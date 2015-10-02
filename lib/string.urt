@@ -27,6 +27,9 @@ protocol for: string {
   func htmlspecialchars_decode in (string: string, flags: number)
   func htmlspecialchars in (string: string, flags: number, encoding?: number, double_encode: bool)
 
+  func implode in (glue: string, pieces: array)
+  func join in (glue: string, pieces: array)
+
 }
 
 protocol for: number {
