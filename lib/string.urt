@@ -25,6 +25,7 @@ protocol for: string {
   func htmlentities in (string: string, flags?: number, encoding?: string, double_encode?: bool)
   func htmlspecialchars_decode in (string: string, flags?: number)
   func htmlspecialchars in (string: string, flags?: number, encoding?: string, double_encode?: bool)
+  func implode in (pieces: string[])
   func implode in (glue: string, pieces: string[])
   func join alias implode
   func lcfirst in (str: string)
