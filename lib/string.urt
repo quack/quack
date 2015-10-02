@@ -42,3 +42,7 @@ protocol for: number {
 protocol for: mixed[] {
   func get_html_translation_table in (table: number, quote_style: number)
 }
+
+protocol for: array {
+
+}
