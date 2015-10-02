@@ -23,9 +23,9 @@ protocol for: string {
   func hex2bin in (data: string)
 
   func html_entity_decode in (string: string, flags: number, encoding?: number)
-  func htmlentities in (string: string, flags: number, encoding?: number)
+  func htmlentities in (string: string, flags: number, encoding?: number, double_encode: bool)
   func htmlspecialchars_decode in (string: string, flags: number)
-  func htmlspecialchars in (string: string, flags: number, encoding?: number)
+  func htmlspecialchars in (string: string, flags: number, encoding?: number, double_encode: bool)
 
 }
 
