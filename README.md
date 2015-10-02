@@ -1,5 +1,7 @@
 ### Urano
 
+![Urano](./resource/urano.png)
+
 Urano is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
 to gradual and duck typing, with the following features:
 
