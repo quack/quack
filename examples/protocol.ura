@@ -1,0 +1,39 @@
+(* Type protocols *)
+
+// Protocol based on primitive return types
+protocol for: string {
+  func strtoupper in (string: string)
+}
+
+// Protocol based on arrray return types
+// Declaration of optional parameters
+protocol for: mixed[] {
+  func explode in (delimiter: string, string: string, limit?: int)
+}
+
+// Alias declaration
+// Multiple functions type declaration
+protocol for: string {
+  func rtrim in (str: string, charlist?: string)
+  func chop alias rtrim
+}
+
+// Variadic function type declaration
+protocol for: void {
+  func echo in (x: string, ...xs: string)
+}
+
+(* Object protocols *)
+
+// Protocol for object
+// Constructor protocol
+// Non-parameterized function type declaration
+protocol for Person {
+  init in (name: string)
+  getInstance: Person
+  getName: string
+  greet: void
+}
+
+// Single function protocol
+protocol add: number in (x: number, y: number
