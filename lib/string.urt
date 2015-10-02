@@ -21,6 +21,12 @@ protocol for: string {
   func hebrev in (hebrew_text: string, max_chars_per_line: number)
   func hebrevc in (hebrew_text: string, max_chars_per_line: number)
   func hex2bin in (data: string)
+
+  func html_entity_decode in (string: string, flags: number, encoding?: number)
+  func htmlentities in (string: string, flags: number, encoding?: number)
+  func htmlspecialchars_decode in (string: string, flags: number)
+  func htmlspecialchars in (string: string, flags: number, encoding?: number)
+
 }
 
 protocol for: number {
