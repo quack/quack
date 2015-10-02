@@ -9,4 +9,24 @@ protocol for: string {
   func addslashes in (str: string)
   func bin2hex in (str: string)
   func chop alias rtrim
+  func chunk_split in (body: string, chunklen?: number, end?: string)
+  func convert_cyr_string in (str: string, from: string, to: string)
+  func convert_uudecode in (data: string)
+  func convert_uuencode in (data: string)
+  func count_chars in (string: string, mode: number)
+  func crc32 in (str: string)
+  func crypt in (str: string, salt?: string)
+  func echo in (x: string, ...xs: string)
+  func explode in (delimiter: string, string: string, limit?: number)
+  func hebrev in (hebrew_text: string, max_chars_per_line: number)
+  func hebrevc in (hebrew_text: string, max_chars_per_line: number)
+  func hex2bin in (data: string)
+}
+
+protocol for: number {
+  func fprintf in (handle: resource, format: string, x?: mixed, ...xs: mixed)
+}
+
+protocol for: mixed[] {
+  func get_html_translation_table in (table: number, quote_style: number)
 }
