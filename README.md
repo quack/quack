@@ -32,8 +32,8 @@ protocol for func Fact: number in (n: number)
 
 func Fact: number in (n: number) {
   match n with {
-    0         = 1,
-    a: number = n * Fact(n - 1)
+    0 = 1,
+    _ = n * Fact(n - 1)
   }
 }
 ```
