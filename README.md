@@ -7,7 +7,7 @@ to gradual and duck typing, with the following features:
 - Support for protocols and type derivations;
 - First-class type system;
 - Multi-paradigm (functional, imperactive, object oriented);
-- Operator overloading.
+- Operator overloading;
 - Code optimization.
 
 #### Hello World
