@@ -30,10 +30,13 @@ protocol for: string {
   func implode in (glue: string, pieces: array)
   func join in (glue: string, pieces: array)
 
+  func lcfirst in (str: string)
+
 }
 
 protocol for: number {
   func fprintf in (handle: resource, format: string, x?: mixed, ...xs: mixed)
+  func levenshtein in (str1: string, str2: string, cost_ins: number, cost_rep: number, cost_del: number)
 }
 
 protocol for: mixed[] {
