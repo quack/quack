@@ -32,17 +32,17 @@ protocol for: string {
 
   func lcfirst in (str: string)
 
+  func ltrim in (str: string, character_mask?: string)
+
 }
 
 protocol for: number {
   func fprintf in (handle: resource, format: string, x?: mixed, ...xs: mixed)
   func levenshtein in (str1: string, str2: string, cost_ins: number, cost_rep: number, cost_del: number)
+  func md5 in (str: string, raw_output: bool)
 }
 
 protocol for: mixed[] {
   func get_html_translation_table in (table: number, quote_style: number)
-}
-
-protocol for: array {
-
+  func localeconv
 }
