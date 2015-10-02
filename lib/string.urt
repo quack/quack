@@ -21,20 +21,22 @@ protocol for: string {
   func hebrev in (hebrew_text: string, max_chars_per_line: number)
   func hebrevc in (hebrew_text: string, max_chars_per_line: number)
   func hex2bin in (data: string)
-  func html_entity_decode in (string: string, flags: number, encoding?: number)
-  func htmlentities in (string: string, flags: number, encoding?: number, double_encode: bool)
-  func htmlspecialchars_decode in (string: string, flags: number)
-  func htmlspecialchars in (string: string, flags: number, encoding?: number, double_encode: bool)
-  func implode in (glue: string, pieces: array)
-  func join in (glue: string, pieces: array)
+  func html_entity_decode in (string: string, flags?: number, encoding?: string)
+  func htmlentities in (string: string, flags?: number, encoding?: string, double_encode?: bool)
+  func htmlspecialchars_decode in (string: string, flags?: number)
+  func htmlspecialchars in (string: string, flags?: number, encoding?: string, double_encode?: bool)
+  func implode in (glue: string, pieces: string[])
+  func join alias implode
   func lcfirst in (str: string)
   func ltrim in (str: string, character_mask?: string)
+  func md5_file in (filename: string, raw_output?: bool)
 }
 
 protocol for: number {
   func fprintf in (handle: resource, format: string, x?: mixed, ...xs: mixed)
+  func levenshtein in (str1: string, str2: string)
   func levenshtein in (str1: string, str2: string, cost_ins: number, cost_rep: number, cost_del: number)
-  func md5 in (str: string, raw_output: bool)
+  func md5 in (str: string, raw_output?: bool)
 }
 
 protocol for: mixed[] {
