@@ -1,0 +1,12 @@
+(**
+ * :describe Type definitions for primitive functions which are used to handle
+ *           strings.
+ * :copyright © 2015 - Marcelo Camargo <marcelocamargo@linuxmail.org>
+ **)
+
+protocol for: string {
+  func addcslashes in (str: string, charlist: string)
+  func addslashes in (str: string)
+  func bin2hex in (str: string)
+  func chop alias rtrim
+}
