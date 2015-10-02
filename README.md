@@ -8,6 +8,7 @@ to gradual and duck typing, with the following features:
 - First-class type system;
 - Multi-paradigm (functional, imperactive, object oriented);
 - Operator overloading.
+- Code optimization.
 
 #### Hello World
 
@@ -17,3 +18,33 @@ func Main: void {
   in print(hello)
 }
 ```
+
+```php
+function Main() {
+  echo "Hello World!";
+}
+```
+
+#### Factorial
+
+```swift
+protocol for func Fact: number in (n: number)
+
+func Fact: number in (n: number) {
+  match n with {
+    0         = 1,
+    a: number = n * Fact(n - 1)
+  }
+}
+```
+
+```php
+<?php
+
+function Fact(n) {
+  return n === 0
+    ? 1
+    : n * Fact(n - 1);
+}
+```
+
