@@ -1,6 +1,6 @@
-### Urano
+# Urano Lang
 
->  A Rust-based programming language with gradual and duck typing that targets PHP.
+> A Rust-based programming language with gradual and duck typing that targets PHP.
 
 ![Urano](./resource/logo.png)
 
