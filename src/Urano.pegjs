@@ -38,12 +38,80 @@ Body
     return Urano.list.build(x, xs, 1);
   }
 
+StmtList
+  = body:Body? {
+    return body !== null ? body : [];
+  }
+
 /* Statements */
 Stmt "statement"
-  = Identifier
+  = IfStmt
+  / WhileStmt
 
+IfStmt "if statement"
+  = IfToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
+    return {
+      type: "IfStmt",
+      condition: expr,
+      body: body
+    };
+  }
+
+WhileStmt "while statement"
+  = WhileToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
+    return {
+      type: "WhileStmt",
+      condition: expr,
+      body: body
+    };
+  }
+
+/* Expressions */
+Expr "expression"
+  = "expr" !IdentRest {
+    return ["MAYBE EXPRESSION"];
+  }
 
 /* Keywords */
+Keyword "reserved word"
+   = AliasToken
+   / AndToken
+   / BoolToken
+   / BreakToken
+   / ClassToken
+   / DeclareToken
+   / ElseToken
+   / ElsifToken
+   / FalseToken
+   / FinallyToken
+   / ForToken
+   / FuncToken
+   / IfToken
+   / ImportToken
+   / InToken
+   / IterateToken
+   / LetToken
+   / LoopToken
+   / MatchToken
+   / MixedToken
+   / ModuleToken
+   / NilToken
+   / NumberToken
+   / ObjectToken
+   / OrToken
+   / OtherwiseToken
+   / ProtocolToken
+   / RaiseToken
+   / RescueToken
+   / ResourceToken
+   / StaticToken
+   / StringToken
+   / TrueToken
+   / TryToken
+   / WhileToken
+   / XorToken
+   / YieldToken
+
 AliasToken "alias"
   = "alias" !IdentRest
 
@@ -146,6 +214,9 @@ TrueToken "true"
 TryToken "try"
   = "try" !IdentRest
 
+WhileToken "while"
+  = "while" !IdentRest
+
 XorToken "xor"
   = "xor" !IdentRest
 
@@ -154,6 +225,11 @@ YieldToken "yield"
 
 /* Identifier */
 Identifier "identifier"
+  = !Keyword name:IdentName {
+    return name;
+  }
+
+IdentName
   = x:IdentStart xs:IdentRest* {
     return {
       type: "Identifier",
@@ -166,6 +242,19 @@ IdentStart
 
 IdentRest
   = [a-zA-Z0-9_\x7f-\xff]
+
+/* Matchers */
+LeftBracket "left bracket"
+  = "{"
+
+RightBracket "right bracket"
+  = "}"
+
+LeftSquareBracket "left square bracket"
+  = "["
+
+RightSquareBracket "right square bracket"
+  = "]"
 
 /* Whitespace and newline */
 _ "optional whitespace"
