@@ -266,9 +266,9 @@ Octal "octal"
   }
 
 Integer "integer"
-  = Octal
-  / Hexadecimal
-  / Decimal
+  = op:( PlusOperator / MinusOperator )? Octal
+  / op:( PlusOperator / MinusOperator )? Hexadecimal
+  / op:( PlusOperator / MinusOperator )? Decimal
 
 /* Identifier */
 Identifier "identifier"
