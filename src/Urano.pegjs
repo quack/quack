@@ -45,8 +45,17 @@ StmtList
 
 /* Statements */
 Stmt "statement"
-  = IfStmt
+  = BreakStmt
+  / IfStmt
   / WhileStmt
+
+BreakStmt "break stmt"
+  = BreakToken __ level:Integer?  {
+    return {
+      type: "BreakStmt",
+      level: level !== null ? level : 1
+    };
+  }
 
 IfStmt "if statement"
   = IfToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
@@ -222,6 +231,37 @@ XorToken "xor"
 
 YieldToken "yield"
   = "yield" !IdentRest
+
+/* Operators */
+PlusOperator "plus operator"
+  = "+"
+
+MinusOperator "minus operator"
+  = "-"
+
+/* Integer */
+Decimal "decimal"
+  = x:[1-9] xs:[0-9]* {
+    return parseInt([x].concat(xs).join(""));
+  }
+  / "0" ![xX] {
+    return 0;
+  }
+
+Hexadecimal "hexadecimal"
+  = "0" [xX] hexa:[0-9a-fA-F]+ {
+    return parseInt("0x" + hexa.join(""));
+  }
+
+Octal "octal"
+  = "0" octal:[0-7]+ {
+    return parseInt("0" + octal.join(""), 8);
+  }
+
+Integer "integer"
+  = Octal
+  / Hexadecimal
+  / Decimal
 
 /* Identifier */
 Identifier "identifier"
