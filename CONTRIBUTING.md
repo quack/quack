@@ -26,4 +26,4 @@ If we find an issue that's related, we will reference it and close your issue, s
 
 ##License
 
-[Orçamento](https://github.com/haskellcamargo/urano) is distributed under the GNU General Public License, version 3, [available in this repository](master/LICENSE.md). All contributions are assumed to be also licensed under the GPLv3.
+[Urano](https://github.com/haskellcamargo/urano) is distributed under the GNU General Public License, version 3, [available in this repository](master/LICENSE.md). All contributions are assumed to be also licensed under the GPLv3.
