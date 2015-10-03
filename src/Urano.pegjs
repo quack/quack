@@ -48,6 +48,7 @@ Stmt "statement"
   = BreakStmt
   / IfStmt
   / WhileStmt
+  / Expr
 
 BreakStmt "break stmt"
   = BreakToken __ level:Integer?  {
@@ -79,6 +80,12 @@ WhileStmt "while statement"
 Expr "expression"
   = "expr" !IdentRest {
     return ["MAYBE EXPRESSION"];
+  }
+  / i:Integer {
+    return {
+      type: "Expr",
+      value: i
+    }
   }
 
 /* Keywords */
