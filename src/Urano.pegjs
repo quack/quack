@@ -60,12 +60,34 @@ BreakStmt "break stmt"
     };
   }
 
+ElseStmt "else statement"
+  = ElseToken __ LeftBracket ___ body:StmtList ___ RightBracket {
+    return {
+      type: "ElseStmt",
+      body: body
+    };
+  }
+
+ElsifStmt "elsif statement"
+  = ElsifToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
+    return {
+      type: "ElsifStmt",
+      condition: expr,
+      body: body
+    };
+  }
+
 IfStmt "if statement"
-  = IfToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
+  = IfToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket
+    elsif:(___ elsif:ElsifStmt { return elsif; })*
+    _else:(___ _else:ElseStmt { return _else; })? {
+
     return {
       type: "IfStmt",
       condition: expr,
-      body: body
+      then: body,
+      elsif: Urano.list.opt(elsif),
+      else: _else
     };
   }
 
@@ -86,11 +108,13 @@ ReturnStmt "return statement"
   }
 
 WhileStmt "while statement"
-  = WhileToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket {
+  = WhileToken __ expr:Expr __ LeftBracket ___ body:StmtList ___ RightBracket
+    _else:(___ _else:ElseStmt { return _else; })? {
     return {
       type: "WhileStmt",
       condition: expr,
-      body: body
+      body: body,
+      else: _else
     };
   }
 
