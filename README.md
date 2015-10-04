@@ -52,6 +52,33 @@ function Fact(n) {
 }
 ```
 
+#### While-else control structure
+
+```swift
+do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) < 4 {
+  match pokemon {
+    1 = "You chose charmander!"
+    2 = "You chose squirtle!"
+    3 = "You chose bulbasaur!"
+    _ = "You chose pikachu!"
+  }
+} else {
+  print("Invalid pokémon!")
+}
+```
+
 ### Test parser
 
 ![Test parser](resource/test_parser.png)
+
+
+### What is already implemented on parser?
+
+- Return statement
+- If/Elsif/Else statement
+- Import statement
+- While/Else statement
+- Loop statement
+- Break statement
+- Integer as expression (decimal, hexadecimal, octal)
+- Identifiers
