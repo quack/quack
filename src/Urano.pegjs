@@ -47,6 +47,7 @@ StmtList
 Stmt "statement"
   = BreakStmt
   / IfStmt
+  / ImportStmt
   / LoopStmt
   / ReturnStmt
   / WhileStmt
@@ -88,6 +89,14 @@ IfStmt "if statement"
       then: body,
       elsif: Urano.list.opt(elsif),
       else: _else
+    };
+  }
+
+ImportStmt "import statement"
+  = ImportToken __ x:ImportIdentifier xs:ImportIdentifierRest* {
+    return {
+      type: "ImportStmt",
+      import: [x].concat(xs)
     };
   }
 
@@ -340,6 +349,19 @@ IdentStart
 
 IdentRest
   = [a-zA-Z0-9_\x7f-\xff]
+
+ImportIdentifier "import identifier"
+  = x:Identifier xs:("." i:Identifier { return i.value; })* {
+    return {
+      type: "ImportIdentifier",
+      file: [x.value].concat(xs)
+    };
+  }
+
+ImportIdentifierRest
+  = _ "," _ i:ImportIdentifier {
+    return i;
+  }
 
 /* Matchers */
 LeftBracket "left bracket"
