@@ -55,7 +55,7 @@ function Fact(n) {
 #### While-else control structure
 
 ```swift
-do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) < 4 {
+do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) <= 4 {
   match pokemon {
     1 = "You chose charmander!"
     2 = "You chose squirtle!"
