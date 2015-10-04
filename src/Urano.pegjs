@@ -47,6 +47,8 @@ StmtList
 Stmt "statement"
   = BreakStmt
   / IfStmt
+  / LoopStmt
+  / ReturnStmt
   / WhileStmt
   / Expr
 
@@ -65,6 +67,22 @@ IfStmt "if statement"
       condition: expr,
       body: body
     };
+  }
+
+LoopStmt "loop statement"
+  = LoopToken __ LeftBracket ___ body:StmtList ___ RightBracket {
+    return {
+      type: "LoopStmt",
+      body: body
+    };
+  }
+
+ReturnStmt "return statement"
+  = ReturnToken expr:(__ expr:Expr { return expr })? {
+    return {
+      type: "ReturnStmt",
+      expr: expr
+    }
   }
 
 WhileStmt "while statement"
@@ -120,6 +138,7 @@ Keyword "reserved word"
    / RaiseToken
    / RescueToken
    / ResourceToken
+   / ReturnToken
    / StaticToken
    / StringToken
    / TrueToken
@@ -217,6 +236,9 @@ RescueToken "rescue"
 
 ResourceToken "resource"
   = "resource" !IdentRest
+
+ReturnToken "return"
+  = "return" !IdentRest
 
 StaticToken "static"
   = "static" !IdentRest
