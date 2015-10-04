@@ -129,14 +129,51 @@ WhileStmt "while statement"
 
 /* Expressions */
 Expr "expression"
-  = "expr" !IdentRest {
-    return ["MAYBE EXPRESSION"];
-  }
-  / i:Integer {
+  = e:ValidExpr {
     return {
       type: "Expr",
+      value: e
+    };
+  }
+
+ValidExpr
+  = IntegerExpr
+  / LetInExpr
+  / LetExpr
+  / NilExpr
+
+IntegerExpr "integer expression"
+  = i:Integer {
+    return {
+      type: "Integer",
       value: i
-    }
+    };
+  }
+
+LetExpr "let expression"
+  = LetToken __ i:Identifier _ EqualOperator _ expr:Expr {
+    return {
+      type: "LetExpr",
+      key: i.value,
+      value: expr
+    };
+  }
+
+LetInExpr "let-in expression"
+  = l:LetExpr __ InToken __ expr:Expr {
+    return {
+      type: "LetInExpr",
+      key: l.key,
+      value: l.value,
+      in: expr
+    };
+  }
+
+NilExpr "nil"
+  = NilToken {
+    return {
+      type: "Nil"
+    };
   }
 
 /* Keywords */
@@ -300,6 +337,9 @@ PlusOperator "plus operator"
 
 MinusOperator "minus operator"
   = "-"
+
+EqualOperator "equality operator"
+  = "="
 
 /* Integer */
 Decimal "decimal"
