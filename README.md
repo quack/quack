@@ -51,3 +51,7 @@ function Fact(n) {
     : n * Fact(n - 1);
 }
 ```
+
+### Test parser
+
+![Test parser](resource/test_parser.png)
