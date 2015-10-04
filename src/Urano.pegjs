@@ -266,9 +266,14 @@ Octal "octal"
   }
 
 Integer "integer"
-  = op:( PlusOperator / MinusOperator )? Octal
-  / op:( PlusOperator / MinusOperator )? Hexadecimal
-  / op:( PlusOperator / MinusOperator )? Decimal
+  = op:( PlusOperator / MinusOperator )? t:( Octal / Hexadecimal / Decimal ) {
+    // TODO: +- on operators
+    return op === null
+      ? t
+      : op === "+"
+        ? +(t)
+        : -(t);
+  }
 
 /* Identifier */
 Identifier "identifier"

@@ -234,6 +234,14 @@ Urano = (function() {
               return parseInt("0" + octal.join(""), 8);
             },
           { type: "other", description: "integer" },
+          function(op, t) {
+              // TODO: +- on operators
+              return op === null
+                ? t
+                : op === "+"
+                  ? +(t)
+                  : -(t);
+            },
           { type: "other", description: "identifier" },
           function(name) {
               return name;
@@ -325,21 +333,21 @@ Urano = (function() {
           peg$decode("<%4\xA7\"\"5!7\xA8/E#$4\xA9\"\"5!7\xAA0)*4\xA9\"\"5!7\xAA&/)$8\":\xAB\"\"! )(\"'#&'#.R &%2\xAC\"\"6\xAC7\xAD/B#%<4\xAE\"\"5!7\xAF=.##&&!&'#/'$8\":\xB0\" )(\"'#&'#=.\" 7\xA6"),
           peg$decode("<%2\xAC\"\"6\xAC7\xAD/Y#4\xAE\"\"5!7\xAF/J$$4\xB2\"\"5!7\xB3/,#0)*4\xB2\"\"5!7\xB3&&&#/($8#:\xB4#! )(#'#(\"'#&'#=.\" 7\xB1"),
           peg$decode("<%2\xAC\"\"6\xAC7\xAD/J#$4\xB6\"\"5!7\xB7/,#0)*4\xB6\"\"5!7\xB7&&&#/($8\":\xB8\"! )(\"'#&'#=.\" 7\xB5"),
-          peg$decode("<;S.) &;R.# &;Q=.\" 7\xB9"),
-          peg$decode("<%%<;)=.##&&!&'#/1#;V/($8\":\xBB\"! )(\"'#&'#=.\" 7\xBA"),
-          peg$decode("%;W/9#$;X0#*;X&/)$8\":\xBC\"\"! )(\"'#&'#"),
-          peg$decode("4\xBD\"\"5!7\xBE"),
-          peg$decode("4\xBF\"\"5!7\xC0"),
-          peg$decode("<2\xC2\"\"6\xC27\xC3=.\" 7\xC1"),
-          peg$decode("<2\xC5\"\"6\xC57\xC6=.\" 7\xC4"),
-          peg$decode("<2\xC8\"\"6\xC87\xC9=.\" 7\xC7"),
-          peg$decode("<2\xCB\"\"6\xCB7\xCC=.\" 7\xCA"),
-          peg$decode("<$4\xCE\"\"5!7\xCF0)*4\xCE\"\"5!7\xCF&=.\" 7\xCD"),
-          peg$decode("<$4\xCE\"\"5!7\xCF/,#0)*4\xCE\"\"5!7\xCF&&&#=.\" 7\xD0"),
-          peg$decode("<$4\xD2\"\"5!7\xD30)*4\xD2\"\"5!7\xD3&=.\" 7\xD1"),
-          peg$decode("<$4\xD2\"\"5!7\xD3/,#0)*4\xD2\"\"5!7\xD3&&&#=.\" 7\xD4"),
-          peg$decode("<$4\xCE\"\"5!7\xCF.) &4\xD2\"\"5!7\xD305*4\xCE\"\"5!7\xCF.) &4\xD2\"\"5!7\xD3&=.\" 7\xD5"),
-          peg$decode("<;^.# &;`=.\" 7\xD6")
+          peg$decode("<%;O.# &;P.\" &\"/>#;S.) &;R.# &;Q/)$8\":\xBA\"\"! )(\"'#&'#=.\" 7\xB9"),
+          peg$decode("<%%<;)=.##&&!&'#/1#;V/($8\":\xBC\"! )(\"'#&'#=.\" 7\xBB"),
+          peg$decode("%;W/9#$;X0#*;X&/)$8\":\xBD\"\"! )(\"'#&'#"),
+          peg$decode("4\xBE\"\"5!7\xBF"),
+          peg$decode("4\xC0\"\"5!7\xC1"),
+          peg$decode("<2\xC3\"\"6\xC37\xC4=.\" 7\xC2"),
+          peg$decode("<2\xC6\"\"6\xC67\xC7=.\" 7\xC5"),
+          peg$decode("<2\xC9\"\"6\xC97\xCA=.\" 7\xC8"),
+          peg$decode("<2\xCC\"\"6\xCC7\xCD=.\" 7\xCB"),
+          peg$decode("<$4\xCF\"\"5!7\xD00)*4\xCF\"\"5!7\xD0&=.\" 7\xCE"),
+          peg$decode("<$4\xCF\"\"5!7\xD0/,#0)*4\xCF\"\"5!7\xD0&&&#=.\" 7\xD1"),
+          peg$decode("<$4\xD3\"\"5!7\xD40)*4\xD3\"\"5!7\xD4&=.\" 7\xD2"),
+          peg$decode("<$4\xD3\"\"5!7\xD4/,#0)*4\xD3\"\"5!7\xD4&&&#=.\" 7\xD5"),
+          peg$decode("<$4\xCF\"\"5!7\xD0.) &4\xD3\"\"5!7\xD405*4\xCF\"\"5!7\xD0.) &4\xD3\"\"5!7\xD4&=.\" 7\xD6"),
+          peg$decode("<;^.# &;`=.\" 7\xD7")
         ],
 
         peg$currPos          = 0,
