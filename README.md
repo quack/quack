@@ -61,7 +61,7 @@ do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) <= 4
     2 = "You chose squirtle!"
     3 = "You chose bulbasaur!"
     _ = "You chose pikachu!"
-  }
+  } |> print
 } else {
   print("Invalid pokémon!")
 }
