@@ -88,6 +88,8 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_PARTIAL, "partial"));
     $this->reserve(new Word(Tag::T_EXTENSION, "extension"));
     $this->reserve(new Word(Tag::T_IS, "is"));
+    $this->reserve(new Word(Tag::T_OUT, "out"));
+    $this->reserve(new Word(Tag::T_DERIVING, "deriving"));
   }
 
   private function reserve(Word $t) {
@@ -96,7 +98,7 @@ abstract class Lexer
 
   protected function isEnd()
   {
-    return $this->position >= strlen($this->input);
+    return $this->position >= $this->size;
   }
 
   public function consume($n = 1)

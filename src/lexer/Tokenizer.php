@@ -80,7 +80,7 @@ class Tokenizer extends Lexer
 
     do {
       $buffer[] = $this->readChar();
-    } while (ctype_alnum($this->peek) || $this->peek === '_');
+    } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
 
     $string = implode($buffer);
 

@@ -12,7 +12,7 @@ use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Lexer\Tag;
 
 try {
-  $lexer = new Tokenizer(file_get_contents("../urano/Tokenizer.ura"));
+  $lexer = new Tokenizer("declare protocol x for n");
   $symbol_table = $lexer->getSymbolTable();
 
   $token = $lexer->nextToken();
