@@ -92,7 +92,8 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_DERIVING, "deriving"));
   }
 
-  private function reserve(Word $t) {
+  private function reserve(Word $t)
+  {
     $this->words[$t->lexeme] = $t;
   }
 
