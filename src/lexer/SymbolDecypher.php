@@ -42,7 +42,6 @@ class SymbolDecypher
       }
     }
 
-    $peek = $context->peek;
     return static::fetch($context, $context->peek);
   }
 
