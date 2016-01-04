@@ -54,24 +54,56 @@ class Tokenizer extends Lexer
     $buffer = [];
     $is_double = false;
 
+    // Hexadecimal
+    if ((int) $this->peek === 0 && strtolower($this->preview()) === 'x' && ctype_xdigit((string) $this->preview(2))) {
+      $buffer[] = $this->readChar(); // 0
+      $buffer[] = $this->readChar(); // x
+
+      do {
+        $buffer[] = $this->readChar();
+      } while (ctype_xdigit((string) $this->peek));
+
+      $hex_as_dec = (string) hexdec(implode($buffer));
+      $this->column += sizeof($hex_as_dec);
+      return new Token(Tag::T_INTEGER, $this->symbol_table->add($hex_as_dec));
+    }
+
+    // Is it decimal or octal?
     parse_int:
     do {
       $buffer[] = $this->readChar();
-    } while (ctype_digit($this->peek));
+    } while (ctype_digit((string) $this->peek));
 
-    if ($this->peek === '.' && ctype_digit($this->preview()) && !$is_double) {
+    if ($this->peek === '.' && ctype_digit((string) $this->preview()) && !$is_double) {
       $buffer[] = $this->readChar();
       $is_double = true;
       goto parse_int;
     }
 
+    // Try to check for octal compatibility
+    $is_octal = false;
+    if (!$is_double && (int) $buffer[0] === 0 && sizeof($buffer) > 1) {
+      $oct_buffer = [];
+      $current_buffer_size = sizeof($buffer);
+
+      $i = 0;
+      while ($i < $current_buffer_size && in_array($buffer[$i], range(0, 7))) {
+        $oct_buffer[] = $buffer[$i];
+        $i++;
+      }
+
+      $oct_as_dec = (string) octdec(implode($oct_buffer));
+      $this->column += sizeof($oct_as_dec);
+      return new Token(Tag::T_INTEGER, $this->symbol_table->add($oct_as_dec));
+    }
+
+    // Decimal
     $size = sizeof($buffer);
     $buffer = implode($buffer);
     $buffer = $is_double ? (double) $buffer : (int) $buffer;
 
     $this->column += $size;
-    return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER,
-      $this->symbol_table->add($buffer));
+    return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($buffer));
   }
 
   private function identifier()
