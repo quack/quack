@@ -213,4 +213,20 @@ class Tokenizer extends Lexer
   {
     return $this->symbol_table;
   }
+
+  public function eagerlyEvaluate($show_symbol_table = false)
+  {
+    $this->rewind();
+    $symbol_table = &$this->getSymbolTable();
+    $token_stream = [];
+
+    while ($this->peek != self::EOF) {
+      $token_stream[] = $this->nextToken();
+      if ($show_symbol_table) {
+        $token_stream[sizeof($token_stream) - 1]->showSymbolTable($symbol_table);
+      }
+    }
+
+    return $token_stream;
+  }
 }

@@ -11,8 +11,18 @@ require_once "SymbolDecypher.php";
 use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Lexer\Tag;
 
+$lexer = new Tokenizer("let add = &(+)");
+
+// Eager evaluation
+foreach ($lexer->eagerlyEvaluate(true) as $token) {
+  echo $token;
+}
+
+echo PHP_EOL;
+
+// Lazy, generator based, evaluation
 try {
-  $lexer = new Tokenizer("this is :a :_");
+  $lexer->rewind();
   $symbol_table = $lexer->getSymbolTable();
 
   $token = $lexer->nextToken();

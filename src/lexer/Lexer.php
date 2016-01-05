@@ -102,6 +102,16 @@ abstract class Lexer
     return $this->position >= $this->size;
   }
 
+  public function rewind()
+  {
+    if ($this->size === 0) {
+      exit;
+    }
+
+    $this->position = 0;
+    $this->peek = $this->input[0];
+  }
+
   public function consume($n = 1)
   {
     $this->position += $n;
