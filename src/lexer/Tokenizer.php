@@ -93,7 +93,7 @@ class Tokenizer extends Lexer
       }
 
       $oct_as_dec = (string) octdec(implode($oct_buffer));
-      $this->column += sizeof($oct_as_dec);
+      $this->column += $current_buffer_size;
       return new Token(Tag::T_INTEGER, $this->symbol_table->add($oct_as_dec));
     }
 
