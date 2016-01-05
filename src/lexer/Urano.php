@@ -12,7 +12,7 @@ use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Lexer\Tag;
 
 try {
-  $lexer = new Tokenizer("0 1 0xA 213 07681 0xF");
+  $lexer = new Tokenizer("this is :a :_");
   $symbol_table = $lexer->getSymbolTable();
 
   $token = $lexer->nextToken();

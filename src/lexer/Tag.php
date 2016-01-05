@@ -11,7 +11,8 @@ class Tag
   const T_INTEGER = 258;
   const T_DOUBLE = 400;
   const T_SEMANTIC_COMMENT = 259;
-  const T_STRING = 260;
+  const T_STRING = 600;
+  const T_ATOM = 601;
 
   /* Keywords */
   const T_TRUE = 260;
