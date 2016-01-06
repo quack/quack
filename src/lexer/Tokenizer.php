@@ -229,4 +229,19 @@ class Tokenizer extends Lexer
 
     return $token_stream;
   }
+
+  public function printTokens()
+  {
+    $this->rewind();
+    $symbol_table = &$this->getSymbolTable();
+
+    $token = $this->nextToken();
+    $token->showSymbolTable($symbol_table);
+
+    while ($token->getTag() !== static::EOF_TYPE) {
+      echo $token;
+      $token = $this->nextToken();
+      $token->showSymbolTable($symbol_table);
+    }    
+  } 
 }
