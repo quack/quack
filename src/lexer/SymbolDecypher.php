@@ -4,37 +4,41 @@ namespace UranoCompiler\Lexer;
 
 class SymbolDecypher
 {
+  public static function add($x, $y) { return $x + $y; }
+
   public static function __callStatic($method, $args)
   {
-    $context = $args[0];
+    $context = &$args[0];
 
     switch ($method) {
       case '<':
-        return static::tryMatch(['<<<', '<<=', '<<', '<>', '<='], $context);
+        return static::tryMatch($context, ['<<<', '<<=', '<<', '<>', '<=']);
       case '>':
-        return static::tryMatch(['>>>', '>>=', '>=', '>>'], $context);
+        return static::tryMatch($context, ['>>>', '>>=', '>=', '>>']);
       case ':':
-        return static::tryMatch(['::', ':=', ':>'], $context);
+        return static::tryMatch($context, ['::', ':=', ':>', ':{']);
       case '-':
-        return static::tryMatch(['->', '-='], $context);
+        return static::tryMatch($context, ['->', '-=']);
       case '+':
-        return static::tryMatch(['+=', '++=', '+++', '++'], $context);
+        return static::tryMatch($context, ['+=', '++=', '+++', '++']);
       case '*':
-        return static::tryMatch(['*=', '**'], $context);
+        return static::tryMatch($context, ['*=', '**']);
       case '/':
-        return static::tryMatch(['/='], $context);
+        return static::tryMatch($context, ['/=']);
       case '=':
-        return static::tryMatch(['=~', '=='], $context);
+        return static::tryMatch($context, ['=~', '==']);
       case '|':
-        return static::tryMatch(['|>'], $context);
+        return static::tryMatch($context, ['|>']);
       case '^':
-        return static::tryMatch(['^^'], $context);
+        return static::tryMatch($context, ['^^']);
+      case '&':
+        return static::tryMatch($context, ['&{', '&(']);
       default:
         return static::fetch($context, $context->peek);
     }
   }
 
-  private static function tryMatch($operator_list, $context)
+  private static function tryMatch(&$context, $operator_list)
   {
     foreach ($operator_list as $operator) {
       if ($context->matches($operator)) {

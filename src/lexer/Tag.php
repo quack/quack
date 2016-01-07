@@ -72,7 +72,8 @@ class Tag
   const T_PARTIAL = 526;
   const T_IS = 527;
   const T_OUT = 528;
-  const T_DERIVING = 259;
+  const T_DERIVING = 529;
+  const T_LETF = 530;
 
   const T_TYPE_INT = 285;
   const T_TYPE_STRING = 286;

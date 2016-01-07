@@ -1,12 +1,13 @@
 <?php
 
-require_once "Lexer.php";
-require_once "Tag.php";
-require_once "Token.php";
-require_once "Word.php";
-require_once "Tokenizer.php";
-require_once "SymbolTable.php";
-require_once "SymbolDecypher.php";
+require_once 'Lexer.php';
+require_once 'Tag.php';
+require_once 'Token.php';
+require_once 'Word.php';
+require_once 'Tokenizer.php';
+require_once 'SymbolTable.php';
+require_once 'SymbolDecypher.php';
+
 
 use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Lexer\Tag;

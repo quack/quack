@@ -1,0 +1,14 @@
+module Example.List
+
+let map = &{ fn, xss |
+  {} = {}
+  xs = {[fn x]} +++ [map xss]
+}
+
+letf map f xs = :{ x | x <- xs }
+letf filter p xs = :{ x | x <- xs, p[x] }
+
+let codes: int+ = { 1, 2, 3 }
+
+users
+|>
