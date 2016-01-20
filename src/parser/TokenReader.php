@@ -35,6 +35,10 @@ class TokenReader extends Parser
 
   public function parse()
   {
+    throw (new SyntaxError())->expected('let')->found($this->lookahead)->on([
+      "line"   => $this->input->line,
+      "column" => $this->input->column
+    ]);
     $this->ast[] = new Ast($this->_print());
   }
 

@@ -13,16 +13,22 @@ require_once '../ast/PrintStmt.php';
 require_once '../ast/Expr.php';
 
 require_once '../parser/Parser.php';
+require_once '../parser/SyntaxError.php';
 require_once '../parser/TokenReader.php';
 
 use \UranoCompiler\Lexer\Tokenizer;
+use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 
 $lexer = new Tokenizer("print 20");
 $parser = new TokenReader($lexer);
 
-$parser->parse();
-$parser->ast();
+try {
+  $parser->parse();
+  $parser->ast();
+} catch (SyntaxError $e) {
+  echo $e;
+}
 
 echo PHP_EOL;
