@@ -91,6 +91,7 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_OUT, "out"));
     $this->reserve(new Word(Tag::T_DERIVING, "deriving"));
     $this->reserve(new Word(Tag::T_LETF, "letf"));
+    $this->reserve(new Word(Tag::T_PRINT, "print"));
   }
 
   private function reserve(Word $t)

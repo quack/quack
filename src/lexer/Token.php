@@ -19,6 +19,11 @@ class Token
     return $this->tag;
   }
 
+  public function getPointer()
+  {
+    return $this->pointer;
+  }
+
   public function __toString()
   {
     if (isset($this->pointer)) {
