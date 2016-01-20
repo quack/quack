@@ -9,6 +9,7 @@ require_once '../lexer/SymbolTable.php';
 require_once '../lexer/SymbolDecypher.php';
 
 require_once '../ast/Ast.php';
+require_once '../ast/FunctionDecl.php';
 require_once '../ast/PrintStmt.php';
 require_once '../ast/Expr.php';
 
@@ -21,7 +22,14 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 
-$lexer = new Tokenizer("print 20");
+$lexer = new Tokenizer(<<<SRC
+  def *ptr {
+    def sub {
+
+    }
+  }
+SRC
+);
 $parser = new TokenReader($lexer);
 
 try {

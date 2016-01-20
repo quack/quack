@@ -7,6 +7,7 @@ use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 
 use \UranoCompiler\Ast\Ast;
+use \UranoCompiler\Ast\FunctionDecl;
 use \UranoCompiler\Ast\PrintStmt;
 use \UranoCompiler\Ast\Expr;
 
@@ -21,30 +22,61 @@ class TokenReader extends Parser
 
   public function ast($scope = 0, $tree = NULL)
   {
-    $symbol_table = &$this->input->getSymbolTable();
     $level = str_repeat(' ', $scope * 2);
-
     $tree = $tree === NULL ? $this->ast[0] : $tree;
+
+    echo $level . get_class($tree) . PHP_EOL;
+
+    if (isset($tree->body[0])) {
+      $this->ast($scope + 1, $tree->body[0]);
+    }
+
     if (isset($tree->value)) {
-      echo $level . get_class($tree) . PHP_EOL;
       $this->ast($scope + 1, $tree->value);
-    } else {
-      echo $level . $symbol_table->get($tree) . PHP_EOL;
     }
   }
 
   public function parse()
   {
-    throw (new SyntaxError())->expected('let')->found($this->lookahead)->on([
+    $this->ast[] = new Ast($this->_topStmt());
+  }
+
+  private function _topStmt()
+  {
+    if ($this->is(Tag::T_DEF)) {
+      return $this->_functionDecl();
+    }
+
+    throw (new SyntaxError)->expected('statement')->found($this->lookahead)->on([
       "line"   => $this->input->line,
       "column" => $this->input->column
     ]);
-    $this->ast[] = new Ast($this->_print());
   }
 
-  public function _print()
+  private function _functionDecl()
   {
-    $this->match(Tag::T_PRINT);
-    return new PrintStmt(new Expr($this->match(Tag::T_INTEGER)));
+    $symbol_table = &$this->input->getSymbolTable();
+
+    $this->match(Tag::T_DEF);
+    $by_ref = $this->opt('*');
+    $name = $this->access($this->match(Tag::T_IDENT));
+
+    $this->match('{');
+
+    $body = [];
+    if (!$this->is('}')) {
+      $body = [$this->_topStmt()];
+    }
+
+    $this->match('}');
+
+    return (new FunctionDecl($name))
+      ->byRef((boolean) $by_ref)
+      ->body($body);
+  }
+
+  private function access($pointer)
+  {
+    return $this->input->getSymbolTable()->get($pointer);
   }
 }

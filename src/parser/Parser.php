@@ -4,6 +4,7 @@ namespace UranoCompiler\Parser;
 
 use \Exception;
 use \UranoCompiler\Lexer\Tokenizer;
+use \UranoCompiler\Parser\SyntaxError;
 
 abstract class Parser
 {
@@ -22,7 +23,24 @@ abstract class Parser
       return $this->consume();
     }
 
-    throw new Exception("Expecting token {$tag}. Got {$this->lookahead}");
+    throw (new SyntaxError)->expected($tag)->found($this->lookahead)->on([
+      "line"   => $this->input->line,
+      "column" => $this->input->column
+    ]);
+  }
+
+  public function opt($tag)
+  {
+    if ($this->lookahead->getTag() === $tag) {
+      $pointer = $this->consume();
+      return $pointer === NULL ? true : $pointer;
+    }
+    return false;
+  }
+
+  protected function is($tag)
+  {
+    return $this->lookahead->getTag() === $tag;
   }
 
   public function consume()
