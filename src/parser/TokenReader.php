@@ -8,6 +8,7 @@ use \UranoCompiler\Lexer\Tokenizer;
 
 use \UranoCompiler\Ast\FunctionDecl;
 use \UranoCompiler\Ast\ModuleStmt;
+use \UranoCompiler\Ast\OpenStmt;
 use \UranoCompiler\Ast\PrintStmt;
 use \UranoCompiler\Ast\Expr;
 
@@ -36,12 +37,28 @@ class TokenReader extends Parser
   /* Checkers */
   private function startsStmt()
   {
-    return $this->is(Tag::T_MODULE);
+    return $this->is(Tag::T_MODULE)
+        || $this->is(Tag::T_OPEN);
   }
 
   private function isEOF()
   {
     return $this->lookahead->getTag() === 0;
+  }
+
+  /* Coproductions */
+  private function qualifiedName()
+  {
+    $qualified_name = [$this->match(Tag::T_IDENT)];
+
+    while ($this->is('.')) {
+      $this->match('.');
+      $qualified_name[] = $this->match(Tag::T_IDENT);
+    }
+
+    return array_map(function($name) {
+      return $this->resolveScope($name);
+    }, $qualified_name);
   }
 
   /* Productions */
@@ -63,12 +80,27 @@ class TokenReader extends Parser
   private function _topStmt()
   {
     if ($this->is(Tag::T_MODULE)) return $this->_module();
+    if ($this->is(Tag::T_OPEN))   return $this->_open();
   }
 
   private function _module()
   {
     $this->match(Tag::T_MODULE);
-    $module_name = $this->match(Tag::T_IDENT);
-    return new ModuleStmt($this->resolveScope($module_name));
+
+    return new ModuleStmt($this->qualifiedName());
+  }
+
+  private function _open()
+  {
+    $this->match(Tag::T_OPEN);
+    $name = $this->qualifiedName();
+    $alias = NULL;
+
+    if ($this->is(Tag::T_AS)) {
+      $this->match(Tag::T_AS);
+      $alias = $this->resolveScope($this->match(Tag::T_IDENT));
+    }
+
+    return new OpenStmt($name, $alias);
   }
 }

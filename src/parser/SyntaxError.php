@@ -79,7 +79,7 @@ class SyntaxError extends Exception
       }
     }
 
-    $buffer[] = PHP_EOL . str_repeat(' ', $column - $initial_column);
+    $buffer[] = PHP_EOL . str_repeat(' ', $column - $initial_column + 1);
     $buffer[] = BEGIN_BOLD . "^" . END_BOLD . str_repeat('^', 10);
 
     return implode($buffer);

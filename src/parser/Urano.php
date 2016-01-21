@@ -11,6 +11,7 @@ require_once '../lexer/SymbolDecypher.php';
 require_once '../ast/Node.php';
 require_once '../ast/FunctionDecl.php';
 require_once '../ast/ModuleStmt.php';
+require_once '../ast/OpenStmt.php';
 require_once '../ast/PrintStmt.php';
 require_once '../ast/Expr.php';
 
@@ -24,7 +25,10 @@ use \UranoCompiler\Parser\TokenReader;
 
 
 $lexer = new Tokenizer(<<<SRC
-module 12
+  module enterprise.user
+
+  open enterprise.finances
+  open enterprise.human_resources as hr
 SRC
 );
 $parser = new TokenReader($lexer);
