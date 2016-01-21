@@ -7,6 +7,8 @@ use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 
 use \UranoCompiler\Ast\FunctionDecl;
+use \UranoCompiler\Ast\GotoStmt;
+use \UranoCompiler\Ast\LabelStmt;
 use \UranoCompiler\Ast\ModuleStmt;
 use \UranoCompiler\Ast\OpenStmt;
 use \UranoCompiler\Ast\PrintStmt;
@@ -22,7 +24,7 @@ class TokenReader extends Parser
   }
 
   /* Handlers */
-  public function ast()
+  public function dumpAst()
   {
     var_dump($this->ast);
   }
@@ -55,7 +57,9 @@ class TokenReader extends Parser
   private function startsStmt()
   {
     return $this->is(Tag::T_MODULE)
-        || $this->is(Tag::T_OPEN);
+        || $this->is(Tag::T_OPEN)
+        || $this->is(':-')
+        || $this->is(Tag::T_GOTO);
   }
 
   private function isEOF()
@@ -78,6 +82,11 @@ class TokenReader extends Parser
     }, $qualified_name);
   }
 
+  private function identifier()
+  {
+    return $this->resolveScope($this->match(Tag::T_IDENT));
+  }
+
   /* Productions */
   private function _topStmtList()
   {
@@ -98,6 +107,8 @@ class TokenReader extends Parser
   {
     if ($this->is(Tag::T_MODULE)) return $this->_module();
     if ($this->is(Tag::T_OPEN))   return $this->_open();
+    if ($this->is(':-'))          return $this->_label();
+    if ($this->is(Tag::T_GOTO))   return $this->_goto();
   }
 
   private function _module()
@@ -115,9 +126,25 @@ class TokenReader extends Parser
 
     if ($this->is(Tag::T_AS)) {
       $this->match(Tag::T_AS);
-      $alias = $this->resolveScope($this->match(Tag::T_IDENT));
+      $alias = $this->identifier();
     }
 
     return new OpenStmt($name, $alias);
+  }
+
+  private function _label()
+  {
+    $this->match(':-');
+    $label_name = $this->identifier();
+
+    return new LabelStmt($label_name);
+  }
+
+  private function _goto()
+  {
+    $this->match(Tag::T_GOTO);
+    $goto_name = $this->identifier();
+
+    return new GotoStmt($goto_name);
   }
 }

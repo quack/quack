@@ -92,7 +92,7 @@ class SyntaxError extends Exception
     $expected = is_integer($this->expected) ? Tag::getName($this->expected) : $this->expected;
     $found = $this->found->getTag() === 0
       ? "end of the source"
-      : Tag::getName($this->found->getTag());
+      : Tag::getName($this->found->getTag()) ?: $this->found->getTag();
 
     return $this->extractSource() . PHP_EOL . implode(PHP_EOL, [
       BEGIN_ORANGE,

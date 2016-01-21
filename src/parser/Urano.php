@@ -10,6 +10,8 @@ require_once '../lexer/SymbolDecypher.php';
 
 require_once '../ast/Node.php';
 require_once '../ast/FunctionDecl.php';
+require_once '../ast/GotoStmt.php';
+require_once '../ast/LabelStmt.php';
 require_once '../ast/ModuleStmt.php';
 require_once '../ast/OpenStmt.php';
 require_once '../ast/PrintStmt.php';
@@ -27,16 +29,25 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
+  :- start
+
   open enterprise.finances
   open enterprise.human_resources as hr
+
+  :- name
+
+  open project
+  goto start
+
 SRC
 );
 $parser = new TokenReader($lexer);
 
 try {
   $parser->parse();
-  $query = "google-chrome \"http://mshang.ca/syntree/?i=" . $parser->guiAst() . "\"";
-  `$query`;
+  $parser->dumpAst();
+  // $query = "google-chrome \"http://mshang.ca/syntree/?i=" . $parser->guiAst() . "\"";
+  //`$query`;
 } catch (SyntaxError $e) {
   echo $e;
 }
