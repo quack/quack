@@ -23,10 +23,11 @@ abstract class Parser
       return $this->consume();
     }
 
-    throw (new SyntaxError)->expected($tag)->found($this->lookahead)->on([
-      "line"   => $this->input->line,
-      "column" => $this->input->column
-    ]);
+    throw (new SyntaxError)
+      -> expected ($tag)
+      -> found    ($this->lookahead)
+      -> on       ($this->position())
+      -> source   ($this->input);
   }
 
   public function opt($tag)
@@ -50,8 +51,13 @@ abstract class Parser
     return $pointer;
   }
 
-  protected function attachSymbolTable(&$token)
+  protected function resolveScope($pointer)
   {
-    $token->showSymbolTable($this->input->getSymbolTable());
+    return $this->input->getSymbolTable()->get($pointer);
+  }
+
+  protected function position()
+  {
+    return ["line" => &$this->input->line, "column" => &$this->input->column];
   }
 }

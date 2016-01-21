@@ -8,8 +8,9 @@ require_once '../lexer/Tokenizer.php';
 require_once '../lexer/SymbolTable.php';
 require_once '../lexer/SymbolDecypher.php';
 
-require_once '../ast/Ast.php';
+require_once '../ast/Node.php';
 require_once '../ast/FunctionDecl.php';
+require_once '../ast/ModuleStmt.php';
 require_once '../ast/PrintStmt.php';
 require_once '../ast/Expr.php';
 
@@ -23,11 +24,8 @@ use \UranoCompiler\Parser\TokenReader;
 
 
 $lexer = new Tokenizer(<<<SRC
-  def *ptr {
-    def sub {
-
-    }
-  }
+module main
+module 102 where this
 SRC
 );
 $parser = new TokenReader($lexer);

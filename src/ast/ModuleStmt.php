@@ -2,4 +2,4 @@
 
 namespace UranoCompiler\Ast;
 
-class Expr extends Node {}
+class ModuleStmt extends Node {}

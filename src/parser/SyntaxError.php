@@ -3,16 +3,27 @@
 namespace UranoCompiler\Parser;
 
 use \Exception;
+use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Token;
 
 define('BEGIN_ORANGE', "\033[01;31m");
 define('END_ORANGE', "\033[0m");
+
+define('BEGIN_GREEN', "\033[01;32m");
+define('END_GREEN', "\033[0m");
+
+define('BEGIN_BG_RED', "\033[01;41m");
+define('END_BG_RED', "\033[0m");
+
+define('BEGIN_BOLD', "\033[1m");
+define('END_BOLD', "\033[0m");
 
 class SyntaxError extends Exception
 {
   private $expected;
   private $found;
   private $localization;
+  private $source;
 
   public function expected($tag)
   {
@@ -32,13 +43,62 @@ class SyntaxError extends Exception
     return $this;
   }
 
+  public function source($source)
+  {
+    $this->source = $source;
+    return $this;
+  }
+
+  private function extractSource()
+  {
+    $column = $this->localization['column'];
+    $line = $this->localization['line'];
+
+    $source_array = explode(PHP_EOL, $this->source->input);
+    $source_line = $source_array[$line];
+
+    $initial_column = $column - 10 <= 0
+      ? 0
+      : $this->localization['column'] - 10;
+
+    $buffer = [];
+
+    if ($line > 0) {
+      $buffer[] = BEGIN_GREEN . "{$line} | " . $source_array[$this->localization['line'] - 1] . PHP_EOL . END_GREEN;
+    }
+
+    $buffer[] = BEGIN_GREEN . ($line + 1) . " | ";
+
+    for ($i = $initial_column; $i < 70; $i++) {
+      if ($i >= $column) {
+        if (isset($source_line[$i])) {
+          $buffer[] = BEGIN_BG_RED . $source_line[$i] . END_BG_RED;
+        }
+      } else {
+        $buffer[] = BEGIN_GREEN . $source_line[$i] . END_GREEN;
+      }
+    }
+
+    $buffer[] = PHP_EOL . str_repeat(' ', $column + $initial_column + 4);
+    $buffer[] = BEGIN_BOLD . "^" . END_BOLD . str_repeat('^', 10);
+
+    return implode($buffer);
+  }
+
   public function __toString()
   {
-    return implode(PHP_EOL, [
+    $source = $this->extractSource();
+
+    $expected = is_integer($this->expected) ? Tag::getName($this->expected) : $this->expected;
+    $found = $this->found->getTag() === 0
+      ? "end of the source"
+      : Tag::getName($this->found->getTag());
+
+    return $this->extractSource() . PHP_EOL . implode(PHP_EOL, [
       BEGIN_ORANGE,
       "*** You have a syntactic error in your code!",
-      "    Expecting [{$this->expected}]",
-      "    Found     {$this->found}",
+      "    Expecting [{$expected}]",
+      "    Found     [{$found}]",
       "    Line      {$this->localization['line']}",
       "    Column    {$this->localization['column']}",
       END_ORANGE

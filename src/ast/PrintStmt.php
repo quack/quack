@@ -2,12 +2,10 @@
 
 namespace UranoCompiler\Ast;
 
-class PrintStmt
+class PrintStmt extends Node
 {
-  public $value;
-
   public function __construct(Expr $expr)
   {
-    $this->value = $expr;
+    parent::__construct($expr);
   }
 }
