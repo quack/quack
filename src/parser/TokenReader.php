@@ -8,6 +8,8 @@ use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 
 use \UranoCompiler\Ast\BlockStmt;
+use \UranoCompiler\Ast\BreakStmt;
+use \UranoCompiler\Ast\ContinueStmt;
 use \UranoCompiler\Ast\Expr;
 use \UranoCompiler\Ast\FunctionDecl;
 use \UranoCompiler\Ast\GlobalStmt;
@@ -17,6 +19,8 @@ use \UranoCompiler\Ast\LabelStmt;
 use \UranoCompiler\Ast\ModuleStmt;
 use \UranoCompiler\Ast\OpenStmt;
 use \UranoCompiler\Ast\PrintStmt;
+use \UranoCompiler\Ast\RaiseStmt;
+use \UranoCompiler\Ast\ReturnStmt;
 
 class TokenReader extends Parser
 {
@@ -66,7 +70,11 @@ class TokenReader extends Parser
         || $this->is(Tag::T_GOTO)
         || $this->is(Tag::T_GLOBAL)
         || $this->is(Tag::T_IF)
-        || $this->is('[');
+        || $this->is('[')
+        || $this->is(Tag::T_BREAK)
+        || $this->is('<<<')
+        || $this->is(Tag::T_PRINT)
+        || $this->is(Tag::T_RAISE);
   }
 
   private function isEOF()
@@ -119,6 +127,10 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_GLOBAL)) return $this->_global();
     if ($this->is(Tag::T_IF))     return $this->_if();
     if ($this->is('['))           return $this->_blockStmt();
+    if ($this->is(Tag::T_BREAK))  return $this->_break();
+    if ($this->is('<<<'))         return $this->_return();
+    if ($this->is(Tag::T_PRINT))  return $this->_print();
+    if ($this->is(Tag::T_RAISE))  return $this->_raise();
   }
 
   private function _module()
@@ -213,6 +225,31 @@ class TokenReader extends Parser
     $this->match(']');
 
     return new BlockStmt($body);
+  }
+
+  private function _break()
+  {
+    // TODO: Implement optional expression on BREAK, CONTINUE, RETURN
+    $this->match(Tag::T_BREAK);
+    return new BreakStmt(NULL);
+  }
+
+  private function _return()
+  {
+    $this->match('<<<');
+    return new ReturnStmt(NULL);
+  }
+
+  private function _print()
+  {
+    $this->match(Tag::T_PRINT);
+    return new PrintStmt($this->_expr());
+  }
+
+  private function _raise()
+  {
+    $this->match(Tag::T_RAISE);
+    return new RaiseStmt($this->_expr());
   }
 
   private function _expr()

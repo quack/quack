@@ -13,6 +13,9 @@ require_once '../ast/Node.php';
 require_once '../ast/Stmt.php';
 
 require_once '../ast/BlockStmt.php';
+require_once '../ast/BreakStmt.php';
+require_once '../ast/ContinueStmt.php';
+require_once '../ast/Expr.php';
 require_once '../ast/FunctionDecl.php';
 require_once '../ast/GlobalStmt.php';
 require_once '../ast/GotoStmt.php';
@@ -21,7 +24,8 @@ require_once '../ast/LabelStmt.php';
 require_once '../ast/ModuleStmt.php';
 require_once '../ast/OpenStmt.php';
 require_once '../ast/PrintStmt.php';
-require_once '../ast/Expr.php';
+require_once '../ast/RaiseStmt.php';
+require_once '../ast/ReturnStmt.php';
 
 require_once '../parser/Parser.php';
 require_once '../parser/SyntaxError.php';
@@ -35,14 +39,9 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
-  if 0x341 [
-    open enterprise.project
-  ] elif 0x8341 [
-    open my_project
-  ] elif 0 [ open a ]
+  if 0x8947 <<< elif 12 [ print 12 <<< ] else [raise 0x1[][]]
 
-  else open you
-
+  [[]print 10]
 
 
 SRC
