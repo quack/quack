@@ -70,7 +70,7 @@ class SyntaxError extends Exception
     $buffer[] = BEGIN_GREEN . ($line + 1) . " | ";
 
     for ($i = $initial_column; $i < 70; $i++) {
-      if ($i >= $column) {
+      if ($i >= $column - $initial_column) {
         if (isset($source_line[$i])) {
           $buffer[] = BEGIN_BG_RED . $source_line[$i] . END_BG_RED;
         }
@@ -79,7 +79,7 @@ class SyntaxError extends Exception
       }
     }
 
-    $buffer[] = PHP_EOL . str_repeat(' ', $column + $initial_column + 4);
+    $buffer[] = PHP_EOL . str_repeat(' ', $column - $initial_column);
     $buffer[] = BEGIN_BOLD . "^" . END_BOLD . str_repeat('^', 10);
 
     return implode($buffer);

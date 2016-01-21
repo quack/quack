@@ -121,11 +121,12 @@ class Tokenizer extends Lexer
     $string = implode($buffer);
 
     $word = $this->getWord($string);
+    $this->column += sizeof($buffer);
+
     if ($word !== NULL) {
       return $word;
     }
 
-    $this->column += sizeof($buffer);
     return new Token(Tag::T_IDENT, $this->symbol_table->add($string));
   }
 
@@ -242,6 +243,6 @@ class Tokenizer extends Lexer
       echo $token;
       $token = $this->nextToken();
       $token->showSymbolTable($symbol_table);
-    }    
-  } 
+    }
+  }
 }

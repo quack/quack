@@ -52,7 +52,11 @@ class TokenReader extends Parser
     }
 
     if (!$this->isEOF()) {
-      throw (new SyntaxError)->expected('statement')->found($this->lookahead)->on($this->position());
+      throw (new SyntaxError)
+        -> expected ('statement')
+        -> found    ($this->lookahead)
+        -> on       ($this->position())
+        -> source   ($this->input);
     }
   }
 

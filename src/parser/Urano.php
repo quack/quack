@@ -24,8 +24,7 @@ use \UranoCompiler\Parser\TokenReader;
 
 
 $lexer = new Tokenizer(<<<SRC
-module main
-module 102 where this
+module 12
 SRC
 );
 $parser = new TokenReader($lexer);
