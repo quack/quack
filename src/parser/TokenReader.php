@@ -27,6 +27,23 @@ class TokenReader extends Parser
     var_dump($this->ast);
   }
 
+  public function guiAst($tree = NULL)
+  {
+    $starts = $tree === NULL;
+    $tree = $tree ?: $this->ast;
+
+    if ($starts) {
+      $buffer = ["[Program "];
+      foreach ($this->ast as $stmt) {
+        $buffer[] = $this->guiAst($stmt);
+      }
+      $buffer[] = "]";
+      return implode($buffer);
+    }
+
+    return "[" . get_class($tree) . "]";
+  }
+
   public function parse()
   {
     foreach ($this->_topStmtList() as $stmt) {

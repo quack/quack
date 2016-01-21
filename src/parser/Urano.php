@@ -35,7 +35,8 @@ $parser = new TokenReader($lexer);
 
 try {
   $parser->parse();
-  $parser->ast();
+  $query = "google-chrome \"http://mshang.ca/syntree/?i=" . $parser->guiAst() . "\"";
+  `$query`;
 } catch (SyntaxError $e) {
   echo $e;
 }
