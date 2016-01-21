@@ -9,8 +9,14 @@ require_once '../lexer/SymbolTable.php';
 require_once '../lexer/SymbolDecypher.php';
 
 require_once '../ast/Node.php';
+
+require_once '../ast/Stmt.php';
+
+require_once '../ast/BlockStmt.php';
 require_once '../ast/FunctionDecl.php';
+require_once '../ast/GlobalStmt.php';
 require_once '../ast/GotoStmt.php';
+require_once '../ast/IfStmt.php';
 require_once '../ast/LabelStmt.php';
 require_once '../ast/ModuleStmt.php';
 require_once '../ast/OpenStmt.php';
@@ -38,6 +44,21 @@ $lexer = new Tokenizer(<<<SRC
 
   open project
   goto start
+
+  global haskell
+
+  [
+    open name as n
+    open haskell
+    open monad.maybe
+
+    if 1 [
+      open haskell
+
+      if 0x1 [ goto start ]
+    ]
+  ]
+
 
 SRC
 );

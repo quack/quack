@@ -2,7 +2,7 @@
 
 namespace UranoCompiler\Ast;
 
-class OpenStmt
+class OpenStmt implements Stmt
 {
   public $open;
   public $as;

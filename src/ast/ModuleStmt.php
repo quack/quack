@@ -2,4 +2,4 @@
 
 namespace UranoCompiler\Ast;
 
-class ModuleStmt extends Node {}
+class ModuleStmt extends Node implements Stmt {}

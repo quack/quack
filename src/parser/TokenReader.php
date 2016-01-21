@@ -3,16 +3,20 @@
 namespace UranoCompiler\Parser;
 
 use \Exception;
+
 use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 
+use \UranoCompiler\Ast\BlockStmt;
+use \UranoCompiler\Ast\Expr;
 use \UranoCompiler\Ast\FunctionDecl;
+use \UranoCompiler\Ast\GlobalStmt;
 use \UranoCompiler\Ast\GotoStmt;
+use \UranoCompiler\Ast\IfStmt;
 use \UranoCompiler\Ast\LabelStmt;
 use \UranoCompiler\Ast\ModuleStmt;
 use \UranoCompiler\Ast\OpenStmt;
 use \UranoCompiler\Ast\PrintStmt;
-use \UranoCompiler\Ast\Expr;
 
 class TokenReader extends Parser
 {
@@ -59,7 +63,10 @@ class TokenReader extends Parser
     return $this->is(Tag::T_MODULE)
         || $this->is(Tag::T_OPEN)
         || $this->is(':-')
-        || $this->is(Tag::T_GOTO);
+        || $this->is(Tag::T_GOTO)
+        || $this->is(Tag::T_GLOBAL)
+        || $this->is(Tag::T_IF)
+        || $this->is('[');
   }
 
   private function isEOF()
@@ -109,6 +116,9 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_OPEN))   return $this->_open();
     if ($this->is(':-'))          return $this->_label();
     if ($this->is(Tag::T_GOTO))   return $this->_goto();
+    if ($this->is(Tag::T_GLOBAL)) return $this->_global();
+    if ($this->is(Tag::T_IF))     return $this->_if();
+    if ($this->is('['))           return $this->_blockStmt();
   }
 
   private function _module()
@@ -146,5 +156,41 @@ class TokenReader extends Parser
     $goto_name = $this->identifier();
 
     return new GotoStmt($goto_name);
+  }
+
+  private function _global()
+  {
+    $this->match(Tag::T_GLOBAL);
+    $var_name = $this->identifier();
+
+    return new GlobalStmt($var_name);
+  }
+
+  private function _if()
+  {
+    $this->match(Tag::T_IF);
+    $condition = $this->_expr();
+    // TODO: Change for inner stmt
+    $body = $this->_topStmt();
+
+    return new IfStmt($condition, $body);
+  }
+
+  private function _blockStmt()
+  {
+    $body = [];
+
+    $this->match('[');
+    while ($this->startsStmt()) {
+      $body[] = $this->_topStmt();
+    }
+    $this->match(']');
+
+    return new BlockStmt($body);
+  }
+
+  private function _expr()
+  {
+    return new Expr($this->resolveScope($this->match(Tag::T_INTEGER)));
   }
 }

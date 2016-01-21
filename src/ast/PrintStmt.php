@@ -2,7 +2,7 @@
 
 namespace UranoCompiler\Ast;
 
-class PrintStmt extends Node
+class PrintStmt extends Node implements Stmt
 {
   public function __construct(Expr $expr)
   {

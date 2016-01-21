@@ -2,4 +2,4 @@
 
 namespace UranoCompiler\Ast;
 
-class LabelStmt extends Node {}
+class LabelStmt extends Node implements Stmt {}
