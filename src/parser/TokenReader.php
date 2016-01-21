@@ -173,7 +173,20 @@ class TokenReader extends Parser
     // TODO: Change for inner stmt
     $body = $this->_topStmt();
 
-    return new IfStmt($condition, $body);
+    $else = $this->_optElse();
+
+    return new IfStmt($condition, $body, $else);
+  }
+
+  private function _optElse()
+  {
+    if (!$this->is(Tag::T_ELSE)) {
+      return NULL;
+    }
+
+    $this->match(Tag::T_ELSE);
+    // TODO: Change for inner stmt
+    return $this->_topStmt();
   }
 
   private function _blockStmt()

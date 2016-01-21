@@ -35,29 +35,15 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
-  :- start
+  if 0x30
+    if 0x10
+      open foo
+    else
+      open bar
+  else
+    :- name
+    goto name
 
-  open enterprise.finances
-  open enterprise.human_resources as hr
-
-  :- name
-
-  open project
-  goto start
-
-  global haskell
-
-  [
-    open name as n
-    open haskell
-    open monad.maybe
-
-    if 1 [
-      open haskell
-
-      if 0x1 [ goto start ]
-    ]
-  ]
 
 
 SRC
