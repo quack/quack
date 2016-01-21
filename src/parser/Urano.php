@@ -16,6 +16,7 @@ require_once '../ast/BlockStmt.php';
 require_once '../ast/BreakStmt.php';
 require_once '../ast/ContinueStmt.php';
 require_once '../ast/Expr.php';
+require_once '../ast/ForeachStmt.php';
 require_once '../ast/FunctionDecl.php';
 require_once '../ast/GlobalStmt.php';
 require_once '../ast/GotoStmt.php';
@@ -26,6 +27,7 @@ require_once '../ast/OpenStmt.php';
 require_once '../ast/PrintStmt.php';
 require_once '../ast/RaiseStmt.php';
 require_once '../ast/ReturnStmt.php';
+require_once '../ast/WhileStmt.php';
 
 require_once '../parser/Parser.php';
 require_once '../parser/SyntaxError.php';
@@ -39,10 +41,14 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
-  if 0x8947 <<< elif 12 [ print 12 <<< ] else [raise 0x1[][]]
+  :- business
+  foreach *name in 12 [
+    print 1
 
-  [[]print 10]
+    if 12 goto business
 
+    <<<
+  ]
 
 SRC
 );
