@@ -1,0 +1,49 @@
+module uranocompiler.parser
+
+open Exception
+
+open uranocompiler.lexer.Tag
+open uranocompiler.lexer.Tokenizer
+
+open uranocompiler.ast.BlockStmt
+open uranocompiler.ast.Expr
+open uranocompiler.ast.FunctionDecl
+open uranocompiler.ast.GlobalStmt
+open uranocompiler.ast.GotoStmt
+open uranocompiler.ast.IfStmt
+open uranocompiler.ast.LabelStmt
+open uranocompiler.ast.ModuleStmt
+open uranocompiler.ast.OpenStmt
+open uranocompiler.ast.PrintStmt
+
+class TokenReader < Parser [
+  ast: array = *{}
+
+  init [input: Tokenizer] -> super[input]
+
+  def dump_ast -> var_dump[@ast]
+
+  def gui_ast [tree: mixed] [
+    let starts :- tree == nil
+    tree :- tree ?: @ast
+
+    if starts [
+      let buffer: array = *{"[Program "}
+      foreach stmt in @ast buffer := stmt
+      buffer := "]"
+      return implode[buffer]
+    ]
+
+    return "[" ++ get_class[tree] ++ "]"
+  ]
+
+  def parse -> foreach stmt in @_top_stmt_list! @ast := stmt
+
+  def starts_stmt -> *{
+    Tag:T_MODULE; Tag:T_OPEN; Tag:T_GOTO; Tag:T_GLOBAL; Tag:T_IF;
+       ':-'; '['
+    }
+    |> any [&(@is)]
+
+  def is_eof -> @lookahead.get_tag! == 0
+]
