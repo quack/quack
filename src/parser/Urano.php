@@ -35,14 +35,13 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
-  if 0x30
-    if 0x10
-      open foo
-    else
-      open bar
-  else
-    :- name
-    goto name
+  if 0x341 [
+    open enterprise.project
+  ] elif 0x8341 [
+    open my_project
+  ] elif 0 [ open a ]
+
+  else open you
 
 
 

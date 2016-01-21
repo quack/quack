@@ -172,10 +172,23 @@ class TokenReader extends Parser
     $condition = $this->_expr();
     // TODO: Change for inner stmt
     $body = $this->_topStmt();
-
+    $elif = $this->_elifList();
     $else = $this->_optElse();
 
-    return new IfStmt($condition, $body, $else);
+    return new IfStmt($condition, $body, $elif, $else);
+  }
+
+  private function _elifList()
+  {
+    $list = [];
+    while ($this->is(Tag::T_ELIF)) {
+      $this->match(Tag::T_ELIF);
+      $list[] = [
+        "condition" => $this->_expr(),
+        "body"      => $this->_topStmt() // TODO: Change for inner stmt
+      ];
+    }
+    return $list;
   }
 
   private function _optElse()
