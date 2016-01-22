@@ -58,9 +58,7 @@ class TokenReader extends Parser
 
   public function parse()
   {
-    foreach ($this->_topStmtList() as $stmt) {
-      $this->ast[] = $stmt;
-    }
+    $this->ast = iterator_to_array($this->_topStmtList());
   }
 
   /* Checkers */
@@ -102,6 +100,21 @@ class TokenReader extends Parser
         || $this->is(Tag::T_CLASS);
   }
 
+  private function isMethodModifier()
+  {
+    return $this->is(Tag::T_MY)
+        || $this->is(Tag::T_PROTECTED)
+        || $this->is(Tag::T_STATIC)
+        || $this->is(Tag::T_MODEL)
+        || $this->is(Tag::T_FINAL);
+  }
+
+  private function startsClassStmt()
+  {
+    return $this->is(Tag::T_DEF)
+        || $this->isMethodModifier();
+  }
+
   private function isEOF()
   {
     return $this->lookahead->getTag() === 0;
@@ -140,6 +153,13 @@ class TokenReader extends Parser
         -> found    ($this->lookahead)
         -> on       ($this->position())
         -> source   ($this->input);
+    }
+  }
+
+  private function _classStmtList()
+  {
+    while ($this->startsClassStmt()) {
+      yield $this->_classStmt();
     }
   }
 
@@ -345,6 +365,43 @@ class TokenReader extends Parser
       -> parameters ($parameters);
   }
 
+  private function _classStmt()
+  {
+    $modifiers = iterator_to_array($this->_optMethodModifiers());
+
+    if ($this->is(Tag::T_DEF)) {
+      $this->match(Tag::T_DEF);
+      $by_ref = false;
+      if ($this->is('*')) {
+        $this->match('*');
+        $by_ref = true;
+      }
+      $name = $this->identifier();
+      $parameters = $this->_parameters();
+      $body = $this->_innerStmt();
+
+      // TODO: Return method declaration with modifiers
+      // TODO: Allow non-bodied function declaration
+      return (new FunctionDecl($name))
+        -> byRef      ($by_ref)
+        -> body       ($body)
+        -> parameters ($parameters);
+    } else {
+      // Property
+    }
+
+    // else variable or class
+  }
+
+  private function _optMethodModifiers()
+  {
+    while ($this->isMethodModifier()) {
+      $mod = $this->lookahead->lexeme;
+      $this->consume();
+      yield $mod;
+    }
+  }
+
   private function _parameters()
   {
     $parameters = [];
@@ -431,11 +488,16 @@ class TokenReader extends Parser
       }
     }
 
+    $this->match('[');
+    $body = iterator_to_array($this->_classStmtList());
+    $this->match(']');
+
     return [
       'type'       => $type,
       'name'       => $name,
       'extends'    => $extends,
-      'implements' => $implements
+      'implements' => $implements,
+      'body'       => $body
     ];
   }
 
