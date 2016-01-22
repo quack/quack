@@ -41,13 +41,12 @@ use \UranoCompiler\Parser\TokenReader;
 $lexer = new Tokenizer(<<<SRC
   module enterprise.user
 
-  :- business
-  foreach *name in 12 [
-    print 1
+  def *get_users_by_name [... *name] [
+    [print 1]
+  ]
 
-    if 12 goto business
-
-    <<<
+  def record_user [name; age; ... *friends] [
+    [print 0x1]
   ]
 
 SRC

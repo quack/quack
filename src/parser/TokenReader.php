@@ -81,6 +81,19 @@ class TokenReader extends Parser
         || $this->is(Tag::T_FOREACH);
   }
 
+  private function startsTopStmt()
+  {
+    return $this->startsStmt()
+        || $this->is(Tag::T_DEF);
+  }
+
+  private function startsParameter()
+  {
+    return $this->is('...')
+        || $this->is('*')
+        || $this->is(Tag::T_IDENT);
+  }
+
   private function isEOF()
   {
     return $this->lookahead->getTag() === 0;
@@ -109,7 +122,7 @@ class TokenReader extends Parser
   /* Productions */
   private function _topStmtList()
   {
-    while ($this->startsStmt()) {
+    while ($this->startsTopStmt()) {
       yield $this->_topStmt();
     }
 
@@ -123,6 +136,26 @@ class TokenReader extends Parser
   }
 
   private function _topStmt()
+  {
+    if ($this->startsStmt()) return $this->_stmt();
+
+    if ($this->is(Tag::T_DEF)) return $this->_def();
+  }
+
+  private function _innerStmt()
+  {
+    if ($this->startsStmt()) return $this->_stmt();
+
+    if ($this->is(Tag::T_DEF)) return $this->_def();
+
+    throw (new SyntaxError)
+      -> expected ('statement')
+      -> found    ($this->lookahead)
+      -> on       ($this->position())
+      -> source   ($this->input);
+  }
+
+  private function _stmt()
   {
     if ($this->is(Tag::T_MODULE))  return $this->_module();
     if ($this->is(Tag::T_OPEN))    return $this->_open();
@@ -283,6 +316,72 @@ class TokenReader extends Parser
     $body = $this->_topStmt();
 
     return new ForeachStmt($by_ref, $alias, $generator, $body);
+  }
+
+  private function _def()
+  {
+    $this->match(Tag::T_DEF);
+    $by_ref = false;
+    if ($this->is('*')) {
+      $this->match('*');
+      $by_ref = true;
+    }
+    $name = $this->identifier();
+    $parameters = $this->_parameters();
+    $body = $this->_innerStmt();
+
+    return (new FunctionDecl($name))
+      -> byRef      ($by_ref)
+      -> body       ($body)
+      -> parameters ($parameters);
+  }
+
+  private function _parameters()
+  {
+    $parameters = [];
+
+    if ($this->is('!')) {
+      $this->match('!');
+      return $parameters;
+    }
+
+    $this->match('[');
+
+    while ($this->startsParameter()) {
+      $parameters[] = $this->_parameter();
+
+      if ($this->is(';')) {
+        $this->match(';');
+        // TODO: If no more params, throw error with trailing (;)
+      } else {
+        break;
+      }
+    }
+
+    $this->match(']');
+    return $parameters;
+  }
+
+  private function _parameter()
+  {
+    $ellipsis = false;
+    $by_ref = false;
+
+    if ($ellipsis = $this->is('...')) {
+      $this->match('...');
+    }
+
+    if ($by_ref = $this->is('*')) {
+      $this->match('*');
+    }
+
+    $name = $this->resolveScope($this->match(Tag::T_IDENT));
+
+    return [
+      "ellipsis" => $ellipsis,
+      "by_ref"   => $by_ref,
+      "name"     => $name
+    ];
   }
 
   private function _expr()
