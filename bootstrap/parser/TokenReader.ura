@@ -21,7 +21,7 @@ class TokenReader < Parser [
 
   init [input: Tokenizer] -> super[input]
 
-  def dump_ast -> var_dump[@ast]
+  def dump_ast! var_dump[@ast]
 
   def gui_ast [tree: mixed] [
     let starts :- tree == nil
@@ -31,19 +31,19 @@ class TokenReader < Parser [
       let buffer: array = *{"[Program "}
       foreach stmt in @ast buffer := stmt
       buffer := "]"
-      return implode[buffer]
+      <<< implode[buffer]
     ]
 
-    return "[" ++ get_class[tree] ++ "]"
+    <<< "[" ++ get_class[tree] ++ "]"
   ]
 
-  def parse -> foreach stmt in @_top_stmt_list! @ast := stmt
+  def parse! foreach stmt in @_top_stmt_list! @ast := stmt
 
-  def starts_stmt -> *{
+  def starts_stmt! *{
     Tag:T_MODULE; Tag:T_OPEN; Tag:T_GOTO; Tag:T_GLOBAL; Tag:T_IF;
        ':-'; '['
     }
     |> any [&(@is)]
 
-  def is_eof -> @lookahead.get_tag! == 0
+  def is_eof! @lookahead.get_tag! == 0
 ]
