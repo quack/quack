@@ -76,7 +76,8 @@ class TokenReader extends Parser
         || $this->is(Tag::T_PRINT)
         || $this->is(Tag::T_RAISE)
         || $this->is(Tag::T_WHILE)
-        || $this->is(Tag::T_FOREACH);
+        || $this->is(Tag::T_FOREACH)
+        || $this->is(Tag::T_SWITCH);
   }
 
   private function startsTopStmt()
@@ -113,6 +114,12 @@ class TokenReader extends Parser
   {
     return $this->is(Tag::T_DEF)
         || $this->isMethodModifier();
+  }
+
+  private function isCase()
+  {
+    return $this->is(Tag::T_CASE)
+      || $this->is(Tag::T_ELSE);
   }
 
   private function isEOF()
@@ -199,6 +206,7 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_RAISE))   return $this->_raise();
     if ($this->is(Tag::T_WHILE))   return $this->_while();
     if ($this->is(Tag::T_FOREACH)) return $this->_foreach();
+    if ($this->is(Tag::T_SWITCH))  return $this->_switch();
   }
 
   private function _module()
@@ -370,27 +378,30 @@ class TokenReader extends Parser
     $modifiers = iterator_to_array($this->_optMethodModifiers());
 
     if ($this->is(Tag::T_DEF)) {
-      $this->match(Tag::T_DEF);
-      $by_ref = false;
-      if ($this->is('*')) {
-        $this->match('*');
-        $by_ref = true;
-      }
-      $name = $this->identifier();
-      $parameters = $this->_parameters();
-      $body = $this->_innerStmt();
-
-      // TODO: Return method declaration with modifiers
-      // TODO: Allow non-bodied function declaration
-      return (new FunctionDecl($name))
-        -> byRef      ($by_ref)
-        -> body       ($body)
-        -> parameters ($parameters);
+      return $this->_method();
     } else {
       // Property
     }
+  }
 
-    // else variable or class
+  private function _method()
+  {
+    $this->match(Tag::T_DEF);
+    $by_ref = false;
+    if ($this->is('*')) {
+      $this->match('*');
+      $by_ref = true;
+    }
+    $name = $this->identifier();
+    $parameters = $this->_parameters();
+
+    $body = $this->startsStmt() ? $this->_innerStmt() : NULL;
+
+    // TODO: Return method declaration with modifiers
+    return (new FunctionDecl($name))
+      -> byRef      ($by_ref)
+      -> body       ($body)
+      -> parameters ($parameters);
   }
 
   private function _optMethodModifiers()
@@ -499,6 +510,49 @@ class TokenReader extends Parser
       'implements' => $implements,
       'body'       => $body
     ];
+  }
+
+  private function _switch()
+  {
+    $this->match(Tag::T_SWITCH);
+    $condition = $this->_expr();
+
+    $this->match('[');
+    $cases = iterator_to_array($this->_cases());
+    $this->match(']');
+
+    return [
+      "condition" => $condition,
+      "cases"     => $cases
+    ];
+  }
+
+  private function _cases()
+  {
+    var_dump($this->isCase());
+
+    while ($this->isCase()) {
+      if ($this->is(Tag::T_CASE)) {
+        $this->match(Tag::T_CASE);
+        $when = $this->_expr();
+        $then = $this->_innerStmt();
+
+        yield [
+          'is_else' => false,
+          'when'    => $when,
+          'then'    => $then
+        ];
+
+      } else {
+        $this->match(Tag::T_ELSE);
+
+        yield [
+          'is_else' => true,
+          'when'    => NULL,
+          'then'    => $this->_innerStmt()
+        ];
+      }
+    }
   }
 
   private function _expr()

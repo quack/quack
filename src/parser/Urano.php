@@ -40,13 +40,18 @@ use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
 
-  model UserFactory : Base # IFactory; IHolder [
+  switch 0x1 [
+    case 0x2 [
 
-    my static def *get_friends [... *users] [
-      print 0x1
     ]
 
-    model def loader! []
+    case 0x3 [
+
+    ]
+
+    else [
+
+    ]
   ]
 
 SRC

@@ -16,10 +16,10 @@ open uranocompiler.ast.ModuleStmt
 open uranocompiler.ast.OpenStmt
 open uranocompiler.ast.PrintStmt
 
-class TokenReader < Parser [
+class TokenReader : Parser [
   ast: array = *{}
-
-  init [input: Tokenizer] -> super[input]
+  
+  init [input: Tokenizer] super[input]
 
   def dump_ast! var_dump[@ast]
 
