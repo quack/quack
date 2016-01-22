@@ -84,7 +84,8 @@ class TokenReader extends Parser
   private function startsTopStmt()
   {
     return $this->startsStmt()
-        || $this->is(Tag::T_DEF);
+        || $this->is(Tag::T_DEF)
+        || $this->startsClass();
   }
 
   private function startsParameter()
@@ -92,6 +93,13 @@ class TokenReader extends Parser
     return $this->is('...')
         || $this->is('*')
         || $this->is(Tag::T_IDENT);
+  }
+
+  private function startsClass()
+  {
+    return $this->is(Tag::T_FINAL)
+        || $this->is(Tag::T_MODEL)
+        || $this->is(Tag::T_CLASS);
   }
 
   private function isEOF()
@@ -140,6 +148,7 @@ class TokenReader extends Parser
     if ($this->startsStmt()) return $this->_stmt();
 
     if ($this->is(Tag::T_DEF)) return $this->_def();
+    if ($this->startsClass())  return $this->_class();
   }
 
   private function _innerStmt()
@@ -381,6 +390,52 @@ class TokenReader extends Parser
       "ellipsis" => $ellipsis,
       "by_ref"   => $by_ref,
       "name"     => $name
+    ];
+  }
+
+  private function _class()
+  {
+    $type = NULL;
+    $extends = NULL;
+    $implements = [];
+
+    switch ($this->lookahead->getTag()) {
+      case Tag::T_CLASS:
+        $type = 'class';
+        break;
+      case Tag::T_MODEL:
+        $type = 'model';
+        break;
+      case Tag::T_FINAL:
+        $type = 'final';
+        break;
+      default:
+        throw new TodoError(); // TODO
+    }
+
+    $this->consume();
+    $name = $this->identifier();
+
+    if ($this->is(':')) {
+      $this->match(':');
+      $extends = $this->identifier();
+    }
+
+    if ($this->is('#')) {
+      $this->match('#');
+      $implements[] = $this->identifier();
+
+      while ($this->is(';')) {
+        $this->match(';');
+        $implements[] = $this->identifier();
+      }
+    }
+
+    return [
+      'type'       => $type,
+      'name'       => $name,
+      'extends'    => $extends,
+      'implements' => $implements
     ];
   }
 

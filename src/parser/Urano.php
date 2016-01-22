@@ -39,15 +39,11 @@ use \UranoCompiler\Parser\TokenReader;
 
 
 $lexer = new Tokenizer(<<<SRC
-  module enterprise.user
 
-  def *get_users_by_name [... *name] [
-    [print 1]
-  ]
 
-  def record_user [name; age; ... *friends] [
-    [print 0x1]
-  ]
+  model Factory : Base # IFactory; IHolder
+
+  final Singleton : NoInstanceable # Comparable
 
 SRC
 );
