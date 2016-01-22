@@ -49,9 +49,16 @@ $lexer = new Tokenizer(<<<SRC
     [print 0x1]
   ]
 
+
 SRC
 );
 $parser = new TokenReader($lexer);
+
+$tokens = $lexer->eagerlyEvaluate(true);
+
+array_map(function($x) { echo $x, PHP_EOL; }, $tokens);
+
+exit;
 
 try {
   $parser->parse();

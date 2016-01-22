@@ -53,7 +53,7 @@ class Tokenizer extends Lexer
     return new Token(self::EOF_TYPE);
   }
 
-  private function digit()
+  public function digit()
   {
     $buffer = [];
     $is_double = false;

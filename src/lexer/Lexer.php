@@ -12,7 +12,8 @@ abstract class Lexer
   public $peek;
 
   protected $words = [];
-  protected $symbol_table;
+
+  public $symbol_table;
 
   public function __construct($input)
   {

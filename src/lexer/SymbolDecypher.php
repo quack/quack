@@ -32,6 +32,12 @@ class SymbolDecypher
       case '^':
         return static::tryMatch($context, ['^^']);
       case '&':
+        if (ctype_digit($context->preview())) {
+          $context->consume();
+          $param_index = $context->digit()->getPointer();
+          return new Token(Tag::T_PARAM, $param_index);
+        }
+
         return static::tryMatch($context, ['&{', '&(']);
       case '.':
         return static::tryMatch($context, ['...']);
