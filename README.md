@@ -17,29 +17,40 @@ to gradual and duck typing, with the following features:
 #### Hello World
 
 ```swift
-func Main: void {
-  let hello: string = "Hello World!"
-  in print(hello)
-}
+def main: void [
+  let hello: string :- "Hello world!"
+  print hello
+]
 ```
 
 ```php
 function Main() {
-  echo "Hello World!";
+  echo "Hello world!";
 }
 ```
 
 #### Factorial
 
 ```swift
-protocol for func Fact: number in (n: number)
+-: imperative
+def fact [n] [
+  let i: int
+  let fact: int :- 1
+  for i :- 1 while i <= n do [
+    fact :- fact * i
+  ]
+  <<< fact
+]
 
-func Fact: number in (n: number) {
-  match n with {
-    0 = 1,
-    _ = n * Fact(n - 1)
-  }
-}
+-: tail_call_recursion
+def fact [n] [
+  <<< if n = 0 then 1 else [n * fact[n - 1]]
+]
+
+-: compressed
+def fact! if &(= 0) then 1 else &(* fact[&0 - 1])
+
+
 ```
 
 ```php
@@ -55,16 +66,15 @@ function Fact(n) {
 #### While-else control structure
 
 ```swift
-do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) <= 4 {
-  match pokemon {
+while [let pokemon: number = ^int readline["Pick a pokémon"; PHP_EOL]] <= 4
+  match pokemon [
     1 = "You chose charmander!"
     2 = "You chose squirtle!"
     3 = "You chose bulbasaur!"
     _ = "You chose pikachu!"
-  } |> print
-} else {
-  print("Invalid pokémon!")
-}
+  ]
+else
+  print "Invalid pokémon!"
 ```
 
 ### Test parser
@@ -74,11 +84,28 @@ do while (let pokemon: number = [int]readline("Pick a pokémon!", PHP_EOL)) <= 4
 
 ### What is already implemented on parser?
 
-- Return statement
-- If/Elsif/Else statement
-- Import statement
-- While/Else statement
-- Loop statement
-- Break statement
-- Integer as expression (decimal, hexadecimal, octal)
-- Identifiers
+- [ ] Statements
+  - [x] Goto
+  - [x] Foreach
+  - [x] While
+  - [ ] While-else
+  - [x] If-elif-else
+  - [-] Return
+  - [-] Break
+  - [-] Continue
+  - [x] Print
+  - [x] Module
+  - [x] Open
+  - [x] Global
+  - [x] Raise
+  - [x] Block
+  - [ ] Class
+  - [ ] Model
+- [ ] Expressions
+  - [ ] Number
+    - [ ] Integer
+    - [ ] Double
+  - [ ] Strings
+  - [ ] Operators
+    - [ ] Infix
+    - [ ] Prefix
