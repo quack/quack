@@ -77,7 +77,8 @@ class TokenReader extends Parser
         || $this->is(Tag::T_RAISE)
         || $this->is(Tag::T_WHILE)
         || $this->is(Tag::T_FOREACH)
-        || $this->is(Tag::T_SWITCH);
+        || $this->is(Tag::T_SWITCH)
+        || $this->is(Tag::T_TRY);
   }
 
   private function startsTopStmt()
@@ -119,7 +120,7 @@ class TokenReader extends Parser
   private function isCase()
   {
     return $this->is(Tag::T_CASE)
-      || $this->is(Tag::T_ELSE);
+        || $this->is(Tag::T_ELSE);
   }
 
   private function isEOF()
@@ -207,6 +208,7 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_WHILE))   return $this->_while();
     if ($this->is(Tag::T_FOREACH)) return $this->_foreach();
     if ($this->is(Tag::T_SWITCH))  return $this->_switch();
+    if ($this->is(Tag::T_TRY))     return $this->_try();
   }
 
   private function _module()
@@ -510,6 +512,45 @@ class TokenReader extends Parser
       'implements' => $implements,
       'body'       => $body
     ];
+  }
+
+  private function _try()
+  {
+    $this->match(Tag::T_TRY);
+    $try = $this->_innerStmt();
+    $rescues = iterator_to_array($this->_rescues());
+    $finally = NULL;
+    if ($this->is(Tag::T_FINALLY)) {
+      $finally = $this->_finally();
+    }
+
+    // TODO: Use objects to store'em
+    return [
+      'try'     => $try,
+      'rescue'  => $rescues,
+      'finally' => $finally
+    ];
+  }
+
+  private function _rescues()
+  {
+    while ($this->is(Tag::T_RESCUE)) {
+      $this->match(Tag::T_RESCUE);
+      // TODO: Implement name as type
+      $var_name = $this->identifier();
+      $body = $this->_innerStmt();
+
+      yield [
+        'variable' => $var_name,
+        'body'     => $body
+      ];
+    }
+  }
+
+  private function _finally()
+  {
+    $this->match(Tag::T_FINALLY);
+    return $this->_innerStmt();
   }
 
   private function _switch()

@@ -40,19 +40,11 @@ use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
 
-  switch 0x1 [
-    case 0x2 [
+  try print 1
+  rescue e [
 
-    ]
-
-    case 0x3 [
-
-    ]
-
-    else [
-
-    ]
   ]
+
 
 SRC
 );

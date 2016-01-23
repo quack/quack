@@ -9,7 +9,7 @@ use \UranoCompiler\Lexer\Token;
 define('BEGIN_ORANGE', "\033[01;31m");
 define('END_ORANGE', "\033[0m");
 
-define('BEGIN_GREEN', "\033[01;32m");
+define('BEGIN_GREEN', "\033[01;33m");
 define('END_GREEN', "\033[0m");
 
 define('BEGIN_BG_RED', "\033[01;41m");
