@@ -40,10 +40,7 @@ use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
 
-  try print 1
-  rescue e [
-
-  ]
+  1 + 2 * 3;
 
 
 SRC

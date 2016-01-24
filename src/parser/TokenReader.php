@@ -78,7 +78,8 @@ class TokenReader extends Parser
         || $this->is(Tag::T_WHILE)
         || $this->is(Tag::T_FOREACH)
         || $this->is(Tag::T_SWITCH)
-        || $this->is(Tag::T_TRY);
+        || $this->is(Tag::T_TRY)
+        || $this->startsExpr();
   }
 
   private function startsTopStmt()
@@ -86,6 +87,12 @@ class TokenReader extends Parser
     return $this->startsStmt()
         || $this->is(Tag::T_DEF)
         || $this->startsClass();
+  }
+
+  private function startsExpr()
+  {
+    return $this->is(Tag::T_INTEGER)
+        || $this->is(Tag::T_DOUBLE);
   }
 
   private function startsParameter()
@@ -173,8 +180,7 @@ class TokenReader extends Parser
 
   private function _topStmt()
   {
-    if ($this->startsStmt()) return $this->_stmt();
-
+    if ($this->startsStmt())   return $this->_stmt();
     if ($this->is(Tag::T_DEF)) return $this->_def();
     if ($this->startsClass())  return $this->_class();
   }
@@ -182,7 +188,6 @@ class TokenReader extends Parser
   private function _innerStmt()
   {
     if ($this->startsStmt()) return $this->_stmt();
-
     if ($this->is(Tag::T_DEF)) return $this->_def();
 
     throw (new SyntaxError)
@@ -209,6 +214,11 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_FOREACH)) return $this->_foreach();
     if ($this->is(Tag::T_SWITCH))  return $this->_switch();
     if ($this->is(Tag::T_TRY))     return $this->_try();
+    if ($this->startsExpr())       {
+      $expr = $this->_expr();
+      $this->match(';');
+      return $expr;
+    }
   }
 
   private function _module()
@@ -598,6 +608,30 @@ class TokenReader extends Parser
 
   private function _expr()
   {
-    return new Expr($this->resolveScope($this->match(Tag::T_INTEGER)));
+    $x = $this->_term();
+    $xs = [];
+    while ($this->is('+')) {
+      $this->match('+');
+      $xs[] = $this->_term();
+    }
+
+    return new Expr(['term', $x, $xs]);
+  }
+
+  private function _term()
+  {
+    $x = $this->_factor();
+    $xs = [];
+    while ($this->is('*')) {
+      $this->match('*');
+      $xs[] = $this->_factor();
+    }
+
+    return new Expr(['factor', $x, $xs]);
+  }
+
+  private function _factor()
+  {
+    return $this->resolveScope($this->match(Tag::T_INTEGER));
   }
 }
