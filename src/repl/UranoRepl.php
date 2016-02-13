@@ -6,7 +6,8 @@ use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
-function start_repl() {
+function start_repl()
+{
   echo "Urano 0.1 · Use urano --help for more information", PHP_EOL;
 
   if (args_have('-h', '--help')) {
@@ -17,7 +18,8 @@ function start_repl() {
   repl();
 }
 
-function repl() {
+function repl()
+{
   echo "Type ^C or :quit to leave", PHP_EOL;
 
   while (true) {
@@ -33,7 +35,7 @@ function repl() {
 
     try {
       $parser->parse();
-      
+
       if (args_have('-a', '--ast')) {
         $parser->dumpAst();
       }
@@ -43,11 +45,13 @@ function repl() {
   }
 }
 
-function open_repl_help() {
+function open_repl_help()
+{
   // TODO
 }
 
-function args_have() {
+function args_have()
+{
   global $argv;
   return count(array_intersect($argv, func_get_args())) > 0;
 }
