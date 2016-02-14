@@ -33,10 +33,10 @@ require_once '../parser/Parser.php';
 require_once '../parser/SyntaxError.php';
 require_once '../parser/TokenReader.php';
 
+use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
-
 
 $lexer = new Tokenizer(<<<SRC
 

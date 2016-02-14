@@ -49,7 +49,6 @@ class Tag
   const T_TYPE = 505;
   const T_ENUM = 506;
   const T_WITH = 507;
-
   const T_CONTINUE = 508;
   const T_SWITCH = 509;
   const T_BREAK = 510;
@@ -59,7 +58,6 @@ class Tag
   const T_INSTANCEOF = 514;
   const T_EXTENSION = 800;
   const T_PRINT = 801;
-
   const T_TRY = 515;
   const T_RESCUE = 516;
   const T_FINALLY = 517;
@@ -76,7 +74,6 @@ class Tag
   const T_OUT = 528;
   const T_DERIVING = 529;
   const T_LETF = 530;
-
   const T_TYPE_INT = 285;
   const T_TYPE_STRING = 286;
   const T_TYPE_BOOL = 287;
@@ -84,6 +81,127 @@ class Tag
   const T_TYPE_RESOURCE = 289;
   const T_TYPE_OBJECT = 290;
   const T_TYPE_DOUBLE = 291;
+  const T_MOD = 292;
+  const T_NOT = 293;
+
+  /* Operators */
+
+  # <
+  const T_LESSER              = 1000; # <
+  const T_RETURN              = 1001; # <<<
+  const T_BITWISE_SHIFT_LEFT  = 1002; # <<
+  const T_DIFFERENT           = 1003; # <>
+  const T_LESSER_OR_EQUAL     = 1004; # <=
+
+  # >
+  const T_GREATER             = 1005; # >
+  const T_ECHO                = 1006; # >>>
+  const T_GREATER_OR_EQUAL    = 1007; # >=
+  const T_BITWISE_SHIFT_RIGHT = 1008; # >>>
+
+  # :
+  const T_COLON               = 1009; # :
+  const T_ASSIGN              = 1010; # :-
+
+  # -
+  const T_PLUS                = 1011; # +
+  const T_CONCAT_LIST         = 1012; # +++
+  const T_CONCAT              = 1013; # ++
+
+  # *
+  const T_STAR                = 1014; # *
+  const T_POW                 = 1015; # **
+
+  # =
+  const T_EQUAL               = 1016; # =
+  const T_REGEX_EQUAL         = 1017; # =~
+
+  # |
+  const T_BITWISE_OR          = 1018; # |
+  const T_PIPELINE            = 1019; # |>
+
+  # ^
+  const T_CIRCUNFLEX          = 1020; # ^
+  const T_CLONE               = 1021; # ^^
+
+  # &
+  const T_BITWISE_AND         = 1022; # &
+  const T_PARAMETERLESS_FN    = 1023; # &{ expr }
+  const T_PARTIAL_FN          = 1024; # &( op expr )
+
+  # .
+  const T_DOT                 = 1025; # .
+  const T_ELLIPSIS            = 1026; # ...
+
+  # ?
+  const T_SIMPLE_IF           = 1027; # ?
+  const T_SIMPLE_TERNARY      = 1028; # ?:
+  const T_NULL_COALESCENCE    = 1029; # ??
+
+  # Single char operators
+  const T_NEW                 = 1030; # #
+  const T_AT                  = 1031; # @
+  const T_BANG                = 1032; # !
+  const T_MINUS               = 1033; # -
+  # @{link T_INSTANCEOF}
+  # @{link T_AND}
+  # @{link T_OR}
+  # @{link T_XOR}
+  # @{link T_NOT}
+  # @{link T_MOD}
+
+  static function getPunctuator($tag_code) {
+    $op_table = Tag::getOpTable();
+
+    return array_key_exists($tag_code, $op_table)
+      ? $op_table[$tag_code]
+      : null;
+  }
+
+  static function getOpTable() {
+    return [
+      Tag::T_LESSER              => '<',
+      Tag::T_RETURN              => '<<<',
+      Tag::T_BITWISE_SHIFT_LEFT  => '<<',
+      Tag::T_DIFFERENT           => '<>',
+      Tag::T_LESSER_OR_EQUAL     => '<=',
+      Tag::T_GREATER             => '>',
+      Tag::T_ECHO                => '>>>',
+      Tag::T_GREATER_OR_EQUAL    => '>=',
+      Tag::T_BITWISE_SHIFT_RIGHT => '>>',
+      Tag::T_COLON               => ':',
+      Tag::T_ASSIGN              => ':-',
+      Tag::T_PLUS                => '+',
+      Tag::T_CONCAT_LIST         => '+++',
+      Tag::T_CONCAT              => '++',
+      Tag::T_STAR                => '*',
+      Tag::T_POW                 => '**',
+      Tag::T_EQUAL               => '=',
+      Tag::T_REGEX_EQUAL         => '=~',
+      Tag::T_BITWISE_OR          => '|',
+      Tag::T_PIPELINE            => '|>',
+      Tag::T_CIRCUNFLEX          => '^',
+      Tag::T_CLONE               => '^^',
+      Tag::T_BITWISE_AND         => '&',
+      Tag::T_PARAMETERLESS_FN    => '&{ statements }',
+      Tag::T_PARTIAL_FN          => '&( binary_operator expression }',
+      Tag::T_DOT                 => '.',
+      Tag::T_ELLIPSIS            => '...',
+      Tag::T_SIMPLE_IF           => '?',
+      Tag::T_SIMPLE_TERNARY      => '?:',
+      Tag::T_NULL_COALESCENCE    => '??',
+      Tag::T_NEW                 => 'new',
+      Tag::T_AT                  => '@',
+      Tag::T_BANG                => '!',
+      Tag::T_MINUS               => '-',
+      Tag::T_INSTANCEOF          => 'instanceof',
+      Tag::T_AND                 => 'and',
+      Tag::T_OR                  => 'or',
+      Tag::T_XOR                 => 'xor',
+      Tag::T_NOT                 => 'not',
+      Tag::T_MOD                 => 'mod'
+    ];
+  }
 
   static function getName($x)
   {
