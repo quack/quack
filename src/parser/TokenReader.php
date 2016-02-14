@@ -92,7 +92,8 @@ class TokenReader extends Parser
   private function startsExpr()
   {
     return $this->is(Tag::T_INTEGER)
-        || $this->is(Tag::T_DOUBLE);
+        || $this->is(Tag::T_DOUBLE)
+        || $this->isOperator();
   }
 
   private function startsParameter()
@@ -580,8 +581,6 @@ class TokenReader extends Parser
 
   private function _cases()
   {
-    var_dump($this->isCase());
-
     while ($this->isCase()) {
       if ($this->is(Tag::T_CASE)) {
         $this->match(Tag::T_CASE);
@@ -606,32 +605,19 @@ class TokenReader extends Parser
     }
   }
 
-  private function _expr()
+  public function _expr()
   {
-    $x = $this->_term();
-    $xs = [];
-    while ($this->is('+')) {
-      $this->match('+');
-      $xs[] = $this->_term();
+    $token = $this->consumeAndFetch();
+    $prefix_operator = $this->prefixParseletForToken($token);
+
+    if ($prefix_operator == NULL) {
+      throw (new SyntaxError)
+        -> expected ('expression')
+        -> found    ($token)
+        -> on       ($this->position())
+        -> source   ($this->input);
     }
 
-    return new Expr(['term', $x, $xs]);
-  }
-
-  private function _term()
-  {
-    $x = $this->_factor();
-    $xs = [];
-    while ($this->is('*')) {
-      $this->match('*');
-      $xs[] = $this->_factor();
-    }
-
-    return new Expr(['factor', $x, $xs]);
-  }
-
-  private function _factor()
-  {
-    return $this->resolveScope($this->match(Tag::T_INTEGER));
+    return $prefix_operator->parse($this, $token);
   }
 }

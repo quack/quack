@@ -29,6 +29,16 @@ require_once '../ast/RaiseStmt.php';
 require_once '../ast/ReturnStmt.php';
 require_once '../ast/WhileStmt.php';
 
+require_once '../ast/PrefixExpression.php';
+
+
+require_once '../parselets/IPrefixParselet.php';
+require_once '../parselets/IInfixParselet.php';
+
+require_once '../parselets/NumberParselet.php';
+
+require_once '../parselets/PrefixOperatorParselet.php';
+
 require_once '../parser/Parser.php';
 require_once '../parser/SyntaxError.php';
 require_once '../parser/TokenReader.php';
@@ -39,10 +49,7 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-
-  1 + 2 * 3;
-
-
+  +50; -0xFF;
 SRC
 );
 $parser = new TokenReader($lexer);
