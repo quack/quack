@@ -143,6 +143,7 @@ class Tag
   const T_AT                  = 1031; # @
   const T_BANG                = 1032; # !
   const T_MINUS               = 1033; # -
+  const T_BITWISE_NOT         = 1034; # ~
   # @{link T_INSTANCEOF}
   # @{link T_AND}
   # @{link T_OR}
@@ -194,6 +195,7 @@ class Tag
       Tag::T_AT                  => '@',
       Tag::T_BANG                => '!',
       Tag::T_MINUS               => '-',
+      Tag::T_BITWISE_NOT         => '~',
       Tag::T_INSTANCEOF          => 'instanceof',
       Tag::T_AND                 => 'and',
       Tag::T_OR                  => 'or',
