@@ -48,6 +48,7 @@ import(AST, 'stmt/DefStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/GlobalStmt');
+import(AST, 'stmt/GotoStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/ModuleStmt');

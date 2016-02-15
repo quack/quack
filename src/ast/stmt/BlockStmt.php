@@ -15,17 +15,19 @@ class BlockStmt implements Stmt
 
   public function format(Parser $parser)
   {
-    $string_builder = ['['];
-
-    if (sizeof($this->stmt_list) > 0) {
-      $string_builder[] = "\n";
+    if (sizeof($this->stmt_list) == 0) {
+      return "[]\n";
     }
+
+    $string_builder = ["[\n"];
+    $parser->openScope();
 
     foreach ($this->stmt_list as $stmt) {
-      $string_builder[] = $parser->indent();
-      $string_builder[] = $stmt->format($parser);
+      $string_builder[] = $parser->indent() . $stmt->format($parser);
     }
 
+    $string_builder[] = $parser->dedent();
+    $parser->closeScope();
     $string_builder[] = "]\n";
     return implode($string_builder);
   }

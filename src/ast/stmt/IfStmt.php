@@ -2,6 +2,7 @@
 
 namespace UranoCompiler\Ast\Stmt;
 
+use \UranoCompiler\Ast\Stmt\BlockStmt;
 use \UranoCompiler\Parser\Parser;
 
 class IfStmt implements Stmt
@@ -21,6 +22,19 @@ class IfStmt implements Stmt
 
   public function format(Parser $parser)
   {
-    return 'TODO';
+    $is_simple = !($this->body instanceof BlockStmt);
+    $string_builder = ['if '];
+    $string_builder[] = $this->condition->format($parser);
+    $string_builder[] = ' ';
+
+    if ($is_simple) {
+      $string_builder[] = "\n";
+      $parser->openScope();
+      $string_builder[] = $parser->indent();
+      $parser->closeScope();
+    }
+
+    $string_builder[] = $this->body->format($parser);
+    return implode($string_builder);
   }
 }

@@ -128,7 +128,11 @@ abstract class Parser
 
   public function indent()
   {
-    var_dump($this->scope_level);
     return str_repeat('  ', $this->scope_level);
+  }
+
+  public function dedent()
+  {
+    return str_repeat('  ', $this->scope_level > 0 ? $this->scope_level - 1 : 0);
   }
 }

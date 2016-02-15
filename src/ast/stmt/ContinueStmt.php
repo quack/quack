@@ -20,8 +20,9 @@ class ContinueStmt implements Stmt
     if (!is_null($this->label)) {
       $string_builder[] = ' ';
       $string_builder[] = $this->label->format($parser);
-      $string_builder[] = PHP_EOL;
     }
+
+    $string_builder[] = PHP_EOL;
 
     return implode($string_builder);
   }
