@@ -151,14 +151,6 @@ class Tag
   # @{link T_NOT}
   # @{link T_MOD}
 
-  static function getPunctuator($tag_code) {
-    $op_table = Tag::getOpTable();
-
-    return array_key_exists($tag_code, $op_table)
-      ? $op_table[$tag_code]
-      : null;
-  }
-
   static function getOpTable() {
     return [
       Tag::T_LESSER              => '<',
@@ -196,12 +188,12 @@ class Tag
       Tag::T_BANG                => '!',
       Tag::T_MINUS               => '-',
       Tag::T_BITWISE_NOT         => '~',
-      Tag::T_INSTANCEOF          => 'instanceof',
-      Tag::T_AND                 => 'and',
-      Tag::T_OR                  => 'or',
-      Tag::T_XOR                 => 'xor',
-      Tag::T_NOT                 => 'not',
-      Tag::T_MOD                 => 'mod'
+      Tag::T_INSTANCEOF          => Tag::T_INSTANCEOF,
+      Tag::T_AND                 => Tag::T_AND,
+      Tag::T_OR                  => Tag::T_OR,
+      Tag::T_XOR                 => Tag::T_XOR,
+      Tag::T_NOT                 => Tag::T_NOT,
+      Tag::T_MOD                 => Tag::T_MOD
     ];
   }
 

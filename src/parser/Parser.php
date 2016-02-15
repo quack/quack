@@ -31,6 +31,12 @@ abstract class Parser
     $this->register(Tag::T_DOUBLE, new NumberParselet);
     $this->prefix('+');
     $this->prefix('-');
+    $this->prefix('^^');
+    $this->prefix('*');
+    $this->prefix('#');
+    $this->prefix('@');
+    $this->prefix('~');
+    $this->prefix(Tag::T_NOT);
   }
 
   public function match($tag)

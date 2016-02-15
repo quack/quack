@@ -49,9 +49,10 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-  +50; -0xFF;
+  not not -+~*10;
 SRC
 );
+
 $parser = new TokenReader($lexer);
 
 try {
