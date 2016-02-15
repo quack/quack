@@ -1,47 +1,6 @@
 <?php
 
-require_once '../lexer/Lexer.php';
-require_once '../lexer/Tag.php';
-require_once '../lexer/Token.php';
-require_once '../lexer/Word.php';
-require_once '../lexer/Tokenizer.php';
-require_once '../lexer/SymbolTable.php';
-require_once '../lexer/SymbolDecypher.php';
-
-require_once '../ast/Node.php';
-
-require_once '../ast/Stmt.php';
-
-require_once '../ast/BlockStmt.php';
-require_once '../ast/BreakStmt.php';
-require_once '../ast/ContinueStmt.php';
-require_once '../ast/Expr.php';
-require_once '../ast/ForeachStmt.php';
-require_once '../ast/FunctionDecl.php';
-require_once '../ast/GlobalStmt.php';
-require_once '../ast/GotoStmt.php';
-require_once '../ast/IfStmt.php';
-require_once '../ast/LabelStmt.php';
-require_once '../ast/ModuleStmt.php';
-require_once '../ast/NumberExpression.php';
-require_once '../ast/OpenStmt.php';
-require_once '../ast/PrintStmt.php';
-require_once '../ast/RaiseStmt.php';
-require_once '../ast/ReturnStmt.php';
-require_once '../ast/WhileStmt.php';
-
-require_once '../ast/PrefixExpression.php';
-
-require_once '../parselets/IPrefixParselet.php';
-require_once '../parselets/IInfixParselet.php';
-
-require_once '../parselets/NumberParselet.php';
-
-require_once '../parselets/PrefixOperatorParselet.php';
-
-require_once '../parser/Parser.php';
-require_once '../parser/SyntaxError.php';
-require_once '../parser/TokenReader.php';
+require_once '../toolkit/UranoToolkit.php';
 
 use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
@@ -49,8 +8,16 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-  not 10; ~13;
-  -132; +-12;
+:- label [] [ print 1 print 0xFF 12; <<< not 12] break 10 break break 10
+
+continue 12 continue 0xFFFFFF
+
+def name! 1;
+
+def *   name [...
+*ref;*symbol;    test] [
+  print 12
+]
 SRC
 );
 
@@ -59,8 +26,6 @@ $parser = new TokenReader($lexer);
 try {
   $parser->parse();
   $parser->format();
-  // $query = "google-chrome \"http://mshang.ca/syntree/?i=" . $parser->guiAst() . "\"";
-  //`$query`;
 } catch (SyntaxError $e) {
   echo $e;
 }

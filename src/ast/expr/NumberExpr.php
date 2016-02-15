@@ -1,10 +1,10 @@
 <?php
 
-namespace UranoCompiler\Ast;
+namespace UranoCompiler\Ast\Expr;
 
 use \UranoCompiler\Parser\Parser;
 
-class NumberExpression extends Expr
+class NumberExpr implements Expr
 {
   private $token;
 

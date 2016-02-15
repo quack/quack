@@ -2,12 +2,9 @@
 
 namespace UranoCompiler\Ast;
 
-class Node
-{
-  public $value;
+use \UranoCompiler\Parser\Parser;
 
-  public function __construct($value)
-  {
-    $this->value = $value;
-  }
+interface Node
+{
+  function format(Parser $parser);
 }

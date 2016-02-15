@@ -7,22 +7,24 @@ use \Exception;
 use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Tokenizer;
 
-use \UranoCompiler\Ast\BlockStmt;
-use \UranoCompiler\Ast\BreakStmt;
-use \UranoCompiler\Ast\ContinueStmt;
-use \UranoCompiler\Ast\Expr;
-use \UranoCompiler\Ast\ForeachStmt;
-use \UranoCompiler\Ast\FunctionDecl;
-use \UranoCompiler\Ast\GlobalStmt;
-use \UranoCompiler\Ast\GotoStmt;
-use \UranoCompiler\Ast\IfStmt;
-use \UranoCompiler\Ast\LabelStmt;
-use \UranoCompiler\Ast\ModuleStmt;
-use \UranoCompiler\Ast\OpenStmt;
-use \UranoCompiler\Ast\PrintStmt;
-use \UranoCompiler\Ast\RaiseStmt;
-use \UranoCompiler\Ast\ReturnStmt;
-use \UranoCompiler\Ast\WhileStmt;
+use \UranoCompiler\Ast\Stmt\BlockStmt;
+use \UranoCompiler\Ast\Stmt\BreakStmt;
+use \UranoCompiler\Ast\Stmt\ContinueStmt;
+use \UranoCompiler\Ast\Stmt\DefStmt;
+use \UranoCompiler\Ast\Stmt\ExprStmt;
+use \UranoCompiler\Ast\Stmt\ForeachStmt;
+use \UranoCompiler\Ast\Stmt\GlobalStmt;
+use \UranoCompiler\Ast\Stmt\GotoStmt;
+use \UranoCompiler\Ast\Stmt\IfStmt;
+use \UranoCompiler\Ast\Stmt\LabelStmt;
+use \UranoCompiler\Ast\Stmt\ModuleStmt;
+use \UranoCompiler\Ast\Stmt\OpenStmt;
+use \UranoCompiler\Ast\Stmt\PrintStmt;
+use \UranoCompiler\Ast\Stmt\RaiseStmt;
+use \UranoCompiler\Ast\Stmt\ReturnStmt;
+use \UranoCompiler\Ast\Stmt\WhileStmt;
+
+use \UranoCompiler\Ast\Helper\Param;
 
 class TokenReader extends Parser
 {
@@ -42,25 +44,8 @@ class TokenReader extends Parser
   public function format()
   {
     foreach ($this->ast as $stmt) {
-      echo $stmt->format($this) . PHP_EOL;
+      echo $stmt->format($this);
     }
-  }
-
-  public function guiAst($tree = NULL)
-  {
-    $starts = $tree === NULL;
-    $tree = $tree ?: $this->ast;
-
-    if ($starts) {
-      $buffer = ["[Program "];
-      foreach ($this->ast as $stmt) {
-        $buffer[] = $this->guiAst($stmt);
-      }
-      $buffer[] = "]";
-      return implode($buffer);
-    }
-
-    return "[" . get_class($tree) . "]";
   }
 
   public function parse()
@@ -79,6 +64,7 @@ class TokenReader extends Parser
         || $this->is(Tag::T_IF)
         || $this->is('[')
         || $this->is(Tag::T_BREAK)
+        || $this->is(Tag::T_CONTINUE)
         || $this->is('<<<')
         || $this->is(Tag::T_PRINT)
         || $this->is(Tag::T_RAISE)
@@ -207,25 +193,26 @@ class TokenReader extends Parser
 
   private function _stmt()
   {
-    if ($this->is(Tag::T_MODULE))  return $this->_module();
-    if ($this->is(Tag::T_OPEN))    return $this->_open();
-    if ($this->is(':-'))           return $this->_label();
-    if ($this->is(Tag::T_GOTO))    return $this->_goto();
-    if ($this->is(Tag::T_GLOBAL))  return $this->_global();
-    if ($this->is(Tag::T_IF))      return $this->_if();
-    if ($this->is('['))            return $this->_blockStmt();
-    if ($this->is(Tag::T_BREAK))   return $this->_break();
-    if ($this->is('<<<'))          return $this->_return();
-    if ($this->is(Tag::T_PRINT))   return $this->_print();
-    if ($this->is(Tag::T_RAISE))   return $this->_raise();
-    if ($this->is(Tag::T_WHILE))   return $this->_while();
-    if ($this->is(Tag::T_FOREACH)) return $this->_foreach();
-    if ($this->is(Tag::T_SWITCH))  return $this->_switch();
-    if ($this->is(Tag::T_TRY))     return $this->_try();
+    if ($this->is(Tag::T_MODULE))   return $this->_module();
+    if ($this->is(Tag::T_OPEN))     return $this->_open();
+    if ($this->is(':-'))            return $this->_label();
+    if ($this->is(Tag::T_GOTO))     return $this->_goto();
+    if ($this->is(Tag::T_GLOBAL))   return $this->_global();
+    if ($this->is(Tag::T_IF))       return $this->_if();
+    if ($this->is('['))             return $this->_blockStmt();
+    if ($this->is(Tag::T_BREAK))    return $this->_break();
+    if ($this->is(Tag::T_CONTINUE)) return $this->_continue();
+    if ($this->is('<<<'))           return $this->_return();
+    if ($this->is(Tag::T_PRINT))    return $this->_print();
+    if ($this->is(Tag::T_RAISE))    return $this->_raise();
+    if ($this->is(Tag::T_WHILE))    return $this->_while();
+    if ($this->is(Tag::T_FOREACH))  return $this->_foreach();
+    if ($this->is(Tag::T_SWITCH))   return $this->_switch();
+    if ($this->is(Tag::T_TRY))      return $this->_try();
     if ($this->startsExpr())       {
       $expr = $this->_expr();
       $this->match(';');
-      return $expr;
+      return new ExprStmt($expr);
     }
   }
 
@@ -316,7 +303,7 @@ class TokenReader extends Parser
 
     $this->match('[');
     while ($this->startsStmt()) {
-      $body[] = $this->_topStmt();
+      $body[] = $this->_stmt();
     }
     $this->match(']');
 
@@ -325,15 +312,38 @@ class TokenReader extends Parser
 
   private function _break()
   {
-    // TODO: Implement optional expression on BREAK, CONTINUE, RETURN
     $this->match(Tag::T_BREAK);
-    return new BreakStmt(NULL);
+    $expression = NULL;
+
+    if ($this->startsExpr()) {
+      $expression = $this->_expr();
+    }
+
+    return new BreakStmt($expression);
+  }
+
+  private function _continue()
+  {
+    $this->match(Tag::T_CONTINUE);
+    $expression = NULL;
+
+    if ($this->startsExpr()) {
+      $expression = $this->_expr();
+    }
+
+    return new ContinueStmt($expression);
   }
 
   private function _return()
   {
     $this->match('<<<');
-    return new ReturnStmt(NULL);
+    $expression = NULL;
+
+    if ($this->startsExpr()) {
+      $expression = $this->_expr();
+    }
+
+    return new ReturnStmt($expression);
   }
 
   private function _print()
@@ -352,7 +362,7 @@ class TokenReader extends Parser
   {
     $this->match(Tag::T_WHILE);
     $condition = $this->_expr();
-    $body = $this->_topStmt();
+    $body = $this->_stmt();
 
     return new WhileStmt($condition, $body);
   }
@@ -370,7 +380,7 @@ class TokenReader extends Parser
     $alias = $this->identifier();
     $this->match(Tag::T_IN);
     $generator = $this->_expr();
-    $body = $this->_topStmt();
+    $body = $this->_stmt();
 
     return new ForeachStmt($by_ref, $alias, $generator, $body);
   }
@@ -387,10 +397,7 @@ class TokenReader extends Parser
     $parameters = $this->_parameters();
     $body = $this->_innerStmt();
 
-    return (new FunctionDecl($name))
-      -> byRef      ($by_ref)
-      -> body       ($body)
-      -> parameters ($parameters);
+    return new DefStmt($name, $by_ref, $body, $parameters);
   }
 
   private function _classStmt()
@@ -418,10 +425,7 @@ class TokenReader extends Parser
     $body = $this->startsStmt() ? $this->_innerStmt() : NULL;
 
     // TODO: Return method declaration with modifiers
-    return (new FunctionDecl($name))
-      -> byRef      ($by_ref)
-      -> body       ($body)
-      -> parameters ($parameters);
+    return new DefStmt($name, $by_ref, $body, $parameters);
   }
 
   private function _optMethodModifiers()
@@ -474,11 +478,7 @@ class TokenReader extends Parser
 
     $name = $this->resolveScope($this->match(Tag::T_IDENT));
 
-    return [
-      "ellipsis" => $ellipsis,
-      "by_ref"   => $by_ref,
-      "name"     => $name
-    ];
+    return new Param($name, $by_ref, $ellipsis);
   }
 
   private function _class()
