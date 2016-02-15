@@ -87,7 +87,7 @@ abstract class Parser
     return $clone;
   }
 
-  protected function resolveScope($pointer)
+  public function resolveScope($pointer)
   {
     return $this->input->getSymbolTable()->get($pointer);
   }

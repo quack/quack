@@ -2,7 +2,9 @@
 
 namespace UranoCompiler\Ast;
 
+use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Token;
+use \UranoCompiler\Parser\Parser;
 
 class PrefixExpression extends Expr
 {
@@ -13,5 +15,10 @@ class PrefixExpression extends Expr
   {
     $this->operator = $operator->getTag();
     $this->right = $right;
+  }
+
+  public function format(Parser $parser)
+  {
+    return Tag::getPunctuator($this->operator) . ' ' . $this->right->format($parser);
   }
 }

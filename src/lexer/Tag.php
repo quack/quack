@@ -151,6 +151,34 @@ class Tag
   # @{link T_NOT}
   # @{link T_MOD}
 
+  static function getPunctuator($code)
+  {
+    $op_table = static::getOpTable();
+
+    if (in_array($code, $op_table, true)) {
+      if (is_string($code)) {
+        return $code;
+      }
+
+      switch ($code) {
+        case Tag::T_INSTANCEOF:
+          return 'instanceof';
+        case Tag::T_AND:
+          return 'and';
+        case Tag::T_OR:
+          return 'or';
+        case Tag::T_XOR:
+          return 'xor';
+        case Tag::T_NOT:
+          return 'not';
+        case Tag::T_MOD:
+          return 'mod';
+      }
+    }
+
+    return NULL;
+  }
+
   static function getOpTable() {
     return [
       Tag::T_LESSER              => '<',
@@ -176,8 +204,8 @@ class Tag
       Tag::T_CIRCUNFLEX          => '^',
       Tag::T_CLONE               => '^^',
       Tag::T_BITWISE_AND         => '&',
-      Tag::T_PARAMETERLESS_FN    => '&{ statements }',
-      Tag::T_PARTIAL_FN          => '&( binary_operator expression }',
+      Tag::T_PARAMETERLESS_FN    => '&{',
+      Tag::T_PARTIAL_FN          => '&(',
       Tag::T_DOT                 => '.',
       Tag::T_ELLIPSIS            => '...',
       Tag::T_SIMPLE_IF           => '?',

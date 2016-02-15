@@ -23,6 +23,7 @@ require_once '../ast/GotoStmt.php';
 require_once '../ast/IfStmt.php';
 require_once '../ast/LabelStmt.php';
 require_once '../ast/ModuleStmt.php';
+require_once '../ast/NumberExpression.php';
 require_once '../ast/OpenStmt.php';
 require_once '../ast/PrintStmt.php';
 require_once '../ast/RaiseStmt.php';
@@ -30,7 +31,6 @@ require_once '../ast/ReturnStmt.php';
 require_once '../ast/WhileStmt.php';
 
 require_once '../ast/PrefixExpression.php';
-
 
 require_once '../parselets/IPrefixParselet.php';
 require_once '../parselets/IInfixParselet.php';
@@ -49,7 +49,8 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-  not not -+~*10;
+  not 10; ~13;
+  -132; +-12;
 SRC
 );
 
@@ -57,7 +58,7 @@ $parser = new TokenReader($lexer);
 
 try {
   $parser->parse();
-  $parser->dumpAst();
+  $parser->format();
   // $query = "google-chrome \"http://mshang.ca/syntree/?i=" . $parser->guiAst() . "\"";
   //`$query`;
 } catch (SyntaxError $e) {

@@ -39,6 +39,13 @@ class TokenReader extends Parser
     var_dump($this->ast);
   }
 
+  public function format()
+  {
+    foreach ($this->ast as $stmt) {
+      echo $stmt->format($this) . PHP_EOL;
+    }
+  }
+
   public function guiAst($tree = NULL)
   {
     $starts = $tree === NULL;
