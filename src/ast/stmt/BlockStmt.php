@@ -22,7 +22,7 @@ class BlockStmt implements Stmt
     }
 
     foreach ($this->stmt_list as $stmt) {
-      $string_builder[] = '  ';
+      $string_builder[] = $parser->indent();
       $string_builder[] = $stmt->format($parser);
     }
 

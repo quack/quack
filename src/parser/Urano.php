@@ -8,16 +8,13 @@ use \UranoCompiler\Parser\SyntaxError;
 use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-:- label [] [ print 1 print 0xFF 12; <<< not 12] break 10 break break 10
-
-continue 12 continue 0xFFFFFF
-
-def name! 1;
-
-def *   name [...
-*ref;*symbol;    test] [
-  print 12
-]
+  while 1 [
+    while 2 [
+      while 3 [
+        print 4
+      ]
+    ]
+  ]
 SRC
 );
 

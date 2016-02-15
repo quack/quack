@@ -2,6 +2,7 @@
 
 namespace UranoCompiler\Ast\Stmt;
 
+use \UranoCompiler\Ast\Util;
 use \UranoCompiler\Parser\Parser;
 
 class ForeachStmt implements Stmt

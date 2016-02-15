@@ -360,11 +360,16 @@ class TokenReader extends Parser
 
   private function _while()
   {
+    $this->openScope();
+
     $this->match(Tag::T_WHILE);
     $condition = $this->_expr();
     $body = $this->_stmt();
 
-    return new WhileStmt($condition, $body);
+    $result = new WhileStmt($condition, $body);
+
+    $this->closeScope();
+    return $result;
   }
 
   private function _foreach()

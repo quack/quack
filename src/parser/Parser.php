@@ -15,6 +15,7 @@ abstract class Parser
 {
   public $input;
   public $lookahead;
+  public $scope_level = 0;
 
   protected $prefix_parselets = [];
 
@@ -110,7 +111,24 @@ abstract class Parser
     $this->prefix_parselets[$tag] = $parselet;
   }
 
-  private function prefix($tag) {
+  private function prefix($tag)
+  {
     $this->register($tag, new PrefixOperatorParselet);
+  }
+
+  public function openScope()
+  {
+    $this->scope_level++;
+  }
+
+  public function closeScope()
+  {
+    $this->scope_level--;
+  }
+
+  public function indent()
+  {
+    var_dump($this->scope_level);
+    return str_repeat('  ', $this->scope_level);
   }
 }

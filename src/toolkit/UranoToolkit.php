@@ -33,6 +33,7 @@ import(PARSELETS, 'PrefixOperatorParselet');
 
 /* Ast */
 
+import(AST, 'Util');
 import(AST, 'Node');
 
 import(AST, 'expr/Expr');

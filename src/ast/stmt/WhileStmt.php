@@ -26,7 +26,7 @@ class WhileStmt implements Stmt
     } else {
       $string_builder[] = '[';
       $string_builder[] = PHP_EOL;
-      $string_builder[] = '  ';
+      $string_builder[] = '  '; // TODO
       $string_builder[] = $this->body->format($parser);
       $string_builder[] = ']';
     }

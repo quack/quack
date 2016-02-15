@@ -43,7 +43,6 @@ class DefStmt implements Stmt
     }
 
     $string_builder[] = $this->body->format($parser);
-    $string_builder[] = "";
 
     return implode($string_builder);
   }
