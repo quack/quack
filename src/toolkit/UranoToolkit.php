@@ -30,6 +30,7 @@ import(PARSELETS, 'IInfixParselet');
 import(PARSELETS, 'IPrefixParselet');
 import(PARSELETS, 'NumberParselet');
 import(PARSELETS, 'PrefixOperatorParselet');
+import(PARSELETS, 'BinaryOperatorParselet');
 
 /* Ast */
 
@@ -39,6 +40,7 @@ import(AST, 'Node');
 import(AST, 'expr/Expr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');
+import(AST, 'expr/OperatorExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

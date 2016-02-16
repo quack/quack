@@ -7,6 +7,7 @@ use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Token;
 use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Parselets\IPrefixParselet;
+use \UranoCompiler\Parselets\BinaryOperatorParselet;
 use \UranoCompiler\Parselets\NumberParselet;
 use \UranoCompiler\Parselets\PrefixOperatorParselet;
 use \UranoCompiler\Parser\SyntaxError;
@@ -18,6 +19,7 @@ abstract class Parser
   public $scope_level = 0;
 
   protected $prefix_parselets = [];
+  protected $infix_parselets = [];
 
   public function __construct(Tokenizer $input)
   {
@@ -28,6 +30,8 @@ abstract class Parser
 
   private function registerParselets()
   {
+
+    // Register prefix operators
     $this->register(Tag::T_INTEGER, new NumberParselet);
     $this->register(Tag::T_DOUBLE, new NumberParselet);
     $this->prefix('+');
@@ -38,6 +42,12 @@ abstract class Parser
     $this->prefix('@');
     $this->prefix('~');
     $this->prefix(Tag::T_NOT);
+
+    // Register infix operators
+    $this->infixBinOp('+');
+    $this->infixBinOp('-');
+    $this->infixBinOp('*');
+    $this->infixBinOp('/');
   }
 
   public function match($tag)
@@ -98,6 +108,14 @@ abstract class Parser
     return ["line" => &$this->input->line, "column" => &$this->input->column];
   }
 
+  protected function infixParseletForToken(Token $token)
+  {
+    $key = $token->getTag();
+    return array_key_exists($key, $this->infix_parselets)
+      ? $this->infix_parselets[$key]
+      : NULL;
+  }
+
   protected function prefixParseletForToken(Token $token)
   {
     $key = $token->getTag();
@@ -114,6 +132,11 @@ abstract class Parser
   private function prefix($tag)
   {
     $this->register($tag, new PrefixOperatorParselet);
+  }
+
+  private function infixBinOp($tag)
+  {
+    $this->infix_parselets[$tag] = new BinaryOperatorParselet;
   }
 
   public function openScope()

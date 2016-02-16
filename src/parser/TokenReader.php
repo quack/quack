@@ -624,6 +624,20 @@ class TokenReader extends Parser
         -> source   ($this->input);
     }
 
-    return $prefix_operator->parse($this, $token);
+    $left = $prefix_operator->parse($this, $token);
+    $token = $this->lookahead;
+
+    $infix_operator = $this->infixParseletForToken($token);
+
+    // When we have no infix operator, return the current parser
+    // operand
+    if (is_null($infix_operator)) {
+      return $left;
+    }
+
+    // We have a valid infix operator. Eat it. We have it already
+    // stored on $token
+    $this->consume();
+    return $infix_operator->parse($this, $left, $token);
   }
 }
