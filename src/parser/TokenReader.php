@@ -86,7 +86,8 @@ class TokenReader extends Parser
   {
     return $this->is(Tag::T_INTEGER)
         || $this->is(Tag::T_DOUBLE)
-        || $this->isOperator();
+        || $this->isOperator()
+        || $this->is('(');
   }
 
   private function startsParameter()
@@ -611,12 +612,13 @@ class TokenReader extends Parser
     }
   }
 
-  public function _expr()
+  public function _expr($precedence = 0)
   {
     $token = $this->consumeAndFetch();
-    $prefix_operator = $this->prefixParseletForToken($token);
 
-    if ($prefix_operator == NULL) {
+    $prefix = $this->prefixParseletForToken($token);
+
+    if ($prefix == NULL) {
       throw (new SyntaxError)
         -> expected ('expression')
         -> found    ($token)
@@ -624,20 +626,22 @@ class TokenReader extends Parser
         -> source   ($this->input);
     }
 
-    $left = $prefix_operator->parse($this, $token);
-    $token = $this->lookahead;
+    $left = $prefix->parse($this, $token);
 
-    $infix_operator = $this->infixParseletForToken($token);
-
-    // When we have no infix operator, return the current parser
-    // operand
-    if (is_null($infix_operator)) {
-      return $left;
+    while ($precedence < $this->getPrecedence()) {
+      $token = $this->consumeAndFetch();
+      $infix = $this->infixParseletForToken($token);
+      $left = $infix->parse($this, $left, $token);
     }
 
-    // We have a valid infix operator. Eat it. We have it already
-    // stored on $token
-    $this->consume();
-    return $infix_operator->parse($this, $left, $token);
+    return $left;
+  }
+
+  private function getPrecedence()
+  {
+    $parser = $this->infixParseletForToken($this->lookahead);
+    return !is_null($parser)
+      ? $parser->getPrecedence()
+      : 0;
   }
 }

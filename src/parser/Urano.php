@@ -9,9 +9,7 @@ use \UranoCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
 
-  ~+-1;
-
-  +1 + 20;
+  -+*10 + 1;
 SRC
 );
 
@@ -19,7 +17,7 @@ $parser = new TokenReader($lexer);
 
 try {
   $parser->parse();
-  $parser->format();
+  $parser->dumpAst();
 } catch (SyntaxError $e) {
   echo $e;
 }

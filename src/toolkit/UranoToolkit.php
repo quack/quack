@@ -25,12 +25,16 @@ import(LEXER, 'Word');
 import(PARSER, 'Parser');
 import(PARSER, 'SyntaxError');
 import(PARSER, 'TokenReader');
+import(PARSER, 'Precedence');
 
 import(PARSELETS, 'IInfixParselet');
 import(PARSELETS, 'IPrefixParselet');
 import(PARSELETS, 'NumberParselet');
 import(PARSELETS, 'PrefixOperatorParselet');
 import(PARSELETS, 'BinaryOperatorParselet');
+import(PARSELETS, 'PostfixOperatorParselet');
+import(PARSELETS, 'TernaryParselet');
+import(PARSELETS, 'GroupParselet');
 
 /* Ast */
 
@@ -41,6 +45,8 @@ import(AST, 'expr/Expr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
+import(AST, 'expr/PostfixExpr');
+import(AST, 'expr/TernaryExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

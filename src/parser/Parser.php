@@ -7,10 +7,13 @@ use \UranoCompiler\Lexer\Tag;
 use \UranoCompiler\Lexer\Token;
 use \UranoCompiler\Lexer\Tokenizer;
 use \UranoCompiler\Parselets\IPrefixParselet;
+use \UranoCompiler\Parselets\IInfixParselet;
 use \UranoCompiler\Parselets\BinaryOperatorParselet;
 use \UranoCompiler\Parselets\NumberParselet;
+use \UranoCompiler\Parselets\PostfixOperatorParselet;
 use \UranoCompiler\Parselets\PrefixOperatorParselet;
-use \UranoCompiler\Parser\SyntaxError;
+use \UranoCompiler\Parselets\TernaryParselet;
+use \UranoCompiler\Parselets\GroupParselet;
 
 abstract class Parser
 {
@@ -28,26 +31,85 @@ abstract class Parser
     $this->consume();
   }
 
+  private function register($tag, $parselet)
+  {
+    if ($parselet instanceof IPrefixParselet) {
+      $this->prefix_parselets[$tag] = $parselet;
+    } else if ($parselet instanceof IInfixParselet) {
+      $this->infix_parselets[$tag] = $parselet;
+    }
+  }
+
+  private function postfix($tag, $precedence)
+  {
+    $this->register($tag, new PostfixOperatorParselet($precedence));
+  }
+
+  private function prefix($tag, $precedence)
+  {
+    $this->register($tag, new PrefixOperatorParselet($precedence));
+  }
+
+  private function infixLeft($tag, $precedence)
+  {
+    $this->register($tag, new BinaryOperatorParselet($precedence, false));
+  }
+
+  private function infixRight($tag, $precedence)
+  {
+    $this->register($tag, new BinaryOperatorParselet($precedence, true));
+  }
+
   private function registerParselets()
   {
-
-    // Register prefix operators
     $this->register(Tag::T_INTEGER, new NumberParselet);
     $this->register(Tag::T_DOUBLE, new NumberParselet);
-    $this->prefix('+');
-    $this->prefix('-');
-    $this->prefix('^^');
-    $this->prefix('*');
-    $this->prefix('#');
-    $this->prefix('@');
-    $this->prefix('~');
-    $this->prefix(Tag::T_NOT);
+    $this->register('?', new TernaryParselet);
+    $this->register('(', new GroupParselet);
 
-    // Register infix operators
-    $this->infixBinOp('+');
-    $this->infixBinOp('-');
-    $this->infixBinOp('*');
-    $this->infixBinOp('/');
+    $this->prefix('+', Precedence::PREFIX);
+    $this->prefix('-', Precedence::PREFIX);
+    $this->prefix('^^', Precedence::PREFIX);
+    $this->prefix('*', Precedence::PREFIX);
+    $this->prefix('#', Precedence::PREFIX);
+    $this->prefix('@', Precedence::PREFIX);
+    $this->prefix('~', Precedence::PREFIX);
+    $this->prefix(Tag::T_NOT, Precedence::PREFIX);
+
+    $this->postfix('!', Precedence::POSTFIX);
+
+    $this->infixLeft('+', Precedence::ADDITIVE);
+    $this->infixLeft('-', Precedence::ADDITIVE);
+    $this->infixLeft('*', Precedence::MULTIPLICATIVE);
+    $this->infixLeft('/', Precedence::MULTIPLICATIVE);
+
+    $this->infixRight('**', Precedence::EXPONENT);
+
+    // // Register prefix operators
+    // $this->registerPrefix(Tag::T_INTEGER, new NumberParselet);
+    // $this->registerPrefix(Tag::T_DOUBLE, new NumberParselet);
+    // $this->registerPrefix('(', new GroupParselet);
+    // $this->prefix('+');
+    // $this->prefix('-');
+    // $this->prefix('^^');
+    // $this->prefix('*');
+    // $this->prefix('#');
+    // $this->prefix('@');
+    // $this->prefix('~');
+    // $this->prefix(Tag::T_NOT);
+
+    // // Register infix binary operators
+    // $this->infixBinOp('+');
+    // $this->infixBinOp('-');
+    // $this->infixBinOp('*');
+    // $this->infixBinOp('/');
+    // $this->infixBinOp(Tag::T_AND);
+    // $this->infixBinOp(Tag::T_OR);
+
+    // // Register mixfix operators
+    // $this->registerInfix('?', new TernaryParselet);
+
+    // // Register postfix operators
   }
 
   public function match($tag)
@@ -122,21 +184,6 @@ abstract class Parser
     return array_key_exists($key, $this->prefix_parselets)
       ? $this->prefix_parselets[$key]
       : NULL;
-  }
-
-  private function register($tag, IPrefixParselet $parselet)
-  {
-    $this->prefix_parselets[$tag] = $parselet;
-  }
-
-  private function prefix($tag)
-  {
-    $this->register($tag, new PrefixOperatorParselet);
-  }
-
-  private function infixBinOp($tag)
-  {
-    $this->infix_parselets[$tag] = new BinaryOperatorParselet;
   }
 
   public function openScope()

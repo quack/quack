@@ -9,5 +9,5 @@ use \UranoCompiler\Parser\TokenReader;
 interface IInfixParselet
 {
   function parse(TokenReader $parser, Expr $left, Token $token);
-  // TODO: Not now, but after. function getPrecedence();
+  function getPrecedence();
 }
