@@ -28,6 +28,8 @@ function repl()
 
     if ($command === ':quit') {
       exit;
+    } else if (trim($command) === "") {
+      continue;
     }
 
     $lexer = new Tokenizer($command);
