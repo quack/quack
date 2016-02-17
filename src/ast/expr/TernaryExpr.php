@@ -4,7 +4,7 @@ namespace UranoCompiler\Ast\Expr;
 
 use \UranoCompiler\Parser\Parser;
 
-class TernaryExpr
+class TernaryExpr implements Expr
 {
   public $condition;
   public $then;
@@ -19,11 +19,13 @@ class TernaryExpr
 
   public function format(Parser $parser)
   {
-    $string_builder = [$this->condition->format($parser)];
+    $string_builder = ['('];
+    $string_builder[] = $this->condition->format($parser);
     $string_builder[] = ' ? ';
     $string_builder[] = $this->then->format($parser);
     $string_builder[] = ' : ';
     $string_builder[] = $this->else->format($parser);
+    $string_builder[] = ')';
     return implode($string_builder);
   }
 }

@@ -37,7 +37,7 @@ function repl()
 
     try {
       $parser->parse();
-
+      echo $parser->format($parser);
       if (args_have('-a', '--ast')) {
         $parser->dumpAst();
       }

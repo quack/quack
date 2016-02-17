@@ -82,34 +82,10 @@ abstract class Parser
     $this->infixLeft('-', Precedence::ADDITIVE);
     $this->infixLeft('*', Precedence::MULTIPLICATIVE);
     $this->infixLeft('/', Precedence::MULTIPLICATIVE);
+    $this->infixLeft(Tag::T_AND, Precedence::LOGICAL_AND);
+    $this->infixLeft(Tag::T_OR, Precedence::LOGICAL_OR);
 
     $this->infixRight('**', Precedence::EXPONENT);
-
-    // // Register prefix operators
-    // $this->registerPrefix(Tag::T_INTEGER, new NumberParselet);
-    // $this->registerPrefix(Tag::T_DOUBLE, new NumberParselet);
-    // $this->registerPrefix('(', new GroupParselet);
-    // $this->prefix('+');
-    // $this->prefix('-');
-    // $this->prefix('^^');
-    // $this->prefix('*');
-    // $this->prefix('#');
-    // $this->prefix('@');
-    // $this->prefix('~');
-    // $this->prefix(Tag::T_NOT);
-
-    // // Register infix binary operators
-    // $this->infixBinOp('+');
-    // $this->infixBinOp('-');
-    // $this->infixBinOp('*');
-    // $this->infixBinOp('/');
-    // $this->infixBinOp(Tag::T_AND);
-    // $this->infixBinOp(Tag::T_OR);
-
-    // // Register mixfix operators
-    // $this->registerInfix('?', new TernaryParselet);
-
-    // // Register postfix operators
   }
 
   public function match($tag)

@@ -20,11 +20,13 @@ class OperatorExpr implements Expr
 
   public function format(Parser $parser)
   {
-    $string_builder = [$this->left->format($parser)];
+    $string_builder = ['('];
+    $string_builder[] = $this->left->format($parser);
     $string_builder[] = ' ';
     $string_builder[] = Tag::getPunctuator($this->operator);
     $string_builder[] = ' ';
     $string_builder[] = $this->right->format($parser);
+    $string_builder[] = ')';
     return implode($string_builder);
   }
 }
