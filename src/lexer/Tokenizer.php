@@ -152,9 +152,9 @@ class Tokenizer extends Lexer
       if (in_array(ord($this->peek), $new_line)) {
         $this->line++;
         $this->column = 1;
-      } else {
-        $this->column++;
+        continue;
       }
+      $this->column++;
       $this->consume();
     } while (ctype_space($this->peek));
   }
