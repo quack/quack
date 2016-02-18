@@ -1,9 +1,9 @@
 engines:
   phpmd:
     enabled: true
-    config:
-      file_extensions: "php"
-      rulesets: "cleancode,codesize,controversial,design,unusedcode"
+    checks:
+      Controversial/CamelCaseVariableName:
+        enabled: false
   duplication:
     enabled: true
     config:
