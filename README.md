@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/haskellcamargo/urano.svg?branch=master)](https://travis-ci.org/haskellcamargo/urano)
+
 # Urano Lang
 
 > A Rust-based programming language with gradual and duck typing that targets PHP.
