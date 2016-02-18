@@ -102,4 +102,11 @@ class LexerTest extends PHPUnit_Framework_TestCase
       "[declare][yield][super][partial][extension][is][out]" .
       "[deriving][letf][print][not]", $this->tokenize(implode(' ', $keywords)));
   }
+
+  public function testOperators()
+  {
+    $this->assertEquals("[-][T_INTEGER, 0][*][T_INTEGER, 1][and]" .
+      "[T_INTEGER, 2][or][T_INTEGER, 3][++][T_INTEGER, 4][;][@][T_IDENT, 5]",
+      $this->tokenize("-1 * 3 and 2 or 4 ++ 8; @name"));
+  }
 }
