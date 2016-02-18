@@ -69,13 +69,6 @@ class Tokenizer extends Lexer
 
       $hex_as_dec = (string) hexdec(implode($buffer));
       $this->column += sizeof($hex_as_dec);
-
-      // Ignore everything else together
-      while (!ctype_space($this->preview()) && !$this->isEnd()) {
-        $this->consume();
-        $this->column++;
-      }
-
       return new Token(Tag::T_INTEGER, $this->symbol_table->add($hex_as_dec));
     }
 
