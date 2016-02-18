@@ -1,5 +1,16 @@
 TEST = phpunit --verbose --colors
 
+repl:
+ifeq ($(mode), ast)
+	cd src/repl; php UranoRepl.php --ast
+else
+ifeq ($(mode), python)
+	cd src/repl; php UranoRepl.php --python
+else
+	@echo No mode for repl
+endif
+endif
+
 test:
 ifeq ($(module), lexer)
 	$(TEST)  ./tests/LexerTest.php
