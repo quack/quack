@@ -77,35 +77,12 @@ else
   print "Invalid pokémon!"
 ```
 
-### Test parser
+### Execute tests
 
-![Test parser](resource/test_parser.png)
+`make test module=module_name`
 
+**Modules**
 
-### What is already implemented on parser?
-
-- [ ] Statements
-  - [x] Goto
-  - [x] Foreach
-  - [x] While
-  - [ ] While-else
-  - [x] If-elif-else
-  - [-] Return
-  - [-] Break
-  - [-] Continue
-  - [x] Print
-  - [x] Module
-  - [x] Open
-  - [x] Global
-  - [x] Raise
-  - [x] Block
-  - [ ] Class
-  - [ ] Model
-- [ ] Expressions
-  - [ ] Number
-    - [ ] Integer
-    - [ ] Double
-  - [ ] Strings
-  - [ ] Operators
-    - [ ] Infix
-    - [ ] Prefix
+-----------
+| `lexer` |
+-----------

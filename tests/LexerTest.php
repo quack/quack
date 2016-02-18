@@ -78,4 +78,28 @@ class LexerTest extends PHPUnit_Framework_TestCase
     $some_parameters = "&0, &1, &(2)";
     $this->assertEquals("[T_PARAM, 0][,][T_PARAM, 1][,][&(][T_INTEGER, 2][)]", $this->tokenize($some_parameters, SHOW_SYMBOL_TABLE));
   }
+
+  public function testKeywords()
+  {
+    $keywords = ["true", "false", "let", "if", "for", "while", "do", "struct",
+      "init", "self", "module", "class", "def", "override", "goto", "foreach",
+      "match", "in", "model", "where", "const", "my", "nil", "static",
+      "protected", "protocol", "final", "int", "double", "string", "bool",
+      "array", "resource", "object", "open", "global", "as", "type", "enum",
+      "with", "continue", "switch", "break", "and", "or", "xor", "instanceof",
+      "try", "rescue", "finally", "raise", "callable", "elif", "else", "case",
+      "declare", "yield", "super", "partial", "extension", "is", "out",
+      "deriving", "letf", "print", "not"
+    ];
+
+    $this->assertEquals("[true][false][let][if][for][while][do][struct]" .
+      "[init][self][module][class][def][override][goto][foreach]" .
+      "[match][in][model][where][const][my][nil][static]" .
+      "[protected][protocol][final][int][double][string][bool]" .
+      "[array][resource][object][open][global][as][type][enum]" .
+      "[with][continue][switch][break][and][or][xor][instanceof]" .
+      "[try][rescue][finally][raise][callable][elif][else][case]" .
+      "[declare][yield][super][partial][extension][is][out]" .
+      "[deriving][letf][print][not]", $this->tokenize(implode(' ', $keywords)));
+  }
 }
