@@ -29,4 +29,16 @@ class OperatorExpr implements Expr
     $string_builder[] = ')';
     return implode($string_builder);
   }
+
+  public function python(Parser $parser)
+  {
+    $string_builder = ['('];
+    $string_builder[] = $this->left->python($parser);
+    $string_builder[] = ' ';
+    $string_builder[] = Tag::getPunctuator($this->operator);
+    $string_builder[] = ' ';
+    $string_builder[] = $this->right->python($parser);
+    $string_builder[] = ')';
+    return implode($string_builder);
+  }
 }

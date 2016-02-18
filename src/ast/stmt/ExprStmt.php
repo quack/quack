@@ -19,4 +19,11 @@ class ExprStmt implements Stmt
     $string_builder[] = ";\n";
     return implode($string_builder);
   }
+
+  public function python(Parser $parser)
+  {
+    $string_builder = [$this->expression->python($parser)];
+    $string_builder[] = "\n";
+    return implode($string_builder);
+  }
 }

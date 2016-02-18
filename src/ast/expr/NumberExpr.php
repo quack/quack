@@ -17,4 +17,9 @@ class NumberExpr implements Expr
   {
     return $parser->resolveScope($this->token->getPointer());
   }
+
+  public function python(Parser $parser)
+  {
+    return $this->format($parser);
+  }
 }

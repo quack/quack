@@ -48,6 +48,13 @@ class TokenReader extends Parser
     }
   }
 
+  public function python()
+  {
+    foreach ($this->ast as $stmt) {
+      echo $stmt->python($this);
+    }
+  }
+
   public function parse()
   {
     $this->ast = iterator_to_array($this->_topStmtList());

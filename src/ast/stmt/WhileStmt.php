@@ -33,4 +33,22 @@ class WhileStmt implements Stmt
     $string_builder[] = $this->body->format($parser);
     return implode($string_builder);
   }
+
+  public function python(Parser $parser)
+  {
+    $is_simple = !($this->body instanceof BlockStmt);
+    $string_builder = ['while '];
+    $string_builder[] = $this->condition->python($parser);
+    $string_builder[] = ":\n";
+
+    if ($is_simple) {
+      $string_builder[] = "\n";
+      $parser->openScope();
+      $string_builder[] = $parser->indent();
+      $parser->closeScope();
+    }
+
+    $string_builder[] = $this->body->python($parser);
+    return implode($string_builder);
+  }
 }

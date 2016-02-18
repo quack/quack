@@ -28,4 +28,16 @@ class TernaryExpr implements Expr
     $string_builder[] = ')';
     return implode($string_builder);
   }
+
+  public function python(Parser $parser)
+  {
+    $string_builder = ['('];
+    $string_builder[] = $this->then->python($parser);
+    $string_builder[] = ' if ';
+    $string_builder[] = $this->condition->python($parser);
+    $string_builder[] = ' else ';
+    $string_builder[] = $this->else->python($parser);
+    $string_builder[] = ')';
+    return implode($string_builder);
+  }
 }

@@ -31,4 +31,21 @@ class BlockStmt implements Stmt
     $string_builder[] = "]\n";
     return implode($string_builder);
   }
+
+  public function python(Parser $parser)
+  {
+    if (sizeof($this->stmt_list) == 0) {
+      return "pass\n";
+    }
+
+    $parser->openScope();
+
+    foreach ($this->stmt_list as $stmt) {
+      $string_builder[] = $parser->indent() . $stmt->python($parser);
+    }
+
+    $string_builder[] = $parser->dedent();
+    $parser->closeScope();
+    return implode($string_builder);
+  }
 }

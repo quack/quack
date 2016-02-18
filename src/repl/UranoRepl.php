@@ -37,9 +37,12 @@ function repl()
 
     try {
       $parser->parse();
-      echo $parser->format($parser);
       if (args_have('-a', '--ast')) {
         $parser->dumpAst();
+      }
+
+      if (args_have('-p', '--python')) {
+        $parser->python($parser);
       }
     } catch (SyntaxError $e) {
       echo $e;
