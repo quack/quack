@@ -29,7 +29,6 @@ class LexerTest extends PHPUnit_Framework_TestCase
     $octal_integer = "0314";
     $octal_partial_integer = "0314891";
     $hexa_integer = "0xFFAB01";
-    $hexa_partial_integer = "0xFFAB01ZD";
     $decimal_double = "124.1323";
     $decimal_non_octal_double = "0314.0";
 
@@ -37,7 +36,6 @@ class LexerTest extends PHPUnit_Framework_TestCase
     $this->assertEquals("[T_INTEGER, 204]", $this->tokenize($octal_integer, SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_INTEGER, 204]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_INTEGER, 16755457]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 16755457]", $this->tokenize($hexa_partial_integer, SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_DOUBLE, 124.1323]", $this->tokenize($decimal_double, SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_DOUBLE, 314]", $this->tokenize($decimal_non_octal_double, SHOW_SYMBOL_TABLE));
   }
