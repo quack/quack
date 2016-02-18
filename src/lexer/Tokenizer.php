@@ -85,15 +85,14 @@ class Tokenizer extends Lexer
     }
 
     // Try to check for octal compatibility
-    $is_octal = false;
     if (!$is_double && (int) $buffer[0] === 0 && sizeof($buffer) > 1) {
       $oct_buffer = [];
       $current_buffer_size = sizeof($buffer);
 
-      $i = 0;
-      while ($i < $current_buffer_size && in_array($buffer[$i], range(0, 7))) {
-        $oct_buffer[] = $buffer[$i];
-        $i++;
+      $index = 0;
+      while ($index < $current_buffer_size && in_array($buffer[$index], range(0, 7))) {
+        $oct_buffer[] = $buffer[$index];
+        $index++;
       }
 
       $oct_as_dec = (string) octdec(implode($oct_buffer));
