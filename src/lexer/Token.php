@@ -28,14 +28,11 @@ class Token
   {
     if (isset($this->pointer)) {
       $tag_name = Tag::getName($this->tag);
-      if (isset($this->symbol_table)) {
-        return "[" . $tag_name . ", " . $this->symbol_table->get($this->pointer) . "]";
-      } else {
-        return "[" . $tag_name . ", " . $this->pointer . "]";
-      }
-    } else {
-      return "[" . $this->tag . "]";
+      return isset($this->symbol_table)
+        ? "[" . $tag_name . ", " . $this->symbol_table->get($this->pointer) . "]"
+        : "[" . $tag_name . ", " . $this->pointer . "]";
     }
+    return "[" . $this->tag . "]";
   }
 
   public function showSymbolTable(SymbolTable &$symbol_table)
