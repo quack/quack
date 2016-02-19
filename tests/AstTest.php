@@ -36,6 +36,28 @@ class AstTest extends PHPUnit_Framework_TestCase
     $this->assertEquals("501", $this->format($octal, new NumberExpr(new Token(Tag::T_INTEGER, 0))));
   }
 
+  public function testOperator()
+  {
+    $prefix_precedence = "-1 * +~2;";
+
+
+    $this->assertEquals("(-1 * +~2)", $this->format($prefix_precedence,
+      new OperatorExpr(
+        new PrefixExpr(
+          new Token('-'), new NumberExpr(new Token(Tag::T_INTEGER, 0))
+        ),
+        '*',
+        new PrefixExpr(
+          new Token('+'),
+          new PrefixExpr(
+            new Token('~'),
+            new NumberExpr(new Token(Tag::T_INTEGER, 1))
+          )
+        )
+      ))
+    );
+  }
+
   public function testTernaryOperator()
   {
     $source = "10 and 2 ? 1 : 2 and 3 ? 4 : 5;";

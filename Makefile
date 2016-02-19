@@ -25,3 +25,8 @@ else
 endif
 endif
 endif
+
+deploy:
+	git add *
+	git commit -m "$(message)"
+	git push origin master
