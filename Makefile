@@ -18,6 +18,10 @@ else
 ifeq ($(module), ast)
 	$(TEST) ./tests/AstTest.php
 else
+ifeq ($(module), parser)
+	$(TEST) ./tests/ParserTest.php
+else
 	@echo No module defined for testing
+endif
 endif
 endif

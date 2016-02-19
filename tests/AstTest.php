@@ -30,7 +30,7 @@ class AstTest extends PHPUnit_Framework_TestCase
     $hexa = "0xABC;";
     $octal = "0765;";
 
-    $this->assertEquals("10.99", $this->format($double, new NumberExpr(new Token(Tag::T_INTEGER, 0))));
+    $this->assertEquals("10.99", $this->format($double, new NumberExpr(new Token(Tag::T_DOUBLE, 0))));
     $this->assertEquals("3123", $this->format($integer, new NumberExpr(new Token(Tag::T_INTEGER, 0))));
     $this->assertEquals("2748", $this->format($hexa, new NumberExpr(new Token(Tag::T_INTEGER, 0))));
     $this->assertEquals("501", $this->format($octal, new NumberExpr(new Token(Tag::T_INTEGER, 0))));

@@ -48,6 +48,15 @@ class TokenReader extends Parser
     }
   }
 
+  public function beautify()
+  {
+    $source = [];
+    foreach ($this->ast as $stmt) {
+      $source[] = $stmt->format($this);
+    }
+    return implode($source);
+  }
+
   public function python()
   {
     foreach ($this->ast as $stmt) {
