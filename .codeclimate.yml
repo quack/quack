@@ -15,6 +15,8 @@ engines:
     checks:
       Controversial/CamelCaseVariableName:
         enabled: false
+      CleanCode/StaticAccess:
+        enabled: false
 ratings:
   paths:
   - "**.inc"
