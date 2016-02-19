@@ -21,3 +21,8 @@ else
 	@echo No module defined for testing
 endif
 endif
+
+deploy:
+	git add *
+	git commit -m "$(message)"
+	git push origin master
