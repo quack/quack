@@ -6,4 +6,7 @@ php:
   - hhvm
   - nightly
 
-script: make test module=lexer
+script:
+  - make test module=lexer
+  - make test module=ast
+  - make test module=parser
