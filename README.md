@@ -1,16 +1,16 @@
-[![Join the chat at https://gitter.im/haskellcamargo/urano](https://badges.gitter.im/haskellcamargo/urano.svg)](https://gitter.im/haskellcamargo/urano?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/haskellcamargo/urano.svg?branch=master)](https://travis-ci.org/haskellcamargo/urano)
-[![Code Climate](https://codeclimate.com/github/haskellcamargo/urano/badges/gpa.svg)](https://codeclimate.com/github/haskellcamargo/urano)
-[![Test Coverage](https://codeclimate.com/github/haskellcamargo/urano/badges/coverage.svg)](https://codeclimate.com/github/haskellcamargo/urano/coverage)
-[![Issue Count](https://codeclimate.com/github/haskellcamargo/urano/badges/issue_count.svg)](https://codeclimate.com/github/haskellcamargo/urano)
+[![Join the chat at https://gitter.im/haskellcamargo/quack](https://badges.gitter.im/haskellcamargo/quack.svg)](https://gitter.im/haskellcamargo/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/haskellcamargo/quack.svg?branch=master)](https://travis-ci.org/haskellcamargo/quack)
+[![Code Climate](https://codeclimate.com/github/haskellcamargo/quack/badges/gpa.svg)](https://codeclimate.com/github/haskellcamargo/quack)
+[![Test Coverage](https://codeclimate.com/github/haskellcamargo/quack/badges/coverage.svg)](https://codeclimate.com/github/haskellcamargo/quack/coverage)
+[![Issue Count](https://codeclimate.com/github/haskellcamargo/quack/badges/issue_count.svg)](https://codeclimate.com/github/haskellcamargo/quack)
 
-# Urano Lang
+# Quack Lang
 
 > A Rust-based programming language with gradual and duck typing that targets PHP.
 
-![Urano](./resource/logo.png)
+![Quack](./resource/logo.png)
 
-Urano is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
+Quack is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
 to gradual and duck typing, with the following features:
 
 - Type safe, with primitive types and extensible type system;
