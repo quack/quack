@@ -29,10 +29,12 @@ use \QuackCompiler\Ast\Helper\Param;
 class TokenReader extends Parser
 {
   public $ast = [];
+  public $checker;
 
   public function __construct(Tokenizer $input)
   {
     parent::__construct($input);
+    $this->checker = new TokenChecker($this);
   }
 
   /* Handlers */
@@ -69,57 +71,6 @@ class TokenReader extends Parser
     $this->ast = iterator_to_array($this->_topStmtList());
   }
 
-  /* Checkers */
-  private function startsStmt()
-  {
-    return $this->is(Tag::T_MODULE)
-        || $this->is(Tag::T_OPEN)
-        || $this->is(':-')
-        || $this->is(Tag::T_GOTO)
-        || $this->is(Tag::T_GLOBAL)
-        || $this->is(Tag::T_IF)
-        || $this->is('[')
-        || $this->is(Tag::T_BREAK)
-        || $this->is(Tag::T_CONTINUE)
-        || $this->is('<<<')
-        || $this->is(Tag::T_PRINT)
-        || $this->is(Tag::T_RAISE)
-        || $this->is(Tag::T_WHILE)
-        || $this->is(Tag::T_FOREACH)
-        || $this->is(Tag::T_SWITCH)
-        || $this->is(Tag::T_TRY)
-        || $this->startsExpr();
-  }
-
-  private function startsTopStmt()
-  {
-    return $this->startsStmt()
-        || $this->is(Tag::T_DEF)
-        || $this->startsClass();
-  }
-
-  private function startsExpr()
-  {
-    return $this->is(Tag::T_INTEGER)
-        || $this->is(Tag::T_DOUBLE)
-        || $this->isOperator()
-        || $this->is('(');
-  }
-
-  private function startsParameter()
-  {
-    return $this->is('...')
-        || $this->is('*')
-        || $this->is(Tag::T_IDENT);
-  }
-
-  private function startsClass()
-  {
-    return $this->is(Tag::T_FINAL)
-        || $this->is(Tag::T_MODEL)
-        || $this->is(Tag::T_CLASS);
-  }
-
   private function isMethodModifier()
   {
     return $this->is(Tag::T_MY)
@@ -133,12 +84,6 @@ class TokenReader extends Parser
   {
     return $this->is(Tag::T_DEF)
         || $this->isMethodModifier();
-  }
-
-  private function isCase()
-  {
-    return $this->is(Tag::T_CASE)
-        || $this->is(Tag::T_ELSE);
   }
 
   private function isEOF()
@@ -169,7 +114,7 @@ class TokenReader extends Parser
   /* Productions */
   private function _topStmtList()
   {
-    while ($this->startsTopStmt()) {
+    while ($this->checker->startsTopStmt()) {
       yield $this->_topStmt();
     }
 
@@ -191,14 +136,14 @@ class TokenReader extends Parser
 
   private function _topStmt()
   {
-    if ($this->startsStmt())   return $this->_stmt();
+    if ($this->checker->startsStmt()) return $this->_stmt();
     if ($this->is(Tag::T_DEF)) return $this->_def();
-    if ($this->startsClass())  return $this->_class();
+    if ($this->checker->startsDeclStmt()) return $this->_class();
   }
 
   private function _innerStmt()
   {
-    if ($this->startsStmt()) return $this->_stmt();
+    if ($this->checker->startsStmt()) return $this->_stmt();
     if ($this->is(Tag::T_DEF)) return $this->_def();
 
     throw (new SyntaxError)
@@ -226,7 +171,7 @@ class TokenReader extends Parser
     if ($this->is(Tag::T_FOREACH))  return $this->_foreach();
     if ($this->is(Tag::T_SWITCH))   return $this->_switch();
     if ($this->is(Tag::T_TRY))      return $this->_try();
-    if ($this->startsExpr())       {
+    if ($this->checker->startsExpr())       {
       $expr = $this->_expr();
       $this->match(';');
       return new ExprStmt($expr);
@@ -319,7 +264,7 @@ class TokenReader extends Parser
     $body = [];
 
     $this->match('[');
-    while ($this->startsStmt()) {
+    while ($this->checker->startsStmt()) {
       $body[] = $this->_stmt();
     }
     $this->match(']');
@@ -332,7 +277,7 @@ class TokenReader extends Parser
     $this->match(Tag::T_BREAK);
     $expression = NULL;
 
-    if ($this->startsExpr()) {
+    if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
     }
 
@@ -344,7 +289,7 @@ class TokenReader extends Parser
     $this->match(Tag::T_CONTINUE);
     $expression = NULL;
 
-    if ($this->startsExpr()) {
+    if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
     }
 
@@ -356,7 +301,7 @@ class TokenReader extends Parser
     $this->match('<<<');
     $expression = NULL;
 
-    if ($this->startsExpr()) {
+    if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
     }
 
@@ -438,7 +383,7 @@ class TokenReader extends Parser
     $name = $this->identifier();
     $parameters = $this->_parameters();
 
-    $body = $this->startsStmt() ? $this->_innerStmt() : NULL;
+    $body = $this->checker->startsStmt() ? $this->_innerStmt() : NULL;
 
     // TODO: Return method declaration with modifiers
     return new DefStmt($name, $by_ref, $body, $parameters);
@@ -464,7 +409,7 @@ class TokenReader extends Parser
 
     $this->match('[');
 
-    while ($this->startsParameter()) {
+    while ($this->checker->startsParameter()) {
       $parameters[] = $this->_parameter();
 
       if ($this->is(';')) {
@@ -604,7 +549,7 @@ class TokenReader extends Parser
 
   private function _cases()
   {
-    while ($this->isCase()) {
+    while ($this->checker->isCase()) {
       if ($this->is(Tag::T_CASE)) {
         $this->match(Tag::T_CASE);
         $when = $this->_expr();

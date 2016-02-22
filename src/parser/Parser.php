@@ -110,12 +110,12 @@ abstract class Parser
     return false;
   }
 
-  protected function is($tag)
+  public function is($tag)
   {
     return $this->lookahead->getTag() === $tag;
   }
 
-  protected function isOperator()
+  public function isOperator()
   {
     $op = $this->lookahead->getTag();
     $op_table = array_values(Tag::getOpTable());

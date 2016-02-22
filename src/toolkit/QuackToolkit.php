@@ -23,6 +23,7 @@ import(LEXER, 'Word');
 /* Parser */
 
 import(PARSER, 'Parser');
+import(PARSER, 'TokenChecker');
 import(PARSER, 'SyntaxError');
 import(PARSER, 'TokenReader');
 import(PARSER, 'Precedence');
