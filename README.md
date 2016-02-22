@@ -1,8 +1,8 @@
-[![Join the chat at https://gitter.im/haskellcamargo/quack](https://badges.gitter.im/haskellcamargo/quack.svg)](https://gitter.im/haskellcamargo/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/haskellcamargo/quack.svg?branch=master)](https://travis-ci.org/haskellcamargo/quack)
-[![Code Climate](https://codeclimate.com/github/haskellcamargo/quack/badges/gpa.svg)](https://codeclimate.com/github/haskellcamargo/quack)
-[![Test Coverage](https://codeclimate.com/github/haskellcamargo/quack/badges/coverage.svg)](https://codeclimate.com/github/haskellcamargo/quack/coverage)
-[![Issue Count](https://codeclimate.com/github/haskellcamargo/quack/badges/issue_count.svg)](https://codeclimate.com/github/haskellcamargo/quack)
+[![Join the chat at https://gitter.im/quack/quack](https://badges.gitter.im/quack/quack.svg)](https://gitter.im/quack/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/quack/quack.svg?branch=master)](https://travis-ci.org/quack/quack)
+[![Code Climate](https://codeclimate.com/github/quack/quack/badges/gpa.svg)](https://codeclimate.com/github/quack/quack)
+[![Test Coverage](https://codeclimate.com/github/quack/quack/badges/coverage.svg)](https://codeclimate.com/github/quack/quack/coverage)
+[![Issue Count](https://codeclimate.com/github/quack/quack/badges/issue_count.svg)](https://codeclimate.com/github/quack/quack)
 
 # Quack Lang
 
