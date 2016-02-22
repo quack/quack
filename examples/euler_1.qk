@@ -1,0 +1,9 @@
+(** Solution to Project problem 1
+ *  :author Haskell Camargo
+ *)
+
+print answer
+  where answer :- @{ x for x :- 0 .. 999
+                     when x mod 3 is 0 or x mod 5 is 0
+                   }
+                   |> array_sum
