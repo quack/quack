@@ -8,7 +8,7 @@
 
 > A Rust-based programming language with gradual and duck typing that targets PHP.
 
-![Quack](./resource/logo.png)
+<!-- ![Quack](./resource/logo.png) -->
 
 Quack is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
 to gradual and duck typing, with the following features:
