@@ -1,8 +1,8 @@
 <?php
 
-namespace UranoCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Stmt;
 
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Parser\Parser;
 
 class OpenStmt implements Stmt
 {

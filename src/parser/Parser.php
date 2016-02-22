@@ -1,19 +1,19 @@
 <?php
 
-namespace UranoCompiler\Parser;
+namespace QuackCompiler\Parser;
 
 use \Exception;
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Lexer\Token;
-use \UranoCompiler\Lexer\Tokenizer;
-use \UranoCompiler\Parselets\IPrefixParselet;
-use \UranoCompiler\Parselets\IInfixParselet;
-use \UranoCompiler\Parselets\BinaryOperatorParselet;
-use \UranoCompiler\Parselets\NumberParselet;
-use \UranoCompiler\Parselets\PostfixOperatorParselet;
-use \UranoCompiler\Parselets\PrefixOperatorParselet;
-use \UranoCompiler\Parselets\TernaryParselet;
-use \UranoCompiler\Parselets\GroupParselet;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Parselets\IPrefixParselet;
+use \QuackCompiler\Parselets\IInfixParselet;
+use \QuackCompiler\Parselets\BinaryOperatorParselet;
+use \QuackCompiler\Parselets\NumberParselet;
+use \QuackCompiler\Parselets\PostfixOperatorParselet;
+use \QuackCompiler\Parselets\PrefixOperatorParselet;
+use \QuackCompiler\Parselets\TernaryParselet;
+use \QuackCompiler\Parselets\GroupParselet;
 
 abstract class Parser
 {

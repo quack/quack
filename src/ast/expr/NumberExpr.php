@@ -1,8 +1,8 @@
 <?php
 
-namespace UranoCompiler\Ast\Expr;
+namespace QuackCompiler\Ast\Expr;
 
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Parser\Parser;
 
 class NumberExpr implements Expr
 {

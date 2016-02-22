@@ -1,7 +1,7 @@
 <?php
 
-namespace UranoCompiler\Ast\Expr;
+namespace QuackCompiler\Ast\Expr;
 
-use UranoCompiler\Ast\Node;
+use QuackCompiler\Ast\Node;
 
 interface Expr extends Node {}

@@ -1,9 +1,9 @@
 <?php
 
-namespace UranoCompiler\Ast;
+namespace QuackCompiler\Ast;
 
-use \UranoCompiler\Ast\Stmt\BlockStmt;
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Parser\Parser;
 
 class Util
 {

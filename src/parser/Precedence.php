@@ -1,6 +1,6 @@
 <?php
 
-namespace UranoCompiler\Parser;
+namespace QuackCompiler\Parser;
 
 class Precedence
 {

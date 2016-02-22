@@ -2,16 +2,16 @@
 
 require_once './src/toolkit/TestCaseToolkit.php';
 
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Lexer\Token;
-use \UranoCompiler\Lexer\Tokenizer;
-use \UranoCompiler\Parser\TokenReader;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Parser\TokenReader;
 
-use \UranoCompiler\Ast\Expr\NumberExpr;
-use \UranoCompiler\Ast\Expr\OperatorExpr;
-use \UranoCompiler\Ast\Expr\PostfixExpr;
-use \UranoCompiler\Ast\Expr\PrefixExpr;
-use \UranoCompiler\Ast\Expr\TernaryExpr;
+use \QuackCompiler\Ast\Expr\NumberExpr;
+use \QuackCompiler\Ast\Expr\OperatorExpr;
+use \QuackCompiler\Ast\Expr\PostfixExpr;
+use \QuackCompiler\Ast\Expr\PrefixExpr;
+use \QuackCompiler\Ast\Expr\TernaryExpr;
 
 class AstTest extends PHPUnit_Framework_TestCase
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace UranoCompiler\Parselets;
+namespace QuackCompiler\Parselets;
 
-use \UranoCompiler\Parser\TokenReader;
-use \UranoCompiler\Ast\Expr\Expr;
-use \UranoCompiler\Ast\Expr\PostfixExpr;
-use \UranoCompiler\Lexer\Token;
+use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\PostfixExpr;
+use \QuackCompiler\Lexer\Token;
 
 class PostfixOperatorParselet implements IInfixParselet
 {

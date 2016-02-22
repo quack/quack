@@ -1,11 +1,11 @@
 <?php
 
-namespace UranoCompiler\Parselets;
+namespace QuackCompiler\Parselets;
 
-use \UranoCompiler\Parser\TokenReader;
-use \UranoCompiler\Ast\Expr\Expr;
-use \UranoCompiler\Ast\Expr\OperatorExpr;
-use \UranoCompiler\Lexer\Token;
+use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\OperatorExpr;
+use \QuackCompiler\Lexer\Token;
 
 class BinaryOperatorParselet implements IInfixParselet
 {

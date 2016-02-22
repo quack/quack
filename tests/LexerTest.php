@@ -2,7 +2,7 @@
 
 require_once './src/toolkit/TestCaseToolkit.php';
 
-use \UranoCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Lexer\Tokenizer;
 
 define('SHOW_SYMBOL_TABLE', true);
 
@@ -17,8 +17,8 @@ class LexerTest extends PHPUnit_Framework_TestCase
 
   public function testIdent()
   {
-    $this->assertEquals("[T_IDENT, 0]", $this->tokenize('urano'));
-    $this->assertEquals("[T_IDENT, urano]", $this->tokenize('urano', SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_IDENT, 0]", $this->tokenize('quack'));
+    $this->assertEquals("[T_IDENT, quack]", $this->tokenize('quack', SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_IDENT, 0][T_IDENT, 1]", $this->tokenize('hello world'));
     $this->assertEquals("[T_IDENT, hello][T_IDENT, world]", $this->tokenize('hello world', SHOW_SYMBOL_TABLE));
   }

@@ -1,7 +1,7 @@
 <?php
 
-namespace UranoCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Stmt;
 
-use UranoCompiler\Ast\Node;
+use QuackCompiler\Ast\Node;
 
 interface Stmt extends Node {}

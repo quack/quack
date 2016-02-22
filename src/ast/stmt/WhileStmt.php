@@ -1,9 +1,9 @@
 <?php
 
-namespace UranoCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Stmt;
 
-use \UranoCompiler\Ast\Stmt\BlockStmt;
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Parser\Parser;
 
 class WhileStmt implements Stmt
 {

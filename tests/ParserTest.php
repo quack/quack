@@ -2,8 +2,8 @@
 
 require_once './src/toolkit/TestCaseToolkit.php';
 
-use \UranoCompiler\Lexer\Tokenizer;
-use \UranoCompiler\Parser\TokenReader;
+use \QuackCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Parser\TokenReader;
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {

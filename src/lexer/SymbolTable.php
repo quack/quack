@@ -1,6 +1,6 @@
 <?php
 
-namespace UranoCompiler\Lexer;
+namespace QuackCompiler\Lexer;
 
 class SymbolTable
 {

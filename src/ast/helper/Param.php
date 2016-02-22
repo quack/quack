@@ -1,8 +1,8 @@
 <?php
 
-namespace UranoCompiler\Ast\Helper;
+namespace QuackCompiler\Ast\Helper;
 
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Parser\Parser;
 
 class Param
 {

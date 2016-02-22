@@ -1,10 +1,10 @@
 <?php
 
-namespace UranoCompiler\Parselets;
+namespace QuackCompiler\Parselets;
 
-use \UranoCompiler\Ast\Expr\Expr;
-use \UranoCompiler\Lexer\Token;
-use \UranoCompiler\Parser\TokenReader;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\TokenReader;
 
 interface IInfixParselet
 {

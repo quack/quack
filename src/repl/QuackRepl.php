@@ -1,14 +1,14 @@
 <?php
 
-require_once '../toolkit/UranoToolkit.php';
+require_once '../toolkit/QuackToolkit.php';
 
-use \UranoCompiler\Lexer\Tokenizer;
-use \UranoCompiler\Parser\SyntaxError;
-use \UranoCompiler\Parser\TokenReader;
+use \QuackCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Parser\SyntaxError;
+use \QuackCompiler\Parser\TokenReader;
 
 function start_repl()
 {
-  echo "Urano 0.1 · Use urano --help for more information", PHP_EOL;
+  echo "Quack 0.1 · Use quack --help for more information", PHP_EOL;
 
   if (args_have('-h', '--help')) {
     open_repl_help();
@@ -23,7 +23,7 @@ function repl()
   echo "Type ^C or :quit to leave", PHP_EOL;
 
   while (true) {
-    echo  "\033[01;36mUrano> \033[0m";
+    echo  "\033[01;36mQuack> \033[0m";
     $command = readline();
 
     if ($command === ':quit') {

@@ -1,9 +1,9 @@
 <?php
 
-namespace UranoCompiler\Ast\Expr;
+namespace QuackCompiler\Ast\Expr;
 
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parser\Parser;
 
 class OperatorExpr implements Expr
 {

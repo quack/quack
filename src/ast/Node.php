@@ -1,8 +1,8 @@
 <?php
 
-namespace UranoCompiler\Ast;
+namespace QuackCompiler\Ast;
 
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Parser\Parser;
 
 interface Node
 {

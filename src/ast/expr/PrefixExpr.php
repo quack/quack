@@ -1,10 +1,10 @@
 <?php
 
-namespace UranoCompiler\Ast\Expr;
+namespace QuackCompiler\Ast\Expr;
 
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Lexer\Token;
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Parser;
 
 class PrefixExpr implements Expr
 {

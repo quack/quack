@@ -1,10 +1,10 @@
 <?php
 
-namespace UranoCompiler\Parser;
+namespace QuackCompiler\Parser;
 
 use \Exception;
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
 
 define('BEGIN_ORANGE', "\033[01;31m");
 define('END_ORANGE', "\033[0m");
@@ -77,9 +77,6 @@ class SyntaxError extends Exception
             $buffer[] = BEGIN_GREEN . $source_line[$i] . END_GREEN;
         }
       }
-
-
-
     }
 
     $buffer[] = PHP_EOL . str_repeat(' ', $column - $initial_column + 1);

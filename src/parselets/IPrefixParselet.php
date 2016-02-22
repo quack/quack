@@ -1,9 +1,9 @@
 <?php
 
-namespace UranoCompiler\Parselets;
+namespace QuackCompiler\Parselets;
 
-use \UranoCompiler\Lexer\Token;
-use \UranoCompiler\Parser\TokenReader;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\TokenReader;
 
 interface IPrefixParselet
 {

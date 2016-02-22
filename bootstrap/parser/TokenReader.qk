@@ -1,24 +1,24 @@
-module uranocompiler.parser
+module quackcompiler.parser
 
 open Exception
 
-open uranocompiler.lexer.Tag
-open uranocompiler.lexer.Tokenizer
+open quackcompiler.lexer.Tag
+open quackcompiler.lexer.Tokenizer
 
-open uranocompiler.ast.BlockStmt
-open uranocompiler.ast.Expr
-open uranocompiler.ast.FunctionDecl
-open uranocompiler.ast.GlobalStmt
-open uranocompiler.ast.GotoStmt
-open uranocompiler.ast.IfStmt
-open uranocompiler.ast.LabelStmt
-open uranocompiler.ast.ModuleStmt
-open uranocompiler.ast.OpenStmt
-open uranocompiler.ast.PrintStmt
+open quackcompiler.ast.BlockStmt
+open quackcompiler.ast.Expr
+open quackcompiler.ast.FunctionDecl
+open quackcompiler.ast.GlobalStmt
+open quackcompiler.ast.GotoStmt
+open quackcompiler.ast.IfStmt
+open quackcompiler.ast.LabelStmt
+open quackcompiler.ast.ModuleStmt
+open quackcompiler.ast.OpenStmt
+open quackcompiler.ast.PrintStmt
 
 class TokenReader : Parser [
   ast: array = *{}
-  
+
   init [input: Tokenizer] super[input]
 
   def dump_ast! var_dump[@ast]

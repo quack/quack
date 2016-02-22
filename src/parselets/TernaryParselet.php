@@ -1,12 +1,12 @@
 <?php
 
-namespace UranoCompiler\Parselets;
+namespace QuackCompiler\Parselets;
 
-use \UranoCompiler\Parser\Precedence;
-use \UranoCompiler\Parser\TokenReader;
-use \UranoCompiler\Ast\Expr\Expr;
-use \UranoCompiler\Ast\Expr\TernaryExpr;
-use \UranoCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Precedence;
+use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\TernaryExpr;
+use \QuackCompiler\Lexer\Token;
 
 class TernaryParselet implements IInfixParselet
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace UranoCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Stmt;
 
-use \UranoCompiler\Ast\Util;
-use \UranoCompiler\Parser\Parser;
+use \QuackCompiler\Ast\Util;
+use \QuackCompiler\Parser\Parser;
 
 class ForeachStmt implements Stmt
 {

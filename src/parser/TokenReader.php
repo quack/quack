@@ -1,30 +1,30 @@
 <?php
 
-namespace UranoCompiler\Parser;
+namespace QuackCompiler\Parser;
 
 use \Exception;
 
-use \UranoCompiler\Lexer\Tag;
-use \UranoCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Tokenizer;
 
-use \UranoCompiler\Ast\Stmt\BlockStmt;
-use \UranoCompiler\Ast\Stmt\BreakStmt;
-use \UranoCompiler\Ast\Stmt\ContinueStmt;
-use \UranoCompiler\Ast\Stmt\DefStmt;
-use \UranoCompiler\Ast\Stmt\ExprStmt;
-use \UranoCompiler\Ast\Stmt\ForeachStmt;
-use \UranoCompiler\Ast\Stmt\GlobalStmt;
-use \UranoCompiler\Ast\Stmt\GotoStmt;
-use \UranoCompiler\Ast\Stmt\IfStmt;
-use \UranoCompiler\Ast\Stmt\LabelStmt;
-use \UranoCompiler\Ast\Stmt\ModuleStmt;
-use \UranoCompiler\Ast\Stmt\OpenStmt;
-use \UranoCompiler\Ast\Stmt\PrintStmt;
-use \UranoCompiler\Ast\Stmt\RaiseStmt;
-use \UranoCompiler\Ast\Stmt\ReturnStmt;
-use \UranoCompiler\Ast\Stmt\WhileStmt;
+use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Ast\Stmt\BreakStmt;
+use \QuackCompiler\Ast\Stmt\ContinueStmt;
+use \QuackCompiler\Ast\Stmt\DefStmt;
+use \QuackCompiler\Ast\Stmt\ExprStmt;
+use \QuackCompiler\Ast\Stmt\ForeachStmt;
+use \QuackCompiler\Ast\Stmt\GlobalStmt;
+use \QuackCompiler\Ast\Stmt\GotoStmt;
+use \QuackCompiler\Ast\Stmt\IfStmt;
+use \QuackCompiler\Ast\Stmt\LabelStmt;
+use \QuackCompiler\Ast\Stmt\ModuleStmt;
+use \QuackCompiler\Ast\Stmt\OpenStmt;
+use \QuackCompiler\Ast\Stmt\PrintStmt;
+use \QuackCompiler\Ast\Stmt\RaiseStmt;
+use \QuackCompiler\Ast\Stmt\ReturnStmt;
+use \QuackCompiler\Ast\Stmt\WhileStmt;
 
-use \UranoCompiler\Ast\Helper\Param;
+use \QuackCompiler\Ast\Helper\Param;
 
 class TokenReader extends Parser
 {
