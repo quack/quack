@@ -30,3 +30,6 @@ deploy:
 	git add *
 	git commit -m "$(message)"
 	git push origin master
+
+count_lines:
+	cd src;	git ls-files | xargs wc -l
