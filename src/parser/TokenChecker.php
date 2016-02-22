@@ -13,6 +13,16 @@ class TokenChecker
     $this->parser = $parser;
   }
 
+  function isAny($options)
+  {
+    foreach ($options as $option) {
+      if ($this->parser->is($option)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function startsTopStmt()
   {
     return $this->startsStmt()
@@ -32,23 +42,11 @@ class TokenChecker
 
   function startsStmt()
   {
-    return $this->parser->is('[')
-        || $this->parser->is(Tag::T_IF)
-        || $this->parser->is(Tag::T_WHILE)
-        || $this->parser->is(Tag::T_FOR)
-        || $this->parser->is(Tag::T_FOREACH)
-        || $this->parser->is(Tag::T_MATCH)
-        || $this->parser->is(Tag::T_BREAK)
-        || $this->parser->is(Tag::T_CONTINUE)
-        || $this->parser->is('<<<')
-        || $this->parser->is(Tag::T_YIELD)
-        || $this->parser->is(Tag::T_GLOBAL)
-        || $this->parser->is(Tag::T_STATIC)
-        || $this->parser->is('>>>')
-        || $this->parser->is(Tag::T_RAISE)
-        || $this->parser->is(Tag::T_PRINT)
-        || $this->parser->is(Tag::T_TRY)
-        || $this->startsExpr();
+    return $this->isAny([
+      Tag::T_IF, Tag::T_WHILE, Tag::T_FOR, Tag::T_FOREACH, Tag::T_MATCH,
+      Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_YIELD, Tag::T_GLOBAL, Tag::T_STATIC,
+      Tag::T_RAISE, Tag::T_PRINT, Tag::T_TRY, '<<<', '>>>'
+    ]) || $this->startsExpr();
   }
 
   function startsExpr()
