@@ -1,11 +1,10 @@
+[![Join the chat at https://gitter.im/haskellcamargo/urano](https://badges.gitter.im/haskellcamargo/urano.svg)](https://gitter.im/haskellcamargo/urano?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/haskellcamargo/urano.svg?branch=master)](https://travis-ci.org/haskellcamargo/urano)
 [![Code Climate](https://codeclimate.com/github/haskellcamargo/urano/badges/gpa.svg)](https://codeclimate.com/github/haskellcamargo/urano)
 [![Test Coverage](https://codeclimate.com/github/haskellcamargo/urano/badges/coverage.svg)](https://codeclimate.com/github/haskellcamargo/urano/coverage)
 [![Issue Count](https://codeclimate.com/github/haskellcamargo/urano/badges/issue_count.svg)](https://codeclimate.com/github/haskellcamargo/urano)
 
 # Urano Lang
-
-[![Join the chat at https://gitter.im/haskellcamargo/urano](https://badges.gitter.im/haskellcamargo/urano.svg)](https://gitter.im/haskellcamargo/urano?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > A Rust-based programming language with gradual and duck typing that targets PHP.
 
