@@ -8,9 +8,7 @@ use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Parser\TokenReader;
 
 $lexer = new Tokenizer(<<<SRC
-  while 1 [
-    <<< 1! and 2 and 3 or 4 + 2 and (1 ? 2 : 3 ? 4 : 5)
-  ]
+  module Test
 SRC
 );
 
@@ -18,7 +16,7 @@ $parser = new TokenReader($lexer);
 
 try {
   $parser->parse();
-  $parser->python();
+  $parser->dumpAst();
 } catch (SyntaxError $e) {
   echo $e;
 }
