@@ -80,7 +80,37 @@ class Grammar
   }
 
   function _classDeclStmt() {
-    // TODO
+    $category = 'class';
+    $extends = NULL;
+    $implements = [];
+
+    switch ($this->parser->lookahead->getTag()) {
+      case Tag::T_MODEL:
+        $category = 'model';
+        break;
+      case Tag::T_FINAL:
+        $category = 'final';
+        break;
+    }
+
+    $this->parser->consume();
+    $class_name = $this->identifier();
+
+    if ($this->parser->is(':')) {
+      $this->parser->consume();
+      $extends = $this->identifier();
+      // TODO: Change for qualified class name when ready
+    }
+
+    if ($this->parser->is('#')) {
+      do {
+        $this->parser->consume();
+        $implements[] = $this->identifier();
+      } while ($this->parser->is(';'));
+    }
+
+    // TODO: Implement body
+    return NULL;
   }
 
   function _defStmt()
