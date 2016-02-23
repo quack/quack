@@ -21,8 +21,8 @@ abstract class Parser
   public $lookahead;
   public $scope_level = 0;
 
-  protected $prefix_parselets = [];
-  protected $infix_parselets = [];
+  public $prefix_parselets = [];
+  public $infix_parselets = [];
 
   public function __construct(Tokenizer $input)
   {
@@ -141,12 +141,12 @@ abstract class Parser
     return $this->input->getSymbolTable()->get($pointer);
   }
 
-  protected function position()
+  public function position()
   {
     return ["line" => &$this->input->line, "column" => &$this->input->column];
   }
 
-  protected function infixParseletForToken(Token $token)
+  public function infixParseletForToken(Token $token)
   {
     $key = $token->getTag();
     return array_key_exists($key, $this->infix_parselets)
@@ -154,7 +154,7 @@ abstract class Parser
       : NULL;
   }
 
-  protected function prefixParseletForToken(Token $token)
+  public function prefixParseletForToken(Token $token)
   {
     $key = $token->getTag();
     return array_key_exists($key, $this->prefix_parselets)

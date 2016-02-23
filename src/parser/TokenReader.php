@@ -71,26 +71,6 @@ class TokenReader extends Parser
     $this->ast = iterator_to_array($this->_topStmtList());
   }
 
-  private function isMethodModifier()
-  {
-    return $this->is(Tag::T_MY)
-        || $this->is(Tag::T_PROTECTED)
-        || $this->is(Tag::T_STATIC)
-        || $this->is(Tag::T_MODEL)
-        || $this->is(Tag::T_FINAL);
-  }
-
-  private function startsClassStmt()
-  {
-    return $this->is(Tag::T_DEF)
-        || $this->isMethodModifier();
-  }
-
-  private function isEOF()
-  {
-    return $this->lookahead->getTag() === 0;
-  }
-
   /* Coproductions */
   private function qualifiedName()
   {
@@ -118,7 +98,7 @@ class TokenReader extends Parser
       yield $this->_topStmt();
     }
 
-    if (!$this->isEOF()) {
+    if (!$this->checker->isEoF()) {
       throw (new SyntaxError)
         -> expected ('statement')
         -> found    ($this->lookahead)
@@ -129,7 +109,7 @@ class TokenReader extends Parser
 
   private function _classStmtList()
   {
-    while ($this->startsClassStmt()) {
+    while ($this->checker->startsClassStmt()) {
       yield $this->_classStmt();
     }
   }
@@ -138,7 +118,7 @@ class TokenReader extends Parser
   {
     if ($this->checker->startsStmt()) return $this->_stmt();
     if ($this->is(Tag::T_DEF)) return $this->_def();
-    if ($this->checker->startsDeclStmt()) return $this->_class();
+    if ($this->checker->startsClassDeclStmt()) return $this->_class();
   }
 
   private function _innerStmt()

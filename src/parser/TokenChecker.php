@@ -13,21 +13,11 @@ class TokenChecker
     $this->parser = $parser;
   }
 
-  function isAny($options)
-  {
-    foreach ($options as $option) {
-      if ($this->parser->is($option)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function startsTopStmt()
   {
     return $this->startsStmt()
-        || $this->parser->is(Tag::T_DEF)
         || $this->startsClassDeclStmt()
+        || $this->parser->is(Tag::T_DEF)
         || $this->parser->is(Tag::T_MODULE)
         || $this->parser->is(Tag::T_OPEN)
         || $this->parser->is(Tag::T_CONST);
@@ -42,11 +32,23 @@ class TokenChecker
 
   function startsStmt()
   {
-    return $this->isAny([
-      Tag::T_IF, Tag::T_WHILE, Tag::T_FOR, Tag::T_FOREACH, Tag::T_MATCH,
-      Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_YIELD, Tag::T_GLOBAL, Tag::T_STATIC,
-      Tag::T_RAISE, Tag::T_PRINT, Tag::T_TRY, '<<<', '>>>'
-    ]) || $this->startsExpr();
+    return $this->parser->is(Tag::T_IF)
+        || $this->parser->is(Tag::T_WHILE)
+        || $this->parser->is(Tag::T_FOR)
+        || $this->parser->is(Tag::T_FOREACH)
+        || $this->parser->is(Tag::T_MATCH)
+        || $this->parser->is(Tag::T_BREAK)
+        || $this->parser->is(Tag::T_CONTINUE)
+        || $this->parser->is(Tag::T_YIELD)
+        || $this->parser->is(Tag::T_GLOBAL)
+        || $this->parser->is(Tag::T_STATIC)
+        || $this->parser->is(Tag::T_RAISE)
+        || $this->parser->is(Tag::T_PRINT)
+        || $this->parser->is(Tag::T_PRINT)
+        || $this->parser->is('<<<')
+        || $this->parser->is('>>>')
+        || $this->parser->is('[')
+        || $this->startsExpr();
   }
 
   function startsExpr()
@@ -75,5 +77,25 @@ class TokenChecker
   {
     return $this->is(Tag::T_CASE)
         || $this->is(Tag::T_ELSE);
+  }
+
+  function isMethodModifier()
+  {
+    return $this->parser->is(Tag::T_MY)
+        || $this->parser->is(Tag::T_PROTECTED)
+        || $this->parser->is(Tag::T_STATIC)
+        || $this->parser->is(Tag::T_MODEL)
+        || $this->parser->is(Tag::T_FINAL);
+  }
+
+  function startsClassStmt()
+  {
+    return $this->parser->is(Tag::T_DEF)
+        || $this->isMethodModifier();
+  }
+
+  function isEoF()
+  {
+    return $this->parser->lookahead->getTag() === 0;
   }
 }
