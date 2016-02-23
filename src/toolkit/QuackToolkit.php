@@ -53,6 +53,7 @@ import(AST, 'expr/TernaryExpr');
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
+import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/DefStmt');
 import(AST, 'stmt/ExprStmt');

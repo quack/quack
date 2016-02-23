@@ -68,15 +68,15 @@ class TokenChecker
 
   function startsParameter()
   {
-    return $this->is('...')
-        || $this->is('*')
-        || $this->is(Tag::T_IDENT);
+    return $this->parser->is('...')
+        || $this->parser->is('*')
+        || $this->parser->is(Tag::T_IDENT);
   }
 
   function startsCase()
   {
-    return $this->is(Tag::T_CASE)
-        || $this->is(Tag::T_ELSE);
+    return $this->parser->is(Tag::T_CASE)
+        || $this->parser->is(Tag::T_ELSE);
   }
 
   function isMethodModifier()

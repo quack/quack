@@ -17,7 +17,6 @@ use \QuackCompiler\Ast\Stmt\GlobalStmt;
 use \QuackCompiler\Ast\Stmt\GotoStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
-use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
@@ -76,13 +75,6 @@ class TokenReader extends Parser
   //   while ($this->checker->startsClassStmt()) {
   //     yield $this->_classStmt();
   //   }
-  // }
-
-  // private function _topStmt()
-  // {
-  //   if ($this->checker->startsStmt()) return $this->_stmt();
-  //   if ($this->is(Tag::T_DEF)) return $this->_def();
-  //   if ($this->checker->startsClassDeclStmt()) return $this->_class();
   // }
 
   // private function _innerStmt()
