@@ -55,6 +55,13 @@ class Grammar
     }
   }
 
+  function _innerStmtList()
+  {
+    while ($this->checker->startsInnerStmt()) {
+      yield $this->_innerStmt();
+    }
+  }
+
   function _topStmt()
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
@@ -63,6 +70,17 @@ class Grammar
     if ($this->parser->is(Tag::T_MODULE))      return $this->_moduleStmt();
     if ($this->parser->is(Tag::T_OPEN))        return $this->_openStmt();
     if ($this->parser->is(Tag::T_CONST))       return $this->_constStmt();
+  }
+
+  function _innerStmt()
+  {
+    if ($this->checker->startsStmt())          return $this->_stmt();
+    if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
+    if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
+  }
+
+  function _classDeclStmt() {
+    // TODO
   }
 
   function _defStmt()
@@ -75,7 +93,9 @@ class Grammar
     }
     $name = $this->identifier();
     $parameters = $this->_parameters();
-    $body = $this->_innerStmt();
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(']');
 
     return new DefStmt($name, $by_reference, $body, $parameters);
   }
@@ -150,11 +170,6 @@ class Grammar
     $name = $this->identifier();
 
     return new Param($name, $by_reference, $ellipsis);
-  }
-
-  function _innerStmt()
-  {
-    // TODO
   }
 
   /* Coproductions */
