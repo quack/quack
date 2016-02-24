@@ -18,34 +18,55 @@ function start_repl()
   repl();
 }
 
+function install_stream_handler()
+{
+  echo "\033[01;36m";
+  readline_callback_handler_install("Quack> ", 'readline_callback');
+  echo "\033[0m";
+}
+
+function readline_callback($command)
+{
+  $command = trim($command);
+
+  if ($command === ':quit' || $command === ':q') {
+    exit;
+  } else if ($command === '') {
+    goto next;
+  } else if ($command === ':clear') {
+    $clear = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'cls' : 'clear';
+    system($clear);
+    goto next;
+  }
+
+  $lexer = new Tokenizer($command);
+  $parser = new TokenReader($lexer);
+
+  try {
+    $parser->parse();
+    /* when */ args_have('-a', '--ast') && $parser->dumpAst();
+    /* when */ args_have('-p', '--python') && $parser->python($parser);
+  } catch (SyntaxError $e) {
+    echo $e;
+  }
+
+  next:
+  readline_add_history($command);
+  install_stream_handler();
+}
+
 function repl()
 {
   echo "Type ^C or :quit to leave", PHP_EOL;
+  install_stream_handler();
 
   while (true) {
-    echo  "\033[01;36mQuack> \033[0m";
-    $command = readline();
+    $write = NULL;
+    $except = NULL;
+    $stream = stream_select($read = [STDIN], $write, $except, NULL);
 
-    if ($command === ':quit') {
-      exit;
-    } else if (trim($command) === "") {
-      continue;
-    }
-
-    $lexer = new Tokenizer($command);
-    $parser = new TokenReader($lexer);
-
-    try {
-      $parser->parse();
-      if (args_have('-a', '--ast')) {
-        $parser->dumpAst();
-      }
-
-      if (args_have('-p', '--python')) {
-        $parser->python($parser);
-      }
-    } catch (SyntaxError $e) {
-      echo $e;
+    if ($stream && in_array(STDIN, $read)) {
+      readline_callback_read_char();
     }
   }
 }
