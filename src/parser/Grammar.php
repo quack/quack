@@ -18,6 +18,7 @@ use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
+use \QuackCompiler\Ast\Stmt\PropertyStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
@@ -62,6 +63,13 @@ class Grammar
     }
   }
 
+  function _classStmtList()
+  {
+    while ($this->checker->startsClassStmt()) {
+      yield $this->_classStmt();
+    }
+  }
+
   function _topStmt()
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
@@ -77,6 +85,37 @@ class Grammar
     if ($this->checker->startsStmt())          return $this->_stmt();
     if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
+  }
+
+  function _classStmt()
+  {
+    if ($this->parser->is(Tag::T_CONST)) return $this->_constStmt();
+    if ($this->parser->is(Tag::T_OPEN))  return $this->_openStmt(); // TODO: Replace by traits
+    if ($this->parser->is(Tag::T_DEF))   return $this->_defStmt();
+    if ($this->parser->is(Tag::T_IDENT)) return $this->_property();
+
+    if ($this->checker->isMethodModifier()) {
+      $modifiers = [];
+      while ($this->checker->isMethodModifier()) {
+        $modifiers[] = $this->parser->consumeAndFetch()->lexeme;
+      }
+
+      if ($this->parser->is(Tag::T_DEF))   return $this->_defStmt($modifiers);
+      if ($this->parser->is(Tag::T_IDENT)) return $this->_property($modifiers);
+    }
+  }
+
+  function _property($modifiers = [])
+  {
+    $name = $this->identifier();
+    $value = NULL;
+
+    if ($this->parser->is(':-')) {
+      $this->parser->consume();
+      $value = $this->identifier(); // TODO: Change for _staticScalar()
+    }
+
+    return new PropertyStmt($name, $value, $modifiers);
   }
 
   function _classDeclStmt() {
@@ -109,11 +148,14 @@ class Grammar
       } while ($this->parser->is(';'));
     }
 
-    // TODO: Implement body
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_classStmtList());
+    $this->parser->match(']');
+
     return NULL;
   }
 
-  function _defStmt()
+  function _defStmt($modifiers = [])
   {
     $this->parser->match(Tag::T_DEF);
     $by_reference = false;
@@ -127,7 +169,7 @@ class Grammar
     $body = iterator_to_array($this->_innerStmtList());
     $this->parser->match(']');
 
-    return new DefStmt($name, $by_reference, $body, $parameters);
+    return new DefStmt($name, $by_reference, $body, $parameters, $modifiers);
   }
 
   function _moduleStmt()

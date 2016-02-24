@@ -91,6 +91,9 @@ class TokenChecker
   function startsClassStmt()
   {
     return $this->parser->is(Tag::T_DEF)
+        || $this->parser->is(Tag::T_CONST)
+        || $this->parser->is(Tag::T_OPEN)
+        || $this->parser->is(Tag::T_IDENT)
         || $this->isMethodModifier();
   }
 

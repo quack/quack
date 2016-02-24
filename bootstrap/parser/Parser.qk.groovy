@@ -1,0 +1,99 @@
+module QuackCompiler.Parser
+
+open Exception
+open QuackCompiler.Lexer.Tag
+open QuackCompiler.Lexer.Token
+open QuackCompiler.Lexer.Tokenizer
+open QuackCompiler.Parselets.IPrefixParselet
+open QuackCompiler.Parselets.IInfixParselet
+open QuackCompiler.Parselets.BinaryOperatorParselet
+open QuackCompiler.Parselets.NumberParselet
+open QuackCompiler.Parselets.PostfixOperatorParselet
+open QuackCompiler.Parselets.PrefixOperatorParselet
+open QuackCompiler.Parselets.TernaryParselet
+open QuackCompiler.Parselets.GroupParselet
+
+model Parser [
+  input
+  lookahead
+  scope_level :- zero
+
+  prefix_parselets :- todo
+  infix_parselets :- todo
+
+  def initialize [*input] [
+    // TODO
+  ]
+
+  my def register [tag; parselet] [
+    // TODO
+  ]
+
+  my def postfix [tag; precedence] [
+    // TODO
+  ]
+
+  my def infix_left [tag; precedence] [
+    // TODO
+  ]
+
+  my def infix_right [tag; precedence] [
+    // TODO
+  ]
+
+  my def register_parselets! [
+    // TODO
+  ]
+
+  def _match [tag] [
+    // TODO
+  ]
+
+  def opt [tag] [
+    // TODO
+  ]
+
+  def is_operator! [
+    // TODO
+  ]
+
+  def consume! [
+    // TODO
+  ]
+
+  def consume_and_fetch! [
+    // TODO
+  ]
+
+  def resolve_scope [pointer] [
+    // TODO
+  ]
+
+  def position! [
+    // TODO
+  ]
+
+  def infix_parselet_for_token [token] [
+    // TODO
+  ]
+
+  def prefix_parselet_for_token [token] [
+    // TODO
+  ]
+
+  def open_scope! [
+    // TODO
+  ]
+
+  def close_scope! [
+    // TODO
+  ]
+
+  def indent! [
+    // TODO
+  ]
+
+  def dedent! [
+    // TODO
+  ]
+]

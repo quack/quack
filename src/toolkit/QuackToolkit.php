@@ -65,6 +65,7 @@ import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/PrintStmt');
+import(AST, 'stmt/PropertyStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/WhileStmt');

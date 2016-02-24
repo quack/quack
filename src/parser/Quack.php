@@ -7,10 +7,12 @@ use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Parser\TokenReader;
 
-$lexer = new Tokenizer(<<<SRC
-  module Test
-SRC
-);
+// $lexer = new Tokenizer(<<<SRC
+//   module Test
+// SRC
+// );
+
+$lexer = new Tokenizer(file_get_contents('../../bootstrap/parser/Parser.qk.groovy'));
 
 $parser = new TokenReader($lexer);
 

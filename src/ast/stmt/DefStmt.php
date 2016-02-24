@@ -10,13 +10,15 @@ class DefStmt implements Stmt
   public $by_reference;
   public $body;
   public $parameters;
+  public $modifiers = [];
 
-  public function __construct($name, $by_reference, $body, $parameters)
+  public function __construct($name, $by_reference, $body, $parameters, $modifiers = [])
   {
     $this->name = $name;
     $this->by_reference = $by_reference;
     $this->body = $body;
     $this->parameters = $parameters;
+    $this->modifiers = $modifiers;
   }
 
   public function format(Parser $parser)
