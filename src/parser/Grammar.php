@@ -10,6 +10,7 @@ use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\DefStmt;
+use \QuackCompiler\Ast\Stmt\DoWhileStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
@@ -74,8 +75,16 @@ class Grammar
 
   function _stmt()
   {
-    if ($this->parser->is(Tag::T_IF)) return $this->_ifStmt();
-    if ($this->parser->is('['))       return $this->_stmtBlock();
+    if ($this->parser->is(Tag::T_IF))       return $this->_ifStmt();
+    if ($this->parser->is(Tag::T_WHILE))    return $this->_whileStmt();
+    if ($this->parser->is(Tag::T_DO))       return $this->_doWhileStmt();
+    if ($this->parser->is(Tag::T_FOR))      return $this->_forStmt();
+    if ($this->parser->is(Tag::T_FOREACH))  return $this->_foreachStmt();
+    if ($this->parser->is(Tag::T_BREAK))    return $this->_breakStmt();
+    if ($this->parser->is(Tag::T_CONTINUE)) return $this->_continueStmt();
+    if ($this->parser->is(Tag::T_GOTO))     return $this->_gotoStmt();
+    if ($this->parser->is(Tag::T_GLOBAL))   return $this->_globalStmt();
+    if ($this->parser->is('['))             return $this->_stmtBlock();
 
     throw new \Exception('Not a statement');
   }
@@ -98,6 +107,84 @@ class Grammar
     $else = $this->_optElse();
 
     return new IfStmt($condition, $body, $elif, $else);
+  }
+
+  function _whileStmt()
+  {
+    $this->parser->match(Tag::T_WHILE);
+    $condition = $this->_expr();
+    $body = $this->_stmt();
+
+    return new WhileStmt($condition, $body);
+  }
+
+  function _forStmt()
+  {
+    throw new \Exception('TODO. Open issue to check the best syntax');
+  }
+
+  function _foreachStmt()
+  {
+    $this->parser->match(Tag::T_FOREACH);
+    $key = NULL;
+
+    if ($this->parser->is(Tag::T_ATOM)) {
+      $key = $this->parser->consumeAndFetch();
+    }
+
+    ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
+    $alias = $this->identifier();
+    $this->parser->match(Tag::T_IN);
+    $iterable = $this->_expr();
+    $body = $this->_stmt();
+
+    return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
+  }
+
+  function _doWhileStmt()
+  {
+    $this->parser->match(Tag::T_DO);
+    $body = $this->_stmt();
+    $this->parser->match(Tag::T_WHILE);
+    $condition = $this->_expr();
+
+    return new DoWhileStmt($condition, $body);
+  }
+
+  function _breakStmt()
+  {
+    $this->parser->match(Tag::T_BREAK);
+    $expression = NULL;
+    if ($this->checker->startsExpr()) {
+      $expression = $this->_expr();
+    }
+
+    return new BreakStmt($expression);
+  }
+
+  function _continueStmt()
+  {
+    $this->parser->match(Tag::T_CONTINUE);
+    $expression = NULL;
+    if ($this->checker->startsExpr()) {
+      $expression = $this->_expr();
+    }
+
+    return new ContinueStmt($expression);
+  }
+
+  function _gotoStmt()
+  {
+    $this->parser->match(Tag::T_GOTO);
+    $label = $this->identifier();
+    return new GotoStmt($label);
+  }
+
+  function _globalStmt()
+  {
+    $this->parser->match(Tag::T_GLOBAL);
+    $variable = $this->identifier();
+    return new GlobalStmt($variable);
   }
 
   function _elifList()

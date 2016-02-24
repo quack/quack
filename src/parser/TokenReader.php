@@ -103,46 +103,6 @@ class TokenReader extends Parser
   //   return new LabelStmt($label_name);
   // }
 
-  // private function _goto()
-  // {
-  //   $this->match(Tag::T_GOTO);
-  //   $goto_name = $this->identifier();
-
-  //   return new GotoStmt($goto_name);
-  // }
-
-  // private function _global()
-  // {
-  //   $this->match(Tag::T_GLOBAL);
-  //   $var_name = $this->identifier();
-
-  //   return new GlobalStmt($var_name);
-  // }
-
-  // private function _break()
-  // {
-  //   $this->match(Tag::T_BREAK);
-  //   $expression = NULL;
-
-  //   if ($this->checker->startsExpr()) {
-  //     $expression = $this->_expr();
-  //   }
-
-  //   return new BreakStmt($expression);
-  // }
-
-  // private function _continue()
-  // {
-  //   $this->match(Tag::T_CONTINUE);
-  //   $expression = NULL;
-
-  //   if ($this->checker->startsExpr()) {
-  //     $expression = $this->_expr();
-  //   }
-
-  //   return new ContinueStmt($expression);
-  // }
-
   // private function _return()
   // {
   //   $this->match('<<<');
@@ -165,32 +125,6 @@ class TokenReader extends Parser
   // {
   //   $this->match(Tag::T_RAISE);
   //   return new RaiseStmt($this->_expr());
-  // }
-
-  // private function _while()
-  // {
-  //   $this->match(Tag::T_WHILE);
-  //   $condition = $this->_expr();
-  //   $body = $this->_stmt();
-  //   return new WhileStmt($condition, $body);
-  // }
-
-  // private function _foreach()
-  // {
-  //   $this->match(Tag::T_FOREACH);
-  //   $by_ref = false;
-
-  //   if ($this->is('*')) {
-  //     $by_ref = true;
-  //     $this->match('*');
-  //   }
-
-  //   $alias = $this->identifier();
-  //   $this->match(Tag::T_IN);
-  //   $generator = $this->_expr();
-  //   $body = $this->_stmt();
-
-  //   return new ForeachStmt($by_ref, $alias, $generator, $body);
   // }
 
   // private function _try()

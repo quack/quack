@@ -8,13 +8,15 @@ use \QuackCompiler\Parser\Parser;
 class ForeachStmt implements Stmt
 {
   public $by_reference;
+  public $key;
   public $alias;
   public $generator;
   public $body;
 
-  public function __construct($by_reference, $alias, $generator, $body)
+  public function __construct($by_reference, $key, $alias, $generator, $body)
   {
     $this->by_reference = $by_reference;
+    $this->key = $key;
     $this->alias = $alias;
     $this->generator = $generator;
     $this->body = $body;
