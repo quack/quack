@@ -3,12 +3,14 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
 
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\DefStmt;
+use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\GlobalStmt;
@@ -68,6 +70,60 @@ class Grammar
     while ($this->checker->startsClassStmt()) {
       yield $this->_classStmt();
     }
+  }
+
+  function _stmt()
+  {
+    if ($this->parser->is(Tag::T_IF)) return $this->_ifStmt();
+    if ($this->parser->is('['))       return $this->_stmtBlock();
+
+    throw new \Exception('Not a statement');
+  }
+
+  function _stmtBlock()
+  {
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(']');
+
+    return new BlockStmt($body);
+  }
+
+  function _ifStmt()
+  {
+    $this->parser->match(Tag::T_IF);
+    $condition = $this->_expr();
+    $body = $this->_stmt();
+    $elif = iterator_to_array($this->_elifList());
+    $else = $this->_optElse();
+
+    return new IfStmt($condition, $body, $elif, $else);
+  }
+
+  function _elifList()
+  {
+    while ($this->parser->is(Tag::T_ELIF)) {
+      $this->parser->consume();
+      $condition = $this->_expr();
+      $body = $this->_stmt();
+      yield new ElifStmt($condition, $body);
+    }
+  }
+
+  function _optElse()
+  {
+    if (!$this->parser->is(Tag::T_ELSE)) {
+      return NULL;
+    }
+
+    $this->parser->consume();
+    return $this->_stmt();
+  }
+
+  function _expr($precedence = 0)
+  {
+    $token = $this->parser->consumeAndFetch();
+    return new \QuackCompiler\Ast\Expr\NumberExpr($token);
   }
 
   function _topStmt()

@@ -70,25 +70,6 @@ class TokenReader extends Parser
   }
 
   /* Productions */
-  // private function _classStmtList()
-  // {
-  //   while ($this->checker->startsClassStmt()) {
-  //     yield $this->_classStmt();
-  //   }
-  // }
-
-  // private function _innerStmt()
-  // {
-  //   if ($this->checker->startsStmt()) return $this->_stmt();
-  //   if ($this->is(Tag::T_DEF)) return $this->_def();
-
-  //   throw (new SyntaxError)
-  //     -> expected ('statement')
-  //     -> found    ($this->lookahead)
-  //     -> on       ($this->position())
-  //     -> source   ($this->input);
-  // }
-
   // private function _stmt()
   // {
   //   if ($this->is(Tag::T_MODULE))   return $this->_module();
@@ -136,55 +117,6 @@ class TokenReader extends Parser
   //   $var_name = $this->identifier();
 
   //   return new GlobalStmt($var_name);
-  // }
-
-  // private function _if()
-  // {
-  //   $this->match(Tag::T_IF);
-  //   $condition = $this->_expr();
-  //   // TODO: Change for inner stmt
-  //   $body = $this->_topStmt();
-  //   $elif = $this->_elifList();
-  //   $else = $this->_optElse();
-
-  //   return new IfStmt($condition, $body, $elif, $else);
-  // }
-
-  // private function _elifList()
-  // {
-  //   $list = [];
-  //   while ($this->is(Tag::T_ELIF)) {
-  //     $this->match(Tag::T_ELIF);
-  //     $list[] = [
-  //       "condition" => $this->_expr(),
-  //       "body"      => $this->_topStmt() // TODO: Change for inner stmt
-  //     ];
-  //   }
-  //   return $list;
-  // }
-
-  // private function _optElse()
-  // {
-  //   if (!$this->is(Tag::T_ELSE)) {
-  //     return NULL;
-  //   }
-
-  //   $this->match(Tag::T_ELSE);
-  //   // TODO: Change for inner stmt
-  //   return $this->_topStmt();
-  // }
-
-  // private function _blockStmt()
-  // {
-  //   $body = [];
-
-  //   $this->match('[');
-  //   while ($this->checker->startsStmt()) {
-  //     $body[] = $this->_stmt();
-  //   }
-  //   $this->match(']');
-
-  //   return new BlockStmt($body);
   // }
 
   // private function _break()

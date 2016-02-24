@@ -56,6 +56,7 @@ import(AST, 'stmt/BreakStmt');
 import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/DefStmt');
+import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/GlobalStmt');
