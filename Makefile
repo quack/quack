@@ -1,5 +1,8 @@
 TEST = phpunit --verbose --colors
 
+build:
+	gcc ./src/quack.c -o ./bin/quack
+
 repl:
 ifeq ($(mode), ast)
 	cd src/repl; php QuackRepl.php --ast
