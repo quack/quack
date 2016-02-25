@@ -152,14 +152,14 @@ inline_use_declaration:
 +     | T_BREAK expr ';'                                      { $$ = Stmt\Break_[$2]; }
 +     | T_CONTINUE ';'                                        { $$ = Stmt\Continue_[null]; }
 +     | T_CONTINUE expr ';'                                   { $$ = Stmt\Continue_[$2]; }
-    | T_RETURN ';'                                          { $$ = Stmt\Return_[null]; }
-    | T_RETURN expr ';'                                     { $$ = Stmt\Return_[$2]; }
++     | T_RETURN ';'                                          { $$ = Stmt\Return_[null]; }
++     | T_RETURN expr ';'                                     { $$ = Stmt\Return_[$2]; }
     | yield_expr ';'                                        { $$ = $1; }
 +     | T_GLOBAL global_var_list ';'                          { $$ = Stmt\Global_[$2]; }
     | T_STATIC static_var_list ';'                          { $$ = Stmt\Static_[$2]; }
-    | T_ECHO expr_list ';'                                  { $$ = Stmt\Echo_[$2]; }
++     | T_ECHO expr_list ';'                                  { $$ = Stmt\Echo_[$2]; }
     | T_INLINE_HTML                                         { $$ = Stmt\InlineHTML[$1]; }
-    | expr ';'                                              { $$ = $1; }
+ +    | expr ';'                                              { $$ = $1; }
     | T_UNSET '(' variables_list ')' ';'                    { $$ = Stmt\Unset_[$3]; }
 +     | T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
 +           { $$ = Stmt\Foreach_[$3, $5[0], ['keyVar' => null, 'byRef' => $5[1], 'stmts' => $7]]; }
@@ -168,16 +168,16 @@ inline_use_declaration:
     | T_DECLARE '(' declare_list ')' declare_statement      { $$ = Stmt\Declare_[$3, $5]; }
     | T_TRY '{' inner_statement_list '}' catches optional_finally
           { $$ = Stmt\TryCatch[$3, $5, $6]; }
-    | T_THROW expr ';'                                      { $$ = Stmt\Throw_[$2]; }
++     | T_THROW expr ';'                                      { $$ = Stmt\Throw_[$2]; }
 +     | T_GOTO T_STRING ';'                                   { $$ = Stmt\Goto_[$2]; }
-    | T_STRING ':'                                          { $$ = Stmt\Label[$1]; }
-    | error                                                 { $$ = array(); /* means: no statement */ }
++     | T_STRING ':'                                          { $$ = Stmt\Label[$1]; }
++     | error                                                 { $$ = array(); /* means: no statement */ }
 ;
 
-statement:
-      non_empty_statement                                   { $$ = $1; }
-    | ';'                                                   { $$ = array(); /* means: no statement */ }
-;
++ statement:
++       non_empty_statement                                   { $$ = $1; }
++     | ';'                                                   { $$ = array(); /* means: no statement */ }
++ ;
 
 catches:
       /* empty */                                           { init(); }
@@ -209,29 +209,29 @@ optional_ellipsis:
     | T_ELLIPSIS                                            { $$ = true; }
 ;
 
-function_declaration_statement:
-    T_FUNCTION optional_ref T_STRING '(' parameter_list ')' optional_return_type '{' inner_statement_list '}'
-        { $$ = Stmt\Function_[$3, ['byRef' => $2, 'params' => $5, 'returnType' => $7, 'stmts' => $9]]; }
++ function_declaration_statement:
++     T_FUNCTION optional_ref T_STRING '(' parameter_list ')' optional_return_type '{' inner_statement_list '}'
++         { $$ = Stmt\Function_[$3, ['byRef' => $2, 'params' => $5, 'returnType' => $7, 'stmts' => $9]]; }
 ;
 
-class_declaration_statement:
-      class_entry_type T_STRING extends_from implements_list '{' class_statement_list '}'
-          { $$ = Stmt\Class_[$2, ['type' => $1, 'extends' => $3, 'implements' => $4, 'stmts' => $6]]; }
++ class_declaration_statement:
++       class_entry_type T_STRING extends_from implements_list '{' class_statement_list '}'
++           { $$ = Stmt\Class_[$2, ['type' => $1, 'extends' => $3, 'implements' => $4, 'stmts' => $6]]; }
     | T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
           { $$ = Stmt\Interface_[$2, ['extends' => $3, 'stmts' => $5]]; }
     | T_TRAIT T_STRING '{' class_statement_list '}'
           { $$ = Stmt\Trait_[$2, $4]; }
 ;
 
-class_entry_type:
-      T_CLASS                                               { $$ = 0; }
-    | T_ABSTRACT T_CLASS                                    { $$ = Stmt\Class_::MODIFIER_ABSTRACT; }
-    | T_FINAL T_CLASS                                       { $$ = Stmt\Class_::MODIFIER_FINAL; }
++ class_entry_type:
++       T_CLASS                                               { $$ = 0; }
++     | T_ABSTRACT T_CLASS                                    { $$ = Stmt\Class_::MODIFIER_ABSTRACT; }
++     | T_FINAL T_CLASS                                       { $$ = Stmt\Class_::MODIFIER_FINAL; }
 ;
 
-extends_from:
-      /* empty */                                           { $$ = null; }
-    | T_EXTENDS name                                        { $$ = $2; }
++ extends_from:
++       /* empty */                                           { $$ = null; }
++     | T_EXTENDS name                                        { $$ = $2; }
 ;
 
 interface_extends_list:
@@ -239,20 +239,20 @@ interface_extends_list:
     | T_EXTENDS name_list                                   { $$ = $2; }
 ;
 
-implements_list:
-      /* empty */                                           { $$ = array(); }
-    | T_IMPLEMENTS name_list                                { $$ = $2; }
-;
++ implements_list:
++       /* empty */                                           { $$ = array(); }
++     | T_IMPLEMENTS name_list                                { $$ = $2; }
++ ;
 
 name_list:
       name                                                  { init($1); }
     | name_list ',' name                                    { push($1, $3); }
 ;
 
-for_statement:
-      statement                                             { $$ = toArray($1); }
-    | ':' inner_statement_list T_ENDFOR ';'                 { $$ = $2; }
-;
++ for_statement:
++       statement                                             { $$ = toArray($1); }
++     | ':' inner_statement_list T_ENDFOR ';'                 { $$ = $2; }
++ ;
 
 foreach_statement:
       statement                                             { $$ = toArray($1); }
@@ -460,34 +460,34 @@ variable_modifiers:
     | T_VAR                                                 { $$ = 0; }
 ;
 
-method_modifiers:
-      /* empty */                                           { $$ = 0; }
-    | non_empty_member_modifiers                            { $$ = $1; }
-;
++ method_modifiers:
++       /* empty */                                           { $$ = 0; }
++     | non_empty_member_modifiers                            { $$ = $1; }
++ ;
 
-non_empty_member_modifiers:
-      member_modifier                                       { $$ = $1; }
-    | non_empty_member_modifiers member_modifier            { Stmt\Class_::verifyModifier($1, $2); $$ = $1 | $2; }
-;
++ non_empty_member_modifiers:
++       member_modifier                                       { $$ = $1; }
++     | non_empty_member_modifiers member_modifier            { Stmt\Class_::verifyModifier($1, $2); $$ = $1 | $2; }
++ ;
 
-member_modifier:
-      T_PUBLIC                                              { $$ = Stmt\Class_::MODIFIER_PUBLIC; }
-    | T_PROTECTED                                           { $$ = Stmt\Class_::MODIFIER_PROTECTED; }
-    | T_PRIVATE                                             { $$ = Stmt\Class_::MODIFIER_PRIVATE; }
-    | T_STATIC                                              { $$ = Stmt\Class_::MODIFIER_STATIC; }
-    | T_ABSTRACT                                            { $$ = Stmt\Class_::MODIFIER_ABSTRACT; }
-    | T_FINAL                                               { $$ = Stmt\Class_::MODIFIER_FINAL; }
-;
++ member_modifier:
++       T_PUBLIC                                              { $$ = Stmt\Class_::MODIFIER_PUBLIC; }
++     | T_PROTECTED                                           { $$ = Stmt\Class_::MODIFIER_PROTECTED; }
++     | T_PRIVATE                                             { $$ = Stmt\Class_::MODIFIER_PRIVATE; }
++     | T_STATIC                                              { $$ = Stmt\Class_::MODIFIER_STATIC; }
++     | T_ABSTRACT                                            { $$ = Stmt\Class_::MODIFIER_ABSTRACT; }
++     | T_FINAL                                               { $$ = Stmt\Class_::MODIFIER_FINAL; }
++ ;
 
-property_declaration_list:
-      property_declaration                                  { init($1); }
-    | property_declaration_list ',' property_declaration    { push($1, $3); }
-;
++ property_declaration_list:
++       property_declaration                                  { init($1); }
++     | property_declaration_list ',' property_declaration    { push($1, $3); }
++ ;
 
-property_declaration:
-      T_VARIABLE                                            { $$ = Stmt\PropertyProperty[parseVar($1), null]; }
-    | T_VARIABLE '=' static_scalar                          { $$ = Stmt\PropertyProperty[parseVar($1), $3]; }
-;
++ property_declaration:
++       T_VARIABLE                                            { $$ = Stmt\PropertyProperty[parseVar($1), null]; }
++     | T_VARIABLE '=' static_scalar                          { $$ = Stmt\PropertyProperty[parseVar($1), $3]; }
++ ;
 
 expr_list:
       expr_list ',' expr                                    { push($1, $3); }

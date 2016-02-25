@@ -8,6 +8,7 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
+use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\DefStmt;
 use \QuackCompiler\Ast\Stmt\DoWhileStmt;
@@ -18,13 +19,19 @@ use \QuackCompiler\Ast\Stmt\GlobalStmt;
 use \QuackCompiler\Ast\Stmt\GotoStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
+use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
+use \QuackCompiler\Ast\Stmt\OutStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\PropertyStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
+use \QuackCompiler\Ast\Stmt\RescueStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
+use \QuackCompiler\Ast\Stmt\SwitchStmt;
+use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
+use \QuackCompiler\Ast\Stmt\YieldStmt;
 
 use \QuackCompiler\Ast\Helper\Param;
 
@@ -76,20 +83,29 @@ class Grammar
   function _stmt()
   {
     if ($this->parser->is(Tag::T_IF))       return $this->_ifStmt();
+    if ($this->parser->is(Tag::T_LET))      return $this->_letStmt();
     if ($this->parser->is(Tag::T_WHILE))    return $this->_whileStmt();
     if ($this->parser->is(Tag::T_DO))       return $this->_doWhileStmt();
     if ($this->parser->is(Tag::T_FOR))      return $this->_forStmt();
     if ($this->parser->is(Tag::T_FOREACH))  return $this->_foreachStmt();
+    if ($this->parser->is(Tag::T_SWITCH))   return $this->_switchStmt();
+    if ($this->parser->is(Tag::T_TRY))      return $this->_tryStmt();
     if ($this->parser->is(Tag::T_BREAK))    return $this->_breakStmt();
     if ($this->parser->is(Tag::T_CONTINUE)) return $this->_continueStmt();
     if ($this->parser->is(Tag::T_GOTO))     return $this->_gotoStmt();
+    if ($this->parser->is(Tag::T_YIELD))    return $this->_yieldStmt();
     if ($this->parser->is(Tag::T_GLOBAL))   return $this->_globalStmt();
-    if ($this->parser->is('['))             return $this->_stmtBlock();
+    if ($this->parser->is(Tag::T_RAISE))    return $this->_raiseStmt();
+    if ($this->parser->is(Tag::T_PRINT))    return $this->_printStmt();
+    if ($this->parser->is(Tag::T_OUT))      return $this->_outStmt();
+    if ($this->parser->is('^'))             return $this->_returnStmt();
+    if ($this->parser->is('['))             return $this->_blockStmt();
+    if ($this->parser->is(':-'))            return $this->_labelStmt();
 
     throw new \Exception('Not a statement');
   }
 
-  function _stmtBlock()
+  function _blockStmt()
   {
     $this->parser->match('[');
     $body = iterator_to_array($this->_innerStmtList());
@@ -107,6 +123,16 @@ class Grammar
     $else = $this->_optElse();
 
     return new IfStmt($condition, $body, $elif, $else);
+  }
+
+  function _letStmt()
+  {
+    $this->parser->match(Tag::T_LET);
+    $name = $this->identifier();
+    $this->parser->match(':-');
+    $value = $this->_expr();
+
+    return new LetStmt($name, $value);
   }
 
   function _whileStmt()
@@ -139,6 +165,29 @@ class Grammar
     $body = $this->_stmt();
 
     return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
+  }
+
+  function _switchStmt()
+  {
+    $this->parser->match(Tag::T_SWITCH);
+    $value = $this->_expr();
+    $this->parser->match('[');
+    $cases = iterator_to_array($this->_caseStmtList());
+    $this->parser->match(']');
+
+    return new SwitchStmt($value, $cases);
+  }
+
+  function _tryStmt()
+  {
+    $this->parser->match(Tag::T_TRY);
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(']');
+    $rescues = iterator_to_array($this->_rescueStmtList());
+    $finally = $this->_optFinally();
+
+    return new TryStmt($body, $rescues, $finally);
   }
 
   function _doWhileStmt()
@@ -180,11 +229,60 @@ class Grammar
     return new GotoStmt($label);
   }
 
+  function _yieldStmt()
+  {
+    $this->parser->match(Tag::T_YIELD);
+    $expression = $this->_expr();
+
+    return new YieldStmt($expression);
+  }
+
   function _globalStmt()
   {
     $this->parser->match(Tag::T_GLOBAL);
     $variable = $this->identifier();
     return new GlobalStmt($variable);
+  }
+
+  function _raiseStmt()
+  {
+    $this->parser->match(Tag::T_RAISE);
+    $expression = $this->_expr();
+
+    return new RaiseStmt($expression);
+  }
+
+  function _printStmt()
+  {
+    $this->parser->match(Tag::T_PRINT);
+    $expression = $this->_expr();
+
+    return new PrintStmt($expression);
+  }
+
+  function _outStmt()
+  {
+    $this->parser->match(Tag::T_OUT);
+    $expression = $this->_expr();
+
+    return new OutStmt($expression);
+  }
+
+  function _returnStmt()
+  {
+    $this->parser->match('^');
+    $expression = NULL;
+    $this->checker->startsExpr() && /* then */ $expression = $this->_expr();
+
+    return new ReturnStmt($expression);
+  }
+
+  function _labelStmt()
+  {
+    $this->parser->match(':-');
+    $label_name = $this->identifier();
+
+    return new LabelStmt($label_name);
   }
 
   function _elifList()
@@ -210,6 +308,9 @@ class Grammar
   function _expr($precedence = 0)
   {
     $token = $this->parser->consumeAndFetch();
+    if ($token->getTag() === 0) {
+      throw new \Exception('EOF');
+    }
     return new \QuackCompiler\Ast\Expr\NumberExpr($token);
   }
 
@@ -385,6 +486,48 @@ class Grammar
     $name = $this->identifier();
 
     return new Param($name, $by_reference, $ellipsis);
+  }
+
+  function _caseStmtList()
+  {
+    while ($this->checker->startsCase()) {
+      $is_else = $this->parser->is(Tag::T_ELSE);
+      $this->parser->consume();
+      $value = $is_else ? NULL : $this->_expr();
+      $body = iterator_to_array($this->_innerStmtList());
+
+      yield new CaseStmt($value, $body, $is_else);
+    }
+  }
+
+  function _rescueStmtList()
+  {
+    while ($this->parser->is(Tag::T_RESCUE)) {
+      $this->parser->consume();
+      $this->parser->match('[');
+      $exception_class = $this->identifier(); // TODO: Change for qualified name
+      $variable = $this->identifier();
+      $this->parser->match(']');
+      $this->parser->match('[');
+      $body = iterator_to_array($this->_innerStmtList());
+      $this->parser->match(']');
+
+      yield new RescueStmt($exception_class, $variable, $body);
+    }
+  }
+
+  function _optFinally()
+  {
+    if ($this->parser->is(Tag::T_FINALLY)) {
+      $this->parser->consume();
+      $this->parser->match('[');
+      $body = iterator_to_array($this->_innerStmtList());
+      $this->parser->match(']');
+
+      return $body;
+    }
+
+    return NULL;
   }
 
   /* Coproductions */

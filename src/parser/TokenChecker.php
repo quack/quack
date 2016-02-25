@@ -33,22 +33,26 @@ class TokenChecker
   function startsStmt()
   {
     return $this->parser->is(Tag::T_IF)       // Done
+        || $this->parser->is(Tag::T_LET)      // Done
         || $this->parser->is(Tag::T_WHILE)    // Partially done
         || $this->parser->is(Tag::T_DO)       // Done
-        || $this->parser->is(Tag::T_FOR)
+        || $this->parser->is(Tag::T_FOR)      //
         || $this->parser->is(Tag::T_FOREACH)  // Done
-        || $this->parser->is(Tag::T_MATCH)
+        || $this->parser->is(Tag::T_SWITCH)   // Done
+        || $this->parser->is(Tag::T_TRY)      //
+        || $this->parser->is(Tag::T_MATCH)    //
         || $this->parser->is(Tag::T_BREAK)    // Done
         || $this->parser->is(Tag::T_CONTINUE) // Done
         || $this->parser->is(Tag::T_GOTO)     // Done
-        || $this->parser->is(Tag::T_YIELD)
-        || $this->parser->is(Tag::T_GLOBAL)
-        || $this->parser->is(Tag::T_STATIC)
-        || $this->parser->is(Tag::T_RAISE)
-        || $this->parser->is(Tag::T_PRINT)
-        || $this->parser->is('<<<')
-        || $this->parser->is('>>>')
-        || $this->parser->is('[')
+        || $this->parser->is(Tag::T_YIELD)    //
+        || $this->parser->is(Tag::T_GLOBAL)   // Done
+        || $this->parser->is(Tag::T_STATIC)   //
+        || $this->parser->is(Tag::T_RAISE)    // Done
+        || $this->parser->is(Tag::T_PRINT)    // Done
+        || $this->parser->is(Tag::T_OUT)      // Done
+        || $this->parser->is('^')             // Done
+        || $this->parser->is('[')             // Done
+        || $this->parser->is(':-')            // Done
         || $this->startsExpr();
   }
 
