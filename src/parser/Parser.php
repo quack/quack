@@ -14,6 +14,7 @@ use \QuackCompiler\Parselets\PostfixOperatorParselet;
 use \QuackCompiler\Parselets\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\TernaryParselet;
 use \QuackCompiler\Parselets\GroupParselet;
+use \QuackCompiler\Parselets\FunctionParselet;
 
 abstract class Parser
 {
@@ -66,6 +67,7 @@ abstract class Parser
     $this->register(Tag::T_DOUBLE, new NumberParselet);
     $this->register('?', new TernaryParselet);
     $this->register('(', new GroupParselet);
+    $this->register(Tag::T_FN, new FunctionParselet);
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);
@@ -82,10 +84,19 @@ abstract class Parser
     $this->infixLeft('-', Precedence::ADDITIVE);
     $this->infixLeft('*', Precedence::MULTIPLICATIVE);
     $this->infixLeft('/', Precedence::MULTIPLICATIVE);
+    $this->infixLeft(Tag::T_MOD, Precedence::MULTIPLICATIVE);
     $this->infixLeft(Tag::T_AND, Precedence::LOGICAL_AND);
     $this->infixLeft(Tag::T_OR, Precedence::LOGICAL_OR);
+    $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
+    $this->infixLeft('=', Precedence::VALUE_COMPARATOR);
+    $this->infixLeft('<>', Precedence::VALUE_COMPARATOR);
+    $this->infixLeft('<=', Precedence::SIZE_COMPARATOR);
+    $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
+    $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
+    $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
 
     $this->infixRight('**', Precedence::EXPONENT);
+    $this->infixRight('|>', Precedence::PIPELINE);
   }
 
   public function match($tag)

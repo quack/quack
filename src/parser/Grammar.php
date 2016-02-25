@@ -38,7 +38,7 @@ use \QuackCompiler\Ast\Helper\Param;
 class Grammar
 {
   public $parser;
-  private $checker;
+  public $checker;
 
   function __construct(TokenReader $parser)
   {

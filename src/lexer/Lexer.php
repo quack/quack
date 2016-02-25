@@ -47,6 +47,7 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_MATCH, "match"));
     $this->reserve(new Word(Tag::T_IN, "in"));
     $this->reserve(new Word(Tag::T_MODEL, "model"));
+    $this->reserve(new Word(Tag::T_MOD, "mod"));
     $this->reserve(new Word(Tag::T_WHERE, "where"));
     $this->reserve(new Word(Tag::T_CONST, "const"));
     $this->reserve(new Word(Tag::T_MY, "my"));
@@ -94,6 +95,7 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_LETF, "letf"));
     $this->reserve(new Word(Tag::T_PRINT, "print"));
     $this->reserve(new Word(Tag::T_NOT, "not"));
+    $this->reserve(new Word(Tag::T_FN, "fn"));
   }
 
   private function reserve(Word $t)

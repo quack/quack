@@ -275,34 +275,14 @@ expr:
     | variable T_SL_EQUAL expr                              { $$ = Expr\AssignOp\ShiftLeft [$1, $3]; }
     | variable T_SR_EQUAL expr                              { $$ = Expr\AssignOp\ShiftRight[$1, $3]; }
     | variable T_POW_EQUAL expr                             { $$ = Expr\AssignOp\Pow       [$1, $3]; }
-    | T_INC variable                                        { $$ = Expr\PreInc [$2]; }
-    | T_DEC variable                                        { $$ = Expr\PreDec [$2]; }
-    | expr T_BOOLEAN_OR expr                                { $$ = Expr\BinaryOp\BooleanOr [$1, $3]; }
-    | expr T_BOOLEAN_AND expr                               { $$ = Expr\BinaryOp\BooleanAnd[$1, $3]; }
-    | expr T_LOGICAL_OR expr                                { $$ = Expr\BinaryOp\LogicalOr [$1, $3]; }
-    | expr T_LOGICAL_AND expr                               { $$ = Expr\BinaryOp\LogicalAnd[$1, $3]; }
-    | expr T_LOGICAL_XOR expr                               { $$ = Expr\BinaryOp\LogicalXor[$1, $3]; }
     | expr '|' expr                                         { $$ = Expr\BinaryOp\BitwiseOr [$1, $3]; }
     | expr '&' expr                                         { $$ = Expr\BinaryOp\BitwiseAnd[$1, $3]; }
     | expr '^' expr                                         { $$ = Expr\BinaryOp\BitwiseXor[$1, $3]; }
     | expr '.' expr                                         { $$ = Expr\BinaryOp\Concat    [$1, $3]; }
-    | expr '%' expr                                         { $$ = Expr\BinaryOp\Mod       [$1, $3]; }
     | expr T_SL expr                                        { $$ = Expr\BinaryOp\ShiftLeft [$1, $3]; }
     | expr T_SR expr                                        { $$ = Expr\BinaryOp\ShiftRight[$1, $3]; }
-    | expr T_POW expr                                       { $$ = Expr\BinaryOp\Pow       [$1, $3]; }
-    | '~' expr                                              { $$ = Expr\BitwiseNot[$2]; }
-    | expr T_IS_IDENTICAL expr                              { $$ = Expr\BinaryOp\Identical     [$1, $3]; }
-    | expr T_IS_NOT_IDENTICAL expr                          { $$ = Expr\BinaryOp\NotIdentical  [$1, $3]; }
-    | expr T_IS_EQUAL expr                                  { $$ = Expr\BinaryOp\Equal         [$1, $3]; }
-    | expr T_IS_NOT_EQUAL expr                              { $$ = Expr\BinaryOp\NotEqual      [$1, $3]; }
-    | expr T_SPACESHIP expr                                 { $$ = Expr\BinaryOp\Spaceship     [$1, $3]; }
-    | expr '<' expr                                         { $$ = Expr\BinaryOp\Smaller       [$1, $3]; }
-    | expr T_IS_SMALLER_OR_EQUAL expr                       { $$ = Expr\BinaryOp\SmallerOrEqual[$1, $3]; }
-    | expr '>' expr                                         { $$ = Expr\BinaryOp\Greater       [$1, $3]; }
-    | expr T_IS_GREATER_OR_EQUAL expr                       { $$ = Expr\BinaryOp\GreaterOrEqual[$1, $3]; }
     | expr T_INSTANCEOF class_name_reference                { $$ = Expr\Instanceof_[$1, $3]; }
     | '(' new_expr ')'                                      { $$ = $2; }
-    | expr '?' expr ':' expr                                { $$ = Expr\Ternary[$1, $3,   $5]; }
     | expr '?' ':' expr                                     { $$ = Expr\Ternary[$1, null, $4]; }
     | expr T_COALESCE expr                                  { $$ = Expr\BinaryOp\Coalesce[$1, $3]; }
     | T_ISSET '(' variables_list ')'                        { $$ = Expr\Isset_[$3]; }
@@ -326,12 +306,6 @@ expr:
     | '`' backticks_expr '`'                                { $$ = Expr\ShellExec[$2]; }
     | T_PRINT expr                                          { $$ = Expr\Print_[$2]; }
     | T_YIELD                                               { $$ = Expr\Yield_[null, null]; }
-    | T_FUNCTION optional_ref '(' parameter_list ')' lexical_vars optional_return_type
-      '{' inner_statement_list '}'
-          { $$ = Expr\Closure[['static' => false, 'byRef' => $2, 'params' => $4, 'uses' => $6, 'returnType' => $7, 'stmts' => $9]]; }
-    | T_STATIC T_FUNCTION optional_ref '(' parameter_list ')' lexical_vars optional_return_type
-      '{' inner_statement_list '}'
-          { $$ = Expr\Closure[['static' => true, 'byRef' => $3, 'params' => $5, 'uses' => $7, 'returnType' => $8, 'stmts' => $10]]; }
 ;
 
 yield_expr:

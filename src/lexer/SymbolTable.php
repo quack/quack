@@ -19,4 +19,11 @@ class SymbolTable
   {
     return $this->table[$pointer];
   }
+
+  public function iterator()
+  {
+    foreach ($this->table as $key => $value) {
+      yield $key => $value;
+    }
+  }
 }

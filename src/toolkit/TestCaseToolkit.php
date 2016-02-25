@@ -37,6 +37,7 @@ import(PARSELETS, 'BinaryOperatorParselet');
 import(PARSELETS, 'PostfixOperatorParselet');
 import(PARSELETS, 'TernaryParselet');
 import(PARSELETS, 'GroupParselet');
+import(PARSELETS, 'FunctionParselet');
 
 /* Ast */
 
@@ -44,6 +45,7 @@ import(AST, 'Util');
 import(AST, 'Node');
 
 import(AST, 'expr/Expr');
+import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');

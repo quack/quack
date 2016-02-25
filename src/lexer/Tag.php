@@ -83,6 +83,7 @@ class Tag
   const T_TYPE_DOUBLE = 291;
   const T_MOD = 292;
   const T_NOT = 293;
+  const T_FN = 294;
 
   /* Operators */
 
