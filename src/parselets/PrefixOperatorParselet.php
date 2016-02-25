@@ -4,7 +4,7 @@ namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Ast\Expr\PrefixExpr;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 
 class PrefixOperatorParselet implements IPrefixParselet
 {
@@ -15,7 +15,7 @@ class PrefixOperatorParselet implements IPrefixParselet
     $this->precedence = $precedence;
   }
 
-  public function parse(TokenReader $parser, Token $token)
+  public function parse(Grammar $parser, Token $token)
   {
     $operand = $parser->_expr($this->precedence);
     return new PrefixExpr($token, $operand);

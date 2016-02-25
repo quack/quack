@@ -68,37 +68,4 @@ class TokenReader extends Parser
   {
     $this->ast = $this->grammar->start();
   }
-
-  // public function _expr($precedence = 0)
-  // {
-  //   $token = $this->consumeAndFetch();
-
-  //   $prefix = $this->prefixParseletForToken($token);
-
-  //   if ($prefix == NULL) {
-  //     throw (new SyntaxError)
-  //       -> expected ('expression')
-  //       -> found    ($token)
-  //       -> on       ($this->position())
-  //       -> source   ($this->input);
-  //   }
-
-  //   $left = $prefix->parse($this, $token);
-
-  //   while ($precedence < $this->getPrecedence()) {
-  //     $token = $this->consumeAndFetch();
-  //     $infix = $this->infixParseletForToken($token);
-  //     $left = $infix->parse($this, $left, $token);
-  //   }
-
-  //   return $left;
-  // }
-
-  // private function getPrecedence()
-  // {
-  //   $parser = $this->infixParseletForToken($this->lookahead);
-  //   return !is_null($parser)
-  //     ? $parser->getPrecedence()
-  //     : 0;
-  // }
 }

@@ -3,14 +3,14 @@
 namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Parser\Precedence;
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\TernaryExpr;
 use \QuackCompiler\Lexer\Token;
 
 class TernaryParselet implements IInfixParselet
 {
-  public function parse(TokenReader $parser, Expr $left, Token $token)
+  public function parse(Grammar $parser, Expr $left, Token $token)
   {
     $then = $parser->_expr();
     $parser->match(':');

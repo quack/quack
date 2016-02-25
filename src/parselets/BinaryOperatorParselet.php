@@ -2,7 +2,7 @@
 
 namespace QuackCompiler\Parselets;
 
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\OperatorExpr;
 use \QuackCompiler\Lexer\Token;
@@ -18,7 +18,7 @@ class BinaryOperatorParselet implements IInfixParselet
     $this->is_right = $is_right;
   }
 
-  public function parse(TokenReader $parser, Expr $left, Token $token)
+  public function parse(Grammar $parser, Expr $left, Token $token)
   {
     $right = $parser->_expr($this->precedence - ($this->is_right ? 1 : 0));
     return new OperatorExpr($left, $token->getTag(), $right);

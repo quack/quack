@@ -2,7 +2,7 @@
 
 namespace QuackCompiler\Parselets;
 
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\PostfixExpr;
 use \QuackCompiler\Lexer\Token;
@@ -16,7 +16,7 @@ class PostfixOperatorParselet implements IInfixParselet
     $this->precedence = $precedence;
   }
 
-  public function parse(TokenReader $parser, Expr $left, Token $token)
+  public function parse(Grammar $parser, Expr $left, Token $token)
   {
     return new PostfixExpr($left, $token->getTag());
   }

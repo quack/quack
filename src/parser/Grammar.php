@@ -305,15 +305,6 @@ class Grammar
     return $this->_stmt();
   }
 
-  function _expr($precedence = 0)
-  {
-    $token = $this->parser->consumeAndFetch();
-    if ($token->getTag() === 0) {
-      throw new \Exception('EOF');
-    }
-    return new \QuackCompiler\Ast\Expr\NumberExpr($token);
-  }
-
   function _topStmt()
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
@@ -528,6 +519,38 @@ class Grammar
     }
 
     return NULL;
+  }
+
+  function _expr($precedence = 0)
+  {
+    $token = $this->parser->consumeAndFetch();
+    $prefix = $this->parser->prefixParseletForToken($token);
+
+    if (is_null($prefix)) {
+      throw (new SyntaxError)
+        -> expected ('expression')
+        -> found    ($token)
+        -> on       ($this->parser->position())
+        -> source   ($this->parser->input);
+    }
+
+    $left = $prefix->parse($this, $token);
+
+    while ($precedence < $this->getPrecedence()) {
+      $token = $this->parser->consumeAndFetch();
+      $infix = $this->parser->infixParseletForToken($token);
+      $left = $infix->parse($this, $left, $token);
+    }
+
+    return $left;
+  }
+
+  private function getPrecedence()
+  {
+    $parser = $this->parser->infixParseletForToken($this->parser->lookahead);
+    return !is_null($parser)
+      ? $parser->getPrecedence()
+      : 0;
   }
 
   /* Coproductions */

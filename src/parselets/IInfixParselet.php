@@ -4,10 +4,10 @@ namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 
 interface IInfixParselet
 {
-  function parse(TokenReader $parser, Expr $left, Token $token);
+  function parse(Grammar $parser, Expr $left, Token $token);
   function getPrecedence();
 }

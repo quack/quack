@@ -3,9 +3,9 @@
 namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Parser\Grammar;
 
 interface IPrefixParselet
 {
-  function parse(TokenReader $parser, Token $token);
+  function parse(Grammar $parser, Token $token);
 }
