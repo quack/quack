@@ -12,7 +12,7 @@ use \QuackCompiler\Parser\TokenReader;
 // SRC
 // );
 
-$lexer = new Tokenizer(file_get_contents('../../bootstrap/parser/Parser.qk.groovy'));
+$lexer = new Tokenizer(file_get_contents('../../bootstrap/parser/Parser.qk'));
 
 $parser = new TokenReader($lexer);
 
