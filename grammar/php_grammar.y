@@ -13,8 +13,7 @@ semi_reserved:
     | T_STATIC | T_ABSTRACT | T_FINAL | T_PRIVATE | T_PROTECTED | T_PUBLIC
 ;
 
-+ identifier:
-+       T_STRING                                              { $$ = $1; }
+identifier:
     | semi_reserved                                         { $$ = $1; }
 ;
 
@@ -27,9 +26,7 @@ namespace_name:
       namespace_name_parts                                  { $$ = Name[$1]; }
 ;
 
-+ top_statement:
-    | T_HALT_COMPILER
-          { $$ = Stmt\HaltCompiler[$this->lexer->handleHaltCompiler()]; }
+top_statement:
     | T_USE use_type use_declarations ';'                   { $$ = Stmt\Use_[$3, $2]; }
     | group_use_declaration ';'                             { $$ = $1; }
 ;
@@ -82,12 +79,11 @@ inline_use_declaration:
     | use_type unprefixed_use_declaration                   { $$ = $2; $$->type = $1; }
 ;
 
-+ non_empty_statement:
+non_empty_statement:
     | T_FOR '(' for_expr ';'  for_expr ';' for_expr ')' for_statement
           { $$ = Stmt\For_[['init' => $3, 'cond' => $5, 'loop' => $7, 'stmts' => $9]]; }
     | T_STATIC static_var_list ';'                          { $$ = Stmt\Static_[$2]; }
     | T_INLINE_HTML                                         { $$ = Stmt\InlineHTML[$1]; }
-    | expr ';'                                              { $$ = $1; }
     | T_UNSET '(' variables_list ')' ';'                    { $$ = Stmt\Unset_[$3]; }
           { $$ = Stmt\Foreach_[$3, $7[0], ['keyVar' => $5, 'byRef' => $7[1], 'stmts' => $9]]; }
     | T_DECLARE '(' declare_list ')' declare_statement      { $$ = Stmt\Declare_[$3, $5]; }
@@ -108,7 +104,7 @@ optional_ellipsis:
     | T_ELLIPSIS                                            { $$ = true; }
 ;
 
-+ class_declaration_statement:
+class_declaration_statement:
     | T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
           { $$ = Stmt\Interface_[$2, ['extends' => $3, 'stmts' => $5]]; }
     | T_TRAIT T_STRING '{' class_statement_list '}'
@@ -279,9 +275,7 @@ expr:
     | variable T_SL_EQUAL expr                              { $$ = Expr\AssignOp\ShiftLeft [$1, $3]; }
     | variable T_SR_EQUAL expr                              { $$ = Expr\AssignOp\ShiftRight[$1, $3]; }
     | variable T_POW_EQUAL expr                             { $$ = Expr\AssignOp\Pow       [$1, $3]; }
-    | variable T_INC                                        { $$ = Expr\PostInc[$1]; }
     | T_INC variable                                        { $$ = Expr\PreInc [$2]; }
-    | variable T_DEC                                        { $$ = Expr\PostDec[$1]; }
     | T_DEC variable                                        { $$ = Expr\PreDec [$2]; }
     | expr T_BOOLEAN_OR expr                                { $$ = Expr\BinaryOp\BooleanOr [$1, $3]; }
     | expr T_BOOLEAN_AND expr                               { $$ = Expr\BinaryOp\BooleanAnd[$1, $3]; }
@@ -292,17 +286,10 @@ expr:
     | expr '&' expr                                         { $$ = Expr\BinaryOp\BitwiseAnd[$1, $3]; }
     | expr '^' expr                                         { $$ = Expr\BinaryOp\BitwiseXor[$1, $3]; }
     | expr '.' expr                                         { $$ = Expr\BinaryOp\Concat    [$1, $3]; }
-    | expr '+' expr                                         { $$ = Expr\BinaryOp\Plus      [$1, $3]; }
-    | expr '-' expr                                         { $$ = Expr\BinaryOp\Minus     [$1, $3]; }
-    | expr '*' expr                                         { $$ = Expr\BinaryOp\Mul       [$1, $3]; }
-    | expr '/' expr                                         { $$ = Expr\BinaryOp\Div       [$1, $3]; }
     | expr '%' expr                                         { $$ = Expr\BinaryOp\Mod       [$1, $3]; }
     | expr T_SL expr                                        { $$ = Expr\BinaryOp\ShiftLeft [$1, $3]; }
     | expr T_SR expr                                        { $$ = Expr\BinaryOp\ShiftRight[$1, $3]; }
     | expr T_POW expr                                       { $$ = Expr\BinaryOp\Pow       [$1, $3]; }
-    | '+' expr %prec T_INC                                  { $$ = Expr\UnaryPlus [$2]; }
-    | '-' expr %prec T_INC                                  { $$ = Expr\UnaryMinus[$2]; }
-    | '!' expr                                              { $$ = Expr\BooleanNot[$2]; }
     | '~' expr                                              { $$ = Expr\BitwiseNot[$2]; }
     | expr T_IS_IDENTICAL expr                              { $$ = Expr\BinaryOp\Identical     [$1, $3]; }
     | expr T_IS_NOT_IDENTICAL expr                          { $$ = Expr\BinaryOp\NotIdentical  [$1, $3]; }
@@ -314,8 +301,6 @@ expr:
     | expr '>' expr                                         { $$ = Expr\BinaryOp\Greater       [$1, $3]; }
     | expr T_IS_GREATER_OR_EQUAL expr                       { $$ = Expr\BinaryOp\GreaterOrEqual[$1, $3]; }
     | expr T_INSTANCEOF class_name_reference                { $$ = Expr\Instanceof_[$1, $3]; }
-    | parentheses_expr                                      { $$ = $1; }
-    /* we need a separate '(' new_expr ')' rule to avoid problems caused by a s/r conflict */
     | '(' new_expr ')'                                      { $$ = $2; }
     | expr '?' expr ':' expr                                { $$ = Expr\Ternary[$1, $3,   $5]; }
     | expr '?' ':' expr                                     { $$ = Expr\Ternary[$1, null, $4]; }
@@ -335,14 +320,12 @@ expr:
     | T_BOOL_CAST expr                                      { $$ = Expr\Cast\Bool_   [$2]; }
     | T_UNSET_CAST expr                                     { $$ = Expr\Cast\Unset_  [$2]; }
     | T_EXIT exit_expr                                      { $$ = Expr\Exit_        [$2]; }
-    | '@' expr                                              { $$ = Expr\ErrorSuppress[$2]; }
     | scalar                                                { $$ = $1; }
     | array_expr                                            { $$ = $1; }
     | scalar_dereference                                    { $$ = $1; }
     | '`' backticks_expr '`'                                { $$ = Expr\ShellExec[$2]; }
     | T_PRINT expr                                          { $$ = Expr\Print_[$2]; }
     | T_YIELD                                               { $$ = Expr\Yield_[null, null]; }
-    | T_YIELD_FROM expr                                     { $$ = Expr\YieldFrom[$2]; }
     | T_FUNCTION optional_ref '(' parameter_list ')' lexical_vars optional_return_type
       '{' inner_statement_list '}'
           { $$ = Expr\Closure[['static' => false, 'byRef' => $2, 'params' => $4, 'uses' => $6, 'returnType' => $7, 'stmts' => $9]]; }
@@ -351,18 +334,12 @@ expr:
           { $$ = Expr\Closure[['static' => true, 'byRef' => $3, 'params' => $5, 'uses' => $7, 'returnType' => $8, 'stmts' => $10]]; }
 ;
 
-parentheses_expr:
-      '(' expr ')'                                          { $$ = $2; }
-    | '(' yield_expr ')'                                    { $$ = $2; }
-;
-
 yield_expr:
       T_YIELD expr                                          { $$ = Expr\Yield_[$2, null]; }
     | T_YIELD expr T_DOUBLE_ARROW expr                      { $$ = Expr\Yield_[$4, $2]; }
 ;
 
 array_expr:
-      T_ARRAY '(' array_pair_list ')'                       { $$ = Expr\Array_[$3]; }
     | '[' array_pair_list ']'                               { $$ = Expr\Array_[$2]; }
 ;
 
@@ -374,10 +351,6 @@ scalar_dereference:
     | scalar_dereference '[' dim_offset ']'                 { $$ = Expr\ArrayDimFetch[$1, $3]; }
     /* alternative array syntax missing intentionally */
 ;
-
-anonymous_class:
-      T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
-          { $$ = array(Stmt\Class_[null, ['type' => 0, 'extends' => $3, 'implements' => $4, 'stmts' => $6]], $2); }
 
 new_expr:
       T_NEW class_name_reference ctor_arguments             { $$ = Expr\New_[$2, $3]; }

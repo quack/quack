@@ -53,7 +53,7 @@ class TokenChecker
         || $this->parser->is('^')             // Done
         || $this->parser->is('[')             // Done
         || $this->parser->is(':-')            // Done
-        || $this->startsExpr();
+        || $this->startsExpr();               // Done
   }
 
   function startsExpr()

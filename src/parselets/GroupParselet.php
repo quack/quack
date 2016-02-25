@@ -9,10 +9,10 @@ use \QuackCompiler\Lexer\Token;
 
 class GroupParselet implements IPrefixParselet
 {
-  public function parse(Grammar $parser, Token $token)
+  public function parse(Grammar $grammar, Token $token)
   {
-    $expr = $parser->_expr();
-    $parser->match(')');
+    $expr = $grammar->_expr();
+    $grammar->parser->match(')');
     return $expr;
   }
 }

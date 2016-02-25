@@ -10,11 +10,11 @@ use \QuackCompiler\Lexer\Token;
 
 class TernaryParselet implements IInfixParselet
 {
-  public function parse(Grammar $parser, Expr $left, Token $token)
+  public function parse(Grammar $grammar, Expr $left, Token $token)
   {
-    $then = $parser->_expr();
-    $parser->match(':');
-    $else = $parser->_expr(Precedence::TERNARY - 1);
+    $then = $grammar->_expr();
+    $grammar->parser->match(':');
+    $else = $grammar->_expr(Precedence::TERNARY - 1);
     return new TernaryExpr($left, $then, $else);
   }
 

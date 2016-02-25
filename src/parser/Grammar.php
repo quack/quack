@@ -37,7 +37,7 @@ use \QuackCompiler\Ast\Helper\Param;
 
 class Grammar
 {
-  private $parser;
+  public $parser;
   private $checker;
 
   function __construct(TokenReader $parser)
@@ -101,6 +101,11 @@ class Grammar
     if ($this->parser->is('^'))             return $this->_returnStmt();
     if ($this->parser->is('['))             return $this->_blockStmt();
     if ($this->parser->is(':-'))            return $this->_labelStmt();
+    if ($this->checker->startsExpr()) {
+      $expression = $this->_expr();
+      $this->parser->match(';');
+      return new ExprStmt($expression);
+    }
 
     throw new \Exception('Not a statement');
   }
