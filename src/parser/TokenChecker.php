@@ -17,6 +17,7 @@ class TokenChecker
   {
     return $this->startsStmt()
         || $this->startsClassDeclStmt()
+        || $this->parser->is(Tag::T_STRUCT)
         || $this->parser->is(Tag::T_DEF)
         || $this->parser->is(Tag::T_MODULE)
         || $this->parser->is(Tag::T_OPEN)

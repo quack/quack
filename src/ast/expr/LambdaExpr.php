@@ -6,10 +6,10 @@ use \QuackCompiler\Parser\Parser;
 
 class LambdaExpr implements Expr
 {
-  private $by_reference;
-  private $parameters;
-  private $type;
-  private $body;
+  public $by_reference;
+  public $parameters;
+  public $type;
+  public $body;
 
   public function __construct($by_reference, $parameters, $type, $body)
   {

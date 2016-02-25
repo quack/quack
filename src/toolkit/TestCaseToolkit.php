@@ -76,6 +76,7 @@ import(AST, 'stmt/PropertyStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/RescueStmt');
 import(AST, 'stmt/ReturnStmt');
+import(AST, 'stmt/StructStmt');
 import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');

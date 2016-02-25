@@ -28,6 +28,7 @@ use \QuackCompiler\Ast\Stmt\PropertyStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\RescueStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
+use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
@@ -314,6 +315,7 @@ class Grammar
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
+    if ($this->parser->is(Tag::T_STRUCT))      return $this->_structDeclStmt();
     if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
     if ($this->parser->is(Tag::T_MODULE))      return $this->_moduleStmt();
     if ($this->parser->is(Tag::T_OPEN))        return $this->_openStmt();
@@ -325,6 +327,7 @@ class Grammar
     if ($this->checker->startsStmt())          return $this->_stmt();
     if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
+    if ($this->parser->is(Tag::T_STRUCT))      return $this->_structDeclStmt();
   }
 
   function _classStmt()
@@ -393,6 +396,27 @@ class Grammar
     $this->parser->match(']');
 
     return NULL;
+  }
+
+  function _structDeclStmt()
+  {
+    $interfaces = [];
+
+    $this->parser->match(Tag::T_STRUCT);
+
+    if ($this->parser->is(':')) {
+      do {
+        $this->parser->consume();
+        $interfaces[] = $this->qualifiedName();
+      } while ($this->parser->is(';'));
+    }
+
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_classStmtList());
+    $this->parser->match(']');
+    $name = $this->identifier();
+
+    return new StructStmt($name, $interfaces, $body);
   }
 
   function _defStmt($modifiers = [])
@@ -501,7 +525,7 @@ class Grammar
     while ($this->parser->is(Tag::T_RESCUE)) {
       $this->parser->consume();
       $this->parser->match('[');
-      $exception_class = $this->identifier(); // TODO: Change for qualified name
+      $exception_class = $this->qualifiedName();
       $variable = $this->identifier();
       $this->parser->match(']');
       $this->parser->match('[');
