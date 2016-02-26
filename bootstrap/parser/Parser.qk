@@ -1,4 +1,4 @@
-(** vim: syntax=Swift *)
+(** vim: syntax=Scala *)
 
 module QuackCompiler.Parser
 
