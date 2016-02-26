@@ -1,4 +1,6 @@
-(* Type protocols *)
+(**
+ *  vim: syntax=Scala
+ *  Type protocols *)
 
 // Protocol based on primitive return types
 protocol for: string {
