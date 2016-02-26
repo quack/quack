@@ -1,4 +1,4 @@
-vim: syntax=Groovy
+(** vim: syntax=Swift *)
 
 module QuackCompiler.Parser
 
