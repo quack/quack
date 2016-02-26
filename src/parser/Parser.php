@@ -95,9 +95,9 @@ abstract class Parser
     $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
     $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
     $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
+    $this->infixLeft('|>', Precedence::PIPELINE);
 
     $this->infixRight('**', Precedence::EXPONENT);
-    $this->infixRight('|>', Precedence::PIPELINE);
   }
 
   public function match($tag)
