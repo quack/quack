@@ -1,1 +1,2 @@
 *.qk linguist-language=Groovy
+*.qk linguist-vendored=true
