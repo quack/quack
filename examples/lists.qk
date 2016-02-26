@@ -1,3 +1,5 @@
+(** vim: syntax=Scala *)
+
 module Example.List
 
 let map = &{ fn, xss |
