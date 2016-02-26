@@ -234,25 +234,6 @@ expr:
     | variable '=' '&' new_expr                             { $$ = Expr\AssignRef[$1, $4]; }
     | new_expr                                              { $$ = $1; }
     | T_CLONE expr                                          { $$ = Expr\Clone_[$2]; }
-    | variable T_PLUS_EQUAL expr                            { $$ = Expr\AssignOp\Plus      [$1, $3]; }
-    | variable T_MINUS_EQUAL expr                           { $$ = Expr\AssignOp\Minus     [$1, $3]; }
-    | variable T_MUL_EQUAL expr                             { $$ = Expr\AssignOp\Mul       [$1, $3]; }
-    | variable T_DIV_EQUAL expr                             { $$ = Expr\AssignOp\Div       [$1, $3]; }
-    | variable T_CONCAT_EQUAL expr                          { $$ = Expr\AssignOp\Concat    [$1, $3]; }
-    | variable T_MOD_EQUAL expr                             { $$ = Expr\AssignOp\Mod       [$1, $3]; }
-    | variable T_AND_EQUAL expr                             { $$ = Expr\AssignOp\BitwiseAnd[$1, $3]; }
-    | variable T_OR_EQUAL expr                              { $$ = Expr\AssignOp\BitwiseOr [$1, $3]; }
-    | variable T_XOR_EQUAL expr                             { $$ = Expr\AssignOp\BitwiseXor[$1, $3]; }
-    | variable T_SL_EQUAL expr                              { $$ = Expr\AssignOp\ShiftLeft [$1, $3]; }
-    | variable T_SR_EQUAL expr                              { $$ = Expr\AssignOp\ShiftRight[$1, $3]; }
-    | variable T_POW_EQUAL expr                             { $$ = Expr\AssignOp\Pow       [$1, $3]; }
-    | expr '|' expr                                         { $$ = Expr\BinaryOp\BitwiseOr [$1, $3]; }
-    | expr '&' expr                                         { $$ = Expr\BinaryOp\BitwiseAnd[$1, $3]; }
-    | expr '^' expr                                         { $$ = Expr\BinaryOp\BitwiseXor[$1, $3]; }
-    | expr '.' expr                                         { $$ = Expr\BinaryOp\Concat    [$1, $3]; }
-    | expr T_SL expr                                        { $$ = Expr\BinaryOp\ShiftLeft [$1, $3]; }
-    | expr T_SR expr                                        { $$ = Expr\BinaryOp\ShiftRight[$1, $3]; }
-    | expr T_INSTANCEOF class_name_reference                { $$ = Expr\Instanceof_[$1, $3]; }
     | '(' new_expr ')'                                      { $$ = $2; }
     | expr '?' ':' expr                                     { $$ = Expr\Ternary[$1, null, $4]; }
     | expr T_COALESCE expr                                  { $$ = Expr\BinaryOp\Coalesce[$1, $3]; }
@@ -275,7 +256,6 @@ expr:
     | array_expr                                            { $$ = $1; }
     | scalar_dereference                                    { $$ = $1; }
     | '`' backticks_expr '`'                                { $$ = Expr\ShellExec[$2]; }
-    | T_PRINT expr                                          { $$ = Expr\Print_[$2]; }
     | T_YIELD                                               { $$ = Expr\Yield_[null, null]; }
 ;
 
