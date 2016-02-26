@@ -62,6 +62,7 @@ class TokenChecker
     return $this->parser->is(Tag::T_INTEGER)
         || $this->parser->is(Tag::T_DOUBLE)
         || $this->parser->is(Tag::T_FN)
+        || $this->parser->is(Tag::T_STATIC)
         || $this->parser->isOperator()
         || $this->parser->is('(');
   }

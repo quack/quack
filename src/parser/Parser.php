@@ -68,6 +68,7 @@ abstract class Parser
     $this->register('?', new TernaryParselet);
     $this->register('(', new GroupParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
+    $this->register(Tag::T_STATIC, new FunctionParselet(true));
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);
