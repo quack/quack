@@ -1,3 +1,4 @@
+(** vim: syntax=Scala *)
 
 -: imperative
 def fact [n] [
