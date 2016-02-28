@@ -25,10 +25,10 @@ class AstTest extends PHPUnit_Framework_TestCase
 
   public function testNumber()
   {
-    $double = "10.99;";
-    $integer = "3123;";
-    $hexa = "0xABC;";
-    $octal = "0765;";
+    $double = "10.99.";
+    $integer = "3123.";
+    $hexa = "0xABC.";
+    $octal = "0765.";
 
     $this->assertEquals("10.99", $this->format($double, new NumberExpr(new Token(Tag::T_DOUBLE, 0))));
     $this->assertEquals("3123", $this->format($integer, new NumberExpr(new Token(Tag::T_INTEGER, 0))));
@@ -38,7 +38,7 @@ class AstTest extends PHPUnit_Framework_TestCase
 
   public function testOperator()
   {
-    $prefix_precedence = "-1 * +~2;";
+    $prefix_precedence = "-1 * +~2.";
 
 
     $this->assertEquals("(-1 * +~2)", $this->format($prefix_precedence,
@@ -60,7 +60,7 @@ class AstTest extends PHPUnit_Framework_TestCase
 
   public function testTernaryOperator()
   {
-    $source = "10 and 2 ? 1 : 2 and 3 ? 4 : 5;";
+    $source = "10 and 2 ? 1 : 2 and 3 ? 4 : 5.";
 
     $this->assertEquals("((10 and 2) ? 1 : ((2 or 3) ? 4 : 5))",
       $this->format($source,
