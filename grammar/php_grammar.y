@@ -1,12 +1,3 @@
-namespace_name_parts:
-      T_STRING                                              { init($1); }
-    | namespace_name_parts T_NS_SEPARATOR T_STRING          { push($1, $3); }
-;
-
-namespace_name:
-      namespace_name_parts                                  { $$ = Name[$1]; }
-;
-
 top_statement:
     | T_USE use_type use_declarations ';'                   { $$ = Stmt\Use_[$3, $2]; }
     | group_use_declaration ';'                             { $$ = $1; }
@@ -272,8 +263,6 @@ scalar_dereference:
 
 new_expr:
       T_NEW class_name_reference ctor_arguments             { $$ = Expr\New_[$2, $3]; }
-    | T_NEW anonymous_class
-          { list($class, $ctorArgs) = $2; $$ = Expr\New_[$class, $ctorArgs]; }
 ;
 
 function_call:
@@ -378,7 +367,6 @@ static_scalar:
       common_scalar                                         { $$ = $1; }
     | class_name T_PAAMAYIM_NEKUDOTAYIM identifier          { $$ = Expr\ClassConstFetch[$1, $3]; }
     | name                                                  { $$ = Expr\ConstFetch[$1]; }
-    | T_ARRAY '(' static_array_pair_list ')'                { $$ = Expr\Array_[$3]; }
     | '[' static_array_pair_list ']'                        { $$ = Expr\Array_[$2]; }
     | static_operation                                      { $$ = $1; }
 ;
@@ -582,5 +570,3 @@ encaps_var_offset:
     | T_NUM_STRING                                          { $$ = Scalar\String_[$1]; }
     | T_VARIABLE                                            { $$ = Expr\Variable[parseVar($1)]; }
 ;
-
-%%
