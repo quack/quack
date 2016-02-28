@@ -235,15 +235,9 @@ expr:
     | new_expr                                              { $$ = $1; }
     | T_CLONE expr                                          { $$ = Expr\Clone_[$2]; }
     | '(' new_expr ')'                                      { $$ = $2; }
-    | expr '?' ':' expr                                     { $$ = Expr\Ternary[$1, null, $4]; }
-    | expr T_COALESCE expr                                  { $$ = Expr\BinaryOp\Coalesce[$1, $3]; }
     | T_ISSET '(' variables_list ')'                        { $$ = Expr\Isset_[$3]; }
     | T_EMPTY '(' expr ')'                                  { $$ = Expr\Empty_[$3]; }
-    | T_INCLUDE expr                                        { $$ = Expr\Include_[$2, Expr\Include_::TYPE_INCLUDE]; }
-    | T_INCLUDE_ONCE expr                                   { $$ = Expr\Include_[$2, Expr\Include_::TYPE_INCLUDE_ONCE]; }
     | T_EVAL parentheses_expr                               { $$ = Expr\Eval_[$2]; }
-    | T_REQUIRE expr                                        { $$ = Expr\Include_[$2, Expr\Include_::TYPE_REQUIRE]; }
-    | T_REQUIRE_ONCE expr                                   { $$ = Expr\Include_[$2, Expr\Include_::TYPE_REQUIRE_ONCE]; }
     | T_INT_CAST expr                                       { $$ = Expr\Cast\Int_    [$2]; }
     | T_DOUBLE_CAST expr                                    { $$ = Expr\Cast\Double  [$2]; }
     | T_STRING_CAST expr                                    { $$ = Expr\Cast\String_ [$2]; }
@@ -255,7 +249,6 @@ expr:
     | scalar                                                { $$ = $1; }
     | array_expr                                            { $$ = $1; }
     | scalar_dereference                                    { $$ = $1; }
-    | '`' backticks_expr '`'                                { $$ = Expr\ShellExec[$2]; }
     | T_YIELD                                               { $$ = Expr\Yield_[null, null]; }
 ;
 

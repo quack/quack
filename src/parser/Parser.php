@@ -15,6 +15,7 @@ use \QuackCompiler\Parselets\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\TernaryParselet;
 use \QuackCompiler\Parselets\GroupParselet;
 use \QuackCompiler\Parselets\FunctionParselet;
+use \QuackCompiler\Parselets\IncludeParselet;
 
 abstract class Parser
 {
@@ -69,6 +70,8 @@ abstract class Parser
     $this->register('(', new GroupParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
     $this->register(Tag::T_STATIC, new FunctionParselet(true));
+    $this->register(Tag::T_REQUIRE, new IncludeParselet);
+    $this->register(Tag::T_INCLUDE, new IncludeParselet);
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);
@@ -103,6 +106,8 @@ abstract class Parser
     $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
     $this->infixLeft('|>', Precedence::PIPELINE);
     $this->infixLeft(Tag::T_INSTANCEOF, Precedence::O_INSTANCEOF);
+    $this->infixLeft('??', Precedence::COALESCENCE);
+    $this->infixLeft('?:', Precedence::TERNARY);
 
     $this->infixRight('**', Precedence::EXPONENT);
   }

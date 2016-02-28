@@ -6,7 +6,7 @@ use \QuackCompiler\Parser\Parser;
 
 class NumberExpr implements Expr
 {
-  private $token;
+  public $token;
 
   public function __construct($token)
   {

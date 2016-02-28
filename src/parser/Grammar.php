@@ -104,7 +104,7 @@ class Grammar
     if ($this->parser->is(':-'))            return $this->_labelStmt();
     if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
-      $this->parser->match(';');
+      $this->parser->match('.');
       return new ExprStmt($expression);
     }
 
@@ -380,8 +380,7 @@ class Grammar
 
     if ($this->parser->is(':')) {
       $this->parser->consume();
-      $extends = $this->identifier();
-      // TODO: Change for qualified class name when ready
+      $extends = $this->qualifiedName();
     }
 
     if ($this->parser->is('#')) {
