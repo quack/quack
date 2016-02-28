@@ -551,8 +551,6 @@ non_empty_array_pair_list:
 ;
 
 array_pair:
-      expr T_DOUBLE_ARROW expr                              { $$ = Expr\ArrayItem[$3, $1,   false]; }
-    | expr                                                  { $$ = Expr\ArrayItem[$1, null, false]; }
     | expr T_DOUBLE_ARROW '&' variable                      { $$ = Expr\ArrayItem[$4, $1,   true]; }
     | '&' variable                                          { $$ = Expr\ArrayItem[$2, null, true]; }
 ;

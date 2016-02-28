@@ -5,6 +5,8 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
+use \QuackCompiler\Ast\Expr\ArrayPairExpr;
+
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
@@ -78,6 +80,24 @@ class Grammar
   {
     while ($this->checker->startsClassStmt()) {
       yield $this->_classStmt();
+    }
+  }
+
+  function _arrayPairList()
+  {
+    while (!$this->parser->is('}')) {
+      $left = $this->_expr();
+      $right = NULL;
+
+      if ($this->checker->startsExpr()) {
+        $right = $this->_expr();
+      }
+
+      if (!$this->parser->is('}')) {
+        $this->parser->match(';');
+      }
+
+      yield new ArrayPairExpr($left, $right);
     }
   }
 

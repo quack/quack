@@ -16,6 +16,7 @@ use \QuackCompiler\Parselets\TernaryParselet;
 use \QuackCompiler\Parselets\GroupParselet;
 use \QuackCompiler\Parselets\FunctionParselet;
 use \QuackCompiler\Parselets\IncludeParselet;
+use \QuackCompiler\Parselets\ArrayParselet;
 
 abstract class Parser
 {
@@ -68,6 +69,7 @@ abstract class Parser
     $this->register(Tag::T_DOUBLE, new NumberParselet);
     $this->register('?', new TernaryParselet);
     $this->register('(', new GroupParselet);
+    $this->register('{', new ArrayParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
     $this->register(Tag::T_STATIC, new FunctionParselet(true));
     $this->register(Tag::T_REQUIRE, new IncludeParselet);

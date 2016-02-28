@@ -39,6 +39,7 @@ import(PARSELETS, 'TernaryParselet');
 import(PARSELETS, 'GroupParselet');
 import(PARSELETS, 'FunctionParselet');
 import(PARSELETS, 'IncludeParselet');
+import(PARSELETS, 'ArrayParselet');
 
 /* Ast */
 
@@ -46,6 +47,8 @@ import(AST, 'Util');
 import(AST, 'Node');
 
 import(AST, 'expr/Expr');
+import(AST, 'expr/ArrayExpr');
+import(AST, 'expr/ArrayPairExpr');
 import(AST, 'expr/IncludeExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/NumberExpr');
