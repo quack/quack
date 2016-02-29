@@ -9,8 +9,9 @@ use \QuackCompiler\Ast\Expr\ArrayPairExpr;
 
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
-use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
+use \QuackCompiler\Ast\Stmt\ClassStmt;
+use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\DefStmt;
 use \QuackCompiler\Ast\Stmt\DoWhileStmt;
@@ -20,11 +21,13 @@ use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\GlobalStmt;
 use \QuackCompiler\Ast\Stmt\GotoStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
+use \QuackCompiler\Ast\Stmt\IntfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\OutStmt;
+use \QuackCompiler\Ast\Stmt\PieceStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\PropertyStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
@@ -393,6 +396,10 @@ class Grammar
       case Tag::T_FINAL:
         $category = 'final';
         break;
+      case Tag::T_INTF:
+        return $this->_intfStmt();
+      case Tag::T_PIECE:
+        return $this->_pieceStmt();
     }
 
     $this->parser->consume();
@@ -406,7 +413,7 @@ class Grammar
     if ($this->parser->is('#')) {
       do {
         $this->parser->consume();
-        $implements[] = $this->identifier();
+        $implements[] = $this->qualifiedName();
       } while ($this->parser->is(';'));
     }
 
@@ -414,7 +421,38 @@ class Grammar
     $body = iterator_to_array($this->_classStmtList());
     $this->parser->match(']');
 
-    return NULL;
+    return new ClassStmt($category, $class_name, $extends, $implements, $body);
+  }
+
+  function _intfStmt()
+  {
+    $this->parser->match(Tag::T_INTF);
+    $intf_name = $this->identifier();
+    $extends = [];
+
+    if ($this->parser->is(':')) {
+      do {
+        $this->parser->consume();
+        $extends[] = $this->qualifiedName();
+      } while ($this->parser->is(';'));
+    }
+
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_classStmtList());
+    $this->parser->match(']');
+
+    return new IntfStmt($intf_name, $extends, $body);
+  }
+
+  function _pieceStmt()
+  {
+    $this->parser->match(Tag::T_PIECE);
+    $piece_name = $this->identifier();
+    $this->parser->match('[');
+    $body = iterator_to_array($this->_classStmtList());
+    $this->parser->match(']');
+
+    return new PieceStmt($piece_name, $body);
   }
 
   function _structDeclStmt()
@@ -448,11 +486,16 @@ class Grammar
     }
     $name = $this->identifier();
     $parameters = $this->_parameters();
-    $this->parser->match('[');
-    $body = iterator_to_array($this->_innerStmtList());
-    $this->parser->match(']');
 
-    return new DefStmt($name, $by_reference, $body, $parameters, $modifiers);
+    if ($this->parser->is('[')) {
+      $this->parser->match('[');
+      $body = iterator_to_array($this->_innerStmtList());
+      $this->parser->match(']');
+
+      return new DefStmt($name, $by_reference, $body, $parameters, $modifiers);
+    }
+
+    return new DefStmt($name, $by_reference, NULL, $parameters, $modifiers);
   }
 
   function _moduleStmt()

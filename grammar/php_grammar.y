@@ -60,18 +60,6 @@ optional_ellipsis:
     | T_ELLIPSIS                                            { $$ = true; }
 ;
 
-class_declaration_statement:
-    | T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
-          { $$ = Stmt\Interface_[$2, ['extends' => $3, 'stmts' => $5]]; }
-    | T_TRAIT T_STRING '{' class_statement_list '}'
-          { $$ = Stmt\Trait_[$2, $4]; }
-;
-
-interface_extends_list:
-      /* empty */                                           { $$ = array(); }
-    | T_EXTENDS name_list                                   { $$ = $2; }
-;
-
 name_list:
       name                                                  { init($1); }
     | name_list ',' name                                    { push($1, $3); }

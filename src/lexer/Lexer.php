@@ -99,6 +99,8 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_REQUIRE, "require"));
     $this->reserve(new Word(Tag::T_INCLUDE, "include"));
     $this->reserve(new Word(Tag::T_ONCE, "once"));
+    $this->reserve(new Word(Tag::T_PIECE, "piece"));
+    $this->reserve(new Word(Tag::T_INTF, "intf"));
   }
 
   private function reserve(Word $t)

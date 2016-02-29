@@ -74,7 +74,9 @@ class TokenChecker
   {
     return $this->parser->is(Tag::T_FINAL)
         || $this->parser->is(Tag::T_MODEL)
-        || $this->parser->is(Tag::T_CLASS);
+        || $this->parser->is(Tag::T_CLASS)
+        || $this->parser->is(Tag::T_PIECE)
+        || $this->parser->is(Tag::T_INTF);
   }
 
   function startsParameter()
