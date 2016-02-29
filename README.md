@@ -1,14 +1,22 @@
-[![Join the chat at https://gitter.im/quack/quack](https://badges.gitter.im/quack/quack.svg)](https://gitter.im/quack/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/quack/quack.svg?branch=master)](https://travis-ci.org/quack/quack)
-[![Code Climate](https://codeclimate.com/github/quack/quack/badges/gpa.svg)](https://codeclimate.com/github/quack/quack)
-[![Test Coverage](https://codeclimate.com/github/quack/quack/badges/coverage.svg)](https://codeclimate.com/github/quack/quack/coverage)
-[![Issue Count](https://codeclimate.com/github/quack/quack/badges/issue_count.svg)](https://codeclimate.com/github/quack/quack)
+<p align="center">
+  <a href="">
+    <img alt="Logo" src="./resource/logo.png" width="600px">
+  </a>
+</p>
 
-# Quack Lang
+<p align="center">
 
-> A Rust-based programming language with gradual and duck typing that targets PHP.
+  <a href="https://gitter.im/quack/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img alt="Join the chat at https://gitter.im/quack/quack" src="https://badges.gitter.im/quack/quack.svg"></a>
 
-![Quack](./resource/logo.jpg)
+  <a href="https://travis-ci.org/quack/quack"><img alt="Build Status" src="https://travis-ci.org/quack/quack.svg?branch=master"></a>
+
+  <a href="https://codeclimate.com/github/quack/quack"><img alt="Code Climate" src="https://codeclimate.com/github/quack/quack/badges/gpa.svg"></a>
+
+  <a href="https://codeclimate.com/github/quack/quack/coverage"><img alt="Test Coverage" src="https://codeclimate.com/github/quack/quack/badges/coverage.svg"/></a>
+
+  <a href="https://codeclimate.com/github/quack/quack"><img alt="Issue Count" src="https://codeclimate.com/github/quack/quack/badges/issue_count.svg"/></a>
+
+</p>
 
 Quack is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
 to gradual and duck typing, with the following features:
