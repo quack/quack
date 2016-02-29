@@ -1,11 +1,5 @@
 top_statement:
-    | T_USE use_type use_declarations ';'                   { $$ = Stmt\Use_[$3, $2]; }
     | group_use_declaration ';'                             { $$ = $1; }
-;
-
-use_type:
-      T_FUNCTION                                            { $$ = Stmt\Use_::TYPE_FUNCTION; }
-    | T_CONST                                               { $$ = Stmt\Use_::TYPE_CONSTANT; }
 ;
 
 /* Using namespace_name_parts here to avoid s/r conflict on T_NS_SEPARATOR */
@@ -26,11 +20,6 @@ unprefixed_use_declarations:
     | unprefixed_use_declaration                            { init($1); }
 ;
 
-use_declarations:
-      use_declarations ',' use_declaration                  { push($1, $3); }
-    | use_declaration                                       { init($1); }
-;
-
 inline_use_declarations:
       inline_use_declarations ',' inline_use_declaration    { push($1, $3); }
     | inline_use_declaration                                { init($1); }
@@ -39,11 +28,6 @@ inline_use_declarations:
 unprefixed_use_declaration:
       namespace_name                                        { $$ = Stmt\UseUse[$1, null, Stmt\Use_::TYPE_UNKNOWN]; }
     | namespace_name T_AS T_STRING                          { $$ = Stmt\UseUse[$1, $3, Stmt\Use_::TYPE_UNKNOWN]; }
-;
-
-use_declaration:
-      unprefixed_use_declaration                            { $$ = $1; }
-    | T_NS_SEPARATOR unprefixed_use_declaration             { $$ = $2; }
 ;
 
 inline_use_declaration:

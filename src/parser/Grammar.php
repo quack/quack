@@ -464,7 +464,13 @@ class Grammar
   function _openStmt()
   {
     $this->parser->match(Tag::T_OPEN);
-    $name = $this->qualifiedName();
+    $type = NULL;
+    if ($this->parser->is(Tag::T_CONST) || $this->parser->is(Tag::T_FN)) {
+      $type = $this->parser->consumeAndFetch();
+    }
+
+    $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
+    $name[] = $this->qualifiedName();
     $alias = NULL;
 
     if ($this->parser->is(Tag::T_AS)) {
@@ -472,7 +478,7 @@ class Grammar
       $alias = $this->identifier();
     }
 
-    return new OpenStmt($name, $alias);
+    return new OpenStmt($name, $alias, $type);
   }
 
   function _constStmt()

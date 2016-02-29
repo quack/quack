@@ -8,11 +8,13 @@ class OpenStmt implements Stmt
 {
   public $module;
   public $alias;
+  public $type;
 
-  public function __construct($module, $alias = NULL)
+  public function __construct($module, $alias = NULL, $type = NULL)
   {
     $this->module = $module;
     $this->alias = $alias;
+    $this->type = $type;
   }
 
   public function format(Parser $parser)
