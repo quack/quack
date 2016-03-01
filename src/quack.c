@@ -9,7 +9,8 @@ int main(int argc, char** argv)
   strcpy(out, "");
   strcpy(src, "php ../src/Quack.php ");
   int i;
-  for (i = 1; i < argc; i++) {
+  for (i = 1; i < argc; i++)
+  {
     strcat(out, " ");
     strcat(out, argv[i]);
   }
