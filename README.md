@@ -58,11 +58,11 @@ def fact [n] [
 
 -: tail_call_recursion
 def fact [n] [
-  <<< if n = 0 then 1 else [n * fact[n - 1]]
+  <<< n = 0 ? 1 : [n * fact[n - 1]]
 ]
 
 -: compressed
-def fact! if &(= 0) then 1 else &(* fact[&0 - 1])
+def fact!  &(= 0) ? 1 : &(* fact[&0 - 1])
 
 
 ```
