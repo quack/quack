@@ -62,7 +62,7 @@ def fact [n] [
 ]
 
 -: compressed
-def fact!  &(= 0) ? 1 : &(* fact[&0 - 1])
+def fact! &(= 0) ? 1 : &(* fact[&0 - 1])
 
 
 ```
