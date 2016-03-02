@@ -8,7 +8,14 @@ use \QuackCompiler\Parser\TokenReader;
 
 function start_repl()
 {
-  echo "Quack 0.1 · Use quack --help for more information", PHP_EOL;
+  echo <<<LICENSE
+Quack · Copyright (C) 2016 Marcelo Camargo
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions; type 'show c' for details.\n
+LICENSE
+;
+  echo "Use quack --help for more information", PHP_EOL;
 
   if (args_have('-h', '--help')) {
     open_repl_help();
@@ -25,11 +32,19 @@ function install_stream_handler()
   echo "\033[0m";
 }
 
+function print_entire_license()
+{
+  echo file_get_contents(__DIR__ . "/../../LICENSE.md");
+}
+
 function readline_callback($command)
 {
   $command = trim($command);
 
   if ($command === ':quit' || $command === ':q') {
+    exit;
+  } else if ($command === 'show c') {
+    print_entire_license();
     exit;
   } else if ($command === '') {
     goto next;
