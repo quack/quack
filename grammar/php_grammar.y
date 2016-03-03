@@ -39,7 +39,6 @@ non_empty_statement:
     | T_FOR '(' for_expr ';'  for_expr ';' for_expr ')' for_statement
           { $$ = Stmt\For_[['init' => $3, 'cond' => $5, 'loop' => $7, 'stmts' => $9]]; }
     | T_STATIC static_var_list ';'                          { $$ = Stmt\Static_[$2]; }
-    | T_INLINE_HTML                                         { $$ = Stmt\InlineHTML[$1]; }
     | T_UNSET '(' variables_list ')' ';'                    { $$ = Stmt\Unset_[$3]; }
           { $$ = Stmt\Foreach_[$3, $7[0], ['keyVar' => $5, 'byRef' => $7[1], 'stmts' => $9]]; }
     | T_DECLARE '(' declare_list ')' declare_statement      { $$ = Stmt\Declare_[$3, $5]; }
@@ -53,11 +52,6 @@ variables_list:
 optional_ref:
       /* empty */                                           { $$ = false; }
     | '&'                                                   { $$ = true; }
-;
-
-optional_ellipsis:
-      /* empty */                                           { $$ = false; }
-    | T_ELLIPSIS                                            { $$ = true; }
 ;
 
 name_list:
@@ -83,27 +77,6 @@ declare_list:
 
 declare_list_element:
       T_STRING '=' static_scalar                            { $$ = Stmt\DeclareDeclare[$1, $3]; }
-;
-
-parameter:
-    | optional_param_type optional_ref optional_ellipsis T_VARIABLE '=' static_scalar
-          { $$ = Node\Param[parseVar($4), $6, $1, $2, $3]; }
-;
-
-type:
-      name                                                  { $$ = $1; }
-    | T_ARRAY                                               { $$ = 'array'; }
-    | T_CALLABLE                                            { $$ = 'callable'; }
-;
-
-optional_param_type:
-      /* empty */                                           { $$ = null; }
-    | type                                                  { $$ = $1; }
-;
-
-optional_return_type:
-      /* empty */                                           { $$ = null; }
-    | ':' type                                              { $$ = $2; }
 ;
 
 argument_list:
@@ -177,11 +150,6 @@ trait_method_reference_fully_qualified:
 trait_method_reference:
       trait_method_reference_fully_qualified                { $$ = $1; }
     | identifier                                            { $$ = array(null, $1); }
-;
-
-expr_list:
-      expr_list ',' expr                                    { push($1, $3); }
-    | expr                                                  { init($1); }
 ;
 
 for_expr:
@@ -329,10 +297,6 @@ common_scalar:
     | T_METHOD_C                                            { $$ = Scalar\MagicConst\Method[]; }
     | T_FUNC_C                                              { $$ = Scalar\MagicConst\Function_[]; }
     | T_NS_C                                                { $$ = Scalar\MagicConst\Namespace_[]; }
-    | T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
-          { $$ = Scalar\String_[Scalar\String_::parseDocString($1, $2, false)]; }
-    | T_START_HEREDOC T_END_HEREDOC
-          { $$ = Scalar\String_['']; }
 ;
 
 static_scalar:
@@ -390,8 +354,6 @@ scalar:
     | constant                                              { $$ = $1; }
     | '"' encaps_list '"'
           { parseEncapsed($2, '"', false); $$ = Scalar\Encapsed[$2]; }
-    | T_START_HEREDOC encaps_list T_END_HEREDOC
-          { parseEncapsedDoc($2, false); $$ = Scalar\Encapsed[$2]; }
 ;
 
 static_array_pair_list:
