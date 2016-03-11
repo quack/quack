@@ -40,6 +40,7 @@ import(PARSELETS, 'GroupParselet');
 import(PARSELETS, 'FunctionParselet');
 import(PARSELETS, 'IncludeParselet');
 import(PARSELETS, 'ArrayParselet');
+import(PARSELETS, 'NewParselet');
 
 /* Ast */
 

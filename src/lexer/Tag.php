@@ -223,6 +223,7 @@ class Tag
       Tag::T_BANG                => '!',
       Tag::T_MINUS               => '-',
       Tag::T_BITWISE_NOT         => '~',
+      Tag::T_NEW                 => '#',
       Tag::T_INSTANCEOF          => Tag::T_INSTANCEOF,
       Tag::T_AND                 => Tag::T_AND,
       Tag::T_OR                  => Tag::T_OR,

@@ -160,6 +160,7 @@ class Grammar
     $name = $this->identifier();
     $this->parser->match(':-');
     $value = $this->_expr();
+    $this->parser->match('.');
 
     return new LetStmt($name, $value);
   }

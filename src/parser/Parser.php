@@ -17,6 +17,7 @@ use \QuackCompiler\Parselets\GroupParselet;
 use \QuackCompiler\Parselets\FunctionParselet;
 use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parselets\ArrayParselet;
+use \QuackCompiler\Parselets\NewParselet;
 
 abstract class Parser
 {
@@ -74,12 +75,12 @@ abstract class Parser
     $this->register(Tag::T_STATIC, new FunctionParselet(true));
     $this->register(Tag::T_REQUIRE, new IncludeParselet);
     $this->register(Tag::T_INCLUDE, new IncludeParselet);
+    $this->register('#', new NewParselet);
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);
     $this->prefix('^^', Precedence::PREFIX);
     $this->prefix('*', Precedence::PREFIX);
-    $this->prefix('#', Precedence::PREFIX);
     $this->prefix('@', Precedence::PREFIX);
     $this->prefix('~', Precedence::PREFIX);
     $this->prefix(Tag::T_NOT, Precedence::PREFIX);
