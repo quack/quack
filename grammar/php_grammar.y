@@ -19,40 +19,11 @@ for_statement:
       statement                                             { $$ = toArray($1); }
 ;
 
-argument_list:
-      '(' ')'                                               { $$ = array(); }
-    | '(' non_empty_argument_list ')'                       { $$ = $2; }
-;
-
-non_empty_argument_list:
-      argument                                              { init($1); }
-    | non_empty_argument_list ',' argument                  { push($1, $3); }
-;
-
-argument:
-      expr                                                  { $$ = Node\Arg[$1, false, false]; }
-    | '&' variable                                          { $$ = Node\Arg[$2, true, false]; }
-    | T_ELLIPSIS expr                                       { $$ = Node\Arg[$2, false, true]; }
-;
-
-global_var_list:
-      global_var_list ',' global_var                        { push($1, $3); }
-    | global_var                                            { init($1); }
-;
-
-global_var:
-      T_VARIABLE                                            { $$ = Expr\Variable[parseVar($1)]; }
-    | '$' variable                                          { $$ = Expr\Variable[$2]; }
-    | '$' '{' expr '}'                                      { $$ = Expr\Variable[$3]; }
-;
-
 for_expr:
-      /* empty */                                           { $$ = array(); }
     | expr_list                                             { $$ = $1; }
 ;
 
 expr:
-      variable                                              { $$ = $1; }
     | variable '=' expr                                     { $$ = Expr\Assign[$1, $3]; }
     | variable '=' '&' variable                             { $$ = Expr\AssignRef[$1, $4]; }
     | variable '=' '&' new_expr                             { $$ = Expr\AssignRef[$1, $4]; }
@@ -68,12 +39,7 @@ expr:
     | T_UNSET_CAST expr                                     { $$ = Expr\Cast\Unset_  [$2]; }
     | T_EXIT exit_expr                                      { $$ = Expr\Exit_        [$2]; }
     | scalar                                                { $$ = $1; }
-    | array_expr                                            { $$ = $1; }
     | scalar_dereference                                    { $$ = $1; }
-;
-
-array_expr:
-    | '[' array_pair_list ']'                               { $$ = Expr\Array_[$2]; }
 ;
 
 scalar_dereference:
@@ -112,10 +78,6 @@ class_name_or_var:
 ;
 
 object_access_for_dcnr:
-      base_variable T_OBJECT_OPERATOR object_property
-          { $$ = Expr\PropertyFetch[$1, $3]; }
-    | object_access_for_dcnr T_OBJECT_OPERATOR object_property
-          { $$ = Expr\PropertyFetch[$1, $3]; }
     | object_access_for_dcnr '[' dim_offset ']'             { $$ = Expr\ArrayDimFetch[$1, $3]; }
     | object_access_for_dcnr '{' expr '}'                   { $$ = Expr\ArrayDimFetch[$1, $3]; }
 ;
@@ -124,13 +86,6 @@ exit_expr:
       /* empty */                                           { $$ = null; }
     | '(' ')'                                               { $$ = null; }
     | parentheses_expr                                      { $$ = $1; }
-;
-
-backticks_expr:
-      /* empty */                                           { $$ = array(); }
-    | T_ENCAPSED_AND_WHITESPACE
-          { $$ = array(Scalar\EncapsedStringPart[Scalar\String_::parseEscapeSequences($1, '`', false)]); }
-    | encaps_list                                           { parseEncapsed($1, '`', false); $$ = $1; }
 ;
 
 ctor_arguments:
@@ -155,11 +110,6 @@ scalar:
     | constant                                              { $$ = $1; }
     | '"' encaps_list '"'
           { parseEncapsed($2, '"', false); $$ = Scalar\Encapsed[$2]; }
-;
-
-variable:
-      object_access                                         { $$ = $1; }
-    | base_variable                                         { $$ = $1; }
 ;
 
 object_access:
@@ -202,21 +152,6 @@ object_property:
       T_STRING                                              { $$ = $1; }
     | '{' expr '}'                                          { $$ = $2; }
     | variable_without_objects                              { $$ = $1; }
-;
-
-array_pair_list:
-      /* empty */                                           { $$ = array(); }
-    | non_empty_array_pair_list optional_comma              { $$ = $1; }
-;
-
-non_empty_array_pair_list:
-      non_empty_array_pair_list ',' array_pair              { push($1, $3); }
-    | array_pair                                            { init($1); }
-;
-
-array_pair:
-    | expr T_DOUBLE_ARROW '&' variable                      { $$ = Expr\ArrayItem[$4, $1,   true]; }
-    | '&' variable                                          { $$ = Expr\ArrayItem[$2, null, true]; }
 ;
 
 encaps_list:
