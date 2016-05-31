@@ -72,7 +72,7 @@ class LexerTest extends PHPUnit_Framework_TestCase
   public function testTag()
   {
     $atom = 'some :atom';
-    $this->assertEquals("[T_IDENT, some][T_ATOM, atom]", $this->tokenize($atom, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_IDENT, some][:][T_IDENT, atom]", $this->tokenize($atom, SHOW_SYMBOL_TABLE));
   }
 
   public function testParam()
