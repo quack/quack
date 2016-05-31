@@ -630,6 +630,13 @@ class Grammar
     return NULL;
   }
 
+  function _name()
+  {
+    $name = $this->parser->lookahead;
+    $this->parser->match(Tag::T_IDENT);
+    return $name;
+  }
+
   function _expr($precedence = 0)
   {
     $token = $this->parser->consumeAndFetch();

@@ -16,16 +16,8 @@ class MemberAccessParselet implements IInfixParselet
 {
   public function parse(Grammar $grammar, Expr $left, Token $token)
   {
-    $right = $grammar->_expr(Precedence::MEMBER_ACCESS - 1);
-
-    if (!($right instanceof NameExpr)) {
-      // throw (new SyntaxError)
-      //   -> expected ('name')
-      //   -> found    ($grammar->parser->lookahead)
-      //   -> on       ($grammar->parser->position())
-      //   -> source   ($grammar->parser->input);
-    }
-    return new OperatorExpr($left, $token->getTag(), $right);
+    $right = $grammar->_name();
+    return new OperatorExpr($left, $token->getTag(), new NameExpr($right));
   }
 
   public function getPrecedence()
