@@ -69,7 +69,7 @@ import(AST, 'stmt/CaseStmt');
 import(AST, 'stmt/ClassStmt');
 import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
-import(AST, 'stmt/DefStmt');
+import(AST, 'stmt/FnStmt');
 import(AST, 'stmt/DoWhileStmt');
 import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/ExprStmt');

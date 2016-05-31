@@ -13,7 +13,7 @@ use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\ClassStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
-use \QuackCompiler\Ast\Stmt\DefStmt;
+use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\DoWhileStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
@@ -132,6 +132,13 @@ class Grammar
       return call_user_func([$this, $action]);
     }
 
+    // Differ function expression from function statement
+    // Look at the first character after T_FN. When not '{', it is a statement
+    if ($this->parser->is(Tag::T_FN) && $this->parser->input->preview(1) !== '{') {
+      return $this->_fnStmt();
+    }
+
+    // Jump to expressions as fallback
     if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
       $this->parser->match('.');
@@ -351,7 +358,7 @@ class Grammar
     if ($this->checker->startsStmt())          return $this->_stmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
     if ($this->parser->is(Tag::T_STRUCT))      return $this->_structDeclStmt();
-    if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
+    if ($this->parser->is(Tag::T_FN))          return $this->_fnStmt();
     if ($this->parser->is(Tag::T_MODULE))      return $this->_moduleStmt();
     if ($this->parser->is(Tag::T_OPEN))        return $this->_openStmt();
     if ($this->parser->is(Tag::T_CONST))       return $this->_constStmt();
@@ -360,7 +367,7 @@ class Grammar
   function _innerStmt()
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
-    if ($this->parser->is(Tag::T_DEF))         return $this->_defStmt();
+    if ($this->parser->is(Tag::T_FN))         return $this->_fnStmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
     if ($this->parser->is(Tag::T_STRUCT))      return $this->_structDeclStmt();
   }
@@ -369,7 +376,7 @@ class Grammar
   {
     if ($this->parser->is(Tag::T_CONST)) return $this->_constStmt();
     if ($this->parser->is(Tag::T_OPEN))  return $this->_openStmt(); // TODO: Replace by traits
-    if ($this->parser->is(Tag::T_DEF))   return $this->_defStmt();
+    if ($this->parser->is(Tag::T_FN))    return $this->_fnStmt();
     if ($this->parser->is(Tag::T_IDENT)) return $this->_property();
 
     if ($this->checker->isMethodModifier()) {
@@ -378,7 +385,7 @@ class Grammar
         $modifiers[] = $this->parser->consumeAndFetch()->lexeme;
       }
 
-      if ($this->parser->is(Tag::T_DEF))   return $this->_defStmt($modifiers);
+      if ($this->parser->is(Tag::T_FN))    return $this->_fnStmt($modifiers);
       if ($this->parser->is(Tag::T_IDENT)) return $this->_property($modifiers);
     }
   }
@@ -488,26 +495,29 @@ class Grammar
     return new StructStmt($name, $interfaces, $body);
   }
 
-  function _defStmt($modifiers = [])
+  function _fnStmt($modifiers = [])
   {
-    $this->parser->match(Tag::T_DEF);
     $by_reference = false;
+    $this->parser->match(Tag::T_FN);
     if ($this->parser->is('*')) {
       $this->parser->consume();
       $by_reference = true;
     }
+
     $name = $this->identifier();
     $parameters = $this->_parameters();
+
+    var_dump($this->parser->lookahead);
 
     if ($this->parser->is('[')) {
       $this->parser->match('[');
       $body = iterator_to_array($this->_innerStmtList());
       $this->parser->match(']');
 
-      return new DefStmt($name, $by_reference, $body, $parameters, $modifiers);
+      return new FnStmt($name, $by_reference, $body, $parameters, $modifiers);
     }
 
-    return new DefStmt($name, $by_reference, NULL, $parameters, $modifiers);
+    return new FnStmt($name, $by_reference, NULL, $parameters, $modifiers);
   }
 
   function _moduleStmt()

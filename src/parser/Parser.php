@@ -92,7 +92,6 @@ abstract class Parser
 
     $this->postfix('!', Precedence::POSTFIX);
 
-
     $this->infixLeft('+', Precedence::ADDITIVE);
     $this->infixLeft('-', Precedence::ADDITIVE);
     $this->infixLeft('++', Precedence::ADDITIVE);

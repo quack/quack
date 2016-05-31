@@ -78,7 +78,7 @@ class LexerTest extends PHPUnit_Framework_TestCase
   public function testKeywords()
   {
     $keywords = ["true", "false", "let", "if", "for", "while", "do", "struct",
-      "init", "self", "module", "class", "def", "override", "goto", "foreach",
+      "init", "self", "module", "class", "override", "goto", "foreach",
       "match", "in", "model", "where", "const", "my", "nil", "static",
       "protected", "protocol", "final", "int", "double", "string", "bool",
       "array", "resource", "object", "open", "global", "as", "type", "enum",
@@ -89,7 +89,7 @@ class LexerTest extends PHPUnit_Framework_TestCase
     ];
 
     $this->assertEquals("[true][false][let][if][for][while][do][struct]" .
-      "[init][self][module][class][def][override][goto][foreach]" .
+      "[init][self][module][class][override][goto][foreach]" .
       "[match][in][model][where][const][my][nil][static]" .
       "[protected][protocol][final][int][double][string][bool]" .
       "[array][resource][object][open][global][as][type][enum]" .

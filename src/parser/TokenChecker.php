@@ -18,7 +18,7 @@ class TokenChecker
     return $this->startsStmt()
         || $this->startsClassDeclStmt()
         || $this->parser->is(Tag::T_STRUCT)
-        || $this->parser->is(Tag::T_DEF)
+        || $this->parser->is(Tag::T_FN)
         || $this->parser->is(Tag::T_MODULE)
         || $this->parser->is(Tag::T_OPEN)
         || $this->parser->is(Tag::T_CONST);
@@ -27,7 +27,7 @@ class TokenChecker
   function startsInnerStmt()
   {
     return $this->startsStmt()
-        || $this->parser->is(Tag::T_DEF)
+        || $this->parser->is(Tag::T_FN)
         || $this->startsClassDeclStmt();
   }
 
@@ -103,7 +103,7 @@ class TokenChecker
 
   function startsClassStmt()
   {
-    return $this->parser->is(Tag::T_DEF)
+    return $this->parser->is(Tag::T_FN)
         || $this->parser->is(Tag::T_CONST)
         || $this->parser->is(Tag::T_OPEN)
         || $this->parser->is(Tag::T_IDENT)

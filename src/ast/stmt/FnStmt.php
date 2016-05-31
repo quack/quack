@@ -4,7 +4,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class DefStmt implements Stmt
+class FnStmt implements Stmt
 {
   public $name;
   public $by_reference;
@@ -23,7 +23,7 @@ class DefStmt implements Stmt
 
   public function format(Parser $parser)
   {
-    $string_builder = ['def '];
+    $string_builder = ['fn '];
     if ($this->by_reference) {
       $string_builder[] = '*';
     }

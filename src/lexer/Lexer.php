@@ -40,7 +40,6 @@ abstract class Lexer
     $this->reserve(new Word(Tag::T_SELF, "self"));
     $this->reserve(new Word(Tag::T_MODULE, "module"));
     $this->reserve(new Word(Tag::T_CLASS, "class"));
-    $this->reserve(new Word(Tag::T_DEF, "def"));
     $this->reserve(new Word(Tag::T_OVERRIDE, "override"));
     $this->reserve(new Word(Tag::T_GOTO, "goto"));
     $this->reserve(new Word(Tag::T_FOREACH, "foreach"));

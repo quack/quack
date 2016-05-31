@@ -25,6 +25,7 @@ class FunctionParselet implements IPrefixParselet
     $this->is_static && $grammar->parser->consume(); // Eat [fn] when static function
     // TODO: implement use
     ($by_reference = $grammar->parser->is('*')) && $grammar->parser->consume();
+
     $parameters = [];
     $type = NULL;
     $value = NULL;
