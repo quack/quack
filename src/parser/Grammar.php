@@ -106,32 +106,43 @@ class Grammar
 
   function _stmt()
   {
-    if ($this->parser->is(Tag::T_IF))       return $this->_ifStmt();
-    if ($this->parser->is(Tag::T_LET))      return $this->_letStmt();
-    if ($this->parser->is(Tag::T_WHILE))    return $this->_whileStmt();
-    if ($this->parser->is(Tag::T_DO))       return $this->_doWhileStmt();
-    if ($this->parser->is(Tag::T_FOR))      return $this->_forStmt();
-    if ($this->parser->is(Tag::T_FOREACH))  return $this->_foreachStmt();
-    if ($this->parser->is(Tag::T_SWITCH))   return $this->_switchStmt();
-    if ($this->parser->is(Tag::T_TRY))      return $this->_tryStmt();
-    if ($this->parser->is(Tag::T_BREAK))    return $this->_breakStmt();
-    if ($this->parser->is(Tag::T_CONTINUE)) return $this->_continueStmt();
-    if ($this->parser->is(Tag::T_GOTO))     return $this->_gotoStmt();
-    if ($this->parser->is(Tag::T_YIELD))    return $this->_yieldStmt();
-    if ($this->parser->is(Tag::T_GLOBAL))   return $this->_globalStmt();
-    if ($this->parser->is(Tag::T_RAISE))    return $this->_raiseStmt();
-    if ($this->parser->is(Tag::T_PRINT))    return $this->_printStmt();
-    if ($this->parser->is(Tag::T_OUT))      return $this->_outStmt();
-    if ($this->parser->is('^'))             return $this->_returnStmt();
-    if ($this->parser->is('['))             return $this->_blockStmt();
-    if ($this->parser->is(':-'))            return $this->_labelStmt();
+    $branch_table = [
+      Tag::T_IF       => '_ifStmt',
+      Tag::T_LET      => '_letStmt',
+      Tag::T_WHILE    => '_whileStmt',
+      Tag::T_DO       => '_doWhileStmt',
+      Tag::T_FOR      => '_forStmt',
+      Tag::T_FOREACH  => '_foreachStmt',
+      Tag::T_SWITCH   => '_switchStmt',
+      Tag::T_TRY      => '_tryStmt',
+      Tag::T_BREAK    => '_breakStmt',
+      Tag::T_CONTINUE => '_continueStmt',
+      Tag::T_GOTO     => '_gotoStmt',
+      Tag::T_YIELD    => '_yieldStmt',
+      Tag::T_GLOBAL   => '_globalStmt',
+      Tag::T_RAISE    => '_raiseStmt',
+      Tag::T_PRINT    => '_printStmt',
+      Tag::T_OUT      => '_outStmt',
+      '^'             => '_returnStmt',
+      '['             => '_blockStmt',
+      ':-'            => '_labelStmt'
+    ];
+
+    foreach ($branch_table as $token => $action) if ($this->parser->is($token)) {
+      return call_user_func([$this, $action]);
+    }
+
     if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
       $this->parser->match('.');
       return new ExprStmt($expression);
     }
 
-    throw new \Exception('Not a statement');
+    throw (new SyntaxError)
+      -> expected ('statement')
+      -> found    ($this->parser->lookahead)
+      -> on       ($this->parser->position())
+      -> source   ($this->parser->input);
   }
 
   function _blockStmt()
