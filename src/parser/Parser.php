@@ -113,6 +113,7 @@ abstract class Parser
     $this->infixLeft('?:', Precedence::TERNARY);
 
     $this->infixRight('**', Precedence::EXPONENT);
+    $this->infixRight(':-', Precedence::ASSIGNMENT);
   }
 
   public function match($tag)
