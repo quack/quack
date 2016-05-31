@@ -7,12 +7,12 @@ def fact [n] [
   for i :- 1 while i <= n do [
     fact :- fact * i
   ]
-  <<< fact
+  ^ fact
 ]
 
 -: tail_call_recursion
 def fact [n] [
-  <<< if n = 0 then 1 else [n * fact[n - 1]]
+  ^ if n = 0 then 1 else [n * fact[n - 1]]
 ]
 
 -: compressed
