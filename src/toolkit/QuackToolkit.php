@@ -94,5 +94,4 @@ import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/YieldStmt');
-
 import(AST, 'helper/Param');

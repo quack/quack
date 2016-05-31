@@ -60,7 +60,7 @@ class AstTest extends PHPUnit_Framework_TestCase
 
   public function testTernaryOperator()
   {
-    $source = "10 and 2 ? 1 : 2 and 3 ? 4 : 5.";
+    $source = "10 and 2 then 1 else 2 and 3 then 4 else 5.";
 
     $this->assertEquals("((10 and 2) ? 1 : ((2 or 3) ? 4 : 5))",
       $this->format($source,

@@ -42,6 +42,7 @@ import(PARSELETS, 'IncludeParselet');
 import(PARSELETS, 'ArrayParselet');
 import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
+import(PARSELETS, 'MemberAccessParselet');
 
 /* Ast */
 
@@ -93,5 +94,4 @@ import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/YieldStmt');
-
 import(AST, 'helper/Param');
