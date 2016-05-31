@@ -517,8 +517,6 @@ class Grammar
     $name = $this->identifier();
     $parameters = $this->_parameters();
 
-    var_dump($this->parser->lookahead);
-
     if ($this->parser->is('[')) {
       $this->parser->match('[');
       $body = iterator_to_array($this->_innerStmtList());
