@@ -40,7 +40,9 @@ import(PARSELETS, 'GroupParselet');
 import(PARSELETS, 'FunctionParselet');
 import(PARSELETS, 'IncludeParselet');
 import(PARSELETS, 'ArrayParselet');
+import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
+import(PARSELETS, 'MemberAccessParselet');
 
 /* Ast */
 
@@ -52,6 +54,7 @@ import(AST, 'expr/ArrayExpr');
 import(AST, 'expr/ArrayPairExpr');
 import(AST, 'expr/IncludeExpr');
 import(AST, 'expr/LambdaExpr');
+import(AST, 'expr/NameExpr');
 import(AST, 'expr/NewExpr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');

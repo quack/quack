@@ -24,10 +24,6 @@ class Tokenizer extends Lexer
         return $this->identifier();
       }
 
-      if ($this->is(':') && (ctype_alpha((string) $preview = $this->preview()) || $preview === '_')) {
-        return $this->atom();
-      }
-
       if (ctype_space($this->peek)) {
         $this->space();
         continue;
@@ -132,20 +128,6 @@ class Tokenizer extends Lexer
     }
 
     return new Token(Tag::T_IDENT, $this->symbol_table->add($string));
-  }
-
-  private function atom()
-  {
-    $buffer = [];
-    $this->consume();
-
-    do {
-      $buffer[] = $this->readChar();
-    } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
-
-    $atom = implode($buffer);
-    $this->column += sizeof($buffer) + 1;
-    return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
   }
 
   private function space()

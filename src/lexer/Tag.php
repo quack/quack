@@ -12,7 +12,6 @@ class Tag
   const T_DOUBLE = 400;
   const T_SEMANTIC_COMMENT = 259;
   const T_STRING = 600;
-  const T_ATOM = 601;
   const T_PARAM = 1000;
 
   /* Keywords */
@@ -89,7 +88,7 @@ class Tag
   const T_ONCE = 297;
   const T_PIECE = 298;
   const T_INTF = 299;
-
+  const T_THEN = 300;
 
   /* Operators */
 

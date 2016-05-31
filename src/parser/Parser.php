@@ -10,6 +10,7 @@ use \QuackCompiler\Parselets\IPrefixParselet;
 use \QuackCompiler\Parselets\IInfixParselet;
 use \QuackCompiler\Parselets\BinaryOperatorParselet;
 use \QuackCompiler\Parselets\NumberParselet;
+use \QuackCompiler\Parselets\NameParselet;
 use \QuackCompiler\Parselets\PostfixOperatorParselet;
 use \QuackCompiler\Parselets\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\TernaryParselet;
@@ -18,6 +19,7 @@ use \QuackCompiler\Parselets\FunctionParselet;
 use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parselets\ArrayParselet;
 use \QuackCompiler\Parselets\NewParselet;
+use \QuackCompiler\Parselets\MemberAccessParselet;
 
 abstract class Parser
 {
@@ -68,7 +70,8 @@ abstract class Parser
   {
     $this->register(Tag::T_INTEGER, new NumberParselet);
     $this->register(Tag::T_DOUBLE, new NumberParselet);
-    $this->register('?', new TernaryParselet);
+    $this->register(Tag::T_IDENT, new NameParselet);
+    $this->register(Tag::T_THEN, new TernaryParselet);
     $this->register('(', new GroupParselet);
     $this->register('{', new ArrayParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
@@ -76,6 +79,8 @@ abstract class Parser
     $this->register(Tag::T_REQUIRE, new IncludeParselet);
     $this->register(Tag::T_INCLUDE, new IncludeParselet);
     $this->register('#', new NewParselet);
+    $this->register(':', new MemberAccessParselet);
+    $this->register('?:', new MemberAccessParselet);
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);
@@ -86,6 +91,7 @@ abstract class Parser
     $this->prefix(Tag::T_NOT, Precedence::PREFIX);
 
     $this->postfix('!', Precedence::POSTFIX);
+
 
     $this->infixLeft('+', Precedence::ADDITIVE);
     $this->infixLeft('-', Precedence::ADDITIVE);
