@@ -1,40 +1,3 @@
-top_statement:
-    | group_use_declaration ';'                             { $$ = $1; }
-;
-
-/* Using namespace_name_parts here to avoid s/r conflict on T_NS_SEPARATOR */
-group_use_declaration:
-      T_USE use_type namespace_name_parts T_NS_SEPARATOR '{' unprefixed_use_declarations '}'
-          { $$ = Stmt\GroupUse[Name[$3], $6, $2]; }
-    | T_USE use_type T_NS_SEPARATOR namespace_name_parts T_NS_SEPARATOR '{' unprefixed_use_declarations '}'
-          { $$ = Stmt\GroupUse[Name[$4], $7, $2]; }
-    | T_USE namespace_name_parts T_NS_SEPARATOR '{' inline_use_declarations '}'
-          { $$ = Stmt\GroupUse[Name[$2], $5, Stmt\Use_::TYPE_UNKNOWN]; }
-    | T_USE T_NS_SEPARATOR namespace_name_parts T_NS_SEPARATOR '{' inline_use_declarations '}'
-          { $$ = Stmt\GroupUse[Name[$3], $6, Stmt\Use_::TYPE_UNKNOWN]; }
-;
-
-unprefixed_use_declarations:
-      unprefixed_use_declarations ',' unprefixed_use_declaration
-          { push($1, $3); }
-    | unprefixed_use_declaration                            { init($1); }
-;
-
-inline_use_declarations:
-      inline_use_declarations ',' inline_use_declaration    { push($1, $3); }
-    | inline_use_declaration                                { init($1); }
-;
-
-unprefixed_use_declaration:
-      namespace_name                                        { $$ = Stmt\UseUse[$1, null, Stmt\Use_::TYPE_UNKNOWN]; }
-    | namespace_name T_AS T_STRING                          { $$ = Stmt\UseUse[$1, $3, Stmt\Use_::TYPE_UNKNOWN]; }
-;
-
-inline_use_declaration:
-      unprefixed_use_declaration                            { $$ = $1; $$->type = Stmt\Use_::TYPE_NORMAL; }
-    | use_type unprefixed_use_declaration                   { $$ = $2; $$->type = $1; }
-;
-
 non_empty_statement:
     | T_FOR '(' for_expr ';'  for_expr ';' for_expr ')' for_statement
           { $$ = Stmt\For_[['init' => $3, 'cond' => $5, 'loop' => $7, 'stmts' => $9]]; }
@@ -62,21 +25,6 @@ name_list:
 for_statement:
       statement                                             { $$ = toArray($1); }
     | ':' inner_statement_list T_ENDFOR ';'                 { $$ = $2; }
-;
-
-declare_statement:
-      non_empty_statement                                   { $$ = toArray($1); }
-    | ';'                                                   { $$ = null; }
-    | ':' inner_statement_list T_ENDDECLARE ';'             { $$ = $2; }
-;
-
-declare_list:
-      declare_list_element                                  { init($1); }
-    | declare_list ',' declare_list_element                 { push($1, $3); }
-;
-
-declare_list_element:
-      T_STRING '=' static_scalar                            { $$ = Stmt\DeclareDeclare[$1, $3]; }
 ;
 
 argument_list:
@@ -199,10 +147,6 @@ scalar_dereference:
     | constant '[' dim_offset ']'                           { $$ = Expr\ArrayDimFetch[$1, $3]; }
     | scalar_dereference '[' dim_offset ']'                 { $$ = Expr\ArrayDimFetch[$1, $3]; }
     /* alternative array syntax missing intentionally */
-;
-
-new_expr:
-      T_NEW class_name_reference ctor_arguments             { $$ = Expr\New_[$2, $3]; }
 ;
 
 function_call:
@@ -361,11 +305,6 @@ static_array_pair_list:
     | non_empty_static_array_pair_list optional_comma       { $$ = $1; }
 ;
 
-optional_comma:
-      /* empty */
-    | ','
-;
-
 non_empty_static_array_pair_list:
       non_empty_static_array_pair_list ',' static_array_pair { push($1, $3); }
     | static_array_pair                                      { init($1); }
@@ -445,21 +384,6 @@ object_property:
       T_STRING                                              { $$ = $1; }
     | '{' expr '}'                                          { $$ = $2; }
     | variable_without_objects                              { $$ = $1; }
-;
-
-list_expr:
-      T_LIST '(' list_expr_elements ')'                     { $$ = Expr\List_[$3]; }
-;
-
-list_expr_elements:
-      list_expr_elements ',' list_expr_element              { push($1, $3); }
-    | list_expr_element                                     { init($1); }
-;
-
-list_expr_element:
-      variable                                              { $$ = $1; }
-    | list_expr                                             { $$ = $1; }
-    | /* empty */                                           { $$ = null; }
 ;
 
 array_pair_list:
