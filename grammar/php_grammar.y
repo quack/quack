@@ -4,17 +4,11 @@ non_empty_statement:
     | T_STATIC static_var_list ';'                          { $$ = Stmt\Static_[$2]; }
     | T_UNSET '(' variables_list ')' ';'                    { $$ = Stmt\Unset_[$3]; }
           { $$ = Stmt\Foreach_[$3, $7[0], ['keyVar' => $5, 'byRef' => $7[1], 'stmts' => $9]]; }
-    | T_DECLARE '(' declare_list ')' declare_statement      { $$ = Stmt\Declare_[$3, $5]; }
 ;
 
 variables_list:
       variable                                              { init($1); }
     | variables_list ',' variable                           { push($1, $3); }
-;
-
-optional_ref:
-      /* empty */                                           { $$ = false; }
-    | '&'                                                   { $$ = true; }
 ;
 
 name_list:
@@ -24,13 +18,11 @@ name_list:
 
 for_statement:
       statement                                             { $$ = toArray($1); }
-    | ':' inner_statement_list T_ENDFOR ';'                 { $$ = $2; }
 ;
 
 argument_list:
       '(' ')'                                               { $$ = array(); }
     | '(' non_empty_argument_list ')'                       { $$ = $2; }
-    | '(' yield_expr ')'                                    { $$ = array(Node\Arg[$2, false, false]); }
 ;
 
 non_empty_argument_list:
@@ -107,13 +99,9 @@ for_expr:
 
 expr:
       variable                                              { $$ = $1; }
-    | list_expr '=' expr                                    { $$ = Expr\Assign[$1, $3]; }
     | variable '=' expr                                     { $$ = Expr\Assign[$1, $3]; }
     | variable '=' '&' variable                             { $$ = Expr\AssignRef[$1, $4]; }
     | variable '=' '&' new_expr                             { $$ = Expr\AssignRef[$1, $4]; }
-    | new_expr                                              { $$ = $1; }
-    | T_CLONE expr                                          { $$ = Expr\Clone_[$2]; }
-    | '(' new_expr ')'                                      { $$ = $2; }
     | T_ISSET '(' variables_list ')'                        { $$ = Expr\Isset_[$3]; }
     | T_EMPTY '(' expr ')'                                  { $$ = Expr\Empty_[$3]; }
     | T_EVAL parentheses_expr                               { $$ = Expr\Eval_[$2]; }
@@ -128,12 +116,6 @@ expr:
     | scalar                                                { $$ = $1; }
     | array_expr                                            { $$ = $1; }
     | scalar_dereference                                    { $$ = $1; }
-    | T_YIELD                                               { $$ = Expr\Yield_[null, null]; }
-;
-
-yield_expr:
-      T_YIELD expr                                          { $$ = Expr\Yield_[$2, null]; }
-    | T_YIELD expr T_DOUBLE_ARROW expr                      { $$ = Expr\Yield_[$4, $2]; }
 ;
 
 array_expr:

@@ -45,7 +45,6 @@ class TokenChecker
         || $this->parser->is(Tag::T_BREAK)    // Done
         || $this->parser->is(Tag::T_CONTINUE) // Done
         || $this->parser->is(Tag::T_GOTO)     // Done
-        || $this->parser->is(Tag::T_YIELD)    //
         || $this->parser->is(Tag::T_GLOBAL)   // Done
         || $this->parser->is(Tag::T_STATIC)   //
         || $this->parser->is(Tag::T_RAISE)    // Done
