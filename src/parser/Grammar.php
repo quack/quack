@@ -320,8 +320,18 @@ class Grammar
   {
     $this->parser->match('^');
     $expression = NULL;
-    $this->checker->startsExpr() && /* then */ $expression = $this->_expr();
 
+    if ($this->parser->is('.')) {
+      $this->parser->match('.');
+      goto ret;
+    }
+
+    if ($this->checker->startsExpr()) {
+      $expression = $this->_expr();
+      $this->parser->match('.');
+    }
+
+    ret:
     return new ReturnStmt($expression);
   }
 
@@ -367,7 +377,7 @@ class Grammar
   function _innerStmt()
   {
     if ($this->checker->startsStmt())          return $this->_stmt();
-    if ($this->parser->is(Tag::T_FN))         return $this->_fnStmt();
+    if ($this->parser->is(Tag::T_FN))          return $this->_fnStmt();
     if ($this->checker->startsClassDeclStmt()) return $this->_classDeclStmt();
     if ($this->parser->is(Tag::T_STRUCT))      return $this->_structDeclStmt();
   }

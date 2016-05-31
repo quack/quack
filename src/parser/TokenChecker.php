@@ -40,7 +40,7 @@ class TokenChecker
         || $this->parser->is(Tag::T_FOR)      //
         || $this->parser->is(Tag::T_FOREACH)  // Done
         || $this->parser->is(Tag::T_SWITCH)   // Done
-        || $this->parser->is(Tag::T_TRY)      //
+        || $this->parser->is(Tag::T_TRY)      // Done
         || $this->parser->is(Tag::T_MATCH)    //
         || $this->parser->is(Tag::T_BREAK)    // Done
         || $this->parser->is(Tag::T_CONTINUE) // Done

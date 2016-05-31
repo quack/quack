@@ -184,6 +184,8 @@ class Tag
     return NULL;
   }
 
+  // TODO: Separate operators that can be used as the start of an expression
+  // from the others
   static function getOpTable() {
     return [
       Tag::T_LESSER              => '<',
