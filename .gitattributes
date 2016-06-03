@@ -1,2 +1,2 @@
-*.qk linguist-language=Scala
-*.qkt linguist-language=Scala
+*.qk linguist-language=FSharp
+*.qkt linguist-language=FSharp
