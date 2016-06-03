@@ -1,2 +1,3 @@
 *.qk linguist-language=FSharp
 *.qkt linguist-language=FSharp
+*.php linguist-language=Hack
