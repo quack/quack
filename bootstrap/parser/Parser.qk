@@ -1,4 +1,4 @@
-(** vim: syntax=Scala *)
+(** vim: syntax=OCaml *)
 
 module QuackCompiler.Parser
 
@@ -16,86 +16,85 @@ open QuackCompiler.Parselets.TernaryParselet
 open QuackCompiler.Parselets.GroupParselet
 
 model Parser [
-  input
-  lookahead
-  scope_level :- zero
+  | input;
+    lookahead;
+    scope_level      :- zero;
+    prefix_parselets :- todo;
+    infix_parselets  :- todo |
 
-  prefix_parselets :- todo
-  infix_parselets :- todo
-
-  def initialize [*input] [
+  fn initialize [*input] [
     // TODO
   ]
 
-  my def register [tag; parselet] [
+  my fn register [tag; parselet] [
     // TODO
   ]
 
-  my def postfix [tag; precedence] [
+  my fn postfix [tag; precedence] [
     // TODO
   ]
 
-  my def infix_left [tag; precedence] [
+  my fn infix_left [tag; precedence] [
     // TODO
   ]
 
-  my def infix_right [tag; precedence] [
+  my fn infix_right [tag; precedence] [
     // TODO
   ]
 
-  my def register_parselets! [
+  my fn register_parselets! [
     // TODO
   ]
 
-  def _match [tag] [
+  fn _match [tag] [
     // TODO
   ]
 
-  def opt [tag] [
+  fn opt [tag] [
     // TODO
   ]
 
-  def is_operator! [
+  fn is_operator! [
     // TODO
   ]
 
-  def consume! [
+  fn consume! [
     // TODO
   ]
 
-  def consume_and_fetch! [
+  fn consume_and_fetch! [
     // TODO
   ]
 
-  def resolve_scope [pointer] [
+  fn resolve_scope [pointer] [
     // TODO
   ]
 
-  def position! [
+  fn position! [
     // TODO
   ]
 
-  def infix_parselet_for_token [token] [
+  fn infix_parselet_for_token [token] [
     // TODO
   ]
 
-  def prefix_parselet_for_token [token] [
+  fn prefix_parselet_for_token [token] [
     // TODO
   ]
 
-  def open_scope! [
+  fn open_scope! [
     // TODO
   ]
 
-  def close_scope! [
+  fn close_scope! [
     // TODO
   ]
 
-  def indent! [
+  fn indent! [
     // TODO
   ]
 
-  def dedent! [
+  fn dedent! [
     // TODO
   ]
 ]
