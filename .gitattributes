@@ -1,2 +1,3 @@
-*.qk linguist-language=Scala
-*.qkt linguist-language=Scala
+*.qk linguist-language=OCaml
+*.qkt linguist-language=OCaml
+*.php linguist-language=Hack

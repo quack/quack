@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 (* vim: Syntax=Ruby *)
+=======
+(** vim: syntax=OCaml *)
+
+>>>>>>> ec319ac8161f287195709df41fcc5ccbb541b412
 module QuackCompiler.Parser
 
 open .Exception
@@ -12,6 +17,7 @@ open QuackCompiler.Parselets.{
 model Parser [
   | input;
     lookahead;
+<<<<<<< HEAD
     scope_level      :- 0;
     prefix_parselets :- {};
     infix_parselets  :- {} |
@@ -116,5 +122,85 @@ model Parser [
 
   fn dedent! :- str_repeat[
     ' '; self:scope_level > 0 then self:scope_level - 1 else 0
+=======
+    scope_level      :- zero;
+    prefix_parselets :- todo;
+    infix_parselets  :- todo |
+
+  fn initialize [*input] [
+    // TODO
+  ]
+
+  my fn register [tag; parselet] [
+    // TODO
+  ]
+
+  my fn postfix [tag; precedence] [
+    // TODO
+  ]
+
+  my fn infix_left [tag; precedence] [
+    // TODO
+  ]
+
+  my fn infix_right [tag; precedence] [
+    // TODO
+  ]
+
+  my fn register_parselets! [
+    // TODO
+  ]
+
+  fn _match [tag] [
+    // TODO
+  ]
+
+  fn opt [tag] [
+    // TODO
+  ]
+
+  fn is_operator! [
+    // TODO
+  ]
+
+  fn consume! [
+    // TODO
+  ]
+
+  fn consume_and_fetch! [
+    // TODO
+  ]
+
+  fn resolve_scope [pointer] [
+    // TODO
+  ]
+
+  fn position! [
+    // TODO
+  ]
+
+  fn infix_parselet_for_token [token] [
+    // TODO
+  ]
+
+  fn prefix_parselet_for_token [token] [
+    // TODO
+  ]
+
+  fn open_scope! [
+    // TODO
+  ]
+
+  fn close_scope! [
+    // TODO
+  ]
+
+  fn indent! [
+    // TODO
+  ]
+
+  fn dedent! [
+    // TODO
+>>>>>>> ec319ac8161f287195709df41fcc5ccbb541b412
   ]
 ]

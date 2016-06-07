@@ -1,8 +1,3 @@
-(**
- * vim: syntax=Scala
- * Declaration of types of external resources
- *)
-
 // Constant declaration
 declare const: string in __CLASS__
 
