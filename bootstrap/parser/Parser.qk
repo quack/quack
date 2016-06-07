@@ -1,101 +1,120 @@
-(** vim: syntax=Scala *)
-
+(* vim: Syntax=Ruby *)
 module QuackCompiler.Parser
 
-open Exception
-open QuackCompiler.Lexer.Tag
-open QuackCompiler.Lexer.Token
-open QuackCompiler.Lexer.Tokenizer
-open QuackCompiler.Parselets.IPrefixParselet
-open QuackCompiler.Parselets.IInfixParselet
-open QuackCompiler.Parselets.BinaryOperatorParselet
-open QuackCompiler.Parselets.NumberParselet
-open QuackCompiler.Parselets.PostfixOperatorParselet
-open QuackCompiler.Parselets.PrefixOperatorParselet
-open QuackCompiler.Parselets.TernaryParselet
-open QuackCompiler.Parselets.GroupParselet
+open .Exception
+open QuackCompiler.Lexer.{ Tag; Token; Tokenizer }
+open QuackCompiler.Parselets.{
+  IPrefixParselet; IInfixParselet; BinaryOperatorParselet; NumberParselet;
+  NameParselet; PostfixOperatorParselet; PrefixOperatorParselet;
+  TernaryParselet; GroupParselet; FunctionParselet; IncludeParselet;
+  ArrayParselet; NewParselet; MemberAccessParselet }
 
 model Parser [
-  input
-  lookahead
-  scope_level :- zero
+  | input;
+    lookahead;
+    scope_level      :- 0;
+    prefix_parselets :- {};
+    infix_parselets  :- {} |
 
-  prefix_parselets :- todo
-  infix_parselets :- todo
-
-  def initialize [*input] [
-    // TODO
+  init[ @input ] [
+    self:register_parselets!
+    self:consume!
   ]
 
-  my def register [tag; parselet] [
-    // TODO
+  my fn register[ tag; parselet ] :- &(::- parselet)[
+      parselet <: IPrefixParselet
+        then self:prefix_parselets{ tag }
+        else parselet <: IInfixParselet
+          then self:infix_parselets{ tag }
+          else raise "Error"
   ]
 
-  my def postfix [tag; precedence] [
-    // TODO
+  my fn postfix[ tag; precedence ] :- self:register[
+    tag; #PostfixOperatorParselet with { precedence }
   ]
 
-  my def infix_left [tag; precedence] [
-    // TODO
+  my fn prefix[ tag; precedence ] :- self:register[
+    tag; #PrefixOperatorParselet with { precedence }
   ]
 
-  my def infix_right [tag; precedence] [
-    // TODO
+  my fn infix_left[ tag; precedence ] :- self:register[
+    tag; #BinaryOperatorParselet with { precedence; false }
   ]
 
-  my def register_parselets! [
-    // TODO
+  my fn infix_right[ tag; precedence ] :- self:register[
+    tag; #BinaryOperatorParselet with { precedence; true }
   ]
 
-  def _match [tag] [
-    // TODO
+  fn register_parselets! [
+    let custom :- {
+      Tag:T_INTEGER #NumberParset;
+      Tag:T_DOUBLE  #NumberParselet;
+      Tag:T_IDENT   #NameParset;
+      Tag:T_THEN    #TernaryParselet;
+    }
+
+    custom |> array_walk[ fn { key | self:register[ key; custom{ key } ] } ]
   ]
 
-  def opt [tag] [
-    // TODO
+  fn match[ tag ] [
+    if self:lookahead:get_tag! = tag [ ^ self:consume!. ]
+    raise #SyntaxError
+      :expected [ tag            ]
+      :found    [ self:lookahead ]
+      :on       [ self:position! ]
+      :source   [ self:input     ].
   ]
 
-  def is_operator! [
-    // TODO
+  fn opt[ tag ] [
+    if self:lookahead:get_tag! = tag [
+      let pointer :- self:consume! in ^ pointer = null then true else pointer
+    ]
+    ^ false.
   ]
 
-  def consume! [
-    // TODO
+  fn is[ tag ] :- self:lookahead:get_tag! = tag
+
+  fn is_operator! [
+    self:op ::- self:lookahead:get_tag!.
+    let op_table:- array_values[ Tag:get_op_table! ].
+    ^ in_array[ op; op_table; true ].
   ]
 
-  def consume_and_fetch! [
-    // TODO
+  fn consume! [
+    let pointer :- self:lookahead?:get_pointer!.
+    self:lookahead :- self:input:next_token!.
+    ^ pointer
   ]
 
-  def resolve_scope [pointer] [
-    // TODO
+  fn consume_and_fetch! [
+    let clone :- self:lookahead.
+    self:lookahead ::- self:input:next_token!.
+    ^ clone.
   ]
 
-  def position! [
-    // TODO
+  fn resolve_scope[ pointer ] :- self:input:get_symbol_table!:get[ pointer ]
+
+  fn position :- { "line" *self:input:line; "column" *self:input:column }
+
+  fn infix_parselet_for_token[ token ] [
+    let key :- token:get_tag!.
+    ^ array_key_exists[ key; self:prefix_parselets ] then self.infix_parselets[ key ]
+                                                     else nil.
   ]
 
-  def infix_parselet_for_token [token] [
-    // TODO
+  fn prefix_parselet_for_token[ token ] [
+    let key :- token:get_tag!.
+    ^ array_key_exists[ key; self:prefix_parselets ] then self.prefix_parselets[ key ]
+                                                     else nil.
   ]
 
-  def prefix_parselet_for_token [token] [
-    // TODO
-  ]
+  fn open_scope :- self:scope_level ::- self:scope_level + 1
 
-  def open_scope! [
-    // TODO
-  ]
+  fn close_scope :- self:scope_level ::- self:scope_level - 1
 
-  def close_scope! [
-    // TODO
-  ]
+  fn indent! :- str_repeat[ ' '; self:scope_level ]
 
-  def indent! [
-    // TODO
-  ]
-
-  def dedent! [
-    // TODO
+  fn dedent! :- str_repeat[
+    ' '; self:scope_level > 0 then self:scope_level - 1 else 0
   ]
 ]
