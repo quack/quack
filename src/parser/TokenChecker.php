@@ -60,15 +60,12 @@ class TokenChecker
         || $this->parser->is(Tag::T_FOREACH)  // Done
         || $this->parser->is(Tag::T_SWITCH)   // Done
         || $this->parser->is(Tag::T_TRY)      // Done
-        || $this->parser->is(Tag::T_MATCH)    //
         || $this->parser->is(Tag::T_BREAK)    // Done
         || $this->parser->is(Tag::T_CONTINUE) // Done
         || $this->parser->is(Tag::T_GOTO)     // Done
         || $this->parser->is(Tag::T_GLOBAL)   // Done
-        || $this->parser->is(Tag::T_STATIC)   //
         || $this->parser->is(Tag::T_RAISE)    // Done
         || $this->parser->is(Tag::T_PRINT)    // Done
-        || $this->parser->is(Tag::T_OUT)      // Done
         || $this->parser->is('^')             // Done
         || $this->parser->is('[')             // Done
         || $this->parser->is(':-')            // Done
@@ -80,7 +77,6 @@ class TokenChecker
     return $this->parser->is(Tag::T_INTEGER)
         || $this->parser->is(Tag::T_DOUBLE)
         || $this->parser->is(Tag::T_FN)
-        || $this->parser->is(Tag::T_STATIC)
         || $this->parser->is(Tag::T_REQUIRE)
         || $this->parser->is(Tag::T_INCLUDE)
         || $this->parser->is(Tag::T_IDENT)
@@ -91,11 +87,7 @@ class TokenChecker
 
   function startsClassDeclStmt()
   {
-    return $this->parser->is(Tag::T_FINAL)
-        || $this->parser->is(Tag::T_MODEL)
-        || $this->parser->is(Tag::T_CLASS)
-        || $this->parser->is(Tag::T_PIECE)
-        || $this->parser->is(Tag::T_INTF);
+    return $this->parser->is(Tag::T_CLASS);
   }
 
   function startsParameter()
@@ -111,22 +103,12 @@ class TokenChecker
         || $this->parser->is(Tag::T_ELSE);
   }
 
-  function isMethodModifier()
-  {
-    return $this->parser->is(Tag::T_MY)
-        || $this->parser->is(Tag::T_PROTECTED)
-        || $this->parser->is(Tag::T_STATIC)
-        || $this->parser->is(Tag::T_MODEL)
-        || $this->parser->is(Tag::T_FINAL);
-  }
-
   function startsClassStmt()
   {
     return $this->parser->is(Tag::T_FN)
         || $this->parser->is(Tag::T_CONST)
         || $this->parser->is(Tag::T_OPEN)
-        || $this->parser->is(Tag::T_IDENT)
-        || $this->isMethodModifier();
+        || $this->parser->is(Tag::T_IDENT);
   }
 
   function isEoF()

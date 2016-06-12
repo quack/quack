@@ -94,7 +94,6 @@ abstract class Parser
     $this->register('(', new GroupParselet);
     $this->register('{', new ArrayParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
-    $this->register(Tag::T_STATIC, new FunctionParselet(true));
     $this->register(Tag::T_REQUIRE, new IncludeParselet);
     $this->register(Tag::T_INCLUDE, new IncludeParselet);
     $this->register('#', new NewParselet);
@@ -132,7 +131,6 @@ abstract class Parser
     $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
     $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
     $this->infixLeft('|>', Precedence::PIPELINE);
-    $this->infixLeft(Tag::T_INSTANCEOF, Precedence::O_INSTANCEOF);
     $this->infixLeft('??', Precedence::COALESCENCE);
     $this->infixLeft('?:', Precedence::TERNARY);
 

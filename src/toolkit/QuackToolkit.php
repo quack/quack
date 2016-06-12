@@ -26,7 +26,7 @@ define('PARSER', 'parser');
 
 function import($module, $file)
 {
-  require_once '../' . $module . '/' . $file . '.php';
+  require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
 }
 
 /* Lexer */
@@ -101,7 +101,6 @@ import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
-import(AST, 'stmt/OutStmt');
 import(AST, 'stmt/PieceStmt');
 import(AST, 'stmt/PrintStmt');
 import(AST, 'stmt/PropertyStmt');
@@ -112,5 +111,4 @@ import(AST, 'stmt/StructStmt');
 import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
-import(AST, 'stmt/YieldStmt');
 import(AST, 'helper/Param');

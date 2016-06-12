@@ -45,7 +45,6 @@ use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
-use \QuackCompiler\Ast\Stmt\OutStmt;
 use \QuackCompiler\Ast\Stmt\PieceStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\PropertyStmt;
@@ -56,7 +55,6 @@ use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
-use \QuackCompiler\Ast\Stmt\YieldStmt;
 
 use \QuackCompiler\Ast\Helper\Param;
 
@@ -137,11 +135,9 @@ class Grammar
       Tag::T_BREAK    => '_breakStmt',
       Tag::T_CONTINUE => '_continueStmt',
       Tag::T_GOTO     => '_gotoStmt',
-      Tag::T_YIELD    => '_yieldStmt',
       Tag::T_GLOBAL   => '_globalStmt',
       Tag::T_RAISE    => '_raiseStmt',
       Tag::T_PRINT    => '_printStmt',
-      Tag::T_OUT      => '_outStmt',
       '^'             => '_returnStmt',
       '['             => '_blockStmt',
       ':-'            => '_labelStmt'
@@ -296,14 +292,6 @@ class Grammar
     return new GotoStmt($label);
   }
 
-  function _yieldStmt()
-  {
-    $this->parser->match(Tag::T_YIELD);
-    $expression = $this->_expr();
-
-    return new YieldStmt($expression);
-  }
-
   function _globalStmt()
   {
     $this->parser->match(Tag::T_GLOBAL);
@@ -325,14 +313,6 @@ class Grammar
     $expression = $this->_expr();
 
     return new PrintStmt($expression);
-  }
-
-  function _outStmt()
-  {
-    $this->parser->match(Tag::T_OUT);
-    $expression = $this->_expr();
-
-    return new OutStmt($expression);
   }
 
   function _returnStmt()
@@ -408,15 +388,7 @@ class Grammar
     if ($this->parser->is(Tag::T_FN))    return $this->_fnStmt();
     if ($this->parser->is(Tag::T_IDENT)) return $this->_property();
 
-    if ($this->checker->isMethodModifier()) {
-      $modifiers = [];
-      while ($this->checker->isMethodModifier()) {
-        $modifiers[] = $this->parser->consumeAndFetch()->lexeme;
-      }
-
-      if ($this->parser->is(Tag::T_FN))    return $this->_fnStmt($modifiers);
-      if ($this->parser->is(Tag::T_IDENT)) return $this->_property($modifiers);
-    }
+    throw new \SyntaxError('TODO: Throw a syntax error');
   }
 
   function _property($modifiers = [])
@@ -433,24 +405,10 @@ class Grammar
   }
 
   function _classDeclStmt() {
-    $category = 'class';
     $extends = NULL;
     $implements = [];
 
-    switch ($this->parser->lookahead->getTag()) {
-      case Tag::T_MODEL:
-        $category = 'model';
-        break;
-      case Tag::T_FINAL:
-        $category = 'final';
-        break;
-      case Tag::T_INTF:
-        return $this->_intfStmt();
-      case Tag::T_PIECE:
-        return $this->_pieceStmt();
-    }
-
-    $this->parser->consume();
+    $this->parser->match(Tag::T_CLASS);
     $class_name = $this->identifier();
 
     if ($this->parser->is(':')) {
@@ -469,38 +427,7 @@ class Grammar
     $body = iterator_to_array($this->_classStmtList());
     $this->parser->match(']');
 
-    return new ClassStmt($category, $class_name, $extends, $implements, $body);
-  }
-
-  function _intfStmt()
-  {
-    $this->parser->match(Tag::T_INTF);
-    $intf_name = $this->identifier();
-    $extends = [];
-
-    if ($this->parser->is(':')) {
-      do {
-        $this->parser->consume();
-        $extends[] = $this->qualifiedName();
-      } while ($this->parser->is(';'));
-    }
-
-    $this->parser->match('[');
-    $body = iterator_to_array($this->_classStmtList());
-    $this->parser->match(']');
-
-    return new IntfStmt($intf_name, $extends, $body);
-  }
-
-  function _pieceStmt()
-  {
-    $this->parser->match(Tag::T_PIECE);
-    $piece_name = $this->identifier();
-    $this->parser->match('[');
-    $body = iterator_to_array($this->_classStmtList());
-    $this->parser->match(']');
-
-    return new PieceStmt($piece_name, $body);
+    return new ClassStmt($class_name, $extends, $implements, $body);
   }
 
   function _structDeclStmt()

@@ -41,8 +41,7 @@ class Precedence
   const MULTIPLICATIVE     = 16;
   const PREFIX             = 17;
   const POSTFIX            = 18;
-  const O_INSTANCEOF       = 19;
-  const TYPE_CAST          = 20;
-  const EXPONENT           = 21;
+  const TYPE_CAST          = 19;
+  const EXPONENT           = 20;
   // TODO: Define other operators, build operators table
 }

@@ -1,6 +1,6 @@
 <?php
-
-require_once './src/toolkit/TestCaseToolkit.php';
+define('BASE_PATH', __DIR__ . '/../src');
+require_once './src/toolkit/QuackToolkit.php';
 
 use \QuackCompiler\Lexer\Tokenizer;
 
@@ -78,25 +78,17 @@ class LexerTest extends PHPUnit_Framework_TestCase
   public function testKeywords()
   {
     $keywords = ["true", "false", "let", "if", "for", "while", "do", "struct",
-      "init", "self", "module", "class", "override", "goto", "foreach",
-      "match", "in", "model", "where", "const", "my", "nil", "static",
-      "protected", "protocol", "final", "int", "double", "string", "bool",
-      "array", "resource", "object", "open", "global", "as", "type", "enum",
-      "with", "continue", "switch", "break", "and", "or", "xor", "instanceof",
-      "try", "rescue", "finally", "raise", "callable", "elif", "else", "case",
-      "declare", "yield", "super", "partial", "extension", "is", "out",
-      "deriving", "letf", "print", "not"
+      "init", "self", "module", "class", "goto", "foreach", "in", "where",
+      "const", "nil", "open", "global", "as", "enum", "continue", "switch",
+      "break", "and", "or", "xor", "try", "rescue", "finally", "raise", "elif",
+      "else", "case", "super", "is", "deriving", "print", "not"
     ];
 
     $this->assertEquals("[true][false][let][if][for][while][do][struct]" .
-      "[init][self][module][class][override][goto][foreach]" .
-      "[match][in][model][where][const][my][nil][static]" .
-      "[protected][protocol][final][int][double][string][bool]" .
-      "[array][resource][object][open][global][as][type][enum]" .
-      "[with][continue][switch][break][and][or][xor][instanceof]" .
-      "[try][rescue][finally][raise][callable][elif][else][case]" .
-      "[declare][yield][super][partial][extension][is][out]" .
-      "[deriving][letf][print][not]", $this->tokenize(implode(' ', $keywords)));
+      "[init][self][module][class][goto][foreach][in][where][const][nil]" .
+      "[open][global][as][enum][continue][switch][break][and][or][xor][try]" .
+      "[rescue][finally][raise][elif][else][case][super][is][deriving][print]" .
+      "[not]", $this->tokenize(implode(' ', $keywords)));
   }
 
   public function testOperators()

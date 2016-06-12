@@ -1,6 +1,6 @@
 <?php
-
-require_once './src/toolkit/TestCaseToolkit.php';
+define('BASE_PATH', __DIR__ . '/../src');
+require_once './src/toolkit/QuackToolkit.php';
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
