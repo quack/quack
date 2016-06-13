@@ -83,6 +83,9 @@ class Tag
   const T_THEN = 300;
   const T_BEGIN = 301;
   const T_END = 302;
+  const T_FROM = 303;
+  const T_TO = 304;
+  const T_BY = 305;
 
   /* Operators */
 

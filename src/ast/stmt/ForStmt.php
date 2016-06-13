@@ -21,41 +21,33 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Util;
+use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 
-class ForeachStmt implements Stmt
+class ForStmt implements Stmt
 {
-  public $by_reference;
-  public $alias;
-  public $generator;
+  public $variable;
+  public $from;
+  public $to;
+  public $by;
   public $body;
 
-  public function __construct($by_reference, $alias, $generator, $body)
+  public function __construct($variable, $from, $to, $by, $body)
   {
-    $this->by_reference = $by_reference;
-    $this->alias = $alias;
-    $this->generator = $generator;
+    $this->variable = $variable;
+    $this->from = $from;
+    $this->to = $to;
+    $this->by = $by;
     $this->body = $body;
   }
 
   public function format(Parser $parser)
   {
-    $is_simple = !($this->body instanceof BlockStmt);
-    $string_builder = ['foreach '];
-    $string_builder[] = $this->alias;
-    $string_builder[] = ' in ';
-    $string_builder[] = $this->generator->format($parser);
-    $string_builder[] = ' ';
+    throw new \Exception('TODO');
+  }
 
-    if ($is_simple) {
-      $string_builder[] = "\n";
-      $parser->openScope();
-      $string_builder[] = $parser->indent();
-      $parser->closeScope();
-    }
-
-    $string_builder[] = $this->body->format($parser);
-    return implode($string_builder);
+  public function python(Parser $parser)
+  {
+    throw new \Exception('TODO');
   }
 }

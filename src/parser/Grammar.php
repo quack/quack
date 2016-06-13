@@ -37,6 +37,7 @@ use \QuackCompiler\Ast\Stmt\DoWhileStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
+use \QuackCompiler\Ast\Stmt\ForStmt;
 use \QuackCompiler\Ast\Stmt\GlobalStmt;
 use \QuackCompiler\Ast\Stmt\GotoStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
@@ -174,9 +175,10 @@ class Grammar
   {
     $this->parser->match(Tag::T_IF);
     $condition = $this->_expr();
-    $body = $this->_stmt();
+    $body = iterator_to_array($this->_innerStmtList());
     $elif = iterator_to_array($this->_elifList());
     $else = $this->_optElse();
+    $this->parser->match(Tag::T_END);
 
     return new IfStmt($condition, $body, $elif, $else);
   }
@@ -195,32 +197,45 @@ class Grammar
   {
     $this->parser->match(Tag::T_WHILE);
     $condition = $this->_expr();
-    $body = $this->_stmt();
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(Tag::T_END);
 
     return new WhileStmt($condition, $body);
   }
 
   function _forStmt()
   {
-    throw new \Exception('TODO. Open issue to check the best syntax');
+    $this->parser->match(Tag::T_FOR);
+    $variable = $this->identifier();
+    $this->parser->match(Tag::T_FROM);
+    $from = $this->_expr();
+    $this->parser->match(Tag::T_TO);
+    $to = $this->_expr();
+    $by = NULL;
+
+    if ($this->parser->is(Tag::T_BY)) {
+      $this->parser->consume();
+      $by = $this->_expr();
+    }
+
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(Tag::T_END);
+
+    return new ForStmt($variable, $from, $to, $by, $body);
   }
 
   function _foreachStmt()
   {
     $this->parser->match(Tag::T_FOREACH);
-    $key = NULL;
-
-    if ($this->parser->is(Tag::T_ATOM)) {
-      $key = $this->parser->consumeAndFetch();
-    }
 
     ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
     $alias = $this->identifier();
     $this->parser->match(Tag::T_IN);
     $iterable = $this->_expr();
-    $body = $this->_stmt();
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(Tag::T_END);
 
-    return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
+    return new ForeachStmt($by_reference, $alias, $iterable, $body);
   }
 
   function _switchStmt()

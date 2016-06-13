@@ -97,7 +97,7 @@ abstract class Parser
     $this->register(Tag::T_REQUIRE, new IncludeParselet);
     $this->register(Tag::T_INCLUDE, new IncludeParselet);
     $this->register('#', new NewParselet);
-    $this->register(':', new MemberAccessParselet);
+    $this->register('.', new MemberAccessParselet);
     $this->register('?:', new MemberAccessParselet);
 
     $this->prefix('+', Precedence::PREFIX);

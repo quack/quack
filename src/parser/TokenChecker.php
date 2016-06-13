@@ -54,9 +54,9 @@ class TokenChecker
   {
     return $this->parser->is(Tag::T_IF)       // Done
         || $this->parser->is(Tag::T_LET)      // Done
-        || $this->parser->is(Tag::T_WHILE)    // Partially done
+        || $this->parser->is(Tag::T_WHILE)    // Done
         || $this->parser->is(Tag::T_DO)       // Done
-        || $this->parser->is(Tag::T_FOR)      //
+        || $this->parser->is(Tag::T_FOR)      // Done
         || $this->parser->is(Tag::T_FOREACH)  // Done
         || $this->parser->is(Tag::T_SWITCH)   // Done
         || $this->parser->is(Tag::T_TRY)      // Done
