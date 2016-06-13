@@ -127,7 +127,7 @@ class Grammar
       Tag::T_IF       => '_ifStmt',
       Tag::T_LET      => '_letStmt',
       Tag::T_WHILE    => '_whileStmt',
-      Tag::T_DO       => '_doWhileStmt',
+      Tag::T_DO       => '_exprStmt',
       Tag::T_FOR      => '_forStmt',
       Tag::T_FOREACH  => '_foreachStmt',
       Tag::T_SWITCH   => '_switchStmt',
@@ -147,24 +147,18 @@ class Grammar
       return call_user_func([$this, $action]);
     }
 
-    // Differ function expression from function statement
-    // Look at the first character after T_FN. When not '{', it is a statement
-    if ($this->parser->is(Tag::T_FN) && $this->parser->input->preview(1) !== '{') {
-      return $this->_fnStmt();
-    }
-
-    // Jump to expressions as fallback
-    if ($this->checker->startsExpr()) {
-      $expression = $this->_expr();
-      $this->parser->match('.');
-      return new ExprStmt($expression);
-    }
-
     throw (new SyntaxError)
       -> expected ('statement')
       -> found    ($this->parser->lookahead)
       -> on       ($this->parser->position())
       -> source   ($this->parser->input);
+  }
+
+  function _exprStmt()
+  {
+    $this->parser->match(Tag::T_DO);
+    $expr = $this->_expr();
+    return new ExprStmt($expr);
   }
 
   function _blockStmt()
@@ -193,7 +187,6 @@ class Grammar
     $name = $this->identifier();
     $this->parser->match(':-');
     $value = $this->_expr();
-    $this->parser->match('.');
 
     return new LetStmt($name, $value);
   }
@@ -249,16 +242,6 @@ class Grammar
     $this->parser->match(Tag::T_END);
 
     return new TryStmt($body, $rescues, $finally);
-  }
-
-  function _doWhileStmt()
-  {
-    $this->parser->match(Tag::T_DO);
-    $body = $this->_stmt();
-    $this->parser->match(Tag::T_WHILE);
-    $condition = $this->_expr();
-
-    return new DoWhileStmt($condition, $body);
   }
 
   function _breakStmt()
@@ -318,17 +301,10 @@ class Grammar
     $this->parser->match('^');
     $expression = NULL;
 
-    if ($this->parser->is('.')) {
-      $this->parser->match('.');
-      goto ret;
-    }
-
     if ($this->checker->startsExpr()) {
       $expression = $this->_expr();
-      $this->parser->match('.');
     }
 
-    ret:
     return new ReturnStmt($expression);
   }
 

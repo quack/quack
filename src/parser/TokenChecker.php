@@ -68,8 +68,7 @@ class TokenChecker
         || $this->parser->is(Tag::T_PRINT)    // Done
         || $this->parser->is(Tag::T_BEGIN)    // Done
         || $this->parser->is('^')             // Done
-        || $this->parser->is(':-')            // Done
-        || $this->startsExpr();               // Done
+        || $this->parser->is(':-');           // Done
   }
 
   function startsExpr()
