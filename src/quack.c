@@ -7,7 +7,7 @@ int main(int argc, char** argv)
   char src[250];
 
   strcpy(out, "");
-  strcpy(src, "php ../src/Quack.php ");
+  strcpy(src, "php5 /quack/quack/src/repl/QuackRepl.php --ast");
   int i;
   for (i = 1; i < argc; i++)
   {

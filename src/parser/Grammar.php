@@ -138,8 +138,8 @@ class Grammar
       Tag::T_GLOBAL   => '_globalStmt',
       Tag::T_RAISE    => '_raiseStmt',
       Tag::T_PRINT    => '_printStmt',
+      Tag::T_BEGIN    => '_blockStmt',
       '^'             => '_returnStmt',
-      '['             => '_blockStmt',
       ':-'            => '_labelStmt'
     ];
 
@@ -169,9 +169,9 @@ class Grammar
 
   function _blockStmt()
   {
-    $this->parser->match('[');
+    $this->parser->match(Tag::T_BEGIN);
     $body = iterator_to_array($this->_innerStmtList());
-    $this->parser->match(']');
+    $this->parser->match(Tag::T_END);
 
     return new BlockStmt($body);
   }
@@ -234,9 +234,8 @@ class Grammar
   {
     $this->parser->match(Tag::T_SWITCH);
     $value = $this->_expr();
-    $this->parser->match('[');
     $cases = iterator_to_array($this->_caseStmtList());
-    $this->parser->match(']');
+    $this->parser->match(Tag::T_END);
 
     return new SwitchStmt($value, $cases);
   }
@@ -244,11 +243,10 @@ class Grammar
   function _tryStmt()
   {
     $this->parser->match(Tag::T_TRY);
-    $this->parser->match('[');
     $body = iterator_to_array($this->_innerStmtList());
-    $this->parser->match(']');
     $rescues = iterator_to_array($this->_rescueStmtList());
     $finally = $this->_optFinally();
+    $this->parser->match(Tag::T_END);
 
     return new TryStmt($body, $rescues, $finally);
   }
@@ -423,9 +421,8 @@ class Grammar
       } while ($this->parser->is(';'));
     }
 
-    $this->parser->match('[');
     $body = iterator_to_array($this->_classStmtList());
-    $this->parser->match(']');
+    $this->parser->match(Tag::T_END);
 
     return new ClassStmt($class_name, $extends, $implements, $body);
   }
@@ -443,9 +440,8 @@ class Grammar
       } while ($this->parser->is(';'));
     }
 
-    $this->parser->match('[');
     $body = iterator_to_array($this->_classStmtList());
-    $this->parser->match(']');
+    $this->parser->match(Tag::T_END);
     $name = $this->identifier();
 
     return new StructStmt($name, $interfaces, $body);
@@ -463,15 +459,10 @@ class Grammar
     $name = $this->identifier();
     $parameters = $this->_parameters();
 
-    if ($this->parser->is('[')) {
-      $this->parser->match('[');
-      $body = iterator_to_array($this->_innerStmtList());
-      $this->parser->match(']');
+    $body = iterator_to_array($this->_innerStmtList());
+    $this->parser->match(Tag::T_END);
 
-      return new FnStmt($name, $by_reference, $body, $parameters, $modifiers);
-    }
-
-    return new FnStmt($name, $by_reference, NULL, $parameters, $modifiers);
+    return new FnStmt($name, $by_reference, $body, $parameters, $modifiers);
   }
 
   function _moduleStmt()
@@ -572,9 +563,7 @@ class Grammar
       $exception_class = $this->qualifiedName();
       $variable = $this->identifier();
       $this->parser->match(']');
-      $this->parser->match('[');
       $body = iterator_to_array($this->_innerStmtList());
-      $this->parser->match(']');
 
       yield new RescueStmt($exception_class, $variable, $body);
     }
@@ -584,10 +573,7 @@ class Grammar
   {
     if ($this->parser->is(Tag::T_FINALLY)) {
       $this->parser->consume();
-      $this->parser->match('[');
       $body = iterator_to_array($this->_innerStmtList());
-      $this->parser->match(']');
-
       return $body;
     }
 

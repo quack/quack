@@ -20,7 +20,7 @@
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('BASE_PATH', __DIR__ . '/..');
-require_once '../toolkit/QuackToolkit.php';
+require_once '/quack/quack/src/toolkit/QuackToolkit.php';
 
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\SyntaxError;

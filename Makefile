@@ -36,3 +36,11 @@ deploy:
 
 count_lines:
 	cd src;	git ls-files | xargs wc -l
+
+test_all:
+	$(MAKE) test module=lexer
+	$(MAKE) test module=parser
+	$(MAKE) test module=ast
+
+install:
+	cp bin/quack /usr/bin

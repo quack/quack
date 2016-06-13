@@ -81,6 +81,8 @@ class Tag
   const T_REQUIRE = 296;
   const T_ONCE = 297;
   const T_THEN = 300;
+  const T_BEGIN = 301;
+  const T_END = 302;
 
   /* Operators */
 
