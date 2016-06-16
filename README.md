@@ -30,11 +30,10 @@ to gradual and duck typing, with the following features:
 
 #### Hello World
 
-```swift
-def main: void [
-  let hello: string :- "Hello world!"
-  print hello
-]
+```ruby
+fn main
+  print "Hello World!"
+end
 ```
 
 ```php
@@ -45,26 +44,21 @@ function Main() {
 
 #### Factorial
 
-```swift
+```ruby
 -: imperative
-def fact [n] [
-  let i: int
-  let fact: int :- 1
-  for i :- 1 while i <= n do [
-    fact :- fact * i
-  ]
-  <<< fact
+fn fact [n] [
+  let fact :- 1
+  for i from 1 to n do fact :- fact * i
+  ^ fact
 ]
 
 -: tail_call_recursion
-def fact [n] [
-  <<< n = 0 ? 1 : [n * fact[n - 1]]
-]
+fn fact [n]
+  ^ n = 0 then 1 else n * fact[ n - 1 ]
+end
 
 -: compressed
-def fact! &(= 0) ? 1 : &(* fact[&0 - 1])
-
-
+fn fact! {| &0 = 1 then 1 else &1 * fact[ n - 1 ] } end
 ```
 
 ```php
@@ -75,20 +69,6 @@ function Fact(n) {
     ? 1
     : n * Fact(n - 1);
 }
-```
-
-#### While-else control structure
-
-```swift
-while [let pokemon: number = ^int readline["Pick a pokémon"; PHP_EOL]] <= 4
-  match pokemon [
-    1 = "You chose charmander!"
-    2 = "You chose squirtle!"
-    3 = "You chose bulbasaur!"
-    _ = "You chose pikachu!"
-  ]
-else
-  print "Invalid pokémon!"
 ```
 
 ### Execute tests
