@@ -56,9 +56,6 @@ fn fact [n] [
 fn fact [n]
   ^ n = 0 then 1 else n * fact[ n - 1 ]
 end
-
--: compressed
-fn fact! {| &0 = 1 then 1 else &1 * fact[ n - 1 ] } end
 ```
 
 ```php
