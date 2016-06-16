@@ -154,11 +154,11 @@ class Grammar
         $lexeme = $this->parser->consumeAndFetch()->lexeme;
         $condition = $this->_expr();
 
-        if ($lexeme === 'unless') {
-          $condition = new PrefixExpr(new Token(Tag::T_NOT), $condition);
-        }
-
-        return new IfStmt($condition, $first_class_stmt, [], NULL);
+        return new IfStmt(
+          $lexeme !== 'unless'
+            ? $condition
+            : new PrefixExpr(new Token(Tag::T_NOT), $condition)
+          , $first_class_stmt, [], NULL);
       }
 
       return $first_class_stmt;
