@@ -11,3 +11,4 @@
 - [ ] Implement short syntax for `open` statements
 - [ ] Implement function invocation
 - [ ] Implement array access
+- [ ] Implement do-switch (|) notation

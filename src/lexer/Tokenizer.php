@@ -48,6 +48,10 @@ class Tokenizer extends Lexer
         continue;
       }
 
+      if ($this->matches(':') && ctype_alpha($this->preview())) {
+        return $this->atom();
+      }
+
       if ($this->matches('(*') && $this->previous() !== '&') {
         return $this->semanticComment();
       }
@@ -198,6 +202,18 @@ class Tokenizer extends Lexer
     }
 
     return new Token(Tag::T_SEMANTIC_COMMENT, $this->symbol_table->add($comment));
+  }
+
+  private function atom()
+  {
+    $this->consume(); // :
+
+    do {
+      $buffer[] = $this->readChar();
+    } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
+
+    $atom = implode($buffer);
+    return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
   }
 
   private function comment()
