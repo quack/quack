@@ -59,6 +59,8 @@ use \QuackCompiler\Ast\Stmt\WhileStmt;
 
 use \QuackCompiler\Ast\Helper\Param;
 
+use \QuackCompiler\Ast\Expr\PrefixExpr;
+
 class Grammar
 {
   public $parser;
@@ -145,7 +147,21 @@ class Grammar
     ];
 
     foreach ($branch_table as $token => $action) if ($this->parser->is($token)) {
-      return call_user_func([$this, $action]);
+      $first_class_stmt = $this->{$action}();
+
+      // Syntactic sugar to allow post-conditionals for statements
+      if ($this->parser->is(Tag::T_WHEN) || $this->parser->is(Tag::T_UNLESS)) {
+        $lexeme = $this->parser->consumeAndFetch()->lexeme;
+        $condition = $this->_expr();
+
+        if ($lexeme === 'unless') {
+          $condition = new PrefixExpr(new Token(Tag::T_NOT), $condition);
+        }
+
+        return new IfStmt($condition, $first_class_stmt, [], NULL);
+      }
+
+      return $first_class_stmt;
     }
 
     throw (new SyntaxError)
