@@ -18,15 +18,25 @@
 
 </p>
 
-Quack is a programming language that targets PHP, based in Rust syntax and TypeScript type system, with support
-to gradual and duck typing, with the following features:
+### What is Quack?
 
-- Type safe, with primitive types and extensible type system;
-- Support for protocols and type derivations;
-- First-class type system;
-- Multi-paradigm (functional, imperactive, object oriented);
-- Operator overloading;
-- Code optimization.
+More than a programming language, Quack is also a concept. The objective is to implement a type-safe and productive programming language, multi-paradigm, that allows you to write consistent and legible code once and run in different targets.
+
+### Quack is:
+
+#### Type safe
+
+You can optionally provide type annotations for your values, although it isn't really necessary because we rely on duck and gradual typing. The Quack compiler is being built to be decidable by propagation and with a strong type inference.
+
+#### Multi-paradigm
+
+Quack supports different programming paradigms, mainly functional and imperative one. The language supports tacit programming and uses of immutability and determinism when possible.
+
+#### Metaprogrammable and extensible
+
+The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide than as libraries with annotations. You can create operators in compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.
+
+### Basic examples
 
 #### Hello World
 
@@ -34,12 +44,6 @@ to gradual and duck typing, with the following features:
 fn main
   print "Hello World!"
 end
-```
-
-```php
-function Main() {
-  echo "Hello world!";
-}
 ```
 
 #### Factorial
@@ -58,17 +62,19 @@ fn fact [n]
 end
 ```
 
-```php
-<?php
+### How does it work?
 
-function Fact(n) {
-  return n === 0
-    ? 1
-    : n * Fact(n - 1);
-}
-```
+First of all, Quack compiler is, currently, entirely written in PHP, by hand. I'm doing this because I want to easily make it self-hosted and write the compiler in itself later. The front-end of the compiler is easy to extend and you can provide multiple back-ends for it. I'm writing standard libraries in the language for itself to allow interpreting it and running the compiler on desktop, on browser and interpreting it using the evaluator of any target language. Basically, when integrating Quack with your main programming language, you need to provide a set of type annotations for your libraries and for the language core. For JavaScript, I'm writing a tool that is able to convert TypeScript type definitions `.d.ts` for Quack type definitons `.qkt`, making the life easier. The initial support will be provided for **PHP**, **Python** and **JavaScript**. Please, note that Quack is in it early stage, and in constant development. Quack also provides a [REPL that you can try online here](http://108.167.188.125/~conta180/quack/), currently generating the AST of the source.
 
-### Execute tests
+### Get Quack
+
+#### REPL
+
+To get and try Quack, the steps are simple. Clone this repository and install the `src` folder under `/quack/quack`. I promise I'll provide a better way to do it later. After, `cd /quack/quack/src/repl` and `php QuackRepl.php --ast` (you can also try with `--python`, but it is unstable yet). You will be sent to the REPL. Currently, the REPL is only compatible with POSIX systems. I'll implement support for Windows later, I promise too!
+
+#### Run tests
+
+Assert that everything is **OK**. There is a small set of tests that may be run.
 
 `make test module=module_name`
 
@@ -76,3 +82,12 @@ function Fact(n) {
 
 | `lexer` | `ast` | `parser` |
 |---------|-------|----------|
+
+### Contribute to Quack!
+
+Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to do, and you can find them in this repository issues! Look for the `accepting-pull-requests` label! People that are starting to contribute to open-source are very welcome!
+
+Don't you know how you can help? Well, you can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
+
+
+Doubts? contact me on [marcelocamargo@linuxmail.org](mailto:marcelocamargo@linuxmail.org). It will be a pleasure to answer!
