@@ -20,7 +20,7 @@
 
 ### What is Quack?
 
-More than a programming language, Quack is also a concept. The objective is to implement a type-safe and productive programming language, multi-paradigm, that allows you to write consistent and legible code once and run in different targets.
+Quack is a type-safe, multi-paradigm programming language. Quack enables you to write consistent and legible code, and run it on different platforms.
 
 ### Quack is:
 
@@ -30,11 +30,11 @@ You can optionally provide type annotations for your values, although it isn't r
 
 #### Multi-paradigm
 
-Quack supports different programming paradigms, mainly functional and imperative one. The language supports tacit programming and uses of immutability and determinism when possible.
+Quack supports many programming paradigms, especially functional and imperative programming. Quack also supports tacit programming,  immutability and determinism when possible.
 
 #### Metaprogrammable and extensible
 
-The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide than as libraries with annotations. You can create operators in compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.
+The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide than as libraries with annotations. You can create operators at compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.
 
 ### Basic examples
 
@@ -64,7 +64,7 @@ end
 
 ### How does it work?
 
-First of all, Quack compiler is, currently, entirely written in PHP, by hand. I'm doing this because I want to easily make it self-hosted and write the compiler in itself later. The front-end of the compiler is easy to extend and you can provide multiple back-ends for it. I'm writing standard libraries in the language for itself to allow interpreting it and running the compiler on desktop, on browser and interpreting it using the evaluator of any target language. Basically, when integrating Quack with your main programming language, you need to provide a set of type annotations for your libraries and for the language core. For JavaScript, I'm writing a tool that is able to convert TypeScript type definitions `.d.ts` for Quack type definitons `.qkt`, making the life easier. The initial support will be provided for **PHP**, **Python** and **JavaScript**. Please, note that Quack is in it early stage, and in constant development. Quack also provides a [REPL that you can try online here](http://108.167.188.125/~conta180/quack/), currently generating the AST of the source.
+First of all, Quack compiler is, currently, entirely written in PHP, by hand. I'm doing this because I want to easily make it self-hosted and write the compiler in itself later. The front-end of the compiler is easy to extend and you can provide multiple back-ends for it. I'm writing standard libraries in the language for itself to allow interpreting it and running the compiler on desktop, on browser and interpreting it using the evaluator of any target language. Basically, when integrating Quack with your main programming language, you need to provide a set of type annotations for your libraries and for the language core. For JavaScript, I'm writing a tool that is able to convert TypeScript type definitions `.d.ts` for Quack type definitons `.qkt`, making the life easier. The initial support will be provided for **PHP**, **Python** and **JavaScript**. Please note that Quack is in its early stage, and in constant development. Quack also provides a [REPL that you can try online here](http://108.167.188.125/~conta180/quack/), currently generating the AST of the source.
 
 ### Get Quack
 
@@ -87,8 +87,8 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 
 Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to do, and you can find them in this repository issues! Look for the `accepting-pull-requests` label! People that are starting to contribute to open-source are very welcome! Please, read the `CONTRIBUTING` file in this repository also!
 
-Don't you know how you can help? Well, you can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
+There are many ways to help! You can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
 
 We also need to implement support of Quack for the different text editors. If you want to implement for some, contact me and I'll write the syntactic specification and the semantic of the blocks for you!
 
-Doubts? contact me on [marcelocamargo@linuxmail.org](mailto:marcelocamargo@linuxmail.org). It will be a pleasure to answer!
+Questions or concerns? Contact me at <marcelocamargo@linuxmail.org> and I'll be happy to answer.
