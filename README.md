@@ -85,9 +85,10 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 
 ### Contribute to Quack!
 
-Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to do, and you can find them in this repository issues! Look for the `accepting-pull-requests` label! People that are starting to contribute to open-source are very welcome!
+Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to do, and you can find them in this repository issues! Look for the `accepting-pull-requests` label! People that are starting to contribute to open-source are very welcome! Please, read the `CONTRIBUTING` file in this repository also!
 
 Don't you know how you can help? Well, you can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
 
+We also need to implement support of Quack for the different text editors. If you want to implement for some, contact me and I'll write the syntactic specification and the semantic of the blocks for you!
 
 Doubts? contact me on [marcelocamargo@linuxmail.org](mailto:marcelocamargo@linuxmail.org). It will be a pleasure to answer!
