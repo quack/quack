@@ -62,6 +62,7 @@ import(PARSELETS, 'ArrayParselet');
 import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
 import(PARSELETS, 'MemberAccessParselet');
+import(PARSELETS, 'KeywordParselet');
 
 /* Ast */
 
@@ -80,6 +81,8 @@ import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
+import(AST, 'expr/NilExpr');
+import(AST, 'expr/BoolExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

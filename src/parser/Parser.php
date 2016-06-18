@@ -39,6 +39,7 @@ use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parselets\ArrayParselet;
 use \QuackCompiler\Parselets\NewParselet;
 use \QuackCompiler\Parselets\MemberAccessParselet;
+use \QuackCompiler\Parselets\KeywordParselet;
 
 abstract class Parser
 {
@@ -99,6 +100,9 @@ abstract class Parser
     $this->register('#', new NewParselet);
     $this->register('.', new MemberAccessParselet);
     $this->register('?:', new MemberAccessParselet);
+    $this->register(Tag::T_TRUE, new KeywordParselet);
+    $this->register(Tag::T_FALSE, new KeywordParselet);
+    $this->register(Tag::T_NIL, new KeywordParselet);
 
     $this->prefix('+', Precedence::PREFIX);
     $this->prefix('-', Precedence::PREFIX);

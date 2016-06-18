@@ -79,6 +79,9 @@ class TokenChecker
         || $this->parser->is(Tag::T_REQUIRE)
         || $this->parser->is(Tag::T_INCLUDE)
         || $this->parser->is(Tag::T_IDENT)
+        || $this->parser->is(Tag::T_TRUE)
+        || $this->parser->is(Tag::T_FALSE)
+        || $this->parser->is(Tag::T_NIL)
         || $this->parser->isOperator()
         || $this->parser->is('{')
         || $this->parser->is('(');

@@ -13,6 +13,7 @@
 - [ ] Implement do-switch (|) notation
 - [ ] Analysis about during {n} times syntax.
 - [ ] Implement short syntax for `open` statements
-- [ ] Implement booleans as expressions
-- [ ] Implement nil as expression
+- [x] Implement booleans as expressions
+- [x] Implement nil as expression
 - [ ] Implement partial function parsing
+- [ ] Distinguish double from integer
