@@ -85,7 +85,7 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 
 ### Contribute to Quack!
 
-Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to do, and you can find them in this repository issues! Look for the `accepting-pull-requests` label! People that are starting to contribute to open-source are very welcome! Please, read the `CONTRIBUTING` file in this repository also!
+Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to be done, and you can find them in this repository's issues! Look for the `accepting-pull-requests` label! Newcomers to the open-source contribution process are very welcome! Please, read the `CONTRIBUTING` file in this repository as well!
 
 There are many ways to help! You can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
 
