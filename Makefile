@@ -18,14 +18,10 @@ test:
 ifeq ($(module), lexer)
 	$(TEST)  ./tests/LexerTest.php
 else
-ifeq ($(module), ast)
-	$(TEST) ./tests/AstTest.php
-else
 ifeq ($(module), parser)
 	$(TEST) ./tests/ParserTest.php
 else
 	@echo No module defined for testing
-endif
 endif
 endif
 
@@ -40,7 +36,6 @@ count_lines:
 test_all:
 	$(MAKE) test module=lexer
 	$(MAKE) test module=parser
-	$(MAKE) test module=ast
 
 install:
 	cp bin/quack /usr/bin

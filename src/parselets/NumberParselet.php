@@ -22,13 +22,15 @@
 namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Ast\Expr\NumberExpr;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
 
 class NumberParselet implements IPrefixParselet
 {
-  public function parse(Grammar $parser, Token $token)
+  public function parse(Grammar $grammar, Token $token)
   {
-    return new NumberExpr($token);
+    return new NumberExpr($grammar->parser->resolveScope($token->getPointer()),
+      $token->getTag() === Tag::T_DOUBLE ? 'double' : 'int');
   }
 }
