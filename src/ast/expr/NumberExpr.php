@@ -25,20 +25,17 @@ use \QuackCompiler\Parser\Parser;
 
 class NumberExpr implements Expr
 {
-  public $token;
+  public $value;
+  public $type;
 
-  public function __construct($token)
+  public function __construct($value, $type)
   {
-    $this->token = $token;
+    $this->value = $value;
+    $this->type = $type;
   }
 
   public function format(Parser $parser)
   {
-    return $parser->resolveScope($this->token->getPointer());
-  }
-
-  public function python(Parser $parser)
-  {
-    return $this->format($parser);
+    return (string) $this->value;
   }
 }

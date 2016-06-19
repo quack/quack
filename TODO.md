@@ -16,7 +16,7 @@
 - [x] Implement booleans as expressions
 - [x] Implement nil as expression
 - [ ] Implement partial function parsing
-- [ ] Distinguish double from integer
-- [ ] Store numbers as strings instead of integers
+- [x] Distinguish double from integer
+- [x] Store numbers as strings instead of integers
 - [ ] Implement static properties (without semantic validation)
 - [ ] Make a sandwich (because I'm hungry)

@@ -80,8 +80,8 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 
 **Modules**
 
-| `lexer` | `ast` | `parser` |
-|---------|-------|----------|
+| `lexer` | `parser` |
+|---------|----------|
 
 ### Contribute to Quack!
 

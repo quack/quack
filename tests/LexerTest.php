@@ -35,13 +35,13 @@ class LexerTest extends PHPUnit_Framework_TestCase
     $binary_invalid = "0b1019";
 
     $this->assertEquals("[T_INTEGER, 1083]", $this->tokenize($decimal_integer, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 204]", $this->tokenize($octal_integer, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 204]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 16755457]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_INTEGER, 0314]", $this->tokenize($octal_integer, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_INTEGER, 0314]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_INTEGER, 0xFFAB01]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
     $this->assertEquals("[T_DOUBLE, 124.1323]", $this->tokenize($decimal_double, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_DOUBLE, 314]", $this->tokenize($decimal_non_octal_double, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 255]", $this->tokenize($binary_integer, SHOW_SYMBOL_TABLE));
-    $this->assertEquals("[T_INTEGER, 5][T_INTEGER, 9]", $this->tokenize($binary_invalid, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_DOUBLE, 0314.0]", $this->tokenize($decimal_non_octal_double, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_INTEGER, 0b11111111]", $this->tokenize($binary_integer, SHOW_SYMBOL_TABLE));
+    $this->assertEquals("[T_INTEGER, 0b101][T_INTEGER, 9]", $this->tokenize($binary_invalid, SHOW_SYMBOL_TABLE));
   }
 
   public function testSemanticComment()

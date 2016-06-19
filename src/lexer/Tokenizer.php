@@ -77,22 +77,44 @@ class Tokenizer extends Lexer
     $buffer = [];
     $is_double = false;
 
+
     // Hexadecimal or binary
-    if ((int) $this->peek === 0 && in_array(strtolower($this->preview()), ['x','b'], true) && ctype_xdigit((string) $this->preview(2))) {
-      $this->readChar(); // 0
-      $type = strtolower($this->readChar()); // x or b
+    if ($this->peek === '0' && (in_array(strtolower($this->preview()), ['x', 'b']))) {
+      $buffer[] = $this->readChar(); // 0
 
-      do {
-        $buffer[] = $this->readChar();
-      } while ($type === 'x'
-        ? (ctype_xdigit((string) $this->peek))
-        : (in_array($this->peek, ['0', '1'], true)));
+      // b and x are identifiers if there is no valid value after then
+      if (($this->peek === 'b' && (int) $this->preview() >> 1)         // Fake bin
+        || ($this->peek === 'x' && !ctype_xdigit($this->preview()))) { // Fake hex
 
-      $value = $type === 'x'
-        ? (string) hexdec(implode($buffer))
-        : bindec(implode($buffer));
+        $value = '0';
+        $this->column += 1;
+        return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+      }
 
+      $buffer[] = $b_or_x = strtolower($this->readChar()); // b or x
+
+      switch ($b_or_x) {
+        case 'b':
+
+          do {
+            $buffer[] = $this->readChar();
+          } while (ctype_digit($this->peek) && !((int) $this->peek >> 1));
+
+          break;
+
+        case 'x':
+
+          do {
+            $buffer[] = $this->readChar();
+          } while (ctype_xdigit($this->peek));
+
+          break;
+
+      }
+
+      $value = implode($buffer);
       $this->column += sizeof($value);
+
       return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
     }
 
@@ -109,7 +131,7 @@ class Tokenizer extends Lexer
     }
 
     // Try to check for octal compatibility
-    if (!$is_double && (int) $buffer[0] === 0 && sizeof($buffer) > 1) {
+    if (!$is_double && $buffer[0] === '0' && sizeof($buffer) > 1) {
       $oct_buffer = [];
       $current_buffer_size = sizeof($buffer);
 
@@ -119,18 +141,17 @@ class Tokenizer extends Lexer
         $index++;
       }
 
-      $oct_as_dec = (string) octdec(implode($oct_buffer));
+      $value = implode($oct_buffer);
       $this->column += $current_buffer_size;
-      return new Token(Tag::T_INTEGER, $this->symbol_table->add($oct_as_dec));
+      return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
     }
 
     // Decimal
     $size = sizeof($buffer);
-    $buffer = implode($buffer);
-    $buffer = $is_double ? (double) $buffer : (int) $buffer;
+    $value = implode($buffer);
 
     $this->column += $size;
-    return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($buffer));
+    return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($value));
   }
 
   private function identifier()
