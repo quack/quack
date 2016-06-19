@@ -10,10 +10,13 @@
 - [x] Implement post-conditionals for expression statements
 - [ ] Implement function invocation
 - [ ] Implement array access
-- [ ] Implement do-switch (|) notation
+- [x] Implement when notation
 - [ ] Analysis about during {n} times syntax.
 - [ ] Implement short syntax for `open` statements
 - [x] Implement booleans as expressions
 - [x] Implement nil as expression
 - [ ] Implement partial function parsing
 - [ ] Distinguish double from integer
+- [ ] Store numbers as strings instead of integers
+- [ ] Implement static properties (without semantic validation)
+- [ ] Make a sandwich (because I'm hungry)
