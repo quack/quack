@@ -20,3 +20,4 @@
 - [x] Store numbers as strings instead of integers
 - [ ] Implement static properties (without semantic validation)
 - [ ] Make a sandwich (because I'm hungry)
+- [x] Implement strings as expressions

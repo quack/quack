@@ -21,14 +21,14 @@
  */
 namespace QuackCompiler\Parselets;
 
-use \QuackCompiler\Ast\Expr\NameExpr;
+use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
 
-class NameParselet implements IPrefixParselet
+class StringParselet implements IPrefixParselet
 {
   public function parse(Grammar $grammar, Token $token)
   {
-    return new NameExpr($grammar->parser->resolveScope($token->getPointer()));
+    return new StringExpr($grammar->parser->resolveScope($token->getPointer()));
   }
 }

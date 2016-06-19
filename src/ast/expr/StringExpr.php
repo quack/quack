@@ -19,16 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Expr\NameExpr;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\Parser;
 
-class NameParselet implements IPrefixParselet
+class StringExpr implements Expr
 {
-  public function parse(Grammar $grammar, Token $token)
+  public $value;
+
+  public function __construct($value)
   {
-    return new NameExpr($grammar->parser->resolveScope($token->getPointer()));
+    $this->value = $value;
+  }
+
+  public function format(Parser $parser)
+  {
+    return $this->value;
   }
 }
