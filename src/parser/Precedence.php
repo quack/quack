@@ -43,5 +43,6 @@ class Precedence
   const POSTFIX            = 18;
   const TYPE_CAST          = 19;
   const EXPONENT           = 20;
+  const CALL               = 21;
   // TODO: Define other operators, build operators table
 }
