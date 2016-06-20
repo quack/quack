@@ -50,11 +50,11 @@ end
 
 ```ruby
 -: imperative
-fn fact [n] [
+fn fact [n]
   let fact :- 1
   for i from 1 to n do fact :- fact * i
   ^ fact
-]
+end
 
 -: tail_call_recursion
 fn fact [n]
