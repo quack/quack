@@ -134,7 +134,7 @@ abstract class Lexer
   {
     $next = $this->position + $n;
 
-    return $next >= strlen($this->input)
+    return $next >= $this->size
       ? /* then      */ self::EOF
       : /* otherwise */ $this->input[$next];
   }
@@ -149,11 +149,14 @@ abstract class Lexer
 
   public function matches($string)
   {
-    for ($i = 0; $i < strlen($string); $i++) {
+    $len = strlen($string);
+
+    for ($i = 0; $i < $len; $i++) {
       if ($this->preview($i) !== $string[$i]) {
         return false;
       }
     }
+
     return true;
   }
 
