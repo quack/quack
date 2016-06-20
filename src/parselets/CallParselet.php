@@ -19,30 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parser;
+namespace QuackCompiler\Parselets;
 
-class Precedence
+use \QuackCompiler\Ast\Expr\CallExpr;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\Precedence;
+
+class CallParselet implements IInfixParselet
 {
-  const ASSIGNMENT         = 1;
-  const PIPELINE           = 2;
-  const MEMBER_ACCESS      = 3;
-  const TERNARY            = 4;
-  const COALESCENCE        = 5;
-  const LOGICAL_OR         = 6;
-  const LOGICAL_XOR        = 7;
-  const LOGICAL_AND        = 8;
-  const BITWISE_OR         = 9;
-  const BITWISE_XOR        = 10;
-  const BITWISE_AND_OR_REF = 11;
-  const VALUE_COMPARATOR   = 12;
-  const SIZE_COMPARATOR    = 13;
-  const BITWISE_SHIFT      = 14;
-  const ADDITIVE           = 15;
-  const MULTIPLICATIVE     = 16;
-  const PREFIX             = 17;
-  const POSTFIX            = 18;
-  const TYPE_CAST          = 19;
-  const EXPONENT           = 20;
-  const CALL               = 21;
-  // TODO: Define other operators, build operators table
+  public function parse(Grammar $grammar, Expr $left, Token $token)
+  {
+    $args = [];
+
+    if (!$grammar->parser->is(']')) {
+      $args[] = $grammar->_expr();
+
+      while ($grammar->parser->is(';')) {
+        $grammar->parser->consume();
+        $args[] = $grammar->_expr();
+      }
+    }
+
+    $grammar->parser->match(']');
+
+    return new CallExpr($left, $args);
+  }
+
+  public function getPrecedence()
+  {
+    return Precedence::CALL;
+  }
 }

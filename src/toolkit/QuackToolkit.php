@@ -65,6 +65,7 @@ import(PARSELETS, 'MemberAccessParselet');
 import(PARSELETS, 'KeywordParselet');
 import(PARSELETS, 'WhenParselet');
 import(PARSELETS, 'StringParselet');
+import(PARSELETS, 'CallParselet');
 
 /* Ast */
 
@@ -87,6 +88,7 @@ import(AST, 'expr/NilExpr');
 import(AST, 'expr/BoolExpr');
 import(AST, 'expr/WhenExpr');
 import(AST, 'expr/StringExpr');
+import(AST, 'expr/CallExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

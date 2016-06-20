@@ -8,7 +8,7 @@
 - [x] Object access syntax should use (.) instead of (:)
 - [x] Re-implement atoms
 - [x] Implement post-conditionals for expression statements
-- [ ] Implement function invocation
+- [x] Implement function invocation
 - [ ] Implement array access
 - [x] Implement when notation
 - [ ] Analysis about during {n} times syntax.
