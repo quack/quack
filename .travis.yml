@@ -8,5 +8,4 @@ php:
 
 script:
   - make test module=lexer
-  - make test module=ast
   - make test module=parser
