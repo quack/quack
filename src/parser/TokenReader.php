@@ -80,13 +80,6 @@ class TokenReader extends Parser
     return implode($source);
   }
 
-  public function python()
-  {
-    foreach ($this->ast as $stmt) {
-      echo $stmt->python($this);
-    }
-  }
-
   public function parse()
   {
     $this->ast = $this->grammar->start();
