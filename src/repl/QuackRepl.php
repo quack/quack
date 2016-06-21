@@ -80,7 +80,6 @@ function readline_callback($command)
   try {
     $parser->parse();
     /* when */ args_have('-a', '--ast') && $parser->dumpAst();
-    /* when */ args_have('-p', '--python') && $parser->python($parser);
   } catch (SyntaxError $e) {
     echo $e;
   }
