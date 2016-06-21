@@ -7,9 +7,6 @@ repl:
 ifeq ($(mode), ast)
 	cd src/repl; php QuackRepl.php --ast
 else
-ifeq ($(mode), python)
-	cd src/repl; php QuackRepl.php --python
-else
 	@echo No mode for repl
 endif
 endif
