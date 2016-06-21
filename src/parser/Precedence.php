@@ -44,5 +44,6 @@ class Precedence
   const TYPE_CAST          = 19;
   const EXPONENT           = 20;
   const CALL               = 21;
-  // TODO: Define other operators, build operators table
+  const ACCESS             = 22;
+  // TODO: Review operators precedence when finish the parser
 }
