@@ -50,18 +50,4 @@ class PrefixExpr implements Expr
     return implode($string_builder);
   }
 
-  public function python(Parser $parser)
-  {
-    $string_builder = [];
-    if ($this->operator === Tag::T_NOT) {
-      $string_builder[] = '!';
-    } else if ($this->operator === '*') {
-      // pass
-    } else {
-      $string_builder[] = $this->operator;
-    }
-
-    $string_builder[] = $this->right->python($parser);
-    return implode($string_builder);
-  }
 }

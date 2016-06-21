@@ -44,12 +44,4 @@ class PostfixExpr implements Expr
     return implode($string_builder);
   }
 
-  public function python(Parser $parser)
-  {
-    $string_builder = ['('];
-    $string_builder[] = $this->left->python($parser);
-    $string_builder[] = Tag::getPunctuator($this->operator);
-    $string_builder[] = ')';
-    return implode($string_builder);
-  }
 }

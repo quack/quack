@@ -36,9 +36,4 @@ class BoolExpr implements Expr
   {
     return $this->value ? 'true' : 'false';
   }
-
-  public function python(Parser $_)
-  {
-    return $this->value ? 'True' : 'False';
-  }
 }

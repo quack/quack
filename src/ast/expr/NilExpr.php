@@ -32,8 +32,4 @@ class NilExpr implements Expr
     return 'nil';
   }
 
-  public function python(Parser $_)
-  {
-    return 'None';
-  }
 }
