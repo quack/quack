@@ -6,15 +6,15 @@
 
 <p align="center">
 
-  <a href="https://gitter.im/quack/quack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img alt="Join the chat at https://gitter.im/quack/quack" src="https://badges.gitter.im/quack/quack.svg"></a>
+  <a href="https://quack-lang.herokuapp.com/"><img alt="Slack" src="https://quack-lang.herokuapp.com/badge.svg" height="20"></a>
 
   <a href="https://travis-ci.org/quack/quack"><img alt="Build Status" src="https://travis-ci.org/quack/quack.svg?branch=master"></a>
 
   <a href="https://codeclimate.com/github/quack/quack"><img alt="Code Climate" src="https://codeclimate.com/github/quack/quack/badges/gpa.svg"></a>
 
-  <a href="https://codeclimate.com/github/quack/quack/coverage"><img alt="Test Coverage" src="https://codeclimate.com/github/quack/quack/badges/coverage.svg"/></a>
+  <a href="https://codeclimate.com/github/quack/quack/coverage"><img alt="Test Coverage" src="https://codeclimate.com/github/quack/quack/badges/coverage.svg"></a>
 
-  <a href="https://codeclimate.com/github/quack/quack"><img alt="Issue Count" src="https://codeclimate.com/github/quack/quack/badges/issue_count.svg"/></a>
+  <a href="https://codeclimate.com/github/quack/quack"><img alt="Issue Count" src="https://codeclimate.com/github/quack/quack/badges/issue_count.svg"></a>
 
 </p>
 
