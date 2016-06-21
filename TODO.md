@@ -9,15 +9,14 @@
 - [x] Re-implement atoms
 - [x] Implement post-conditionals for expression statements
 - [x] Implement function invocation
-- [ ] Implement array access
+- [x] Implement array access
 - [x] Implement when notation
-- [ ] Analysis about during {n} times syntax.
-- [ ] Implement short syntax for `open` statements
 - [x] Implement booleans as expressions
 - [x] Implement nil as expression
-- [ ] Implement partial function parsing
 - [x] Distinguish double from integer
 - [x] Store numbers as strings instead of integers
-- [ ] Implement static properties (without semantic validation)
-- [ ] Make a sandwich (because I'm hungry)
+- [x] Make a sandwich (because I'm hungry)
 - [x] Implement strings as expressions
+- [ ] Implement short syntax for `open` statements
+- [ ] Implement partial function parsing
+- [ ] Implement static properties (without semantic validation)
