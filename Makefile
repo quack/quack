@@ -9,7 +9,6 @@ ifeq ($(mode), ast)
 else
 	@echo No mode for repl
 endif
-endif
 
 test:
 ifeq ($(module), lexer)
