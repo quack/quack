@@ -43,6 +43,7 @@ use \QuackCompiler\Parselets\KeywordParselet;
 use \QuackCompiler\Parselets\WhenParselet;
 use \QuackCompiler\Parselets\StringParselet;
 use \QuackCompiler\Parselets\CallParselet;
+use \QuackCompiler\Parselets\AccessParselet;
 
 abstract class Parser
 {
@@ -99,6 +100,7 @@ abstract class Parser
     $this->register('(', new GroupParselet);
     $this->register('[', new CallParselet);
     $this->register('{', new ArrayParselet);
+    $this->register('{', new AccessParselet);
     $this->register(Tag::T_FN, new FunctionParselet);
     $this->register(Tag::T_REQUIRE, new IncludeParselet);
     $this->register(Tag::T_INCLUDE, new IncludeParselet);
