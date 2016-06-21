@@ -40,7 +40,6 @@ Common:
   -op, --optimize                   Enables code optimization on generated code
 
 Target:
-  --python                          Compiles to Python
   --php                             Compiles to PHP
   --es5                             Compiles to ECMAScript 5
   --es6                             Compiles to ECMAScript 6
