@@ -629,8 +629,6 @@ class Grammar
   /* Coproductions */
   function qualifiedName()
   {
-    print 'foo';
-
     $symbol_pointers = [$this->parser->match(Tag::T_IDENT)];
     while ($this->parser->is('.')) {
       $this->parser->consume();
