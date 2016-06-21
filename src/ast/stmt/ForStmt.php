@@ -46,8 +46,4 @@ class ForStmt implements Stmt
     throw new \Exception('TODO');
   }
 
-  public function python(Parser $parser)
-  {
-    throw new \Exception('TODO');
-  }
 }

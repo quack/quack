@@ -45,16 +45,4 @@ class ReturnStmt implements Stmt
     return implode($string_builder);
   }
 
-  public function python(Parser $parser)
-  {
-    $string_builder = ['return'];
-
-    if (!is_null($this->expression)) {
-      $string_builder[] = ' ';
-      $string_builder[] = $this->expression->python($parser);
-      $string_builder[] = PHP_EOL;
-    }
-
-    return implode($string_builder);
-  }
 }
