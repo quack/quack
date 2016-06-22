@@ -68,6 +68,7 @@ import(PARSELETS, 'StringParselet');
 import(PARSELETS, 'CallParselet');
 import(PARSELETS, 'AccessParselet');
 import(PARSELETS, 'RangeParselet');
+import(PARSELETS, 'AtomParselet');
 
 /* Ast */
 
@@ -93,6 +94,7 @@ import(AST, 'expr/StringExpr');
 import(AST, 'expr/CallExpr');
 import(AST, 'expr/AccessExpr');
 import(AST, 'expr/RangeExpr');
+import(AST, 'expr/AtomExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

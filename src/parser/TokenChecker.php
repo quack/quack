@@ -84,6 +84,7 @@ class TokenChecker
         || $this->parser->is(Tag::T_NIL)
         || $this->parser->is(Tag::T_WHEN)
         || $this->parser->is(Tag::T_STRING)
+        || $this->parser->is(Tag::T_ATOM)
         || $this->parser->isOperator()
         || $this->parser->is('{')
         || $this->parser->is('(');
