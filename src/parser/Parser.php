@@ -45,6 +45,7 @@ use \QuackCompiler\Parselets\StringParselet;
 use \QuackCompiler\Parselets\CallParselet;
 use \QuackCompiler\Parselets\AccessParselet;
 use \QuackCompiler\Parselets\RangeParselet;
+use \QuackCompiler\Parselets\AtomParselet;
 
 abstract class Parser
 {
@@ -112,6 +113,7 @@ abstract class Parser
     $this->register(Tag::T_TRUE, new KeywordParselet);
     $this->register(Tag::T_FALSE, new KeywordParselet);
     $this->register(Tag::T_NIL, new KeywordParselet);
+    $this->register(Tag::T_ATOM, new AtomParselet);
     $this->register(Tag::T_WHEN, new WhenParselet);
 
     $this->prefix('+', Precedence::PREFIX);
