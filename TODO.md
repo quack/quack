@@ -17,6 +17,7 @@
 - [x] Store numbers as strings instead of integers
 - [x] Make a sandwich (because I'm hungry)
 - [x] Implement strings as expressions
+- [x] Implement `<expr> .. <expr> by <expr>` syntax
 - [ ] Implement short syntax for `open` statements
 - [ ] Implement partial function parsing
 - [ ] Implement static properties (without semantic validation)
