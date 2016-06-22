@@ -44,6 +44,7 @@ use \QuackCompiler\Parselets\WhenParselet;
 use \QuackCompiler\Parselets\StringParselet;
 use \QuackCompiler\Parselets\CallParselet;
 use \QuackCompiler\Parselets\AccessParselet;
+use \QuackCompiler\Parselets\RangeParselet;
 
 abstract class Parser
 {
@@ -97,6 +98,7 @@ abstract class Parser
     $this->register(Tag::T_STRING, new StringParselet);
     $this->register(Tag::T_IDENT, new NameParselet);
     $this->register(Tag::T_THEN, new TernaryParselet);
+    $this->register('..', new RangeParselet);
     $this->register('(', new GroupParselet);
     $this->register('[', new CallParselet);
     $this->register('{', new ArrayParselet);
