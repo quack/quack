@@ -20,7 +20,7 @@
 ;; along with Quack.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(import [os [listdir walk]]
+(import [os [listdir walk linesep]]
         [os.path [isfile isdir join]]
         [sys [argv]]
         [getopt [getopt GetoptError]]
@@ -28,7 +28,7 @@
         [fnmatch])
 
 (def **version** "Quack test toolkit v0.0.1-alpha")
-(def **file-pattern** "*.php")
+(def **file-pattern** "*.qtest")
 
 ; Return the parameters passed to the script
 (defn get-params [args]
@@ -38,7 +38,6 @@
 ; Output version
 (defn version []
   (print **version**))
-
 
 ; Error handler
 (defn throw-error [message]
@@ -51,7 +50,7 @@
     (do
       (setv matches [])
       (for [(, root dirname filenames) (walk dir)]
-        (for [filename (-> fnmatch (.filter filenames "*.php"))]
+        (for [filename (-> fnmatch (.filter filenames **file-pattern**))]
           (-> matches (.append (join root filename)))))
       matches)))
 
@@ -59,6 +58,33 @@
 (defn file-get-contents [file]
   (with [[f (open file)]]
     (.read f)))
+
+(defn group-sections [input]
+  (setv tok :none)
+  (setv describe [])
+  (setv source [])
+  (setv expect [])
+  (let [[lines (.split input linesep)]]
+    (for [line lines]
+      (cond
+        [(= line "%%describe")
+          (setv tok :describe)]
+        [(= line "%%source")
+          (setv tok :source)]
+        [(= line "%%expect")
+          (setv tok :expect)]
+        [True
+          (cond
+            [(= tok :describe)
+              (-> describe (.append line))]
+            [(= tok :source)
+              (-> source (.append line))]
+            [(= tok :expect)
+              (-> expect (.append line))])])))
+  (let [[joiner (fn [lst] (-> linesep (.join lst)))]]
+   { :describe (joiner describe)
+     :source (joiner source)
+     :expect (joiner expect) }))
 
 ; Entry point
 (defmain [&rest args]
@@ -73,5 +99,5 @@
         (if (= k "--dir")
           (let [[generator (get-all-test-files v)]]
             (for [file generator]
-              (print (file-get-contents file)))))))))
+              (print (group-sections (file-get-contents file))))))))))
 
