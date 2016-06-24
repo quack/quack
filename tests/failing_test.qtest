@@ -6,5 +6,4 @@ fn main!
 end
 %%expect
 fn main!
-  print "Hello world!"
-end
+  print "Helloworld!"

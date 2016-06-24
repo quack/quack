@@ -27,7 +27,9 @@
         [glob [iglob]]
         [fnmatch]
         [shutil [rmtree]]
-        [ntpath [basename]])
+        [ntpath [basename]]
+        [termcolor [colored]]
+        [difflib])
 
 (def **version** "Quack test toolkit v0.0.1-alpha")
 (def **file-pattern** "*.qtest")
@@ -127,6 +129,10 @@
   """
     The test suite!
   """
+  (setv tests 0)
+  (setv failed 0)
+  (setv passed 0)
+
   ; start by creating the folder to store our tests and then feed the compiler
   (create-tmp-folder)
 
@@ -134,14 +140,32 @@
     (setv filename (basename file))
     (setv section (group-sections (file-get-contents file)))
     ; Store the source for future queries
-    (persist-source filename (:source section)))
+    (persist-source filename (:source section))
     (setv command (-> exe (.replace "%s" (join **tmp-folder** (-> filename (+ ".tmp"))))))
-    (print "Calling " command)
-    (setv output (-> (popen "date") (.read) (.strip)))
+    (setv output (-> (popen command) (.read) (.strip)))
     (setv stripped-to-compare (-> (:expect section) (.strip)))
     ; We have enough data to give the results
 
-    (print output)
+    (setv tests (inc tests))
+    (if (= output stripped-to-compare)
+      (do
+        (setv passed (inc passed))
+        (print (colored (-> "Pass: " (+ file)) "green")))
+      (do
+        (setv failed (inc failed))
+        (print (colored (-> "Fail: " (+ file)) "red"))
+        (print "Difference:")
+        (setv output-list (-> output (.split linesep)))
+        (setv expected-list (-> stripped-to-compare (.split linesep)))
+
+        (setv d (-> difflib (.Differ)))
+        (setv diff (-> d (.compare output-list expected-list)))
+        (print (-> linesep (.join diff))))))
+
+  (print (colored "\nResults: " :attrs ["bold"]))
+  (print (colored (-> "Run:  " (+ (str tests))) :attrs ["bold"]))
+  (print (colored (-> "Pass: " (+ (str passed))) :attrs ["bold"]))
+  (print (colored (-> "Fail: " (+ (str failed))) :attrs ["bold"]))
 
   ; Dump garbage
   (delete-tmp-files))
