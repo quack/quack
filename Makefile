@@ -42,4 +42,4 @@ dev_dependencies:
 
 dev_tests:
 	$(MAKE) dev_dependencies
-	./tools/testsuite/run-tests.hy --dir ./tests --exe ./bin/quack
+	./tools/testsuite/run-tests.hy --dir ./tests --exe "./bin/quack %s"
