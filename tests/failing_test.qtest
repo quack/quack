@@ -1,0 +1,9 @@
+%%describe
+Hello world
+%%source
+fn main!
+  print "Hello world!"
+end
+%%expect
+fn main!
+  print "Helloworld!"
