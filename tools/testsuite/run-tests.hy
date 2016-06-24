@@ -153,19 +153,33 @@
         (print (colored (-> "Pass: " (+ file)) "green")))
       (do
         (setv failed (inc failed))
-        (print (colored (-> "Fail: " (+ file)) "red"))
+        (print
+          (colored
+            (-> "Fail: " (+ file)) "red"))
         (print "Difference:")
-        (setv output-list (-> output (.split linesep)))
-        (setv expected-list (-> stripped-to-compare (.split linesep)))
+        (setv output-list
+          (-> output (.split linesep)))
+        (setv expected-list
+          (-> stripped-to-compare (.split linesep)))
 
-        (setv d (-> difflib (.Differ)))
-        (setv diff (-> d (.compare output-list expected-list)))
-        (print (-> linesep (.join diff))))))
+        (setv d
+          (-> difflib (.Differ)))
+        (setv diff
+          (-> d (.compare output-list expected-list)))
+        (print
+          (-> linesep (.join diff))))))
 
-  (print (colored "\nResults: " :attrs ["bold"]))
-  (print (colored (-> "Run:  " (+ (str tests))) :attrs ["bold"]))
-  (print (colored (-> "Pass: " (+ (str passed))) :attrs ["bold"]))
-  (print (colored (-> "Fail: " (+ (str failed))) :attrs ["bold"]))
+  (print
+    (colored "\nResults: " :attrs ["bold" "underline"]))
+  (print
+    (colored
+      (-> "Run:  " (+ (str tests))) :attrs ["bold"]))
+  (print
+    (colored
+      (-> "Pass: " (+ (str passed))) :attrs ["bold"]))
+  (print
+    (colored
+      (-> "Fail: " (+ (str failed))) :attrs ["bold"]))
 
   ; Dump garbage
   (delete-tmp-files))
