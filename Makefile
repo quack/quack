@@ -12,7 +12,7 @@ endif
 
 test:
 ifeq ($(module), lexer)
-	$(TEST)  ./tests/LexerTest.php
+	$(TEST) ./tests/LexerTest.php
 else
 ifeq ($(module), parser)
 	$(TEST) ./tests/ParserTest.php
@@ -22,12 +22,12 @@ endif
 endif
 
 deploy:
-	git add *
+	git add .
 	git commit -m "$(message)"
 	git push origin master
 
 count_lines:
-	cd src;	git ls-files | xargs wc -l
+	cd src; git ls-files | xargs wc -l
 
 test_all:
 	$(MAKE) test module=lexer
@@ -35,3 +35,11 @@ test_all:
 
 install:
 	cp bin/quack /usr/bin
+
+dev_dependencies:
+	pip install hy
+	pip install termcolor
+
+dev_tests:
+	$(MAKE) dev_dependencies
+	./tools/testsuite/run-tests.hy --dir ./tests --exe ./bin/quack
