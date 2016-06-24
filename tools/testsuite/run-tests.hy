@@ -20,7 +20,7 @@
 ;; along with Quack.  If not, see <http://www.gnu.org/licenses/>.
 ;;
 
-(import [os [listdir walk linesep makedirs]]
+(import [os [listdir walk linesep makedirs popen]]
         [os.path [isfile isdir join exists]]
         [sys [argv]]
         [getopt [getopt GetoptError]]
@@ -38,7 +38,7 @@
   Returns the parameters passed to the script (parsed)
   """
   (car
-    (getopt args "v" ["dir="])))
+    (getopt args "v" ["dir=" "exe="])))
 
 (defn version []
   """
@@ -123,7 +123,7 @@
   (with [[f (open (join **tmp-folder** (-> name (+ ".tmp"))) "w")]]
     (-> f (.write source))))
 
-(defn run-tests [generator]
+(defn run-tests [generator exe]
   """
     The test suite!
   """
@@ -132,13 +132,34 @@
 
   (for [file generator]
     (setv filename (basename file))
-    (let [[section (group-sections (file-get-contents file))]]
-      ; Store the source for future queries
-      (persist-source filename (:source section))))
+    (setv section (group-sections (file-get-contents file)))
+    ; Store the source for future queries
+    (persist-source filename (:source section)))
+    (setv command (-> exe (.replace "%s" (join **tmp-folder** (-> filename (+ ".tmp"))))))
+    (print "Calling " command)
+    (setv output (-> (popen "date") (.read) (.strip)))
+    (setv stripped-to-compare (-> (:expect section) (.strip)))
+    ; We have enough data to give the results
+
+    (print output)
 
   ; Dump garbage
-  ; (delete-tmp-files)
-  )
+  (delete-tmp-files))
+
+(defn tuple-contains-key [needle haystack]
+  """
+  Tells if a tuple contains a key. Returns (False, nil) if not.
+  Returns (True, value) if it does
+  """
+  (setv fst False)
+  (setv snd nil)
+  (for [(, k v) haystack]
+    (if (= k needle)
+      (do
+        (setv fst True)
+        (setv snd v)
+        (break))))
+  (, fst snd))
 
 (defmain [&rest args]
   """
@@ -151,10 +172,16 @@
     (except [e GetoptError]
       (throw-error e))
     (else
-      (for [(, k v) params]
-        (if (= k "-v") (version))
-        (if (= k "--dir")
-          ; Start the analysis
-          (let [[generator (get-all-test-files v)]]
-            (run-tests generator)))))))
-
+      ; Version
+      (if (first (tuple-contains-key "-v" params))
+        (version))
+      ; Define directory params
+      (setv dir-tuple (tuple-contains-key "--dir" params))
+      (setv exe-tuple (tuple-contains-key "--exe" params))
+      (if (->> (first dir-tuple) (and (first exe-tuple)))
+        (do
+          (setv dir (second dir-tuple))
+          (setv exe (second exe-tuple))
+          (let [[generator (get-all-test-files dir)]]
+            (run-tests generator exe)))
+        (throw-error "--dir and --exe are obligatory")))))
