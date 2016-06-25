@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Quack Programming Language by quack</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Quack Programming Language</h1>
+        <p>:baby_chick: A multi-paradigm programming language with gradual and duck typing that targets PHP and JS</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/quack/quack" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/quack/quack/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/quack/quack/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p align="center">
+  <a href="">
+    <img alt="Logo" src="https://raw.githubusercontent.com/quack/quack/master/resource/logo.png" width="600px">
+  </a>
+</p>
+
+<p align="center">
+
+  <a href="https://quack-lang.herokuapp.com/"><img alt="Slack" src="https://quack-lang.herokuapp.com/badge.svg" height="20"></a>
+
+  <a href="https://travis-ci.org/quack/quack"><img alt="Build Status" src="https://travis-ci.org/quack/quack.svg?branch=master"></a>
+
+  <a href="https://codeclimate.com/github/quack/quack"><img alt="Code Climate" src="https://codeclimate.com/github/quack/quack/badges/gpa.svg"></a>
+
+  <a href="https://codeclimate.com/github/quack/quack/coverage"><img alt="Test Coverage" src="https://codeclimate.com/github/quack/quack/badges/coverage.svg"></a>
+
+  <a href="https://codeclimate.com/github/quack/quack"><img alt="Issue Count" src="https://codeclimate.com/github/quack/quack/badges/issue_count.svg"></a>
+
+</p>
+
+<h3>
+<a id="what-is-quack" class="anchor" href="#what-is-quack" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is Quack?</h3>
+
+<p>Quack is a type-safe, multi-paradigm programming language. Quack enables you to write consistent and legible code, and run it on different platforms.</p>
+
+<h3>
+<a id="quack-is" class="anchor" href="#quack-is" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quack is:</h3>
+
+<h4>
+<a id="type-safe" class="anchor" href="#type-safe" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Type safe</h4>
+
+<p>You can optionally provide type annotations for your values, although it isn't really necessary because we rely on duck and gradual typing. The Quack compiler is being built to be decidable by propagation and with a strong type inference.</p>
+
+<h4>
+<a id="multi-paradigm" class="anchor" href="#multi-paradigm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Multi-paradigm</h4>
+
+<p>Quack supports many programming paradigms, especially functional and imperative programming. Quack also supports tacit programming,  immutability and determinism when possible.</p>
+
+<h4>
+<a id="metaprogrammable-and-extensible" class="anchor" href="#metaprogrammable-and-extensible" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Metaprogrammable and extensible</h4>
+
+<p>The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide than as libraries with annotations. You can create operators at compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.</p>
+
+<h3>
+<a id="basic-examples" class="anchor" href="#basic-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic examples</h3>
+
+<h4>
+<a id="hello-world" class="anchor" href="#hello-world" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hello World</h4>
+
+<div class="highlight highlight-source-ruby"><pre>fn main
+  print <span class="pl-s"><span class="pl-pds">"</span>Hello World!<span class="pl-pds">"</span></span>
+<span class="pl-k">end</span></pre></div>
+
+<h4>
+<a id="factorial" class="anchor" href="#factorial" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Factorial</h4>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">-</span>: imperative
+fn fact [n]
+  let fact <span class="pl-c1">:-</span> <span class="pl-c1">1</span>
+  <span class="pl-k">for</span> i from <span class="pl-c1">1</span> to n <span class="pl-k">do </span>fact <span class="pl-c1">:-</span> fact <span class="pl-k">*</span> i
+  <span class="pl-k">^</span> fact
+<span class="pl-k">end</span>
+
+<span class="pl-k">-</span>: tail_call_recursion
+fn fact [n]
+  <span class="pl-k">^</span> n <span class="pl-k">=</span> <span class="pl-c1">0</span> <span class="pl-k">then</span> <span class="pl-c1">1</span> <span class="pl-k">else</span> n <span class="pl-k">*</span> fact[ n <span class="pl-k">-</span> <span class="pl-c1">1</span> ]
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="how-does-it-work" class="anchor" href="#how-does-it-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How does it work?</h3>
+
+<p>First of all, Quack compiler is, currently, entirely written in PHP, by hand. I'm doing this because I want to easily make it self-hosted and write the compiler in itself later. The front-end of the compiler is easy to extend and you can provide multiple back-ends for it. I'm writing standard libraries in the language for itself to allow interpreting it and running the compiler on desktop, on browser and interpreting it using the evaluator of any target language. Basically, when integrating Quack with your main programming language, you need to provide a set of type annotations for your libraries and for the language core. For JavaScript, I'm writing a tool that is able to convert TypeScript type definitions <code>.d.ts</code> for Quack type definitons <code>.qkt</code>, making the life easier. The initial support will be provided for <strong>PHP</strong>, <strong>Python</strong> and <strong>JavaScript</strong>. Please note that Quack is in its early stage, and in constant development. Quack also provides a <a href="http://108.167.188.125/%7Econta180/quack/">REPL that you can try online here</a>, currently generating the AST of the source.</p>
+
+<h3>
+<a id="get-quack" class="anchor" href="#get-quack" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Get Quack</h3>
+
+<h4>
+<a id="repl" class="anchor" href="#repl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>REPL</h4>
+
+<p>To get and try Quack, the steps are simple. Clone this repository and install the <code>src</code> folder under <code>/quack/quack</code>. I promise I'll provide a better way to do it later. After, <code>cd /quack/quack/src/repl</code> and <code>php QuackRepl.php --ast</code> (you can also try with <code>--python</code>, but it is unstable yet). You will be sent to the REPL. Currently, the REPL is only compatible with POSIX systems. I'll implement support for Windows later, I promise too!</p>
+
+<h4>
+<a id="run-tests" class="anchor" href="#run-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run tests</h4>
+
+<p>Assert that everything is <strong>OK</strong>. There is a small set of tests that may be run.</p>
+
+<p><code>make test module=module_name</code></p>
+
+<p><strong>Modules</strong></p>
+
+<table>
+<thead>
+<tr>
+<th><code>lexer</code></th>
+<th><code>parser</code></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<h3>
+<a id="contribute-to-quack" class="anchor" href="#contribute-to-quack" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contribute to Quack!</h3>
+
+<p>Yay! Your contribution for the Quack language core is <strong>very</strong> important! There is <strong>a lot of work</strong> to be done, and you can find them in this repository's issues! Look for the <code>accepting-pull-requests</code> label! Newcomers to the open-source contribution process are very welcome! Please, read the <code>CONTRIBUTING</code> file in this repository as well!</p>
+
+<p>There are many ways to help! You can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!</p>
+
+<p>We also need to implement support of Quack for the different text editors. If you want to implement for some, contact me and I'll write the syntactic specification and the semantic of the blocks for you!</p>
+
+<p>Questions or concerns? Contact me at <a href="mailto:marcelocamargo@linuxmail.org">marcelocamargo@linuxmail.org</a> and I'll be happy to answer.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/quack">quack</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
