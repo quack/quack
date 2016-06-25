@@ -27,6 +27,6 @@ use \QuackCompiler\Parser\Grammar;
 
 interface IInfixParselet
 {
-  function parse(Grammar $parser, Expr $left, Token $token);
-  function getPrecedence();
+    public function parse(Grammar $parser, Expr $left, Token $token);
+    public function getPrecedence();
 }

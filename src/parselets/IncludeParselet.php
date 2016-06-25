@@ -28,17 +28,17 @@ use \QuackCompiler\Parser\Grammar;
 
 class IncludeParselet implements IPrefixParselet
 {
-  const TYPE_REQUIRE = 0x1;
-  const TYPE_INCLUDE = 0x2;
+    const TYPE_REQUIRE = 0x1;
+    const TYPE_INCLUDE = 0x2;
 
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $type = $token->getTag() === Tag::T_REQUIRE
-      ? static::TYPE_REQUIRE
-      : static::TYPE_INCLUDE;
-    $is_once = $grammar->parser->is(Tag::T_ONCE) && $grammar->parser->consume();
-    $file = $grammar->_expr();
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $type = $token->getTag() === Tag::T_REQUIRE
+            ? static::TYPE_REQUIRE
+            : static::TYPE_INCLUDE;
+        $is_once = $grammar->parser->is(Tag::T_ONCE) && $grammar->parser->consume();
+        $file = $grammar->_expr();
 
-    return new IncludeExpr($type, $is_once, $file);
-  }
+        return new IncludeExpr($type, $is_once, $file);
+    }
 }

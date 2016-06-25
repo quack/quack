@@ -45,43 +45,43 @@ use \QuackCompiler\Ast\Helper\Param;
 
 class TokenReader extends Parser
 {
-  public $ast = [];
-  public $grammar;
+    public $ast = [];
+    public $grammar;
 
-  public function __construct(Tokenizer $input)
-  {
-    parent::__construct($input);
-    $this->grammar = new Grammar($this);
-  }
-
-  /* Handlers */
-  public function dumpAst()
-  {
-    foreach ($this->input->symbol_table->iterator() as $key => $value) {
-      echo '[', BEGIN_GREEN, $key, END_GREEN, ': ', BEGIN_BOLD,  $value, END_BOLD, ']', PHP_EOL;
+    public function __construct(Tokenizer $input)
+    {
+        parent::__construct($input);
+        $this->grammar = new Grammar($this);
     }
 
-    var_dump($this->ast);
-  }
+    /* Handlers */
+    public function dumpAst()
+    {
+        foreach ($this->input->symbol_table->iterator() as $key => $value) {
+            echo '[', BEGIN_GREEN, $key, END_GREEN, ': ', BEGIN_BOLD,  $value, END_BOLD, ']', PHP_EOL;
+        }
 
-  public function format()
-  {
-    foreach ($this->ast as $stmt) {
-      echo $stmt->format($this);
+        var_dump($this->ast);
     }
-  }
 
-  public function beautify()
-  {
-    $source = [];
-    foreach ($this->ast as $stmt) {
-      $source[] = $stmt->format($this);
+    public function format()
+    {
+        foreach ($this->ast as $stmt) {
+            echo $stmt->format($this);
+        }
     }
-    return implode($source);
-  }
 
-  public function parse()
-  {
-    $this->ast = $this->grammar->start();
-  }
+    public function beautify()
+    {
+        $source = [];
+        foreach ($this->ast as $stmt) {
+            $source[] = $stmt->format($this);
+        }
+        return implode($source);
+    }
+
+    public function parse()
+    {
+        $this->ast = $this->grammar->start();
+    }
 }

@@ -25,17 +25,17 @@ use \QuackCompiler\Parser\Parser;
 
 class AccessExpr implements Expr
 {
-  public $left;
-  public $index;
+    public $left;
+    public $index;
 
-  public function __construct($left, $index)
-  {
-    $this->left = $left;
-    $this->index = $index;
-  }
+    public function __construct($left, $index)
+    {
+        $this->left = $left;
+        $this->index = $index;
+    }
 
-  public function format(Parser $parser)
-  {
-    throw new \Exception;
-  }
+    public function format(Parser $parser)
+    {
+        throw new \Exception;
+    }
 }

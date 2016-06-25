@@ -23,28 +23,28 @@ namespace QuackCompiler\Parser;
 
 class Precedence
 {
-  const ASSIGNMENT         = 1;
-  const PIPELINE           = 2;
-  const MEMBER_ACCESS      = 3;
-  const TERNARY            = 4;
-  const COALESCENCE        = 5;
-  const RANGE              = 6;
-  const LOGICAL_OR         = 7;
-  const LOGICAL_XOR        = 8;
-  const LOGICAL_AND        = 9;
-  const BITWISE_OR         = 10;
-  const BITWISE_XOR        = 11;
-  const BITWISE_AND_OR_REF = 12;
-  const VALUE_COMPARATOR   = 13;
-  const SIZE_COMPARATOR    = 14;
-  const BITWISE_SHIFT      = 15;
-  const ADDITIVE           = 16;
-  const MULTIPLICATIVE     = 17;
-  const PREFIX             = 18;
-  const POSTFIX            = 19;
-  const TYPE_CAST          = 20;
-  const EXPONENT           = 21;
-  const CALL               = 22;
-  const ACCESS             = 23;
-  // TODO: Review operators precedence when finish the parser
+    const ASSIGNMENT         = 1;
+    const PIPELINE           = 2;
+    const MEMBER_ACCESS      = 3;
+    const TERNARY            = 4;
+    const COALESCENCE        = 5;
+    const RANGE              = 6;
+    const LOGICAL_OR         = 7;
+    const LOGICAL_XOR        = 8;
+    const LOGICAL_AND        = 9;
+    const BITWISE_OR         = 10;
+    const BITWISE_XOR        = 11;
+    const BITWISE_AND_OR_REF = 12;
+    const VALUE_COMPARATOR   = 13;
+    const SIZE_COMPARATOR    = 14;
+    const BITWISE_SHIFT      = 15;
+    const ADDITIVE           = 16;
+    const MULTIPLICATIVE     = 17;
+    const PREFIX             = 18;
+    const POSTFIX            = 19;
+    const TYPE_CAST          = 20;
+    const EXPONENT           = 21;
+    const CALL               = 22;
+    const ACCESS             = 23;
+    // TODO: Review operators precedence when finish the parser
 }

@@ -26,7 +26,7 @@ define('PARSER', 'parser');
 
 function import($module, $file)
 {
-  require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
+    require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
 }
 
 /* Lexer */

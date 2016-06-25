@@ -25,17 +25,17 @@ use \QuackCompiler\Parser\Parser;
 
 class NumberExpr implements Expr
 {
-  public $value;
-  public $type;
+    public $value;
+    public $type;
 
-  public function __construct($value, $type)
-  {
-    $this->value = $value;
-    $this->type = $type;
-  }
+    public function __construct($value, $type)
+    {
+        $this->value = $value;
+        $this->type = $type;
+    }
 
-  public function format(Parser $parser)
-  {
-    return (string) $this->value;
-  }
+    public function format(Parser $parser)
+    {
+        return (string) $this->value;
+    }
 }

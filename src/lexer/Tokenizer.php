@@ -23,268 +23,267 @@ namespace QuackCompiler\Lexer;
 
 class Tokenizer extends Lexer
 {
-  public $line = 0;
-  public $column = 0;
+    public $line = 0;
+    public $column = 0;
 
-  public function __construct($input)
-  {
-    parent::__construct($input);
-  }
-
-  public function nextToken()
-  {
-    while ($this->peek != self::EOF) {
-
-      if (ctype_digit($this->peek)) {
-        return $this->digit();
-      }
-
-      if ((ctype_alpha($this->peek) || $this->is('_')) || ($this->is('_') && ctype_alnum((string) $this->preview()))) {
-        return $this->identifier();
-      }
-
-      if (ctype_space($this->peek)) {
-        $this->space();
-        continue;
-      }
-
-      if ($this->matches(':') && ctype_alpha($this->preview())) {
-        return $this->atom();
-      }
-
-      if ($this->matches('(*') && $this->previous() !== '&') {
-        return $this->semanticComment();
-      }
-
-      if ($this->matches('//')) {
-        $this->comment();
-        continue;
-      }
-
-      if ($this->is('"') || $this->is("'")) {
-        return $this->string($this->peek);
-      }
-
-      // Multichar symbol analysis
-      return SymbolDecypher::{$this->peek}($this);
+    public function __construct($input)
+    {
+        parent::__construct($input);
     }
 
-    return new Token(self::EOF_TYPE);
-  }
+    public function nextToken()
+    {
+        while ($this->peek != self::EOF) {
+            if (ctype_digit($this->peek)) {
+                return $this->digit();
+            }
 
-  public function digit()
-  {
-    $buffer = [];
-    $is_double = false;
+            if ((ctype_alpha($this->peek) || $this->is('_'))
+                ||
+                ($this->is('_') && ctype_alnum((string) $this->preview()))
+                ) {
+                    return $this->identifier();
+            }
 
+            if (ctype_space($this->peek)) {
+                $this->space();
+                continue;
+            }
 
-    // Hexadecimal or binary
-    if ($this->peek === '0' && (in_array(strtolower($this->preview()), ['x', 'b']))) {
-      $buffer[] = $this->readChar(); // 0
+            if ($this->matches(':') && ctype_alpha($this->preview())) {
+                return $this->atom();
+            }
 
-      // b and x are identifiers if there is no valid value after then
-      if (($this->peek === 'b' && (int) $this->preview() >> 1)         // Fake bin
-        || ($this->peek === 'x' && !ctype_xdigit($this->preview()))) { // Fake hex
+            if ($this->matches('(*') && $this->previous() !== '&') {
+                return $this->semanticComment();
+            }
 
-        $value = '0';
-        $this->column += 1;
-        return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
-      }
+            if ($this->matches('//')) {
+                $this->comment();
+                continue;
+            }
 
-      $buffer[] = $b_or_x = strtolower($this->readChar()); // b or x
+            if ($this->is('"') || $this->is("'")) {
+                return $this->string($this->peek);
+            }
 
-      switch ($b_or_x) {
-        case 'b':
+            // Multichar symbol analysis
+            return SymbolDecypher::{$this->peek}($this);
+        }
 
-          do {
+        return new Token(self::EOF_TYPE);
+    }
+
+    public function digit()
+    {
+        $buffer = [];
+        $is_double = false;
+
+        // Hexadecimal or binary
+        if ($this->peek === '0' && (in_array(strtolower($this->preview()), ['x', 'b']))) {
+            $buffer[] = $this->readChar(); // 0
+
+            // b and x are identifiers if there is no valid value after then
+            if (($this->peek === 'b' && (int) $this->preview() >> 1)         // Fake bin
+                || ($this->peek === 'x' && !ctype_xdigit($this->preview()))) { // Fake hex
+
+                $value = '0';
+                $this->column += 1;
+                return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+            }
+
+            $buffer[] = $b_or_x = strtolower($this->readChar()); // b or x
+
+            switch ($b_or_x) {
+                case 'b':
+                    do {
+                        $buffer[] = $this->readChar();
+                    } while (ctype_digit($this->peek) && !((int) $this->peek >> 1));
+
+                    break;
+
+                case 'x':
+                    do {
+                        $buffer[] = $this->readChar();
+                    } while (ctype_xdigit($this->peek));
+
+                    break;
+            }
+
+            $value = implode($buffer);
+            $this->column += sizeof($value);
+
+            return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+        }
+
+        // Is it decimal or octal?
+        parse_int:
+        do {
             $buffer[] = $this->readChar();
-          } while (ctype_digit($this->peek) && !((int) $this->peek >> 1));
+        } while (ctype_digit((string) $this->peek));
 
-          break;
-
-        case 'x':
-
-          do {
+        if ($this->peek === '.' && ctype_digit((string) $this->preview()) && !$is_double) {
             $buffer[] = $this->readChar();
-          } while (ctype_xdigit($this->peek));
+            $is_double = true;
+            goto parse_int;
+        }
 
-          break;
+        // Try to check for octal compatibility
+        if (!$is_double && $buffer[0] === '0' && sizeof($buffer) > 1) {
+            $oct_buffer = [];
+            $current_buffer_size = sizeof($buffer);
 
-      }
+            $index = 0;
+            while ($index < $current_buffer_size && in_array($buffer[$index], range(0, 7))) {
+                $oct_buffer[] = $buffer[$index];
+                $index++;
+            }
 
-      $value = implode($buffer);
-      $this->column += sizeof($value);
+            $value = implode($oct_buffer);
+            $this->column += $current_buffer_size;
+            return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+        }
 
-      return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+        // Decimal
+        $size = sizeof($buffer);
+        $value = implode($buffer);
+
+        $this->column += $size;
+        return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($value));
     }
 
-    // Is it decimal or octal?
-    parse_int:
-    do {
-      $buffer[] = $this->readChar();
-    } while (ctype_digit((string) $this->peek));
+    private function identifier()
+    {
+        $buffer = [];
 
-    if ($this->peek === '.' && ctype_digit((string) $this->preview()) && !$is_double) {
-      $buffer[] = $this->readChar();
-      $is_double = true;
-      goto parse_int;
+        do {
+            $buffer[] = $this->readChar();
+        } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
+
+        $string = implode($buffer);
+
+        $word = $this->getWord($string);
+        $this->column += sizeof($buffer);
+
+        if ($word !== null) {
+            return $word;
+        }
+
+        return new Token(Tag::T_IDENT, $this->symbol_table->add($string));
     }
 
-    // Try to check for octal compatibility
-    if (!$is_double && $buffer[0] === '0' && sizeof($buffer) > 1) {
-      $oct_buffer = [];
-      $current_buffer_size = sizeof($buffer);
+    private function space()
+    {
+        $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
 
-      $index = 0;
-      while ($index < $current_buffer_size && in_array($buffer[$index], range(0, 7))) {
-        $oct_buffer[] = $buffer[$index];
-        $index++;
-      }
+        do {
+            if (in_array(ord($this->peek), $new_line)) {
+                $this->line++;
+                $this->column = 1;
+            } else {
+                $this->column++;
+            }
 
-      $value = implode($oct_buffer);
-      $this->column += $current_buffer_size;
-      return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+            $this->consume();
+        } while (ctype_space($this->peek));
     }
 
-    // Decimal
-    $size = sizeof($buffer);
-    $value = implode($buffer);
+    private function string($delimiter)
+    {
+        $this->consume();
 
-    $this->column += $size;
-    return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($value));
-  }
+        $buffer = [];
+        while (!$this->isEnd() && !($this->is($delimiter) && $this->previous() !== '\\')) {
+            $buffer[] = $this->readChar();
+        }
 
-  private function identifier()
-  {
-    $buffer = [];
+        $string = implode($buffer);
 
-    do {
-      $buffer[] = $this->readChar();
-    } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
+        if (!$this->isEnd()) {
+            $this->consume();
+        }
 
-    $string = implode($buffer);
-
-    $word = $this->getWord($string);
-    $this->column += sizeof($buffer);
-
-    if ($word !== NULL) {
-      return $word;
+        return new Token(Tag::T_STRING, $this->symbol_table->add($string));
     }
 
-    return new Token(Tag::T_IDENT, $this->symbol_table->add($string));
-  }
+    private function semanticComment()
+    {
+        $this->consume(2);
 
-  private function space()
-  {
-    $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+        $buffer = [];
+        while (!$this->isEnd() && !($this->is('*') && $this->preview() === ')')) {
+            $buffer[] = $this->readChar();
+        }
 
-    do {
-      if (in_array(ord($this->peek), $new_line)) {
-        $this->line++;
-        $this->column = 1;
-      } else {
-        $this->column++;
-      }
-      $this->consume();
-    } while (ctype_space($this->peek));
-  }
+        $comment = implode($buffer);
 
-  private function string($delimiter)
-  {
-    $this->consume();
+        if (!$this->isEnd()) {
+            $this->consume(2);
+        }
 
-    $buffer = [];
-    while (!$this->isEnd() && !($this->is($delimiter) && $this->previous() !== '\\')) {
-      $buffer[] = $this->readChar();
+        return new Token(Tag::T_SEMANTIC_COMMENT, $this->symbol_table->add($comment));
     }
 
-    $string = implode($buffer);
+    private function atom()
+    {
+        $this->consume(); // :
 
-    if (!$this->isEnd()) {
-      $this->consume();
+        do {
+            $buffer[] = $this->readChar();
+        } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
+
+        $atom = implode($buffer);
+        return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
     }
 
-    return new Token(Tag::T_STRING, $this->symbol_table->add($string));
-  }
-
-  private function semanticComment()
-  {
-    $this->consume(2);
-
-    $buffer = [];
-    while (!$this->isEnd() && !($this->is('*') && $this->preview() === ')')) {
-      $buffer[] = $this->readChar();
+    private function comment()
+    {
+        $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+        do {
+            $this->consume();
+        } while (!in_array(ord($this->peek), $new_line));
     }
 
-    $comment = implode($buffer);
-
-    if (!$this->isEnd()) {
-      $this->consume(2);
+    private function readChar()
+    {
+        $char = $this->peek;
+        $this->consume();
+        return $char;
     }
 
-    return new Token(Tag::T_SEMANTIC_COMMENT, $this->symbol_table->add($comment));
-  }
-
-  private function atom()
-  {
-    $this->consume(); // :
-
-    do {
-      $buffer[] = $this->readChar();
-    } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
-
-    $atom = implode($buffer);
-    return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
-  }
-
-  private function comment()
-  {
-    $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
-    do {
-      $this->consume();
-    } while (!in_array(ord($this->peek), $new_line));
-  }
-
-  private function readChar()
-  {
-    $char = $this->peek;
-    $this->consume();
-    return $char;
-  }
-
-  public function & getSymbolTable()
-  {
-    return $this->symbol_table;
-  }
-
-  public function eagerlyEvaluate($show_symbol_table = false)
-  {
-    $this->rewind();
-    $symbol_table = &$this->getSymbolTable();
-    $token_stream = [];
-
-    while ($this->peek != self::EOF) {
-      $token_stream[] = $this->nextToken();
-      if ($show_symbol_table) {
-        $token_stream[sizeof($token_stream) - 1]->showSymbolTable($symbol_table);
-      }
+    public function & getSymbolTable()
+    {
+        return $this->symbol_table;
     }
 
-    return $token_stream;
-  }
+    public function eagerlyEvaluate($show_symbol_table = false)
+    {
+        $this->rewind();
+        $symbol_table = &$this->getSymbolTable();
+        $token_stream = [];
 
-  public function printTokens()
-  {
-    $this->rewind();
-    $symbol_table = &$this->getSymbolTable();
+        while ($this->peek != self::EOF) {
+            $token_stream[] = $this->nextToken();
+            if ($show_symbol_table) {
+                $token_stream[sizeof($token_stream) - 1]->showSymbolTable($symbol_table);
+            }
+        }
 
-    $token = $this->nextToken();
-    $token->showSymbolTable($symbol_table);
-
-    while ($token->getTag() !== static::EOF_TYPE) {
-      echo $token;
-      $token = $this->nextToken();
-      $token->showSymbolTable($symbol_table);
+        return $token_stream;
     }
-  }
+
+    public function printTokens()
+    {
+        $this->rewind();
+        $symbol_table = &$this->getSymbolTable();
+
+        $token = $this->nextToken();
+        $token->showSymbolTable($symbol_table);
+
+        while ($token->getTag() !== static::EOF_TYPE) {
+            echo $token;
+            $token = $this->nextToken();
+            $token->showSymbolTable($symbol_table);
+        }
+    }
 }

@@ -29,16 +29,16 @@ use \QuackCompiler\Parser\Precedence;
 
 class AccessParselet implements IInfixParselet
 {
-  public function parse(Grammar $grammar, Expr $left, Token $token)
-  {
-    $index = $grammar->_expr();
-    $grammar->parser->match('}');
+    public function parse(Grammar $grammar, Expr $left, Token $token)
+    {
+        $index = $grammar->_expr();
+        $grammar->parser->match('}');
 
-    return new AccessExpr($left, $index);
-  }
+        return new AccessExpr($left, $index);
+    }
 
-  public function getPrecedence()
-  {
-    return Precedence::ACCESS;
-  }
+    public function getPrecedence()
+    {
+        return Precedence::ACCESS;
+    }
 }

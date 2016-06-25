@@ -29,38 +29,37 @@ use \QuackCompiler\Lexer\Tag;
 
 class WhenParselet implements IPrefixParselet
 {
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $cases = [];
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $cases = [];
 
-    do {
-      $grammar->parser->consume();
+        do {
+            $grammar->parser->consume();
 
-      // Default operation
-      if ($grammar->parser->is(Tag::T_ELSE)) {
-        $grammar->parser->consume();
-        $default = new \stdClass;
-        $default->condition = NULL;
-        $default->action = $grammar->_expr();
-        $cases[] = $default;
-        goto fetch_next;
-      }
+            // Default operation
+            if ($grammar->parser->is(Tag::T_ELSE)) {
+                $grammar->parser->consume();
+                $default = new \stdClass;
+                $default->condition = null;
+                $default->action = $grammar->_expr();
+                $cases[] = $default;
+                goto fetch_next;
+            }
 
-      $case = new \stdClass;
-      $case->condition = $grammar->_expr();
-      $grammar->parser->match('->');
-      $case->action = $grammar->_expr();
-      $cases[] = $case;
+            $case = new \stdClass;
+            $case->condition = $grammar->_expr();
+            $grammar->parser->match('->');
+            $case->action = $grammar->_expr();
+            $cases[] = $case;
 
-      fetch_next:
-      if (!$grammar->parser->is(Tag::T_END)) {
-        $grammar->parser->match(';');
-      }
+            fetch_next:
+            if (!$grammar->parser->is(Tag::T_END)) {
+                $grammar->parser->match(';');
+            }
+        } while ($grammar->parser->is('|'));
 
-    } while ($grammar->parser->is('|'));
+        $grammar->parser->match(Tag::T_END);
 
-    $grammar->parser->match(Tag::T_END);
-
-    return new WhenExpr($cases);
-  }
+        return new WhenExpr($cases);
+    }
 }

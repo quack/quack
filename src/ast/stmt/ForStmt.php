@@ -26,24 +26,23 @@ use \QuackCompiler\Parser\Parser;
 
 class ForStmt implements Stmt
 {
-  public $variable;
-  public $from;
-  public $to;
-  public $by;
-  public $body;
+    public $variable;
+    public $from;
+    public $to;
+    public $by;
+    public $body;
 
-  public function __construct($variable, $from, $to, $by, $body)
-  {
-    $this->variable = $variable;
-    $this->from = $from;
-    $this->to = $to;
-    $this->by = $by;
-    $this->body = $body;
-  }
+    public function __construct($variable, $from, $to, $by, $body)
+    {
+        $this->variable = $variable;
+        $this->from = $from;
+        $this->to = $to;
+        $this->by = $by;
+        $this->body = $body;
+    }
 
-  public function format(Parser $parser)
-  {
-    throw new \Exception('TODO');
-  }
-
+    public function format(Parser $parser)
+    {
+        throw new \Exception('TODO');
+    }
 }

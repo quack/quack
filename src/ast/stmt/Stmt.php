@@ -23,4 +23,6 @@ namespace QuackCompiler\Ast\Stmt;
 
 use QuackCompiler\Ast\Node;
 
-interface Stmt extends Node {}
+interface Stmt extends Node
+{
+}
