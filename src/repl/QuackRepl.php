@@ -20,7 +20,7 @@
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('BASE_PATH', __DIR__ . '/..');
-require_once '/quack/quack/src/toolkit/QuackToolkit.php';
+require_once '../toolkit/QuackToolkit.php';
 
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\SyntaxError;
@@ -65,7 +65,7 @@ function readline_callback($command)
     exit;
   } else if ($command === 'show c') {
     print_entire_license();
-    exit;
+    goto next;
   } else if ($command === '') {
     goto next;
   } else if ($command === ':clear') {
