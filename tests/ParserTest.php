@@ -7,7 +7,7 @@ require_once './src/toolkit/QuackToolkit.php';
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\TokenReader;
 
-class ParserTest extends PHPUnit_Framework_TestCase
+class ParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testProvideBeautifier()
     {

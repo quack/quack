@@ -8,7 +8,7 @@ use \QuackCompiler\Lexer\Tokenizer;
 
 define('SHOW_SYMBOL_TABLE', true);
 
-class LexerTest extends PHPUnit_Framework_TestCase
+class LexerTest extends \PHPUnit_Framework_TestCase
 {
     private function tokenize($source, $show_symbol_table = false)
     {
