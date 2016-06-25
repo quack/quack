@@ -112,7 +112,8 @@ class Grammar
       $left = $this->_expr();
       $right = NULL;
 
-      if ($this->checker->startsExpr()) {
+      if ($this->parser->is('->')) {
+        $this->parser->consume();
         $right = $this->_expr();
       }
 
@@ -122,6 +123,8 @@ class Grammar
 
       yield new ArrayPairExpr($left, $right);
     }
+
+    $this->parser->match('}');
   }
 
   function _stmt()
@@ -489,13 +492,26 @@ class Grammar
     $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
     $name[] = $this->qualifiedName();
     $alias = NULL;
+    $subprops = NULL;
 
     if ($this->parser->is(Tag::T_AS)) {
       $this->parser->consume();
       $alias = $this->identifier();
+    } else if ($this->parser->is('{')) {
+      $this->parser->consume();
+      $subprops[] = $this->identifier();
+
+      if ($this->parser->is(';')) {
+        do {
+          $this->parser->match(';');
+          $subprops[] = $this->identifier();
+        } while ($this->parser->is(';'));
+      }
+
+      $this->parser->match('}');
     }
 
-    return new OpenStmt($name, $alias, $type);
+    return new OpenStmt($name, $alias, $type, $subprops);
   }
 
   function _constStmt()
