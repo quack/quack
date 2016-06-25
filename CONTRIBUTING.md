@@ -3,7 +3,7 @@
 ##Table of Contents
 
 - [Reporting a bug](#reporting-a-bug)
-- [The 5 magic steps](#the-5-magic-steps)
+- [The 6 magic steps](#the-6-magic-steps)
 - [License](#license)
 
 ##Reporting a bug
@@ -16,14 +16,16 @@ If we find an issue that's related, we will reference it and close your issue, s
 5. Include any errors that may be displayed.
 6. Update us if you have any new info, or if the problem resolves itself!
 
-##The 5 magic steps
+##The 6 magic steps
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :)
+3. Install your pre-commit hook: `bash /path/to/quack/tools/phpcs-pre-commit/install.sh`
+4. Commit your changes: `git commit -m 'Add some feature'`
+5. Push to the branch: `git push origin my-new-feature`
+6. Submit a pull request :)
 
 ##License
 
 [Quack](https://github.com/haskellcamargo/quack) is distributed under the GNU General Public License, version 3, [available in this repository](master/LICENSE.md). All contributions are assumed to be also licensed under the GPLv3.
+
