@@ -85,10 +85,10 @@ class Grammar
 
         if (!$this->checker->isEoF()) {
             throw (new SyntaxError)
-            -> expected('statement')
-            -> found($this->parser->lookahead)
-            -> on($this->parser->position())
-            -> source($this->parser->input);
+                -> expected('statement')
+                ->found($this->parser->lookahead)
+                -> on($this->parser->position())
+                -> source($this->parser->input);
         }
     }
 
@@ -112,7 +112,8 @@ class Grammar
             $left = $this->_expr();
             $right = null;
 
-            if ($this->checker->startsExpr()) {
+            if ($this->parser->is('->')) {
+                $this->parser->consume();
                 $right = $this->_expr();
             }
 
@@ -122,6 +123,8 @@ class Grammar
 
             yield new ArrayPairExpr($left, $right);
         }
+
+        $this->parser->match('}');
     }
 
     public function _stmt()
@@ -537,13 +540,26 @@ class Grammar
         $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
         $name[] = $this->qualifiedName();
         $alias = null;
+        $subprops = null;
 
         if ($this->parser->is(Tag::T_AS)) {
             $this->parser->consume();
             $alias = $this->identifier();
+        } elseif ($this->parser->is('{')) {
+            $this->parser->consume();
+            $subprops[] = $this->identifier();
+
+            if ($this->parser->is(';')) {
+                do {
+                    $this->parser->match(';');
+                    $subprops[] = $this->identifier();
+                } while ($this->parser->is(';'));
+            }
+
+            $this->parser->match('}');
         }
 
-        return new OpenStmt($name, $alias, $type);
+        return new OpenStmt($name, $alias, $type, $subprops);
     }
 
     public function _constStmt()
@@ -613,14 +629,14 @@ class Grammar
     public function _rescueStmtList()
     {
         while ($this->parser->is(Tag::T_RESCUE)) {
-              $this->parser->consume();
-              $this->parser->match('[');
-              $exception_class = $this->qualifiedName();
-              $variable = $this->identifier();
-              $this->parser->match(']');
-              $body = iterator_to_array($this->_innerStmtList());
+            $this->parser->consume();
+            $this->parser->match('[');
+            $exception_class = $this->qualifiedName();
+            $variable = $this->identifier();
+            $this->parser->match(']');
+            $body = iterator_to_array($this->_innerStmtList());
 
-              yield new RescueStmt($exception_class, $variable, $body);
+            yield new RescueStmt($exception_class, $variable, $body);
         }
     }
 
@@ -669,7 +685,9 @@ class Grammar
     private function getPrecedence()
     {
         $parser = $this->parser->infixParseletForToken($this->parser->lookahead);
-        return !is_null($parser) ? $parser->getPrecedence() : 0;
+        return !is_null($parser)
+            ? $parser->getPrecedence()
+            : 0;
     }
 
     /* Coproductions */

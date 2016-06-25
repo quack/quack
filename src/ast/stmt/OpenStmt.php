@@ -28,12 +28,14 @@ class OpenStmt implements Stmt
     public $module;
     public $alias;
     public $type;
+    public $subprops;
 
-    public function __construct($module, $alias = null, $type = null)
+    public function __construct($module, $alias = null, $type = null, $subprops = null)
     {
         $this->module = $module;
         $this->alias = $alias;
         $this->type = $type;
+        $this->subprops = $subprops;
     }
 
     public function format(Parser $parser)

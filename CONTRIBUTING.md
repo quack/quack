@@ -20,7 +20,7 @@ If we find an issue that's related, we will reference it and close your issue, s
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
-3. Install your pre-commit hook: `bash /path/to/quack/tools/phpcs-pre-commit/install.sh`
+3. Install your pre-commit hook: `cd /path/to/quack/tools/phpcs-pre-commit/ && bash install.sh`
 4. Commit your changes: `git commit -m 'Add some feature'`
 5. Push to the branch: `git push origin my-new-feature`
 6. Submit a pull request :)
