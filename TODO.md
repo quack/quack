@@ -19,9 +19,9 @@
 - [x] Implement strings as expressions
 - [x] Implement `<expr> .. <expr> by <expr>` syntax
 - [x] Implement atoms as expressions
+- [x] Create a single parselet for literal values
 - [ ] Implement short syntax for `open` statements
 - [ ] Implement partial function parsing
 - [ ] Implement static properties (without semantic validation)
 - [ ] Verify property definitions for classes
 - [ ] Verify associative array definitions
-- [ ] Create a single parselet for literal values

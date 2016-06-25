@@ -28,7 +28,7 @@ use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parselets\IPrefixParselet;
 use \QuackCompiler\Parselets\IInfixParselet;
 use \QuackCompiler\Parselets\BinaryOperatorParselet;
-use \QuackCompiler\Parselets\NumberParselet;
+use \QuackCompiler\Parselets\LiteralParselet;
 use \QuackCompiler\Parselets\NameParselet;
 use \QuackCompiler\Parselets\PostfixOperatorParselet;
 use \QuackCompiler\Parselets\PrefixOperatorParselet;
@@ -39,13 +39,10 @@ use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parselets\ArrayParselet;
 use \QuackCompiler\Parselets\NewParselet;
 use \QuackCompiler\Parselets\MemberAccessParselet;
-use \QuackCompiler\Parselets\KeywordParselet;
 use \QuackCompiler\Parselets\WhenParselet;
-use \QuackCompiler\Parselets\StringParselet;
 use \QuackCompiler\Parselets\CallParselet;
 use \QuackCompiler\Parselets\AccessParselet;
 use \QuackCompiler\Parselets\RangeParselet;
-use \QuackCompiler\Parselets\AtomParselet;
 
 abstract class Parser
 {
@@ -94,9 +91,9 @@ abstract class Parser
 
   private function registerParselets()
   {
-    $this->register(Tag::T_INTEGER, new NumberParselet);
-    $this->register(Tag::T_DOUBLE, new NumberParselet);
-    $this->register(Tag::T_STRING, new StringParselet);
+    $this->register(Tag::T_INTEGER, new LiteralParselet);
+    $this->register(Tag::T_DOUBLE, new LiteralParselet);
+    $this->register(Tag::T_STRING, new LiteralParselet);
     $this->register(Tag::T_IDENT, new NameParselet);
     $this->register(Tag::T_THEN, new TernaryParselet);
     $this->register('..', new RangeParselet);
@@ -110,10 +107,10 @@ abstract class Parser
     $this->register('#', new NewParselet);
     $this->register('.', new MemberAccessParselet);
     $this->register('?.', new MemberAccessParselet);
-    $this->register(Tag::T_TRUE, new KeywordParselet);
-    $this->register(Tag::T_FALSE, new KeywordParselet);
-    $this->register(Tag::T_NIL, new KeywordParselet);
-    $this->register(Tag::T_ATOM, new AtomParselet);
+    $this->register(Tag::T_TRUE, new LiteralParselet);
+    $this->register(Tag::T_FALSE, new LiteralParselet);
+    $this->register(Tag::T_NIL, new LiteralParselet);
+    $this->register(Tag::T_ATOM, new LiteralParselet);
     $this->register(Tag::T_WHEN, new WhenParselet);
 
     $this->prefix('+', Precedence::PREFIX);

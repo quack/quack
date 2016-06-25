@@ -50,7 +50,6 @@ import(PARSER, 'Precedence');
 
 import(PARSELETS, 'IInfixParselet');
 import(PARSELETS, 'IPrefixParselet');
-import(PARSELETS, 'NumberParselet');
 import(PARSELETS, 'PrefixOperatorParselet');
 import(PARSELETS, 'BinaryOperatorParselet');
 import(PARSELETS, 'PostfixOperatorParselet');
@@ -62,13 +61,11 @@ import(PARSELETS, 'ArrayParselet');
 import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
 import(PARSELETS, 'MemberAccessParselet');
-import(PARSELETS, 'KeywordParselet');
 import(PARSELETS, 'WhenParselet');
-import(PARSELETS, 'StringParselet');
 import(PARSELETS, 'CallParselet');
 import(PARSELETS, 'AccessParselet');
 import(PARSELETS, 'RangeParselet');
-import(PARSELETS, 'AtomParselet');
+import(PARSELETS, 'LiteralParselet');
 
 /* Ast */
 
