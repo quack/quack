@@ -31,5 +31,4 @@ class NilExpr implements Expr
   {
     return 'nil';
   }
-
 }

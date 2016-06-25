@@ -21,14 +21,39 @@
  */
 namespace QuackCompiler\Parselets;
 
+use \QuackCompiler\Ast\Expr\NumberExpr;
+use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Expr\AtomExpr;
+use \QuackCompiler\Ast\Expr\NilExpr;
+use \QuackCompiler\Ast\Expr\BoolExpr;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
 
-class AtomParselet implements IPrefixParselet
+class LiteralParselet implements IPrefixParselet
 {
   public function parse(Grammar $grammar, Token $token)
   {
-    return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
+    $tag = $token->getTag();
+
+    switch ($tag) {
+      case Tag::T_ATOM:
+        return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
+
+      case Tag::T_STRING:
+        return new StringExpr($grammar->parser->resolveScope($token->getPointer()));
+
+      case Tag::T_DOUBLE:
+      case Tag::T_INTEGER:
+        return new NumberExpr($grammar->parser->resolveScope($token->getPointer()),
+          $tag === Tag::T_DOUBLE ? 'double' : 'int');
+
+      case Tag::T_NIL:
+        return new NilExpr;
+
+      case Tag::T_TRUE:
+      case Tag::T_FALSE:
+        return new BoolExpr($tag === Tag::T_TRUE);
+    }
   }
 }
