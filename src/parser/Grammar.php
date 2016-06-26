@@ -285,22 +285,14 @@ class Grammar
     public function _breakStmt()
     {
         $this->parser->match(Tag::T_BREAK);
-        $expression = null;
-        if ($this->checker->startsExpr()) {
-            $expression = $this->_expr();
-        }
-
+        $expression = $this->_optExpr();;
         return new BreakStmt($expression);
     }
 
     public function _continueStmt()
     {
         $this->parser->match(Tag::T_CONTINUE);
-        $expression = null;
-        if ($this->checker->startsExpr()) {
-            $expression = $this->_expr();
-        }
-
+        $expression = $this->_optExpr();
         return new ContinueStmt($expression);
     }
 
@@ -329,11 +321,7 @@ class Grammar
     public function _returnStmt()
     {
         $this->parser->match('^');
-        $expression = null;
-
-        if ($this->checker->startsExpr()) {
-            $expression = $this->_expr();
-        }
+        $expression = $this->_optExpr();
 
         return new ReturnStmt($expression);
     }
@@ -649,17 +637,26 @@ class Grammar
         return $name;
     }
 
-    public function _expr($precedence = 0)
+    public function _optExpr()
+    {
+        return $this->_expr(0, true);
+    }
+
+    public function _expr($precedence = 0, $opt = false)
     {
         $token = $this->parser->consumeAndFetch();
         $prefix = $this->parser->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
-            throw (new SyntaxError)
-                -> expected('expression')
-                -> found($token)
-                -> on($this->parser->position())
-                -> source($this->parser->input);
+            if (!$opt) {
+                throw (new SyntaxError)
+                    -> expected('expression')
+                    -> found($token)
+                    -> on($this->parser->position())
+                    -> source($this->parser->input);
+            } else {
+                return null;
+            }
         }
 
         $left = $prefix->parse($this, $token);

@@ -178,13 +178,6 @@ abstract class Parser
         return $this->lookahead->getTag() === $tag;
     }
 
-    public function isOperator()
-    {
-        $op = $this->lookahead->getTag();
-        $op_table = array_values(Tag::getOpTable());
-        return in_array($op, $op_table, true);
-    }
-
     public function consume()
     {
         $pointer = $this->lookahead === null ?: $this->lookahead->getPointer();
