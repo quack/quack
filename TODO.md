@@ -20,8 +20,12 @@
 - [x] Implement `<expr> .. <expr> by <expr>` syntax
 - [x] Implement atoms as expressions
 - [x] Create a single parselet for literal values
-- [ ] Implement short syntax for `open` statements
+- [x] Verify associative array definitions
+- [x] Implement short syntax for `open` statements
+- [x] Make print an expression and stdout an alias for echo
 - [ ] Implement partial function parsing
 - [ ] Implement static properties (without semantic validation)
 - [ ] Verify property definitions for classes
-- [ ] Verify associative array definitions
+- [ ] Implement trait support
+- [ ] Fix line-0-bug
+- [ ] Better syntax error output
