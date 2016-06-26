@@ -654,9 +654,9 @@ class Grammar
                     -> found($token)
                     -> on($this->parser->position())
                     -> source($this->parser->input);
-            } else {
-                return null;
             }
+
+            return null;
         }
 
         $left = $prefix->parse($this, $token);
