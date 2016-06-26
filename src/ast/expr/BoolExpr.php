@@ -25,15 +25,15 @@ use \QuackCompiler\Parser\Parser;
 
 class BoolExpr implements Expr
 {
-  public $value;
+    public $value;
 
-  public function __construct($value)
-  {
-    $this->value = (bool) $value;
-  }
+    public function __construct($value)
+    {
+        $this->value = (bool) $value;
+    }
 
-  public function format(Parser $_)
-  {
-    return $this->value ? 'true' : 'false';
-  }
+    public function format(Parser $_)
+    {
+        return $this->value ? 'true' : 'false';
+    }
 }

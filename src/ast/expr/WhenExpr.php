@@ -25,14 +25,15 @@ use \QuackCompiler\Parser\Parser;
 
 class WhenExpr implements Expr
 {
-  public $cases;
+    public $cases;
 
-  public function __construct($cases)
-  {
-    $this->cases = $cases;
-  }
+    public function __construct($cases)
+    {
+        $this->cases = $cases;
+    }
 
-  public function format(Parser $_)
-  {
-  }
+    public function format(Parser $_)
+    {
+        throw new \Exception;
+    }
 }

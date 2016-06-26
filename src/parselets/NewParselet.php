@@ -28,27 +28,27 @@ use \QuackCompiler\Lexer\Token;
 
 class NewParselet implements IPrefixParselet
 {
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $class_name = $grammar->qualifiedName();
-    $ctor_args = [];
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $class_name = $grammar->qualifiedName();
+        $ctor_args = [];
 
-    if ($grammar->parser->is('[')) {
-      $grammar->parser->consume();
+        if ($grammar->parser->is('[')) {
+            $grammar->parser->consume();
 
-      while ($grammar->checker->startsExpr()) {
-        $ctor_args[] = $grammar->_expr();
+            while ($grammar->checker->startsExpr()) {
+                $ctor_args[] = $grammar->_expr();
 
-        if (!$grammar->parser->is(']')) {
-          $grammar->parser->match(';');
+                if (!$grammar->parser->is(']')) {
+                    $grammar->parser->match(';');
+                }
+            }
+
+            $grammar->parser->match(']');
+        } else {
+            $grammar->parser->match('!');
         }
-      }
 
-      $grammar->parser->match(']');
-    } else {
-      $grammar->parser->match('!');
+        return new NewExpr($class_name, $ctor_args);
     }
-
-    return new NewExpr($class_name, $ctor_args);
-  }
 }

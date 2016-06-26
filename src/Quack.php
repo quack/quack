@@ -2,27 +2,27 @@
 
 function args_have()
 {
-  global $argv;
-  return count(array_intersect($argv, func_get_args())) > 0;
+    global $argv;
+    return count(array_intersect($argv, func_get_args())) > 0;
 }
 
 function no_args()
 {
-  global $argv;
-  return count($argv) === 1;
+    global $argv;
+    return count($argv) === 1;
 }
 
 function quack()
 {
-  if (no_args() || args_have('-h', '--help')) {
-    help();
-    return;
-  }
+    if (no_args() || args_have('-h', '--help')) {
+        help();
+        return;
+    }
 }
 
 function help()
 {
-  echo <<<TEXT
+    echo <<<TEXT
 Usage: ./quack [options] [.qk files]
 
 Common:
@@ -51,7 +51,7 @@ Target:
   --plug <backend>                  Plugs your own backend
 
 TEXT
-;
+    ;
 }
 
 quack();

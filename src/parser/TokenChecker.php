@@ -25,99 +25,98 @@ use \QuackCompiler\Lexer\Tag;
 
 class TokenChecker
 {
-  private $parser;
+    private $parser;
 
-  function __construct(TokenReader $parser)
-  {
-    $this->parser = $parser;
-  }
+    public function __construct(TokenReader $parser)
+    {
+        $this->parser = $parser;
+    }
 
-  function startsTopStmt()
-  {
-    return $this->startsStmt()
-        || $this->startsClassDeclStmt()
-        || $this->parser->is(Tag::T_STRUCT)
-        || $this->parser->is(Tag::T_FN)
-        || $this->parser->is(Tag::T_MODULE)
-        || $this->parser->is(Tag::T_OPEN)
-        || $this->parser->is(Tag::T_CONST);
-  }
+    public function startsTopStmt()
+    {
+        return $this->startsStmt()
+            || $this->startsClassDeclStmt()
+            || $this->parser->is(Tag::T_STRUCT)
+            || $this->parser->is(Tag::T_FN)
+            || $this->parser->is(Tag::T_MODULE)
+            || $this->parser->is(Tag::T_OPEN)
+            || $this->parser->is(Tag::T_CONST);
+    }
 
-  function startsInnerStmt()
-  {
-    return $this->startsStmt()
-        || $this->parser->is(Tag::T_FN)
-        || $this->startsClassDeclStmt();
-  }
+    public function startsInnerStmt()
+    {
+        return $this->startsStmt()
+            || $this->parser->is(Tag::T_FN)
+            || $this->startsClassDeclStmt();
+    }
 
-  function startsStmt()
-  {
-    return $this->parser->is(Tag::T_IF)       // Done
-        || $this->parser->is(Tag::T_LET)      // Done
-        || $this->parser->is(Tag::T_WHILE)    // Done
-        || $this->parser->is(Tag::T_DO)       // Done
-        || $this->parser->is(Tag::T_FOR)      // Done
-        || $this->parser->is(Tag::T_FOREACH)  // Done
-        || $this->parser->is(Tag::T_SWITCH)   // Done
-        || $this->parser->is(Tag::T_TRY)      // Done
-        || $this->parser->is(Tag::T_BREAK)    // Done
-        || $this->parser->is(Tag::T_CONTINUE) // Done
-        || $this->parser->is(Tag::T_GOTO)     // Done
-        || $this->parser->is(Tag::T_GLOBAL)   // Done
-        || $this->parser->is(Tag::T_RAISE)    // Done
-        || $this->parser->is(Tag::T_PRINT)    // Done
-        || $this->parser->is(Tag::T_BEGIN)    // Done
-        || $this->parser->is('^')             // Done
-        || $this->parser->is(':-');           // Done
-  }
+    public function startsStmt()
+    {
+        return $this->parser->is(Tag::T_IF)       // Done
+            || $this->parser->is(Tag::T_LET)      // Done
+            || $this->parser->is(Tag::T_WHILE)    // Done
+            || $this->parser->is(Tag::T_DO)       // Done
+            || $this->parser->is(Tag::T_FOR)      // Done
+            || $this->parser->is(Tag::T_FOREACH)  // Done
+            || $this->parser->is(Tag::T_SWITCH)   // Done
+            || $this->parser->is(Tag::T_TRY)      // Done
+            || $this->parser->is(Tag::T_BREAK)    // Done
+            || $this->parser->is(Tag::T_CONTINUE) // Done
+            || $this->parser->is(Tag::T_GOTO)     // Done
+            || $this->parser->is(Tag::T_GLOBAL)   // Done
+            || $this->parser->is(Tag::T_RAISE)    // Done
+            || $this->parser->is(Tag::T_BEGIN)    // Done
+            || $this->parser->is('^')             // Done
+            || $this->parser->is(':-');           // Done
+    }
 
-  function startsExpr()
-  {
-    return $this->parser->is(Tag::T_INTEGER)
-        || $this->parser->is(Tag::T_DOUBLE)
-        || $this->parser->is(Tag::T_FN)
-        || $this->parser->is(Tag::T_REQUIRE)
-        || $this->parser->is(Tag::T_INCLUDE)
-        || $this->parser->is(Tag::T_IDENT)
-        || $this->parser->is(Tag::T_TRUE)
-        || $this->parser->is(Tag::T_FALSE)
-        || $this->parser->is(Tag::T_NIL)
-        || $this->parser->is(Tag::T_WHEN)
-        || $this->parser->is(Tag::T_STRING)
-        || $this->parser->is(Tag::T_ATOM)
-        || $this->parser->isOperator()
-        || $this->parser->is('{')
-        || $this->parser->is('(');
-  }
+    public function startsExpr()
+    {
+        return $this->parser->is(Tag::T_INTEGER)
+            || $this->parser->is(Tag::T_DOUBLE)
+            || $this->parser->is(Tag::T_FN)
+            || $this->parser->is(Tag::T_REQUIRE)
+            || $this->parser->is(Tag::T_INCLUDE)
+            || $this->parser->is(Tag::T_IDENT)
+            || $this->parser->is(Tag::T_TRUE)
+            || $this->parser->is(Tag::T_FALSE)
+            || $this->parser->is(Tag::T_NIL)
+            || $this->parser->is(Tag::T_WHEN)
+            || $this->parser->is(Tag::T_STRING)
+            || $this->parser->is(Tag::T_ATOM)
+            || $this->parser->isOperator()
+            || $this->parser->is('{')
+            || $this->parser->is('(');
+    }
 
-  function startsClassDeclStmt()
-  {
-    return $this->parser->is(Tag::T_CLASS);
-  }
+    public function startsClassDeclStmt()
+    {
+        return $this->parser->is(Tag::T_CLASS);
+    }
 
-  function startsParameter()
-  {
-    return $this->parser->is('...')
-        || $this->parser->is('*')
-        || $this->parser->is(Tag::T_IDENT);
-  }
+    public function startsParameter()
+    {
+        return $this->parser->is('...')
+            || $this->parser->is('*')
+            || $this->parser->is(Tag::T_IDENT);
+    }
 
-  function startsCase()
-  {
-    return $this->parser->is(Tag::T_CASE)
-        || $this->parser->is(Tag::T_ELSE);
-  }
+    public function startsCase()
+    {
+        return $this->parser->is(Tag::T_CASE)
+            || $this->parser->is(Tag::T_ELSE);
+    }
 
-  function startsClassStmt()
-  {
-    return $this->parser->is(Tag::T_FN)
-        || $this->parser->is(Tag::T_CONST)
-        || $this->parser->is(Tag::T_OPEN)
-        || $this->parser->is(Tag::T_IDENT);
-  }
+    public function startsClassStmt()
+    {
+        return $this->parser->is(Tag::T_FN)
+            || $this->parser->is(Tag::T_CONST)
+            || $this->parser->is(Tag::T_OPEN)
+            || $this->parser->is(Tag::T_IDENT);
+    }
 
-  function isEoF()
-  {
-    return $this->parser->lookahead->getTag() === 0;
-  }
+    public function isEoF()
+    {
+        return $this->parser->lookahead->getTag() === 0;
+    }
 }

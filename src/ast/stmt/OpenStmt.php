@@ -25,31 +25,31 @@ use \QuackCompiler\Parser\Parser;
 
 class OpenStmt implements Stmt
 {
-  public $module;
-  public $alias;
-  public $type;
-  public $subprops;
+    public $module;
+    public $alias;
+    public $type;
+    public $subprops;
 
-  public function __construct($module, $alias = NULL, $type = NULL, $subprops = NULL)
-  {
-    $this->module = $module;
-    $this->alias = $alias;
-    $this->type = $type;
-    $this->subprops = $subprops;
-  }
-
-  public function format(Parser $parser)
-  {
-    $string_builder = ['open '];
-    $string_builder[] = implode('.', $this->module);
-
-    if (!is_null($this->alias)) {
-      $string_builder[] = ' as ';
-      $string_builder[] = $this->alias;
+    public function __construct($module, $alias = null, $type = null, $subprops = null)
+    {
+        $this->module = $module;
+        $this->alias = $alias;
+        $this->type = $type;
+        $this->subprops = $subprops;
     }
 
-    $string_builder[] = PHP_EOL;
+    public function format(Parser $parser)
+    {
+        $string_builder = ['open '];
+        $string_builder[] = implode('.', $this->module);
 
-    return implode($string_builder);
-  }
+        if (!is_null($this->alias)) {
+            $string_builder[] = ' as ';
+            $string_builder[] = $this->alias;
+        }
+
+        $string_builder[] = PHP_EOL;
+
+        return implode($string_builder);
+    }
 }

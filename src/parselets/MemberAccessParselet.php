@@ -33,15 +33,18 @@ use \QuackCompiler\Lexer\Tag;
 
 class MemberAccessParselet implements IInfixParselet
 {
-  public function parse(Grammar $grammar, Expr $left, Token $token)
-  {
-    $right = $grammar->_name();
-    return new OperatorExpr($left, $token->getTag(),
-      new NameExpr($grammar->parser->resolveScope($right->getPointer())));
-  }
+    public function parse(Grammar $grammar, Expr $left, Token $token)
+    {
+        $right = $grammar->_name();
+        return new OperatorExpr(
+            $left,
+            $token->getTag(),
+            new NameExpr($grammar->parser->resolveScope($right->getPointer()))
+        );
+    }
 
-  public function getPrecedence()
-  {
-    return Precedence::MEMBER_ACCESS;
-  }
+    public function getPrecedence()
+    {
+        return Precedence::MEMBER_ACCESS;
+    }
 }

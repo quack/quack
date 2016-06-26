@@ -32,28 +32,30 @@ use \QuackCompiler\Parser\Grammar;
 
 class LiteralParselet implements IPrefixParselet
 {
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $tag = $token->getTag();
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $tag = $token->getTag();
 
-    switch ($tag) {
-      case Tag::T_ATOM:
-        return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
+        switch ($tag) {
+            case Tag::T_ATOM:
+                return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
 
-      case Tag::T_STRING:
-        return new StringExpr($grammar->parser->resolveScope($token->getPointer()));
+            case Tag::T_STRING:
+                return new StringExpr($grammar->parser->resolveScope($token->getPointer()));
 
-      case Tag::T_DOUBLE:
-      case Tag::T_INTEGER:
-        return new NumberExpr($grammar->parser->resolveScope($token->getPointer()),
-          $tag === Tag::T_DOUBLE ? 'double' : 'int');
+            case Tag::T_DOUBLE:
+            case Tag::T_INTEGER:
+                return new NumberExpr(
+                    $grammar->parser->resolveScope($token->getPointer()),
+                    $tag === Tag::T_DOUBLE ? 'double' : 'int'
+                );
 
-      case Tag::T_NIL:
-        return new NilExpr;
+            case Tag::T_NIL:
+                return new NilExpr;
 
-      case Tag::T_TRUE:
-      case Tag::T_FALSE:
-        return new BoolExpr($tag === Tag::T_TRUE);
+            case Tag::T_TRUE:
+            case Tag::T_FALSE:
+                return new BoolExpr($tag === Tag::T_TRUE);
+        }
     }
-  }
 }

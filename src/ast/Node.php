@@ -25,5 +25,5 @@ use \QuackCompiler\Parser\Parser;
 
 interface Node
 {
-  function format(Parser $parser);
+    public function format(Parser $parser);
 }

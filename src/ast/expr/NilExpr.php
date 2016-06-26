@@ -25,10 +25,12 @@ use \QuackCompiler\Parser\Parser;
 
 class NilExpr implements Expr
 {
-  public function __construct() {}
+    public function __construct()
+    {
+    }
 
-  public function format(Parser $_)
-  {
-    return 'nil';
-  }
+    public function format(Parser $_)
+    {
+        return 'nil';
+    }
 }

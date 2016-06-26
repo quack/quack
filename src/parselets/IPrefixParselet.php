@@ -26,5 +26,5 @@ use \QuackCompiler\Parser\Grammar;
 
 interface IPrefixParselet
 {
-  function parse(Grammar $parser, Token $token);
+    public function parse(Grammar $parser, Token $token);
 }

@@ -27,27 +27,26 @@ use \QuackCompiler\Parser\Parser;
 
 class PrefixExpr implements Expr
 {
-  private $operator;
-  private $right;
+    private $operator;
+    private $right;
 
-  public function __construct(Token $operator, Expr $right)
-  {
-    $this->operator = $operator->getTag();
-    $this->right = $right;
-  }
-
-  public function format(Parser $parser)
-  {
-    $string_builder = [];
-    if ($this->operator === Tag::T_NOT) {
-      $string_builder[] = 'not ';
-    } else {
-      $string_builder[] = $this->operator;
+    public function __construct(Token $operator, Expr $right)
+    {
+        $this->operator = $operator->getTag();
+        $this->right = $right;
     }
 
-    $string_builder[] = $this->right->format($parser);
+    public function format(Parser $parser)
+    {
+        $string_builder = [];
+        if ($this->operator === Tag::T_NOT) {
+            $string_builder[] = 'not ';
+        } else {
+            $string_builder[] = $this->operator;
+        }
 
-    return implode($string_builder);
-  }
+        $string_builder[] = $this->right->format($parser);
 
+        return implode($string_builder);
+    }
 }

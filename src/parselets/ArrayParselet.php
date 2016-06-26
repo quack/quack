@@ -27,9 +27,9 @@ use \QuackCompiler\Lexer\Token;
 
 class ArrayParselet implements IPrefixParselet
 {
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $items = iterator_to_array($grammar->_arrayPairList());
-    return new ArrayExpr($items);
-  }
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $items = iterator_to_array($grammar->_arrayPairList());
+        return new ArrayExpr($items);
+    }
 }

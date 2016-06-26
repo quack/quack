@@ -25,15 +25,15 @@ use \QuackCompiler\Parser\Parser;
 
 class StringExpr implements Expr
 {
-  public $value;
+    public $value;
 
-  public function __construct($value)
-  {
-    $this->value = $value;
-  }
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
 
-  public function format(Parser $parser)
-  {
-    return $this->value;
-  }
+    public function format(Parser $parser)
+    {
+        return $this->value;
+    }
 }

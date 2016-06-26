@@ -25,17 +25,17 @@ use \QuackCompiler\Parser\Parser;
 
 class CallExpr implements Expr
 {
-  public $func;
-  public $arguments;
+    public $func;
+    public $arguments;
 
-  public function __construct($func, $arguments)
-  {
-    $this->func = $func;
-    $this->arguments = $arguments;
-  }
+    public function __construct($func, $arguments)
+    {
+        $this->func = $func;
+        $this->arguments = $arguments;
+    }
 
-  public function format(Parser $parser)
-  {
-    throw new \Exception;
-  }
+    public function format(Parser $parser)
+    {
+        throw new \Exception;
+    }
 }

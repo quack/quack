@@ -28,10 +28,10 @@ use \QuackCompiler\Lexer\Token;
 
 class GroupParselet implements IPrefixParselet
 {
-  public function parse(Grammar $grammar, Token $token)
-  {
-    $expr = $grammar->_expr();
-    $grammar->parser->match(')');
-    return $expr;
-  }
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $expr = $grammar->_expr();
+        $grammar->parser->match(')');
+        return $expr;
+    }
 }

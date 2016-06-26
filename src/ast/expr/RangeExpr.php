@@ -25,19 +25,19 @@ use \QuackCompiler\Parser\Parser;
 
 class RangeExpr implements Expr
 {
-  public $from;
-  public $to;
-  public $by;
+    public $from;
+    public $to;
+    public $by;
 
-  public function __construct($from, $to, $by)
-  {
-    $this->from = $from;
-    $this->to = $to;
-    $this->by = $by;
-  }
+    public function __construct($from, $to, $by)
+    {
+        $this->from = $from;
+        $this->to = $to;
+        $this->by = $by;
+    }
 
-  public function format(Parser $parser)
-  {
-    throw new \Exception;
-  }
+    public function format(Parser $parser)
+    {
+        throw new \Exception;
+    }
 }

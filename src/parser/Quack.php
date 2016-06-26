@@ -36,10 +36,10 @@ $lexer = new Tokenizer(file_get_contents('../../bootstrap/parser/Parser.qk'));
 $parser = new TokenReader($lexer);
 
 try {
-  $parser->parse();
-  $parser->dumpAst();
+    $parser->parse();
+    $parser->dumpAst();
 } catch (SyntaxError $e) {
-  echo $e;
+    echo $e;
 }
 
 echo PHP_EOL;

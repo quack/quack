@@ -28,20 +28,20 @@ use \QuackCompiler\Lexer\Token;
 
 class PostfixOperatorParselet implements IInfixParselet
 {
-  public $precedence;
+    public $precedence;
 
-  public function __construct($precedence)
-  {
-    $this->precedence = $precedence;
-  }
+    public function __construct($precedence)
+    {
+        $this->precedence = $precedence;
+    }
 
-  public function parse(Grammar $parser, Expr $left, Token $token)
-  {
-    return new PostfixExpr($left, $token->getTag());
-  }
+    public function parse(Grammar $parser, Expr $left, Token $token)
+    {
+        return new PostfixExpr($left, $token->getTag());
+    }
 
-  public function getPrecedence()
-  {
-    return $this->precedence;
-  }
+    public function getPrecedence()
+    {
+        return $this->precedence;
+    }
 }

@@ -30,21 +30,21 @@ use \QuackCompiler\Lexer\Tag;
 
 class RangeParselet implements IInfixParselet
 {
-  public function parse(Grammar $grammar, Expr $from, Token $token)
-  {
-    $to = $grammar->_expr();
-    $by = NULL;
+    public function parse(Grammar $grammar, Expr $from, Token $token)
+    {
+        $to = $grammar->_expr();
+        $by = null;
 
-    if ($grammar->parser->is(Tag::T_BY)) {
-      $grammar->parser->consume();
-      $by = $grammar->_expr();
+        if ($grammar->parser->is(Tag::T_BY)) {
+            $grammar->parser->consume();
+            $by = $grammar->_expr();
+        }
+
+        return new RangeExpr($from, $to, $by);
     }
 
-    return new RangeExpr($from, $to, $by);
-  }
-
-  public function getPrecedence()
-  {
-    return Precedence::RANGE;
-  }
+    public function getPrecedence()
+    {
+        return Precedence::RANGE;
+    }
 }
