@@ -86,7 +86,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_SUPER, "super"));
         $this->reserve(new Word(Tag::T_IS, "is"));
         $this->reserve(new Word(Tag::T_DERIVING, "deriving"));
-        $this->reserve(new Word(Tag::T_PRINT, "print"));
         $this->reserve(new Word(Tag::T_NOT, "not"));
         $this->reserve(new Word(Tag::T_FN, "fn"));
         $this->reserve(new Word(Tag::T_REQUIRE, "require"));
