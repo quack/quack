@@ -52,41 +52,32 @@ class TokenChecker
 
     public function startsStmt()
     {
-        return $this->parser->is(Tag::T_IF)       // Done
-            || $this->parser->is(Tag::T_LET)      // Done
-            || $this->parser->is(Tag::T_WHILE)    // Done
-            || $this->parser->is(Tag::T_DO)       // Done
-            || $this->parser->is(Tag::T_FOR)      // Done
-            || $this->parser->is(Tag::T_FOREACH)  // Done
-            || $this->parser->is(Tag::T_SWITCH)   // Done
-            || $this->parser->is(Tag::T_TRY)      // Done
-            || $this->parser->is(Tag::T_BREAK)    // Done
-            || $this->parser->is(Tag::T_CONTINUE) // Done
-            || $this->parser->is(Tag::T_GOTO)     // Done
-            || $this->parser->is(Tag::T_GLOBAL)   // Done
-            || $this->parser->is(Tag::T_RAISE)    // Done
-            || $this->parser->is(Tag::T_BEGIN)    // Done
-            || $this->parser->is('^')             // Done
-            || $this->parser->is(':-');           // Done
-    }
+        static $possible_stmts = [
+            Tag::T_IF,
+            Tag::T_LET,
+            Tag::T_WHILE,
+            Tag::T_DO,
+            Tag::T_FOR,
+            Tag::T_FOREACH,
+            Tag::T_SWITCH,
+            Tag::T_TRY,
+            Tag::T_BREAK,
+            Tag::T_CONTINUE,
+            Tag::T_GOTO,
+            Tag::T_GLOBAL,
+            Tag::T_RAISE,
+            Tag::T_BEGIN,
+            '^',
+            ':-'
+        ];
 
-    public function startsExpr()
-    {
-        return $this->parser->is(Tag::T_INTEGER)
-            || $this->parser->is(Tag::T_DOUBLE)
-            || $this->parser->is(Tag::T_FN)
-            || $this->parser->is(Tag::T_REQUIRE)
-            || $this->parser->is(Tag::T_INCLUDE)
-            || $this->parser->is(Tag::T_IDENT)
-            || $this->parser->is(Tag::T_TRUE)
-            || $this->parser->is(Tag::T_FALSE)
-            || $this->parser->is(Tag::T_NIL)
-            || $this->parser->is(Tag::T_WHEN)
-            || $this->parser->is(Tag::T_STRING)
-            || $this->parser->is(Tag::T_ATOM)
-            || $this->parser->isOperator()
-            || $this->parser->is('{')
-            || $this->parser->is('(');
+        foreach ($possible_stmts as $token) {
+            if ($this->parser->is($token)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function startsClassDeclStmt()
