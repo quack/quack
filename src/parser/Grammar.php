@@ -285,7 +285,7 @@ class Grammar
     public function _breakStmt()
     {
         $this->parser->match(Tag::T_BREAK);
-        $expression = $this->_optExpr();;
+        $expression = $this->_optExpr();
         return new BreakStmt($expression);
     }
 
