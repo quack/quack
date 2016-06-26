@@ -23,9 +23,12 @@
 - [x] Verify associative array definitions
 - [x] Implement short syntax for `open` statements
 - [x] Make print an expression and stdout an alias for echo
-- [ ] Implement partial function parsing
+- [x] Implement partial function parsing
 - [ ] Implement static properties (without semantic validation)
 - [ ] Verify property definitions for classes
 - [ ] Implement trait support
 - [ ] Fix line-0-bug
 - [ ] Better syntax error output
+- [ ] Implement where-clause
+- [ ] Make do-notation accept multiple expressions
+- [ ] Make function-def be a statement. Fix parsing

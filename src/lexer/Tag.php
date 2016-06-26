@@ -91,16 +91,33 @@ class Tag
 
     public static function & getPartialOperators() {
         static $op_table = [
-            // Arithmetic
-            '+', '-', '*', '/', '**', Tag::T_MOD,
-            // Boolean algebra
-            Tag::T_NOT, Tag::T_AND, Tag::T_OR,
-            // Comparison
-            '<', '>', '<=', '>=', '=', '<>', '=~',
-            // Bitwise operations
-            '<<', '>>', '~', '|', '&',
-            // Others
-            '|>', ':-', '.', '?.', '??', '+++', '++'
+            '+',
+            '-',
+            '*',
+            '/',
+            '**',
+            Tag::T_MOD,
+            Tag::T_NOT,
+            Tag::T_AND,
+            Tag::T_OR,
+            '<',
+            '>',
+            '<=',
+            '>=',
+            '=',
+            '<>',
+            '=~',
+            '<<',
+            '>>',
+            '~',
+            '|',
+            '&',
+            '|>',
+            '.',
+            '?.',
+            '??',
+            '+++',
+            '++',
         ];
 
         return $op_table;

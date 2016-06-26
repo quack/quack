@@ -43,6 +43,7 @@ use \QuackCompiler\Parselets\WhenParselet;
 use \QuackCompiler\Parselets\CallParselet;
 use \QuackCompiler\Parselets\AccessParselet;
 use \QuackCompiler\Parselets\RangeParselet;
+use \QuackCompiler\Parselets\PartialFuncParselet;
 
 abstract class Parser
 {
@@ -91,6 +92,7 @@ abstract class Parser
 
     private function registerParselets()
     {
+        $this->register('&(', new PartialFuncParselet);
         $this->register(Tag::T_INTEGER, new LiteralParselet);
         $this->register(Tag::T_DOUBLE, new LiteralParselet);
         $this->register(Tag::T_STRING, new LiteralParselet);
