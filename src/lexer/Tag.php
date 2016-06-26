@@ -64,7 +64,6 @@ class Tag
     const T_OR = 512;
     const T_XOR = 513;
     const T_EXTENSION = 800;
-    const T_PRINT = 801;
     const T_TRY = 515;
     const T_RESCUE = 516;
     const T_FINALLY = 517;

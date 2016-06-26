@@ -143,7 +143,6 @@ class Grammar
             Tag::T_GOTO     => '_gotoStmt',
             Tag::T_GLOBAL   => '_globalStmt',
             Tag::T_RAISE    => '_raiseStmt',
-            Tag::T_PRINT    => '_printStmt',
             Tag::T_BEGIN    => '_blockStmt',
             '^'             => '_returnStmt',
             ':-'            => '_labelStmt'
@@ -325,14 +324,6 @@ class Grammar
         $expression = $this->_expr();
 
         return new RaiseStmt($expression);
-    }
-
-    public function _printStmt()
-    {
-        $this->parser->match(Tag::T_PRINT);
-        $expression = $this->_expr();
-
-        return new PrintStmt($expression);
     }
 
     public function _returnStmt()

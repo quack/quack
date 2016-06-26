@@ -2,8 +2,8 @@
 module QuackCompiler.Parser
 
 open .Exception
-open QuackCompiler.Lexer.{ Tag; Token; Tokenizer }
-open QuackCompiler.Parselets.{
+open .QuackCompiler.Lexer { Tag; Token; Tokenizer }
+open .QuackCompiler.Parselets {
   IPrefixParselet; IInfixParselet; BinaryOperatorParselet; NumberParselet;
   NameParselet; PostfixOperatorParselet; PrefixOperatorParselet;
   TernaryParselet; GroupParselet; FunctionParselet; IncludeParselet;
