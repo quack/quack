@@ -181,8 +181,15 @@ class Grammar
     public function _exprStmt()
     {
         $this->parser->match(Tag::T_DO);
-        $expr = $this->_expr();
-        return new ExprStmt($expr);
+
+        $expr_list = [$this->_expr()];
+
+        while ($this->parser->is(',')) {
+            $this->parser->consume();
+            $expr_list[] = $this->_expr();
+        }
+
+        return new ExprStmt($expr_list);
     }
 
     public function _blockStmt()
