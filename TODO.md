@@ -32,3 +32,4 @@
 - [ ] Better syntax error output
 - [ ] Implement where-clause
 - [ ] Make function-def be a statement. Fix parsing
+- [ ] Implement built-in support for regexes
