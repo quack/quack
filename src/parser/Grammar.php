@@ -581,7 +581,7 @@ class Grammar
 
         $this->parser->match('[');
 
-        while ($this->checker->startsParameter()) {
+        while (!$this->parser->is(']')) {
             $parameters[] = $this->_parameter();
 
             if ($this->parser->is(';')) {

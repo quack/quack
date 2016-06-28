@@ -73,7 +73,6 @@ class Tag
     const T_CASE = 522;
     const T_SUPER = 525;
     const T_IS = 527;
-    const T_DERIVING = 529;
     const T_MOD = 292;
     const T_NOT = 293;
     const T_FN = 294;

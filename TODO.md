@@ -27,10 +27,10 @@
 - [x] Make do-notation accept multiple expressions
 - [x] Make let-notation accept multiple definitions
 - [x] Implement where-clause
+- [x] Make function-def be a statement. Fix parsing
 - [ ] Implement static properties (without semantic validation)
 - [ ] Verify property definitions for classes
 - [ ] Implement trait support
 - [ ] Fix line-0-bug
 - [ ] Better syntax error output
-- [ ] Make function-def be a statement. Fix parsing
 - [ ] Implement built-in support for regexes

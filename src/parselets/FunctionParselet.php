@@ -32,17 +32,9 @@ class FunctionParselet implements IPrefixParselet
     const TYPE_EXPRESSION = 0x1;
     const TYPE_STATEMENT  = 0x2;
 
-    private $is_static;
-
-    public function __construct($is_static = false)
-    {
-        $this->is_static = $is_static;
-    }
-
     public function parse(Grammar $grammar, Token $token)
     {
         $this->is_static && $grammar->parser->consume(); // Eat [fn] when static function
-        // TODO: implement use
         ($by_reference = $grammar->parser->is('*')) && $grammar->parser->consume();
 
         $parameters = [];
@@ -52,22 +44,23 @@ class FunctionParselet implements IPrefixParselet
 
         $grammar->parser->match('{');
 
-        while ($grammar->checker->startsParameter()) {
+        while (!$grammar->parser->is('|')) {
             $parameters[] = $grammar->_parameter();
 
             if ($grammar->parser->is(';')) {
                 $grammar->parser->consume();
-            } else {
-                break;
+                continue;
             }
+
+            break;
         }
 
         $grammar->parser->match('|');
-        if ($grammar->parser->is('[')) {
+        if ($grammar->parser->is(Tag::T_BEGIN)) {
             $type = static::TYPE_STATEMENT;
-            $grammar->parser->match('[');
+            $grammar->parser->consume();
             $value = iterator_to_array($grammar->_innerStmtList());
-            $grammar->parser->match(']');
+            $grammar->parser->match(Tag::T_END);
         } else {
             $type = static::TYPE_EXPRESSION;
             $value = $grammar->_expr();
@@ -75,7 +68,7 @@ class FunctionParselet implements IPrefixParselet
 
         $grammar->parser->match('}');
 
-        if ($grammar->parser->is(Tag::T_DERIVING)) {
+        if ($grammar->parser->is(Tag::T_IN)) {
             $grammar->parser->consume();
 
             if ($grammar->parser->is('{')) {
