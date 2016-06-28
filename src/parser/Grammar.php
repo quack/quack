@@ -216,11 +216,24 @@ class Grammar
     public function _letStmt()
     {
         $this->parser->match(Tag::T_LET);
+        $definitions = [];
+
+        // First definition is required (without comma)
+        // I could just use a goto, but, Satan would want my soul...
         $name = $this->identifier();
         $this->parser->match(':-');
         $value = $this->_expr();
+        $definitions[$name] = $value;
 
-        return new LetStmt($name, $value);
+        if ($this->parser->is(',')) {
+            $this->parser->consume();
+            $name = $this->identifier();
+            $this->parser->match(':-');
+            $value = $this->_expr();
+            $definitions[$name] = $value;
+        }
+
+        return new LetStmt($definitions);
     }
 
     public function _whileStmt()
