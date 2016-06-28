@@ -25,6 +25,7 @@
 - [x] Make print an expression and stdout an alias for echo
 - [x] Implement partial function parsing
 - [x] Make do-notation accept multiple expressions
+- [x] Make let-notation accept multiple definitions
 - [ ] Implement static properties (without semantic validation)
 - [ ] Verify property definitions for classes
 - [ ] Implement trait support

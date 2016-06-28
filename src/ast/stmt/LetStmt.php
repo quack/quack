@@ -25,13 +25,11 @@ use \QuackCompiler\Parser\Parser;
 
 class LetStmt implements Stmt
 {
-    public $name;
-    public $value;
+    public $definitions;
 
-    public function __construct($name, $value)
+    public function __construct($definitions = [])
     {
-        $this->name = $name;
-        $this->value = $value;
+        $this->definitions = $definitions;
     }
 
     public function format(Parser $parser)
