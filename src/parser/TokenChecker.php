@@ -85,13 +85,6 @@ class TokenChecker
         return $this->parser->is(Tag::T_CLASS);
     }
 
-    public function startsParameter()
-    {
-        return $this->parser->is('...')
-            || $this->parser->is('*')
-            || $this->parser->is(Tag::T_IDENT);
-    }
-
     public function startsCase()
     {
         return $this->parser->is(Tag::T_CASE)
