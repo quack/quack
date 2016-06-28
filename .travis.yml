@@ -9,3 +9,6 @@ php:
 script:
   - make test module=lexer
   - make test module=parser
+
+notifications:
+  slack: quack-lang:CoU1jrj8PX8Do2Pkvl5Rmqdu
