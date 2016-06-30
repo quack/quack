@@ -87,6 +87,7 @@ class Tag
     const T_BY = 305;
     const T_WHEN = 306;
     const T_UNLESS = 307;
+    const T_MEMBER = 308;
 
     public static function & getPartialOperators() {
         static $op_table = [

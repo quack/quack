@@ -118,7 +118,7 @@ import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/PieceStmt');
 import(AST, 'stmt/PrintStmt');
-import(AST, 'stmt/PropertyStmt');
+import(AST, 'stmt/MemberStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/RescueStmt');
 import(AST, 'stmt/ReturnStmt');

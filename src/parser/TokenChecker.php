@@ -91,14 +91,6 @@ class TokenChecker
             || $this->parser->is(Tag::T_ELSE);
     }
 
-    public function startsClassStmt()
-    {
-        return $this->parser->is(Tag::T_FN)
-            || $this->parser->is(Tag::T_CONST)
-            || $this->parser->is(Tag::T_OPEN)
-            || $this->parser->is(Tag::T_IDENT);
-    }
-
     public function isEoF()
     {
         return $this->parser->lookahead->getTag() === 0;

@@ -23,21 +23,17 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class PropertyStmt implements Stmt
+class MemberStmt implements Stmt
 {
-    public $name;
-    public $value;
-    public $modifiers;
+    public $definitions;
 
-    public function __construct($name, $value, $modifiers = [])
+    public function __construct($definitions)
     {
-        $this->name = $name;
-        $this->value = $value;
-        $this->modifiers = $modifiers;
+        $this->definitions = $definitions;
     }
 
     public function format(Parser $parser)
     {
-        throw new TodoException;
+        throw new \Exception;
     }
 }
