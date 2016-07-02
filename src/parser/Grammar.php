@@ -79,16 +79,8 @@ class Grammar
 
     public function _topStmtList()
     {
-        while ($this->checker->startsTopStmt()) {
+        while (!$this->checker->isEoF()) {
             yield $this->_topStmt();
-        }
-
-        if (!$this->checker->isEoF()) {
-            throw (new SyntaxError)
-                -> expected('statement')
-                ->found($this->parser->lookahead)
-                -> on($this->parser->position())
-                -> source($this->parser->input);
         }
     }
 
@@ -385,33 +377,20 @@ class Grammar
 
     public function _topStmt()
     {
-        if ($this->checker->startsStmt()) {
-            return $this->_stmt();
-        }
+        $branch_table = [
+            Tag::T_BLUEPRINT => '_blueprintDeclStmt',
+            Tag::T_STRUCT    => '_structDeclStmt',
+            Tag::T_FN        => '_fnStmt',
+            Tag::T_MODULE    => '_moduleStmt',
+            Tag::T_OPEN      => '_openStmt',
+            Tag::T_CONST     => '_constStmt'
+        ];
 
-        if ($this->parser->is(Tag::T_BLUEPRINT)) {
-            return $this->_blueprintDeclStmt();
-        }
+        $next_tag = $this->parser->lookahead->getTag();
 
-        if ($this->parser->is(Tag::T_STRUCT)) {
-            return $this->_structDeclStmt();
-        }
-
-        if ($this->parser->is(Tag::T_FN)) {
-            return $this->_fnStmt();
-        }
-
-        if ($this->parser->is(Tag::T_MODULE)) {
-            return $this->_moduleStmt();
-        }
-
-        if ($this->parser->is(Tag::T_OPEN)) {
-            return $this->_openStmt();
-        }
-
-        if ($this->parser->is(Tag::T_CONST)) {
-            return $this->_constStmt();
-        }
+        return array_key_exists($next_tag, $branch_table)
+            ? call_user_func([$this, $branch_table[$next_tag]])
+            : $this->_stmt();
     }
 
     public function _innerStmt()
