@@ -70,12 +70,6 @@ class TokenChecker
         return false;
     }
 
-    public function startsCase()
-    {
-        return $this->parser->is(Tag::T_CASE)
-            || $this->parser->is(Tag::T_ELSE);
-    }
-
     public function isEoF()
     {
         return $this->parser->lookahead->getTag() === 0;

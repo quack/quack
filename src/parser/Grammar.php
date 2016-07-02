@@ -629,7 +629,9 @@ class Grammar
 
     public function _caseStmtList()
     {
-        while ($this->checker->startsCase()) {
+        $cases = [Tag::T_CASE, Tag::T_ELSE];
+
+        while (in_array($this->parser->lookahead->getTag(), $cases, true)) {
             $is_else = $this->parser->is(Tag::T_ELSE);
             $this->parser->consume();
             $value = $is_else ? null : $this->_expr();
