@@ -34,10 +34,14 @@ class TokenChecker
 
     public function startsInnerStmt()
     {
-        return $this->startsStmt()
-            || $this->parser->is(Tag::T_BLUEPRINT)
-            || $this->parser->is(Tag::T_STRUCT)
-            || $this->parser->is(Tag::T_FN);
+        $possible_inner_stmts = [
+            Tag::T_BLUEPRINT,
+            Tag::T_STRUCT,
+            Tag::T_FN
+        ];
+
+        return in_array($this->parser->lookahead->getTag(), $possible_inner_stmts, true)
+            || $this->startsStmt();
     }
 
     public function startsStmt()
@@ -61,13 +65,8 @@ class TokenChecker
             ':-'
         ];
 
-        foreach ($possible_stmts as $token) {
-            if ($this->parser->is($token)) {
-                return true;
-            }
-        }
-
-        return false;
+        $next_tag = $this->parser->lookahead->getTag();
+        return in_array($next_tag, $possible_stmts, true);
     }
 
     public function isEoF()

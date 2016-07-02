@@ -395,21 +395,17 @@ class Grammar
 
     public function _innerStmt()
     {
-        if ($this->checker->startsStmt()) {
-            return $this->_stmt();
-        }
+        $branch_table = [
+            Tag::T_FN        => '_fnStmt',
+            Tag::T_BLUEPRINT => '_blueprintStmt',
+            Tag::T_STRUCT    => '_structDeclStmt'
+        ];
 
-        if ($this->parser->is(Tag::T_FN)) {
-            return $this->_fnStmt();
-        }
+        $next_tag = $this->parser->lookahead->getTag();
 
-        if ($this->checker->is(Tag::T_BLUEPRINT)) {
-            return $this->_blueprintDeclStmt();
-        }
-
-        if ($this->parser->is(Tag::T_STRUCT)) {
-            return $this->_structDeclStmt();
-        }
+        return array_key_exists($next_tag, $branch_table)
+            ? call_user_func([$this, $branch_table[$next_tag]])
+            : $this->_stmt();
     }
 
     public function _blueprintStmt()
