@@ -58,7 +58,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_INIT, "init"));
         $this->reserve(new Word(Tag::T_SELF, "self"));
         $this->reserve(new Word(Tag::T_MODULE, "module"));
-        $this->reserve(new Word(Tag::T_CLASS, "class"));
+        $this->reserve(new Word(Tag::T_BLUEPRINT, "blueprint"));
         $this->reserve(new Word(Tag::T_GOTO, "goto"));
         $this->reserve(new Word(Tag::T_FOREACH, "foreach"));
         $this->reserve(new Word(Tag::T_IN, "in"));
@@ -98,6 +98,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_BY, "by"));
         $this->reserve(new Word(Tag::T_WHEN, "when"));
         $this->reserve(new Word(Tag::T_UNLESS, "unless"));
+        $this->reserve(new Word(Tag::T_MEMBER, "member"));
     }
 
     private function reserve(Word $t)

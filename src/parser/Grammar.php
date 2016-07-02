@@ -29,7 +29,7 @@ use \QuackCompiler\Ast\Expr\ArrayPairExpr;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
-use \QuackCompiler\Ast\Stmt\ClassStmt;
+use \QuackCompiler\Ast\Stmt\BlueprintStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
@@ -48,7 +48,7 @@ use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PieceStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
-use \QuackCompiler\Ast\Stmt\PropertyStmt;
+use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\RescueStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
@@ -79,16 +79,8 @@ class Grammar
 
     public function _topStmtList()
     {
-        while ($this->checker->startsTopStmt()) {
+        while (!$this->checker->isEoF()) {
             yield $this->_topStmt();
-        }
-
-        if (!$this->checker->isEoF()) {
-            throw (new SyntaxError)
-                -> expected('statement')
-                ->found($this->parser->lookahead)
-                -> on($this->parser->position())
-                -> source($this->parser->input);
         }
     }
 
@@ -99,10 +91,19 @@ class Grammar
         }
     }
 
-    public function _classStmtList()
+    public function _blueprintStmtList()
     {
-        while ($this->checker->startsClassStmt()) {
-            yield $this->_classStmt();
+        while (!$this->checker->isEoF()) {
+            switch ($this->parser->lookahead->getTag()) {
+                case Tag::T_FN:
+                case Tag::T_CONST:
+                case Tag::T_OPEN:
+                case Tag::T_MEMBER:
+                    yield $this->_blueprintStmt();
+                    continue 2;
+                default:
+                    break 2;
+            }
         }
     }
 
@@ -225,7 +226,7 @@ class Grammar
         $value = $this->_expr();
         $definitions[$name] = $value;
 
-        if ($this->parser->is(',')) {
+        while ($this->parser->is(',')) {
             $this->parser->consume();
             $name = $this->identifier();
             $this->parser->match(':-');
@@ -376,95 +377,90 @@ class Grammar
 
     public function _topStmt()
     {
-        if ($this->checker->startsStmt()) {
-            return $this->_stmt();
-        }
+        $branch_table = [
+            Tag::T_BLUEPRINT => '_blueprintDeclStmt',
+            Tag::T_STRUCT    => '_structDeclStmt',
+            Tag::T_FN        => '_fnStmt',
+            Tag::T_MODULE    => '_moduleStmt',
+            Tag::T_OPEN      => '_openStmt',
+            Tag::T_CONST     => '_constStmt'
+        ];
 
-        if ($this->checker->startsClassDeclStmt()) {
-            return $this->_classDeclStmt();
-        }
+        $next_tag = $this->parser->lookahead->getTag();
 
-        if ($this->parser->is(Tag::T_STRUCT)) {
-            return $this->_structDeclStmt();
-        }
-
-        if ($this->parser->is(Tag::T_FN)) {
-            return $this->_fnStmt();
-        }
-
-        if ($this->parser->is(Tag::T_MODULE)) {
-            return $this->_moduleStmt();
-        }
-
-        if ($this->parser->is(Tag::T_OPEN)) {
-            return $this->_openStmt();
-        }
-
-        if ($this->parser->is(Tag::T_CONST)) {
-            return $this->_constStmt();
-        }
+        return array_key_exists($next_tag, $branch_table)
+            ? call_user_func([$this, $branch_table[$next_tag]])
+            : $this->_stmt();
     }
 
     public function _innerStmt()
     {
-        if ($this->checker->startsStmt()) {
-            return $this->_stmt();
-        }
+        $branch_table = [
+            Tag::T_FN        => '_fnStmt',
+            Tag::T_BLUEPRINT => '_blueprintStmt',
+            Tag::T_STRUCT    => '_structDeclStmt'
+        ];
 
-        if ($this->parser->is(Tag::T_FN)) {
-            return $this->_fnStmt();
-        }
+        $next_tag = $this->parser->lookahead->getTag();
 
-        if ($this->checker->startsClassDeclStmt()) {
-            return $this->_classDeclStmt();
-        }
-
-        if ($this->parser->is(Tag::T_STRUCT)) {
-            return $this->_structDeclStmt();
-        }
+        return array_key_exists($next_tag, $branch_table)
+            ? call_user_func([$this, $branch_table[$next_tag]])
+            : $this->_stmt();
     }
 
-    public function _classStmt()
+    public function _blueprintStmt()
     {
-        if ($this->parser->is(Tag::T_CONST)) {
-            return $this->_constStmt();
-        }
+        $branch_table = [
+            Tag::T_OPEN   => '_openStmt',
+            Tag::T_FN     => '_fnStmt',
+            Tag::T_CONST  => '_constStmt',
+            Tag::T_MEMBER => '_memberStmt'
+        ];
 
-        if ($this->parser->is(Tag::T_OPEN)) {
-            return $this->_openStmt(); // TODO: Replace by traits
-        }
-
-        if ($this->parser->is(Tag::T_FN)) {
-            return $this->_fnStmt();
-        }
-
-        if ($this->parser->is(Tag::T_IDENT)) {
-            return $this->_property();
-        }
-
-        throw new \SyntaxError('TODO: Throw a syntax error');
+        return call_user_func([
+            $this,
+            $branch_table[$this->parser->lookahead->getTag()]
+        ]);
     }
 
-    public function _property($modifiers = [])
+    public function _memberStmt()
     {
+        $this->parser->match(Tag::T_MEMBER);
+        $definitions = [];
+
         $name = $this->identifier();
         $value = null;
 
         if ($this->parser->is(':-')) {
             $this->parser->consume();
-            $value = $this->identifier(); // TODO: Change for _staticScalar()
+            $value = $this->_expr();
         }
 
-        return new PropertyStmt($name, $value, $modifiers);
+        $definitions[$name] = $value;
+
+        while ($this->parser->is(',')) {
+            $this->parser->consume();
+            $name = $this->identifier();
+            $value = null;
+
+            if ($this->parser->is(':-')) {
+                $this->parser->consume();
+                $value = $this->_expr();
+            }
+
+            $definitions[$name] = $value;
+        }
+
+        return new MemberStmt($definitions);
     }
 
-    public function _classDeclStmt()
+    public function _blueprintDeclStmt()
     {
         $extends = null;
         $implements = [];
 
-        $this->parser->match(Tag::T_CLASS);
-        $class_name = $this->identifier();
+        $this->parser->match(Tag::T_BLUEPRINT);
+        $blueprint_name = $this->identifier();
 
         if ($this->parser->is(':')) {
             $this->parser->consume();
@@ -478,10 +474,10 @@ class Grammar
             } while ($this->parser->is(';'));
         }
 
-        $body = iterator_to_array($this->_classStmtList());
+        $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ClassStmt($class_name, $extends, $implements, $body);
+        return new BlueprintStmt($blueprint_name, $extends, $implements, $body);
     }
 
     public function _structDeclStmt()
@@ -497,17 +493,19 @@ class Grammar
             } while ($this->parser->is(';'));
         }
 
-        $body = iterator_to_array($this->_classStmtList());
+        $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
         $name = $this->identifier();
 
         return new StructStmt($name, $interfaces, $body);
     }
 
-    public function _fnStmt($modifiers = [])
+    public function _fnStmt()
     {
         $by_reference = false;
+
         $this->parser->match(Tag::T_FN);
+
         if ($this->parser->is('*')) {
             $this->parser->consume();
             $by_reference = true;
@@ -519,7 +517,7 @@ class Grammar
         $body = iterator_to_array($this->_innerStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new FnStmt($name, $by_reference, $body, $parameters, $modifiers);
+        return new FnStmt($name, $by_reference, $body, $parameters);
     }
 
     public function _moduleStmt()
@@ -564,10 +562,22 @@ class Grammar
     public function _constStmt()
     {
         $this->parser->match(Tag::T_CONST);
+        $definitions = [];
+
         $name = $this->identifier();
         $this->parser->match(':-');
-        $value = $this->identifier(); // TODO: Change for _staticScalar()
-        return new ConstStmt($name, $value);
+        $value = $this->_expr();
+        $definitions[$name] = $value;
+
+        while ($this->parser->is(',')) {
+            $this->parser->consume();
+            $name = $this->identifier();
+            $this->parser->match(':-');
+            $value = $this->_expr();
+            $definitions[$name] = $value;
+        }
+
+        return new ConstStmt($definitions);
     }
 
     public function _parameters()
@@ -615,7 +625,9 @@ class Grammar
 
     public function _caseStmtList()
     {
-        while ($this->checker->startsCase()) {
+        $cases = [Tag::T_CASE, Tag::T_ELSE];
+
+        while (in_array($this->parser->lookahead->getTag(), $cases, true)) {
             $is_else = $this->parser->is(Tag::T_ELSE);
             $this->parser->consume();
             $value = $is_else ? null : $this->_expr();

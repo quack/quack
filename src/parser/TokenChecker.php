@@ -32,22 +32,16 @@ class TokenChecker
         $this->parser = $parser;
     }
 
-    public function startsTopStmt()
-    {
-        return $this->startsStmt()
-            || $this->startsClassDeclStmt()
-            || $this->parser->is(Tag::T_STRUCT)
-            || $this->parser->is(Tag::T_FN)
-            || $this->parser->is(Tag::T_MODULE)
-            || $this->parser->is(Tag::T_OPEN)
-            || $this->parser->is(Tag::T_CONST);
-    }
-
     public function startsInnerStmt()
     {
-        return $this->startsStmt()
-            || $this->parser->is(Tag::T_FN)
-            || $this->startsClassDeclStmt();
+        $possible_inner_stmts = [
+            Tag::T_BLUEPRINT,
+            Tag::T_STRUCT,
+            Tag::T_FN
+        ];
+
+        return in_array($this->parser->lookahead->getTag(), $possible_inner_stmts, true)
+            || $this->startsStmt();
     }
 
     public function startsStmt()
@@ -71,32 +65,8 @@ class TokenChecker
             ':-'
         ];
 
-        foreach ($possible_stmts as $token) {
-            if ($this->parser->is($token)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function startsClassDeclStmt()
-    {
-        return $this->parser->is(Tag::T_CLASS);
-    }
-
-    public function startsCase()
-    {
-        return $this->parser->is(Tag::T_CASE)
-            || $this->parser->is(Tag::T_ELSE);
-    }
-
-    public function startsClassStmt()
-    {
-        return $this->parser->is(Tag::T_FN)
-            || $this->parser->is(Tag::T_CONST)
-            || $this->parser->is(Tag::T_OPEN)
-            || $this->parser->is(Tag::T_IDENT);
+        $next_tag = $this->parser->lookahead->getTag();
+        return in_array($next_tag, $possible_stmts, true);
     }
 
     public function isEoF()

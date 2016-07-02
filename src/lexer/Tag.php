@@ -45,7 +45,7 @@ class Tag
     const T_INIT = 267;
     const T_SELF = 268;
     const T_MODULE = 269;
-    const T_CLASS = 270;
+    const T_BLUEPRINT = 270;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
@@ -87,6 +87,7 @@ class Tag
     const T_BY = 305;
     const T_WHEN = 306;
     const T_UNLESS = 307;
+    const T_MEMBER = 308;
 
     public static function & getPartialOperators() {
         static $op_table = [

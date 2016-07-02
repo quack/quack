@@ -25,21 +25,15 @@ use \QuackCompiler\Parser\Parser;
 
 class ConstStmt implements Stmt
 {
-    public $name;
-    public $value;
+    public $definitions;
 
-    public function __construct($name, $value)
+    public function __construct($definitions)
     {
-        $this->name = $name;
-        $this->value = $value;
+        $this->definitions = $definitions;
     }
 
     public function format(Parser $parser)
     {
-        $string_builder = ['const '];
-        $string_builder[] = $this->name;
-        $string_builder[] = ' :- ';
-        $string_builder[] = $this->value->format($parser);
-        return implode($string_builder);
+        throw new \Exception;
     }
 }
