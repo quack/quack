@@ -35,7 +35,7 @@ class TokenChecker
     public function startsTopStmt()
     {
         return $this->startsStmt()
-            || $this->startsClassDeclStmt()
+            || $this->parser->is(Tag::T_BLUEPRINT)
             || $this->parser->is(Tag::T_STRUCT)
             || $this->parser->is(Tag::T_FN)
             || $this->parser->is(Tag::T_MODULE)
@@ -46,8 +46,9 @@ class TokenChecker
     public function startsInnerStmt()
     {
         return $this->startsStmt()
-            || $this->parser->is(Tag::T_FN)
-            || $this->startsClassDeclStmt();
+            || $this->parser->is(Tag::T_BLUEPRINT)
+            || $this->parser->is(Tag::T_STRUCT)
+            || $this->parser->is(Tag::T_FN);
     }
 
     public function startsStmt()
@@ -78,11 +79,6 @@ class TokenChecker
         }
 
         return false;
-    }
-
-    public function startsClassDeclStmt()
-    {
-        return $this->parser->is(Tag::T_CLASS);
     }
 
     public function startsCase()

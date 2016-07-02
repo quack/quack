@@ -29,7 +29,7 @@ use \QuackCompiler\Ast\Expr\ArrayPairExpr;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
-use \QuackCompiler\Ast\Stmt\ClassStmt;
+use \QuackCompiler\Ast\Stmt\BlueprintStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
@@ -99,7 +99,7 @@ class Grammar
         }
     }
 
-    public function _classStmtList()
+    public function _blueprintStmtList()
     {
         while (!$this->checker->isEoF()) {
             switch ($this->parser->lookahead->getTag()) {
@@ -107,7 +107,7 @@ class Grammar
                 case Tag::T_CONST:
                 case Tag::T_OPEN:
                 case Tag::T_MEMBER:
-                    yield $this->_classStmt();
+                    yield $this->_blueprintStmt();
                     continue 2;
                 default:
                     break 2;
@@ -389,8 +389,8 @@ class Grammar
             return $this->_stmt();
         }
 
-        if ($this->checker->startsClassDeclStmt()) {
-            return $this->_classDeclStmt();
+        if ($this->parser->is(Tag::T_BLUEPRINT)) {
+            return $this->_blueprintDeclStmt();
         }
 
         if ($this->parser->is(Tag::T_STRUCT)) {
@@ -424,8 +424,8 @@ class Grammar
             return $this->_fnStmt();
         }
 
-        if ($this->checker->startsClassDeclStmt()) {
-            return $this->_classDeclStmt();
+        if ($this->checker->is(Tag::T_BLUEPRINT)) {
+            return $this->_blueprintDeclStmt();
         }
 
         if ($this->parser->is(Tag::T_STRUCT)) {
@@ -433,7 +433,7 @@ class Grammar
         }
     }
 
-    public function _classStmt()
+    public function _blueprintStmt()
     {
         $branch_table = [
             Tag::T_OPEN   => '_openStmt',
@@ -479,13 +479,13 @@ class Grammar
         return new MemberStmt($definitions);
     }
 
-    public function _classDeclStmt()
+    public function _blueprintDeclStmt()
     {
         $extends = null;
         $implements = [];
 
-        $this->parser->match(Tag::T_CLASS);
-        $class_name = $this->identifier();
+        $this->parser->match(Tag::T_BLUEPRINT);
+        $blueprint_name = $this->identifier();
 
         if ($this->parser->is(':')) {
             $this->parser->consume();
@@ -499,10 +499,10 @@ class Grammar
             } while ($this->parser->is(';'));
         }
 
-        $body = iterator_to_array($this->_classStmtList());
+        $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ClassStmt($class_name, $extends, $implements, $body);
+        return new BlueprintStmt($blueprint_name, $extends, $implements, $body);
     }
 
     public function _structDeclStmt()
@@ -518,7 +518,7 @@ class Grammar
             } while ($this->parser->is(';'));
         }
 
-        $body = iterator_to_array($this->_classStmtList());
+        $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
         $name = $this->identifier();
 

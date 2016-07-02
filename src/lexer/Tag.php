@@ -45,7 +45,7 @@ class Tag
     const T_INIT = 267;
     const T_SELF = 268;
     const T_MODULE = 269;
-    const T_CLASS = 270;
+    const T_BLUEPRINT = 270;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;

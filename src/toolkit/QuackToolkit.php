@@ -99,7 +99,7 @@ import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
 import(AST, 'stmt/CaseStmt');
-import(AST, 'stmt/ClassStmt');
+import(AST, 'stmt/BlueprintStmt');
 import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/FnStmt');

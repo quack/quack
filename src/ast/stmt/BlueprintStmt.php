@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class ClassStmt implements Stmt
+class BlueprintStmt implements Stmt
 {
     public $name;
     public $extends;
