@@ -32,17 +32,6 @@ class TokenChecker
         $this->parser = $parser;
     }
 
-    public function startsTopStmt()
-    {
-        return $this->startsStmt()
-            || $this->parser->is(Tag::T_BLUEPRINT)
-            || $this->parser->is(Tag::T_STRUCT)
-            || $this->parser->is(Tag::T_FN)
-            || $this->parser->is(Tag::T_MODULE)
-            || $this->parser->is(Tag::T_OPEN)
-            || $this->parser->is(Tag::T_CONST);
-    }
-
     public function startsInnerStmt()
     {
         return $this->startsStmt()
