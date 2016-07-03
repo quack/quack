@@ -87,13 +87,13 @@ class SyntaxError extends Exception
         $found = $this->getFoundTokenName();
         $position = $this->getPosition();
 
-        return $source . PHP_EOL . implode(PHP_EOL, [
+        return $source . PHP_EOL . join([
             BEGIN_RED,
-            "*** You have a syntactic error in your code!",
-            "    Expecting [{$expected}]",
-            "    Found     [{$found}]",
-            "    Line      {$position['line']}",
-            "    Column    " . ($position['column'] - $this->getFoundTokenSize() + 1),
+            "*** Hey, I found a syntax error!", PHP_EOL,
+            "    Expecting [", BEGIN_GREEN, $expected, END_GREEN, BEGIN_RED, "]", PHP_EOL,
+            "    Found     [", BEGIN_GREEN, $found, END_GREEN, BEGIN_RED, "]", PHP_EOL,
+            "    Line      {$position['line']}", PHP_EOL,
+            "    Column    ", ($position['column'] - $this->getFoundTokenSize() + 1), PHP_EOL,
             END_RED
         ]);
     }
