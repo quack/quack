@@ -216,7 +216,7 @@ class Tokenizer extends Lexer
 
         $buffer = [];
 
-        while (!$this->isEnd() && !$this->is('/')) {
+        while (!$this->isEnd() && !($this->is('/') && $this->previous() !== '\\')) {
             $buffer[] = $this->readChar();
             $this->column++;
         }
