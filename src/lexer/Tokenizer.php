@@ -23,7 +23,7 @@ namespace QuackCompiler\Lexer;
 
 class Tokenizer extends Lexer
 {
-    public $line = 0;
+    public $line = 1;
     public $column = 0;
 
     public function __construct($input)

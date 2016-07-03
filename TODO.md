@@ -29,8 +29,8 @@
 - [x] Implement where-clause
 - [x] Make function-def be a statement. Fix parsing
 - [x] Verify property definitions for classes
+- [x] Fix line-0-bug
 - [ ] Implement static properties (without semantic validation)
 - [ ] Implement trait support
-- [ ] Fix line-0-bug
 - [ ] Better syntax error output
 - [ ] Implement built-in support for regexes
