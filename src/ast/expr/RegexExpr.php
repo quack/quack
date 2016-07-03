@@ -34,6 +34,6 @@ class RegexExpr implements Expr
 
     public function format(Parser $parser)
     {
-        return '/' . $this->value . '/';
+        return $this->value;
     }
 }
