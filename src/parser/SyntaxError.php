@@ -119,27 +119,27 @@ class SyntaxError extends Exception
         if ($this->found instanceof \QuackCompiler\Lexer\Word) {
             // Keyword found
             return strlen($this->found->lexeme);
-        } else {
-            // Operator, literal or EoF found
-            $offset = 0;
-            $found_tag = $this->found->getTag();
-
-            // String literals have quotes also!
-            if ($found_tag === Tag::T_STRING) {
-                $offset += 2;
-            }
-
-            $token_val = $this->parser->input->getSymbolTable()->get(
-                $this->found->getPointer()
-            );
-
-            return $offset + (0 === $found_tag
-                ? -1
-                : strlen(null !== $token_val
-                    ? $token_val
-                    : $found_tag
-                ));
         }
+
+        // Operator, literal or EoF found
+        $offset = 0;
+        $found_tag = $this->found->getTag();
+
+        // String literals have quotes also!
+        if ($found_tag === Tag::T_STRING) {
+            $offset += 2;
+        }
+
+        $token_val = $this->parser->input->getSymbolTable()->get(
+            $this->found->getPointer()
+        );
+
+        return $offset + (0 === $found_tag
+            ? -1
+            : strlen(null !== $token_val
+                ? $token_val
+                : $found_tag
+            ));
     }
 
     private function getOriginalSource()
