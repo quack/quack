@@ -55,10 +55,6 @@ class Tokenizer extends Lexer
             }
 
             if ($this->matches('(*') && $this->previous() !== '&') {
-                return $this->semanticComment();
-            }
-
-            if ($this->matches('//')) {
                 $this->comment();
                 continue;
             }
@@ -191,37 +187,48 @@ class Tokenizer extends Lexer
     private function string($delimiter)
     {
         $this->consume();
+        $this->column++;
 
         $buffer = [];
         while (!$this->isEnd() && !($this->is($delimiter) && $this->previous() !== '\\')) {
             $buffer[] = $this->readChar();
+            $this->column++;
         }
 
         $string = implode($buffer);
 
         if (!$this->isEnd()) {
             $this->consume();
+            $this->column++;
         }
 
         return new Token(Tag::T_STRING, $this->symbol_table->add($string));
     }
 
-    private function semanticComment()
+    private function comment()
     {
+        $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+
         $this->consume(2);
+        $this->column += 2;
 
         $buffer = [];
         while (!$this->isEnd() && !($this->is('*') && $this->preview() === ')')) {
-            $buffer[] = $this->readChar();
+            $chr = $this->readChar();
+            $this->column++;
+
+            if (in_array($chr, $new_line, true)) {
+                $this->column = 1;
+                $this->line++;
+            }
         }
 
         $comment = implode($buffer);
 
         if (!$this->isEnd()) {
             $this->consume(2);
+            $this->column += 2;
         }
-
-        return new Token(Tag::T_SEMANTIC_COMMENT, $this->symbol_table->add($comment));
     }
 
     private function atom()
@@ -234,14 +241,6 @@ class Tokenizer extends Lexer
 
         $atom = implode($buffer);
         return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
-    }
-
-    private function comment()
-    {
-        $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
-        do {
-            $this->consume();
-        } while (!in_array(ord($this->peek), $new_line));
     }
 
     private function readChar()

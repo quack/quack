@@ -69,7 +69,7 @@ class SyntaxError extends Exception
             ? []
             : array_slice($error_line, 0, $new_column);
 
-        $error_piece = array_slice($error_line, $new_column, $new_column + 1);
+        $error_piece = array_slice($error_line, $new_column, $new_column + 10);
 
         $out_buffer[] = $line_indicator;
         $out_buffer[] = BEGIN_GREEN . implode($correct_piece) . END_GREEN;
@@ -121,17 +121,24 @@ class SyntaxError extends Exception
             return strlen($this->found->lexeme);
         } else {
             // Operator, literal or EoF found
+            $offset = 0;
             $found_tag = $this->found->getTag();
+
+            // String literals have quotes also!
+            if ($found_tag === Tag::T_STRING) {
+                $offset += 2;
+            }
+
             $token_val = $this->parser->input->getSymbolTable()->get(
                 $this->found->getPointer()
             );
 
-            return 0 === $found_tag
+            return $offset + (0 === $found_tag
                 ? -1
                 : strlen(null !== $token_val
                     ? $token_val
                     : $found_tag
-                );
+                ));
         }
     }
 
