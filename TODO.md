@@ -30,7 +30,9 @@
 - [x] Make function-def be a statement. Fix parsing
 - [x] Verify property definitions for classes
 - [x] Fix line-0-bug
+- [x] Better syntax error output
+- [x] Fix column count on string
+- [x] Ignore comments
 - [ ] Implement static properties (without semantic validation)
 - [ ] Implement trait support
-- [ ] Better syntax error output
 - [ ] Implement built-in support for regexes
