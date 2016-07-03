@@ -211,22 +211,32 @@ class Tokenizer extends Lexer
 
     private function regex()
     {
-        $this->consume();
+        $buffer = [];
+        $buffer[] = $this->readChar();
         $this->column++;
 
-        $buffer = [];
 
         while (!$this->isEnd() && !($this->is('/') && $this->previous() !== '\\')) {
             $buffer[] = $this->readChar();
             $this->column++;
         }
 
-        $regex = implode($buffer);
-
         if (!$this->isEnd()) {
-            $this->consume();
+            $buffer[] = $this->readChar();
             $this->column++;
+
+            // Regex modifiers
+            $allowed_modifiers = [
+                'i', 'm', 's', 'x', 'e', 'A', 'D', 'S', 'U', 'X', 'J', 'u'
+            ];
+
+            while (in_array($this->peek, $allowed_modifiers, true)) {
+                $buffer[] = $this->readChar();
+                $this->column++;
+            }
         }
+
+        $regex = implode($buffer);
 
         return new Token(Tag::T_REGEX, $this->symbol_table->add($regex));
     }

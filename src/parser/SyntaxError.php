@@ -126,7 +126,7 @@ class SyntaxError extends Exception
         $found_tag = $this->found->getTag();
 
         // String literals have quotes also!
-        if (in_array($found_tag, [Tag::T_REGEX, Tag::T_STRING], true)) {
+        if (Tag::T_STRING === $found_tag) {
             $offset += 2;
         }
 
