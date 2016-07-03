@@ -26,6 +26,7 @@ use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Expr\AtomExpr;
 use \QuackCompiler\Ast\Expr\NilExpr;
 use \QuackCompiler\Ast\Expr\BoolExpr;
+use \QuackCompiler\Ast\Expr\RegexExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
@@ -56,6 +57,9 @@ class LiteralParselet implements IPrefixParselet
             case Tag::T_TRUE:
             case Tag::T_FALSE:
                 return new BoolExpr($tag === Tag::T_TRUE);
+
+            case Tag::T_REGEX:
+                return new RegexExpr($grammar->parser->resolveScope($token->getPointer()));
         }
     }
 }

@@ -63,6 +63,10 @@ class Tokenizer extends Lexer
                 return $this->string($this->peek);
             }
 
+            if ($this->is('/')) {
+                return $this->regex();
+            }
+
             // Multichar symbol analysis
             return SymbolDecypher::{$this->peek}($this);
         }
@@ -203,6 +207,28 @@ class Tokenizer extends Lexer
         }
 
         return new Token(Tag::T_STRING, $this->symbol_table->add($string));
+    }
+
+    private function regex()
+    {
+        $this->consume();
+        $this->column++;
+
+        $buffer = [];
+
+        while (!$this->isEnd() && !$this->is('/')) {
+            $buffer[] = $this->readChar();
+            $this->column++;
+        }
+
+        $regex = implode($buffer);
+
+        if (!$this->isEnd()) {
+            $this->consume();
+            $this->column++;
+        }
+
+        return new Token(Tag::T_REGEX, $this->symbol_table->add($regex));
     }
 
     private function comment()

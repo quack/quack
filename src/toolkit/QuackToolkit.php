@@ -94,6 +94,7 @@ import(AST, 'expr/AccessExpr');
 import(AST, 'expr/RangeExpr');
 import(AST, 'expr/AtomExpr');
 import(AST, 'expr/PartialFuncExpr');
+import(AST, 'expr/RegexExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
