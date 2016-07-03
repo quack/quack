@@ -159,11 +159,11 @@ abstract class Parser
             return $this->consume();
         }
 
-        throw (new SyntaxError)
-            -> expected($tag)
-            -> found($this->lookahead)
-            -> on($this->position())
-            -> source($this->input);
+        throw new SyntaxError([
+            'expected' => $tag,
+            'found'    => $this->lookahead,
+            'parser'   => $this
+        ]);
     }
 
     public function opt($tag)

@@ -47,8 +47,18 @@ LICENSE
 
 function install_stream_handler()
 {
-    echo "\033[01;36m";
+    begin_yellow();
     readline_callback_handler_install("Quack> ", 'readline_callback');
+    end_yellow();
+}
+
+function begin_yellow()
+{
+    echo "\033[01;33m";
+}
+
+function end_yellow()
+{
     echo "\033[0m";
 }
 

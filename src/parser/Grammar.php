@@ -172,11 +172,11 @@ class Grammar
             }
         }
 
-        throw (new SyntaxError)
-            -> expected('statement')
-            -> found($this->parser->lookahead)
-            -> on($this->parser->position())
-            -> source($this->parser->input);
+        throw new SyntaxError([
+            'expected' => 'statement',
+            'found'    => $this->parser->lookahead,
+            'parser'   => $this->parser
+        ]);
     }
 
     public function _exprStmt()
@@ -681,11 +681,11 @@ class Grammar
 
         if (is_null($prefix)) {
             if (!$opt) {
-                throw (new SyntaxError)
-                    -> expected('expression')
-                    -> found($token)
-                    -> on($this->parser->position())
-                    -> source($this->parser->input);
+                throw new SyntaxError([
+                    'expected' => 'expression',
+                    'found'    => $token,
+                    'parser'   => $this->parser
+                ]);
             }
 
             return null;
