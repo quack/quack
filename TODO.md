@@ -33,6 +33,6 @@
 - [x] Better syntax error output
 - [x] Fix column count on string
 - [x] Ignore comments
+- [x] Implement built-in support for regexes
 - [ ] Implement static properties (without semantic validation)
 - [ ] Implement trait support
-- [ ] Implement built-in support for regexes
