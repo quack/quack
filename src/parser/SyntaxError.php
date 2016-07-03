@@ -25,10 +25,10 @@ use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
-define('BEGIN_ORANGE', "\033[01;31m");
-define('END_ORANGE', "\033[0m");
+define('BEGIN_RED', "\033[01;31m");
+define('END_RED', "\033[0m");
 
-define('BEGIN_GREEN', "\033[01;33m");
+define('BEGIN_GREEN', "\033[01;32m");
 define('END_GREEN', "\033[0m");
 
 define('BEGIN_BG_RED', "\033[01;41m");
@@ -41,90 +41,114 @@ class SyntaxError extends Exception
 {
     private $expected;
     private $found;
-    private $localization;
-    private $source;
+    private $parser;
 
-    public function expected($tag)
+    public function __construct($parameters)
     {
-        $this->expected = $tag;
-        return $this;
+        $this->expected = $parameters['expected'];
+        $this->found    = $parameters['found'];
+        $this->parser   = $parameters['parser'];
     }
 
-    public function found(Token $token)
+    private function extractPieceOfSource()
     {
-        $this->found = $token;
-        return $this;
-    }
+        // TODO: do-end example not working
+        $out_buffer = [];
+        $position = $this->getPosition();
+        $token_size = $this->getFoundTokenSize();
+        $new_column = $position['column'] - $token_size;
+        $error_line = str_split(
+            explode(PHP_EOL, $this->getOriginalSource()->input)[
+                $position['line'] - 1
+            ]
+        );
 
-    public function on(array $localization)
-    {
-        $this->localization = $localization;
-        return $this;
-    }
+        $line_indicator = "{$position['line']}| ";
 
-    public function source($source)
-    {
-        $this->source = $source;
-        return $this;
-    }
+        $correct_piece = $new_column - 1 <= 0
+            ? []
+            : array_slice($error_line, 0, $new_column);
 
-    private function extractSource()
-    {
-        $column = $this->localization['column'];
-        $line = $this->localization['line'];
+        $error_piece = array_slice($error_line, $new_column, $new_column + 10);
 
-        $source_array = explode(PHP_EOL, $this->source->input);
-        $source_line = $source_array[$line];
+        $out_buffer[] = $line_indicator;
+        $out_buffer[] = BEGIN_GREEN . implode($correct_piece) . END_GREEN;
+        $out_buffer[] = BEGIN_BG_RED . implode($error_piece) . END_BG_RED;
+        $out_buffer[] = PHP_EOL . str_repeat(' ', strlen($line_indicator) + sizeof($correct_piece));
+        $out_buffer[] = BEGIN_BOLD . str_repeat('^', sizeof($error_piece)) . END_BOLD;
 
-        $initial_column = $column - 10 <= 0
-            ? 0
-            : $this->localization['column'] - 10;
-
-        $buffer = [];
-
-        if ($line > 0) {
-            $buffer[] = BEGIN_GREEN
-                . "{$line} | "
-                . $source_array[$this->localization['line'] - 1]
-                . PHP_EOL
-                . END_GREEN;
-        }
-
-        $buffer[] = BEGIN_GREEN . ($line + 1) . " | ";
-
-        for ($i = $initial_column; $i < 70; $i++) {
-            if (isset($source_line[$i])) {
-                if ($i >= $column - $initial_column) {
-                    $buffer[] = BEGIN_BG_RED . $source_line[$i] . END_BG_RED;
-                } else {
-                    $buffer[] = BEGIN_GREEN . $source_line[$i] . END_GREEN;
-                }
-            }
-        }
-
-        $buffer[] = PHP_EOL . str_repeat(' ', $column - $initial_column + 1);
-        $buffer[] = BEGIN_BOLD . "^" . END_BOLD . str_repeat('^', 10);
-
-        return implode($buffer);
+        return implode($out_buffer);
     }
 
     public function __toString()
     {
-        $source = $this->extractSource();
+        $source = $this->extractPieceOfSource();
+        $expected = $this->getExpectedTokenName();
+        $found = $this->getFoundTokenName();
+        $position = $this->getPosition();
 
-        $expected = is_integer($this->expected) ? Tag::getName($this->expected) : $this->expected;
-        $found = $this->found->getTag() === 0
-            ? "end of the source"
-            : Tag::getName($this->found->getTag()) ?: $this->found->getTag();
-
-        return $this->extractSource() . PHP_EOL . implode(PHP_EOL, [
-            BEGIN_ORANGE,
+        return $source . PHP_EOL . implode(PHP_EOL, [
+            BEGIN_RED,
             "*** You have a syntactic error in your code!",
             "    Expecting [{$expected}]",
             "    Found     [{$found}]",
-            "    Line      {$this->localization['line']}",
-            "    Column    {$this->localization['column']}",
-            END_ORANGE
+            "    Line      {$position['line']}",
+            "    Column    " . ($position['column'] - $this->getFoundTokenSize() + 1),
+            END_RED
         ]);
+    }
+
+    private function getExpectedTokenName()
+    {
+        return is_integer($this->expected)
+            ? Tag::getName($this->expected)
+            : $this->expected;
+    }
+
+    private function getFoundTokenName()
+    {
+        $found_tag = $this->found->getTag();
+
+        return 0 === $found_tag
+            ? "end of the source"
+            : Tag::getName($found_tag) ?: $found_tag;
+    }
+
+    private function getFoundTokenSize()
+    {
+        if ($this->found instanceof \QuackCompiler\Lexer\Word) {
+            // Keyword found
+            return strlen($this->found->lexeme);
+        }
+
+        // Operator, literal or EoF found
+        $offset = 0;
+        $found_tag = $this->found->getTag();
+
+        // String literals have quotes also!
+        if ($found_tag === Tag::T_STRING) {
+            $offset += 2;
+        }
+
+        $token_val = $this->parser->input->getSymbolTable()->get(
+            $this->found->getPointer()
+        );
+
+        return $offset + (0 === $found_tag
+            ? -1
+            : strlen(null !== $token_val
+                ? $token_val
+                : $found_tag
+            ));
+    }
+
+    private function getOriginalSource()
+    {
+        return $this->parser->input;
+    }
+
+    private function getPosition()
+    {
+        return $this->parser->position();
     }
 }

@@ -29,7 +29,6 @@ class Tag
     const T_IDENT = 257;
     const T_INTEGER = 258;
     const T_DOUBLE = 400;
-    const T_SEMANTIC_COMMENT = 259;
     const T_STRING = 600;
     const T_ATOM = 601;
     const T_PARAM = 1000;

@@ -36,7 +36,9 @@ class SymbolTable
 
     public function get($pointer)
     {
-        return $this->table[$pointer];
+        return array_key_exists($pointer, $this->table)
+            ? $this->table[$pointer]
+            : null;
     }
 
     public function iterator()
