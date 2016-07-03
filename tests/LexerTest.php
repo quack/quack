@@ -46,25 +46,6 @@ class LexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("[T_INTEGER, 0b101][T_INTEGER, 9]", $this->tokenize($binary_invalid, SHOW_SYMBOL_TABLE));
     }
 
-    public function testSemanticComment()
-    {
-        $partial_function = "&(* 1)";
-        $semantic_comment = "(* Some comment *)";
-
-        $this->assertEquals(
-            "[&(][*][T_INTEGER, 1][)]",
-            $this->tokenize($partial_function, SHOW_SYMBOL_TABLE)
-        );
-        $this->assertEquals(
-            "[T_SEMANTIC_COMMENT,  Some comment ]",
-            $this->tokenize($semantic_comment, SHOW_SYMBOL_TABLE)
-        );
-        $this->assertEquals(
-            "[T_SEMANTIC_COMMENT, 0]",
-            $this->tokenize($semantic_comment)
-        );
-    }
-
     public function testString()
     {
         $string = "'lorem ipsum dolor'";
