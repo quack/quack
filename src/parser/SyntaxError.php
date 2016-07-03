@@ -118,7 +118,7 @@ class SyntaxError extends Exception
     {
         if ($this->found instanceof \QuackCompiler\Lexer\Word) {
             // Keyword found
-            return sizeof($this->found->lexeme);
+            return strlen($this->found->lexeme);
         } else {
             // Operator, literal or EoF found
             $found_tag = $this->found->getTag();
