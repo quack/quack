@@ -37,7 +37,8 @@ class TokenChecker
         $possible_inner_stmts = [
             Tag::T_BLUEPRINT,
             Tag::T_STRUCT,
-            Tag::T_FN
+            Tag::T_FN,
+            Tag::T_ENUM
         ];
 
         return in_array($this->parser->lookahead->getTag(), $possible_inner_stmts, true)

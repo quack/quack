@@ -35,6 +35,7 @@ use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\DoWhileStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
+use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\ForStmt;
@@ -383,7 +384,8 @@ class Grammar
             Tag::T_FN        => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
-            Tag::T_CONST     => '_constStmt'
+            Tag::T_CONST     => '_constStmt',
+            Tag::T_ENUM      => '_enumStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -397,8 +399,9 @@ class Grammar
     {
         $branch_table = [
             Tag::T_FN        => '_fnStmt',
-            Tag::T_BLUEPRINT => '_blueprintStmt',
-            Tag::T_STRUCT    => '_structDeclStmt'
+            Tag::T_BLUEPRINT => '_blueprintDeclStmt',
+            Tag::T_STRUCT    => '_structDeclStmt',
+            Tag::T_ENUM      => '_enumStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -452,6 +455,21 @@ class Grammar
         }
 
         return new MemberStmt($definitions);
+    }
+
+    public function _enumStmt()
+    {
+        $this->parser->match(Tag::T_ENUM);
+        $entries = [];
+        $name = $this->identifier();
+
+        while ($this->parser->is(Tag::T_IDENT)) {
+            $entries[] = $this->identifier();
+        }
+
+        $this->parser->match(Tag::T_END);
+
+        return new EnumStmt($entries);
     }
 
     public function _blueprintDeclStmt()
