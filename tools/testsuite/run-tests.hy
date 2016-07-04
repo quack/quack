@@ -184,7 +184,8 @@
 
   ; Dump garbage
   (delete-tmp-files)
-  (exit failed))
+  (if (> 0 failed)
+    (exit failed)))
 
 (defn tuple-contains-key [needle haystack]
   """
