@@ -2,9 +2,43 @@
 Hello world
 %%source
 fn main!
-  print "Hello world!"
+  do print "Hello world!"
 end
 %%expect
-fn main!
-  print "Hello world!"
-end
+array(1) {
+  [0]=>
+  object(QuackCompiler\Ast\Stmt\FnStmt)#117 (4) {
+    ["name"]=>
+    string(4) "main"
+    ["by_reference"]=>
+    bool(false)
+    ["body"]=>
+    array(1) {
+      [0]=>
+      object(QuackCompiler\Ast\Stmt\ExprStmt)#115 (1) {
+        ["expression"]=>
+        array(1) {
+          [0]=>
+          object(QuackCompiler\Ast\Expr\CallExpr)#113 (2) {
+            ["func"]=>
+            object(QuackCompiler\Ast\Expr\NameExpr)#116 (1) {
+              ["token"]=>
+              string(5) "print"
+            }
+            ["arguments"]=>
+            array(1) {
+              [0]=>
+              object(QuackCompiler\Ast\Expr\StringExpr)#118 (1) {
+                ["value"]=>
+                string(11) "Hello World"
+              }
+            }
+          }
+        }
+      }
+    }
+    ["parameters"]=>
+    array(0) {
+    }
+  }
+}
