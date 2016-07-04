@@ -134,6 +134,7 @@ class Grammar
         $branch_table = [
             Tag::T_IF       => '_ifStmt',
             Tag::T_LET      => '_letStmt',
+            Tag::T_CONST    => '_constStmt',
             Tag::T_WHILE    => '_whileStmt',
             Tag::T_DO       => '_exprStmt',
             Tag::T_FOR      => '_forStmt',
@@ -384,7 +385,6 @@ class Grammar
             Tag::T_FN        => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
-            Tag::T_CONST     => '_constStmt',
             Tag::T_ENUM      => '_enumStmt'
         ];
 
@@ -416,7 +416,6 @@ class Grammar
         $branch_table = [
             Tag::T_OPEN   => '_openStmt',
             Tag::T_FN     => '_fnStmt',
-            Tag::T_CONST  => '_constStmt',
             Tag::T_MEMBER => '_memberStmt'
         ];
 
