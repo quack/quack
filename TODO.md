@@ -35,6 +35,6 @@
 - [x] Ignore comments
 - [x] Implement built-in support for regexes
 - [x] Support for `super` and `self` call
+- [x] Implement enum
 - [ ] Implement static properties (without semantic validation)
 - [ ] Implement trait support
-- [ ] Implement enum
