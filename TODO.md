@@ -34,6 +34,7 @@
 - [x] Fix column count on string
 - [x] Ignore comments
 - [x] Implement built-in support for regexes
+- [x] Support for `super` and `self` call
 - [ ] Implement static properties (without semantic validation)
 - [ ] Implement trait support
-- [ ] Support for `super` call
+- [ ] Implement enum

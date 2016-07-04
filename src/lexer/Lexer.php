@@ -56,7 +56,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_DO, "do"));
         $this->reserve(new Word(Tag::T_STRUCT, "struct"));
         $this->reserve(new Word(Tag::T_INIT, "init"));
-        $this->reserve(new Word(Tag::T_SELF, "self"));
         $this->reserve(new Word(Tag::T_MODULE, "module"));
         $this->reserve(new Word(Tag::T_BLUEPRINT, "blueprint"));
         $this->reserve(new Word(Tag::T_GOTO, "goto"));
@@ -83,8 +82,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_ELIF, "elif"));
         $this->reserve(new Word(Tag::T_ELSE, "else"));
         $this->reserve(new Word(Tag::T_CASE, "case"));
-        $this->reserve(new Word(Tag::T_SUPER, "super"));
-        $this->reserve(new Word(Tag::T_IS, "is"));
         $this->reserve(new Word(Tag::T_NOT, "not"));
         $this->reserve(new Word(Tag::T_FN, "fn"));
         $this->reserve(new Word(Tag::T_REQUIRE, "require"));
