@@ -9,7 +9,7 @@ php:
 
 install:
   - pip install --user hy
-  - pip install termcolor
+  - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
 script:
