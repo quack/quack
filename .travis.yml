@@ -7,7 +7,7 @@ php:
   - hhvm
   - nightly
 
-install: pip install hy
+install: pip install --user hy
 
 script:
   - make test module=lexer
