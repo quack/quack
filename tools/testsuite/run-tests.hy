@@ -1,4 +1,4 @@
-#! /usr/bin/env hy
+;;#! /usr/bin/env hy
 ;;
 ;; Quack Compiler and toolkit
 ;; Copyright (C) 2016 Marcelo Camargo <marcelocamargo@linuxmail.org> and
@@ -22,7 +22,7 @@
 
 (import [os [listdir walk linesep makedirs popen]]
         [os.path [isfile isdir join exists]]
-        [sys [argv]]
+        [sys [argv exit]]
         [getopt [getopt GetoptError]]
         [glob [iglob]]
         [fnmatch]
@@ -52,7 +52,8 @@
   """
   Handles the received errors while receiving input
   """
-  (print message))
+  (print message)
+  (exit 1))
 
 (defn get-all-test-files [dir]
   """
@@ -182,7 +183,8 @@
       (-> "Fail: " (+ (str failed))) :attrs ["bold"]))
 
   ; Dump garbage
-  (delete-tmp-files))
+  (delete-tmp-files)
+  (exit failed))
 
 (defn tuple-contains-key [needle haystack]
   """
