@@ -7,7 +7,9 @@ php:
   - hhvm
   - nightly
 
-install: pip install --user hy
+install:
+  - pip install --user hy
+  - export PATH=$PATH:$HOME/.local/bin
 
 script:
   - make test module=lexer
