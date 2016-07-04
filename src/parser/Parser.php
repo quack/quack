@@ -96,6 +96,7 @@ abstract class Parser
         $this->register(Tag::T_INTEGER, new LiteralParselet);
         $this->register(Tag::T_DOUBLE, new LiteralParselet);
         $this->register(Tag::T_STRING, new LiteralParselet);
+        $this->register(Tag::T_REGEX, new LiteralParselet);
         $this->register(Tag::T_IDENT, new NameParselet);
         $this->register(Tag::T_THEN, new TernaryParselet);
         $this->register('..', new RangeParselet);
@@ -140,6 +141,7 @@ abstract class Parser
         $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
         $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
         $this->infixLeft('=', Precedence::VALUE_COMPARATOR);
+        $this->infixLeft('=~', Precedence::VALUE_COMPARATOR);
         $this->infixLeft('<>', Precedence::VALUE_COMPARATOR);
         $this->infixLeft('<=', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
