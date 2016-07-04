@@ -57,10 +57,6 @@ class TokenReader extends Parser
     /* Handlers */
     public function dumpAst()
     {
-        foreach ($this->input->symbol_table->iterator() as $key => $value) {
-            echo '[', BEGIN_GREEN, $key, END_GREEN, ': ', BEGIN_BOLD,  $value, END_BOLD, ']', PHP_EOL;
-        }
-
         var_dump($this->ast);
     }
 
