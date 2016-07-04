@@ -12,8 +12,3 @@ install: pip install hy
 script:
   - make test module=lexer
   - make test module=parser
-
-addons:
-  apt:
-    packages:
-      - python-pip
