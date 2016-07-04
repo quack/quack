@@ -2,7 +2,7 @@
 Hello world
 %%source
 fn main!
-  do print "Hello world!"
+  do print[ "Hello world!" ]
 end
 %%expect
 array(1) {
