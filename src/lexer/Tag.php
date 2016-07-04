@@ -43,7 +43,6 @@ class Tag
     const T_DO = 265;
     const T_STRUCT = 266;
     const T_INIT = 267;
-    const T_SELF = 268;
     const T_MODULE = 269;
     const T_BLUEPRINT = 270;
     const T_NIL = 272;
@@ -71,8 +70,6 @@ class Tag
     const T_ELIF = 520;
     const T_ELSE = 521;
     const T_CASE = 522;
-    const T_SUPER = 525;
-    const T_IS = 527;
     const T_MOD = 292;
     const T_NOT = 293;
     const T_FN = 294;
