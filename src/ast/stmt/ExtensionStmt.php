@@ -26,12 +26,14 @@ use \QuackCompiler\Parser\Parser;
 class ExtensionStmt implements Stmt
 {
     public $appliesTo;
+    public $appliesToRegexes;
     public $implements;
     public $body;
 
-    public function __construct($appliesTo, $implements, $body)
+    public function __construct($appliesTo, $appliesToRegexes, $implements, $body)
     {
         $this->appliesTo = $appliesTo;
+        $this->appliesToRegexes = $appliesToRegexes;
         $this->implements = $implements;
         $this->body = $body;
     }

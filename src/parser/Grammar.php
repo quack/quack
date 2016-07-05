@@ -475,19 +475,26 @@ class Grammar
 
     public function _extensionDeclStmt()
     {
-        $appliesTo = null;
+        $appliesTo = [];
+        $appliesToRegexes = [];
         $implements = [];
 
         $this->parser->match(Tag::T_EXTENSION);
-        if ($this->parser->is(Tag::T_FOR)) {
-            $this->parser->consume();
+        $this->parser->match(Tag::T_FOR);
 
+        do {
             if ($this->parser->is(Tag::T_REGEX)) {
-                $appliesTo = $this->parser->consumeAndFetch();
+                $appliesToRegexes[] = $this->parser->consumeAndFetch();
             } else {
-                $appliesTo = $this->qualifiedName();
+                $appliesTo[] = $this->qualifiedName();
             }
-        }
+
+            if ($this->parser->is(';')) {
+                $this->parser->consume();
+            } else {
+                break;
+            }
+        } while (true);
 
         if ($this->parser->is('#')) {
             do {
@@ -499,7 +506,7 @@ class Grammar
         $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ExtensionStmt($appliesTo, $implements, $body);
+        return new ExtensionStmt($appliesTo, $appliesToRegexes, $implements, $body);
     }
 
     public function _blueprintDeclStmt()
