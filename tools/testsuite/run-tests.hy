@@ -206,6 +206,7 @@
   """
   Entry point
   """
+  (exit 666)
   (try
     ; Parse params
     (setv params
