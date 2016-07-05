@@ -223,7 +223,6 @@
           (setv dir (second dir-tuple))
           (setv exe (second exe-tuple))
           (setv result (run-tests (get-all-test-files dir) exe))
-          (print result)
-          (if (> 0 result)
+          (if (> result 0)
             (exit 666)))
         (throw-error "--dir and --exe are obligatory")))))
