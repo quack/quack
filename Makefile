@@ -1,4 +1,5 @@
 TEST = phpunit --verbose --colors
+HYPATH = ~/.local/bin/hy
 
 build:
 	gcc ./src/quack.c -o ./bin/quack
@@ -29,17 +30,15 @@ deploy:
 count_lines:
 	cd src; git ls-files | xargs wc -l
 
-test_all:
-	$(MAKE) test module=lexer
-	$(MAKE) test module=parser
-
 install:
 	cp bin/quack /usr/bin
 
 dev_dependencies:
-	pip install hy
-	pip install termcolor
+	pip install --user hy
+	pip install --user termcolor
 
-dev_tests:
+dev_test:
 	$(MAKE) dev_dependencies
-	./tools/testsuite/run-tests.hy --dir ./tests --exe "./bin/quack %s"
+	$(MAKE) test module=lexer
+	$(MAKE) test module=parser
+	$(HYPATH) ./tools/testsuite/run-tests.hy --dir tests --exe "php5 ./src/Quack.php %s"

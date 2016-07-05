@@ -34,6 +34,6 @@ class NameExpr implements Expr
 
     public function format(Parser $parser)
     {
-        return $parser->resolveScope($this->token->getPointer());
+        return $this->token;
     }
 }

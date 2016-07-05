@@ -55,7 +55,7 @@ class Quack
                 $lexer = new Tokenizer(file_get_contents($file));
                 $parser = new TokenReader($lexer);
                 $parser->parse();
-                $parser->dumpAst();
+                echo $parser->format();
             } catch (SyntaxError $e) {
                 echo $e;
                 exit(1);

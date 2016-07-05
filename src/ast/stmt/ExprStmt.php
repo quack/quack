@@ -34,8 +34,11 @@ class ExprStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = [$this->expression->format($parser)];
-        $string_builder[] = ";\n";
-        return implode($string_builder);
+        $source = ['do '];
+        $source[] = implode(', ', array_map(function ($expr) use ($parser) {
+            return $expr->format($parser);
+        }, $this->expression));
+        $source[] = PHP_EOL;
+        return implode($source);
     }
 }
