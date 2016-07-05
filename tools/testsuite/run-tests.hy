@@ -53,7 +53,7 @@
   Handles the received errors while receiving input
   """
   (print message)
-  (exit 1))
+  (exit 666))
 
 (defn get-all-test-files [dir]
   """
@@ -184,8 +184,7 @@
 
   ; Dump garbage
   (delete-tmp-files)
-  (if (> 0 failed)
-    (exit 1)))
+  failed)
 
 (defn tuple-contains-key [needle haystack]
   """
@@ -206,7 +205,6 @@
   """
   Entry point
   """
-  (exit 666)
   (try
     ; Parse params
     (setv params
@@ -224,6 +222,7 @@
         (do
           (setv dir (second dir-tuple))
           (setv exe (second exe-tuple))
-          (let [[generator (get-all-test-files dir)]]
-            (run-tests generator exe)))
+          (setv result (run-tests (get-all-test-files dir) exe))
+          (if (> 0 result)
+            (exit 666)))
         (throw-error "--dir and --exe are obligatory")))))
