@@ -36,3 +36,4 @@
 - [x] Implement built-in support for regexes
 - [x] Support for `super` and `self` call
 - [x] Implement enum
+- [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
