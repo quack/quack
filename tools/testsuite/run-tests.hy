@@ -151,12 +151,18 @@
     (if (= output stripped-to-compare)
       (do
         (setv passed (inc passed))
-        (print (colored (-> "Pass: " (+ file)) "green")))
+        (print (colored (-> "Pass: "
+          (+ file)
+          (+ " - ")
+          (+ (:describe section))) "green")))
       (do
         (setv failed (inc failed))
         (print
           (colored
-            (-> "Fail: " (+ file)) "red"))
+            (-> "Fail: "
+              (+ file)
+              (+ " - ")
+              (+ (:describe section))) "red"))
         (print "Difference:")
         (setv output-list
           (-> output (.split linesep)))
