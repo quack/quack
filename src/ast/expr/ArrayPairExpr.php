@@ -36,6 +36,13 @@ class ArrayPairExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = $this->left->format($parser);
+
+        if (null !== $this->right) {
+            $source .= ' -> ';
+            $source .= $this->right->format($parser);
+        }
+
+        return $source;
     }
 }

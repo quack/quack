@@ -34,6 +34,18 @@ class ArrayExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = '{';
+        if (sizeof($this->items) > 0) {
+            $source .= ' ';
+
+            $source .= implode('; ',
+                array_map(function ($item) use ($parser) {
+                    return $item->format($parser);
+                }, $this->items)
+            );
+            $source .= ' ';
+        }
+        $source .= '}';
+        return $source;
     }
 }

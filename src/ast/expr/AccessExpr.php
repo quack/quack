@@ -36,6 +36,10 @@ class AccessExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = $this->left->format($parser);
+        $source .= ' {';
+        $source .= $this->index->format($parser);
+        $source .= '}';
+        return $source;
     }
 }

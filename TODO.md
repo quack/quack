@@ -39,9 +39,9 @@
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 
 - Implement formatting in the AST for:
-  - [ ] AccessExpr
-  - [ ] ArrayExpr
-  - [ ] ArrayPairExpr
+  - [x] AccessExpr
+  - [x] ArrayExpr
+  - [x] ArrayPairExpr
   - [x] AtomExpr
   - [x] BoolExpr
   - [ ] CallExpr
