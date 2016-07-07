@@ -38,15 +38,10 @@ class PrefixExpr implements Expr
 
     public function format(Parser $parser)
     {
-        $string_builder = [];
-        if ($this->operator === Tag::T_NOT) {
-            $string_builder[] = 'not ';
-        } else {
-            $string_builder[] = $this->operator;
-        }
-
-        $string_builder[] = $this->right->format($parser);
-
-        return implode($string_builder);
+        $source = Tag::T_NOT === $this->operator
+            ? 'not '
+            : $this->operator;
+        $source .= $this->right->format($parser);
+        return $source;
     }
 }

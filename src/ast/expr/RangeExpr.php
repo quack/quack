@@ -38,6 +38,15 @@ class RangeExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = $this->from->format($parser);
+        $source .= ' .. ';
+        $source .= $this->to->format($parser);
+
+        if (null !== $this->by) {
+            $source .= ' by ';
+            $source .= $this->by->format($parser);
+        }
+
+        return $source;
     }
 }

@@ -37,3 +37,27 @@
 - [x] Support for `super` and `self` call
 - [x] Implement enum
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
+
+- Implement formatting in the AST for:
+  - [ ] AccessExpr
+  - [ ] ArrayExpr
+  - [ ] ArrayPairExpr
+  - [x] AtomExpr
+  - [x] BoolExpr
+  - [ ] CallExpr
+  - [x] IncludeExpr
+  - [ ] LambdaExpr
+  - [ ] NameExpr
+  - [ ] NewExpr
+  - [x] NilExpr
+  - [x] NumberExpr
+  - [ ] OperatorExpr
+  - [ ] PartialFuncExpr
+  - [ ] PostfixExpr
+  - [x] PrefixExpr
+  - [x] RangeExpr
+  - [x] RegexExpr
+  - [ ] StringExpr
+  - [ ] TernaryExpr
+  - [ ] WhenExpr
+

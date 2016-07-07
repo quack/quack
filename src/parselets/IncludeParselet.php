@@ -36,7 +36,13 @@ class IncludeParselet implements IPrefixParselet
         $type = $token->getTag() === Tag::T_REQUIRE
             ? static::TYPE_REQUIRE
             : static::TYPE_INCLUDE;
-        $is_once = $grammar->parser->is(Tag::T_ONCE) && $grammar->parser->consume();
+
+        $is_once = $grammar->parser->is(Tag::T_ONCE);
+
+        if ($is_once) {
+            $grammar->parser->consume();
+        }
+
         $file = $grammar->_expr();
 
         return new IncludeExpr($type, $is_once, $file);

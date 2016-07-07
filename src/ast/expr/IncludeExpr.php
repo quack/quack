@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parser\Parser;
 
 class IncludeExpr implements Expr
@@ -38,6 +39,15 @@ class IncludeExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = IncludeParselet::TYPE_REQUIRE === $this->type
+            ? 'require '
+            : 'include ';
+
+        if ($this->is_once) {
+            $source .= 'once ';
+        }
+
+        $source .= $this->file->format($parser);
+        return $source;
     }
 }

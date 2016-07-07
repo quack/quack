@@ -89,7 +89,8 @@ function readline_callback($command)
 
     try {
         $parser->parse();
-        /* when */ args_have('-a', '--ast') && $parser->dumpAst();
+        # /* when */ args_have('-a', '--ast') && $parser->dumpAst();
+        /* when */ args_have('-f', '--format') && $parser->format();
     } catch (SyntaxError $e) {
         echo $e;
     }
