@@ -1,0 +1,7 @@
+%%describe
+Supports booleans as expressions
+%%source
+do true do false
+%%expect
+do true
+do false

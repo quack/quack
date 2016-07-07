@@ -37,8 +37,11 @@ dev_dependencies:
 	pip install --user hy
 	pip install --user termcolor
 
+qtest:
+	$(HYPATH) ./tools/testsuite/run-tests.hy --dir tests --exe "php5 ./src/Quack.php %s"
+
 dev_test:
 	$(MAKE) dev_dependencies
 	$(MAKE) test module=lexer
 	$(MAKE) test module=parser
-	$(HYPATH) ./tools/testsuite/run-tests.hy --dir tests --exe "php5 ./src/Quack.php %s"
+	$(MAKE) qtest

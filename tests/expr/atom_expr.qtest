@@ -1,0 +1,11 @@
+%%describe
+Supports atoms as expressions
+%%source
+do :foo do :bar do :_ do :baz
+do :atom
+%%expect
+do :foo
+do :bar
+do :_
+do :baz
+do :atom

@@ -1,0 +1,7 @@
+%%describe
+Supports formatting array access expression
+%%source
+do some_variable{0}{1}
+{some_other_variable}
+%%expect
+do some_variable {0} {1} {some_other_variable}

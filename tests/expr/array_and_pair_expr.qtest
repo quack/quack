@@ -1,0 +1,15 @@
+%%describe
+Supports formatting array expressions (with pairs)
+%%source
+    do {1} do {1; 2}
+do {a -> 1;b->2;c    ->
+3}
+
+do { name ->  test{4} }
+
+
+%%expect
+do { 1 }
+do { 1; 2 }
+do { a -> 1; b -> 2; c -> 3 }
+do { name -> test {4} }

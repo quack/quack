@@ -61,3 +61,25 @@
   - [ ] TernaryExpr
   - [ ] WhenExpr
 
+- Write tests for
+  - [x] AccessExpr
+  - [x] ArrayExpr
+  - [x] ArrayPairExpr
+  - [x] AtomExpr
+  - [x] BoolExpr
+  - [ ] CallExpr
+  - [ ] IncludeExpr
+  - [ ] LambdaExpr
+  - [ ] NameExpr
+  - [ ] NewExpr
+  - [x] NilExpr
+  - [ ] NumberExpr
+  - [ ] OperatorExpr
+  - [ ] PartialFuncExpr
+  - [ ] PostfixExpr
+  - [ ] PrefixExpr
+  - [x] RangeExpr
+  - [ ] RegexExpr
+  - [ ] StringExpr
+  - [ ] TernaryExpr
+  - [ ] WhenExpr

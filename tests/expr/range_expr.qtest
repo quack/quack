@@ -1,0 +1,12 @@
+%%describe
+Supports ranges as expressions
+%%source
+do 1..+1
+do 0b0101101 .. 10
+  by
+  3 do 9188.2.. 0 by -1 do 1..10 by 0
+%%expect
+do 1 .. +1
+do 0b0101101 .. 10 by 3
+do 9188.2 .. 0 by -1
+do 1 .. 10 by 0
