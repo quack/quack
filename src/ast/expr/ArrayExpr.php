@@ -37,7 +37,6 @@ class ArrayExpr implements Expr
         $source = '{';
         if (sizeof($this->items) > 0) {
             $source .= ' ';
-
             $source .= implode('; ',
                 array_map(function ($item) use ($parser) {
                     return $item->format($parser);
