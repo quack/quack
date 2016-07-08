@@ -29,21 +29,56 @@ class LambdaExpr implements Expr
     public $parameters;
     public $type;
     public $body;
-    public $is_static;
     public $lexical_vars;
 
-    public function __construct($by_reference, $parameters, $type, $body, $is_static, $lexical_vars)
+    public function __construct($by_reference, $parameters, $type, $body, $lexical_vars)
     {
         $this->by_reference = $by_reference;
         $this->parameters = $parameters;
         $this->type = $type;
         $this->body = $body;
-        $this->is_static = $is_static;
         $this->lexical_vars = $lexical_vars;
     }
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'fn ';
+
+        if ($this->by_reference) {
+            $source .= '* ';
+        }
+
+        $source .= '{ ';
+
+        $source .= implode('; ', array_map(function ($param) {
+            $source = '';
+            $param->ellipsis && $source .= '... ';
+            $param->by_reference && $source .= '*';
+            $source .= $param->name;
+            return $source;
+        }, $this->parameters));
+
+        $source .= 'fn { ' !== $source ? ' | ' : '| ';
+
+        // (*self).type determines whether the lambda expression holds an
+        // expression or a statement
+        // TODO: Implement support for statements on code generation
+        $source .= $this->body->format($parser);
+        $source .= ' }';
+
+        $size_t_lexical_vars = sizeof($this->lexical_vars);
+
+        if ($size_t_lexical_vars > 0) {
+            $source .= ' in ';
+            $source .= 1 === $size_t_lexical_vars
+                ? $this->lexical_vars[0]
+                : (
+                    '{ ' .
+                    implode('; ', $this->lexical_vars) .
+                    ' }'
+                );
+        }
+
+        return $source;
     }
 }

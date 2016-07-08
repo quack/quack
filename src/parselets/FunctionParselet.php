@@ -34,7 +34,6 @@ class FunctionParselet implements IPrefixParselet
 
     public function parse(Grammar $grammar, Token $token)
     {
-        $this->is_static && $grammar->parser->consume(); // Eat [fn] when static function
         ($by_reference = $grammar->parser->is('*')) && $grammar->parser->consume();
 
         $parameters = [];
@@ -85,6 +84,6 @@ class FunctionParselet implements IPrefixParselet
             }
         }
 
-        return new LambdaExpr($by_reference, $parameters, $type, $value, $this->is_static, $lexical_vars);
+        return new LambdaExpr($by_reference, $parameters, $type, $value, $lexical_vars);
     }
 }

@@ -1,0 +1,19 @@
+%%describe
+Supports formatting lambda expressions with expressions and statements
+%%source
+do fn*{ a | a } do fn { a; b|a}
+do fn{...a;a| 1} do fn{ ...*a; *b;|-1}
+do fn{a | fn {b| b }} do fn { | 1 }
+do fn{c|c} in {c}
+do fn{c|c} in c
+do fn {c|c} in {a;b;c}
+%%expect
+do fn * { a | a }
+do fn { a; b | a }
+do fn { ... a; a | 1 }
+do fn { ... *a; *b | -1 }
+do fn { a | fn { b | b } }
+do fn { | 1 }
+do fn { c | c } in c
+do fn { c | c } in c
+do fn { c | c } in { a; b; c }
