@@ -1,0 +1,10 @@
+%%describe
+Supports require and include as expressions
+%%source
+do include termcolor do include once __main__
+do require foobar do require once foobar
+%%expect
+do include termcolor
+do include once __main__
+do require foobar
+do require once foobar

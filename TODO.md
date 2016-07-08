@@ -68,7 +68,7 @@
   - [x] AtomExpr
   - [x] BoolExpr
   - [ ] CallExpr
-  - [ ] IncludeExpr
+  - [x] IncludeExpr
   - [ ] LambdaExpr
   - [ ] NameExpr
   - [ ] NewExpr
