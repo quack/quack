@@ -59,7 +59,7 @@
   - [x] RangeExpr
   - [x] RegexExpr
   - [ ] StringExpr
-  - [ ] TernaryExpr
+  - [x] TernaryExpr
   - [ ] WhenExpr
 
 - Write tests for
