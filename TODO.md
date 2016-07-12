@@ -45,7 +45,7 @@
   - [x] ArrayPairExpr
   - [x] AtomExpr
   - [x] BoolExpr
-  - [ ] CallExpr
+  - [x] CallExpr
   - [x] IncludeExpr
   - [ ] LambdaExpr
   - [ ] NameExpr

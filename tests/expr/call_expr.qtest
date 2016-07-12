@@ -1,0 +1,10 @@
+%%describe
+Supports formatting call expressions
+%%source
+do fact [5] do x[y[z]]
+do max[ 10;20]
+%%expect
+do fact[ 5 ]
+do x[ y[ z ] ]
+do max[ 10; 20 ]
+

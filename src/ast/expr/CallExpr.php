@@ -36,6 +36,18 @@ class CallExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = $this->func->format($parser);
+
+        if (sizeof($this->arguments) > 0) {
+            $source .= '[ ';
+            $source .= implode('; ', array_map(function (Expr $arg) use ($parser) {
+                return $arg->format($parser);
+            }, $this->arguments));
+            $source .= ' ]';
+        } else {
+            $source .= '[]';
+        }
+
+        return $source;
     }
 }
