@@ -1,0 +1,10 @@
+%%describe
+Supports formatting new expression
+%%source
+do #person [ "Marcelo";"Camargo";19]
+do #
+  inner.
+  person ["MY SOUL"]
+%%expect
+do #person[ "Marcelo"; "Camargo"; 19 ]
+do #inner.person[ "MY SOUL" ]

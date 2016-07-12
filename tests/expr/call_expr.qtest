@@ -7,4 +7,3 @@ do max[ 10;20]
 do fact[ 5 ]
 do x[ y[ z ] ]
 do max[ 10; 20 ]
-

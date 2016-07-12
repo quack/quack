@@ -36,6 +36,19 @@ class NewExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = '#';
+        $source .= implode('.', $this->class_name);
+
+        if (sizeof($this->ctor_args) > 0) {
+            $source .= '[ ';
+            $source .= implode('; ', array_map(function ($arg) use ($parser) {
+                return $arg->format($parser);
+            }, $this->ctor_args));
+            $source .= ' ]';
+        } else {
+            $source .= '[]';
+        }
+
+        return $source;
     }
 }

@@ -36,15 +36,16 @@ class NewParselet implements IPrefixParselet
         if ($grammar->parser->is('[')) {
             $grammar->parser->consume();
 
-            while ($grammar->checker->startsExpr()) {
+            if (!$grammar->parser->is(']')) {
                 $ctor_args[] = $grammar->_expr();
-
-                if (!$grammar->parser->is(']')) {
-                    $grammar->parser->match(';');
+                while ($grammar->parser->is(';')) {
+                    $grammar->parser->consume();
+                    $ctor_args[] = $grammar->_expr();
                 }
+                $grammar->parser->match(']');
+            } else {
+                $grammar->parser->consume();
             }
-
-            $grammar->parser->match(']');
         } else {
             $grammar->parser->match('!');
         }

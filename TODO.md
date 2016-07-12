@@ -47,9 +47,9 @@
   - [x] BoolExpr
   - [x] CallExpr
   - [x] IncludeExpr
-  - [ ] LambdaExpr
-  - [ ] NameExpr
-  - [ ] NewExpr
+  - [x] LambdaExpr
+  - [x] NameExpr
+  - [x] NewExpr
   - [x] NilExpr
   - [x] NumberExpr
   - [ ] OperatorExpr
@@ -68,11 +68,11 @@
   - [x] ArrayPairExpr
   - [x] AtomExpr
   - [x] BoolExpr
-  - [ ] CallExpr
+  - [x] CallExpr
   - [x] IncludeExpr
-  - [ ] LambdaExpr
+  - [x] LambdaExpr
   - [ ] NameExpr
-  - [ ] NewExpr
+  - [x] NewExpr
   - [x] NilExpr
   - [ ] NumberExpr
   - [ ] OperatorExpr
