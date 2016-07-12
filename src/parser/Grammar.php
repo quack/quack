@@ -470,7 +470,7 @@ class Grammar
 
         $this->parser->match(Tag::T_END);
 
-        return new EnumStmt($entries);
+        return new EnumStmt($name, $entries);
     }
 
     public function _extensionDeclStmt()
