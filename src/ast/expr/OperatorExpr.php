@@ -39,6 +39,11 @@ class OperatorExpr implements Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = $this->left->format($parser);
+        $source .= ' ';
+        $source .= Tag::getOperatorLexeme($this->operator);
+        $source .= ' ';
+        $source .= $this->right->format($parser);
+        return $source;
     }
 }

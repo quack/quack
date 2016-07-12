@@ -86,6 +86,22 @@ class Tag
     const T_UNLESS = 307;
     const T_MEMBER = 308;
 
+    public static function getOperatorLexeme($op)
+    {
+        switch ($op) {
+            case Tag::T_NOT:
+                return 'not';
+            case Tag::T_AND:
+                return 'and';
+            case Tag::T_OR:
+                return 'or';
+            case Tag::T_MOD:
+                return 'mod';
+            default:
+                return $op;
+        }
+    }
+
     public static function & getPartialOperators()
     {
         static $op_table = [

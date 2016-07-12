@@ -52,7 +52,7 @@
   - [x] NewExpr
   - [x] NilExpr
   - [x] NumberExpr
-  - [ ] OperatorExpr
+  - [x] OperatorExpr
   - [ ] PartialFuncExpr
   - [ ] PostfixExpr
   - [x] PrefixExpr
@@ -75,7 +75,7 @@
   - [x] NewExpr
   - [x] NilExpr
   - [ ] NumberExpr
-  - [ ] OperatorExpr
+  - [x] OperatorExpr
   - [ ] PartialFuncExpr
   - [ ] PostfixExpr
   - [ ] PrefixExpr
