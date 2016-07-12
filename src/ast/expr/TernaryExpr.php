@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class TernaryExpr implements Expr
+class TernaryExpr extends Expr
 {
     public $condition;
     public $then;
@@ -43,6 +43,11 @@ class TernaryExpr implements Expr
         $source .= $this->then->format($parser);
         $source .= ' else ';
         $source .= $this->else->format($parser);
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }

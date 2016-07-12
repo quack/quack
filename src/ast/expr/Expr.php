@@ -23,6 +23,17 @@ namespace QuackCompiler\Ast\Expr;
 
 use QuackCompiler\Ast\Node;
 
-interface Expr extends Node
+abstract class Expr implements Node
 {
+  protected $parenthesize = false;
+
+  public function addParentheses()
+  {
+    $this->parenthesize = true;
+  }
+
+  public function removeParentheses()
+  {
+    $this->parenthesize = false;
+  }
 }

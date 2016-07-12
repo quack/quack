@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class WhenExpr implements Expr
+class WhenExpr extends Expr
 {
     public $cases;
 

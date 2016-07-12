@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class NumberExpr implements Expr
+class NumberExpr extends Expr
 {
     public $value;
     public $type;
@@ -36,6 +36,12 @@ class NumberExpr implements Expr
 
     public function format(Parser $parser)
     {
-        return (string) $this->value;
+        $source = $this->value;
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

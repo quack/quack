@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class OperatorExpr implements Expr
+class OperatorExpr extends Expr
 {
     public $left;
     public $operator;
@@ -39,11 +39,20 @@ class OperatorExpr implements Expr
 
     public function format(Parser $parser)
     {
+        $blanks = '.' !== $this->operator && '?.' !== $this->operator
+            ? ' '
+            : '';
+
         $source = $this->left->format($parser);
-        $source .= ' ';
+        $source .= $blanks;
         $source .= Tag::getOperatorLexeme($this->operator);
-        $source .= ' ';
+        $source .= $blanks;
         $source .= $this->right->format($parser);
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }

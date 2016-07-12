@@ -37,7 +37,7 @@
 - [x] Support for `super` and `self` call
 - [x] Implement enum
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
-- [ ] Implement support for parenthesized expressions
+- [x] Implement support for parenthesized expressions
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

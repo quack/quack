@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class ArrayPairExpr implements Expr
+class ArrayPairExpr extends Expr
 {
     public $left;
     public $right;

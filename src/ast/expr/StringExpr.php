@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class StringExpr implements Expr
+class StringExpr extends Expr
 {
     public $value;
 

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class ArrayExpr implements Expr
+class ArrayExpr extends Expr
 {
     public $items;
 
@@ -45,6 +45,11 @@ class ArrayExpr implements Expr
             $source .= ' ';
         }
         $source .= '}';
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }

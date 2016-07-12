@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class AccessExpr implements Expr
+class AccessExpr extends Expr
 {
     public $left;
     public $index;
@@ -40,6 +40,11 @@ class AccessExpr implements Expr
         $source .= ' {';
         $source .= $this->index->format($parser);
         $source .= '}';
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }

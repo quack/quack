@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parser\Parser;
 
-class IncludeExpr implements Expr
+class IncludeExpr extends Expr
 {
     public $type;
     public $is_once;
@@ -48,6 +48,11 @@ class IncludeExpr implements Expr
         }
 
         $source .= $this->file->format($parser);
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }

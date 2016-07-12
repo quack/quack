@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class RangeExpr implements Expr
+class RangeExpr extends Expr
 {
     public $from;
     public $to;
@@ -45,6 +45,10 @@ class RangeExpr implements Expr
         if (null !== $this->by) {
             $source .= ' by ';
             $source .= $this->by->format($parser);
+        }
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
         }
 
         return $source;

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class BoolExpr implements Expr
+class BoolExpr extends Expr
 {
     public $value;
 
@@ -34,6 +34,12 @@ class BoolExpr implements Expr
 
     public function format(Parser $_)
     {
-        return $this->value ? 'true' : 'false';
+        $source = $this->value ? 'true' : 'false';
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

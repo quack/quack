@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class PostfixExpr implements Expr
+class PostfixExpr extends Expr
 {
     public $left;
     public $operator;

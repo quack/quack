@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class LambdaExpr implements Expr
+class LambdaExpr extends Expr
 {
     public $by_reference;
     public $parameters;
@@ -77,6 +77,10 @@ class LambdaExpr implements Expr
                     implode('; ', $this->lexical_vars) .
                     ' }'
                 );
+        }
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
         }
 
         return $source;

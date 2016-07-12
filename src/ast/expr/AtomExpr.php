@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class AtomExpr implements Expr
+class AtomExpr extends Expr
 {
     public $value;
 
@@ -34,6 +34,12 @@ class AtomExpr implements Expr
 
     public function format(Parser $parser)
     {
-        return ':' . $this->value;
+        $source = ':' . $this->value;
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

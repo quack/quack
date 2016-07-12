@@ -23,10 +23,16 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class NilExpr implements Expr
+class NilExpr extends Expr
 {
     public function format(Parser $_)
     {
-        return 'nil';
+        $source = 'nil';
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class PartialFuncExpr implements Expr
+class PartialFuncExpr extends Expr
 {
     public $operator;
     public $right;

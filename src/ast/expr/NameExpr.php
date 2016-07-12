@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class NameExpr implements Expr
+class NameExpr extends Expr
 {
     public $token;
 
@@ -34,6 +34,12 @@ class NameExpr implements Expr
 
     public function format(Parser $parser)
     {
-        return $this->token;
+        $source = $this->token;
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

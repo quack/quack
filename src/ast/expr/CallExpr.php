@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class CallExpr implements Expr
+class CallExpr extends Expr
 {
     public $func;
     public $arguments;
@@ -46,6 +46,10 @@ class CallExpr implements Expr
             $source .= ' ]';
         } else {
             $source .= '[]';
+        }
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
         }
 
         return $source;

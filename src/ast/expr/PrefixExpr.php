@@ -25,7 +25,7 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 
-class PrefixExpr implements Expr
+class PrefixExpr extends Expr
 {
     private $operator;
     private $right;
@@ -42,6 +42,11 @@ class PrefixExpr implements Expr
             ? 'not '
             : $this->operator;
         $source .= $this->right->format($parser);
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
         return $source;
     }
 }
