@@ -30,6 +30,7 @@ use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\BlueprintStmt;
+use \QuackCompiler\Ast\Stmt\ExtensionStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
@@ -385,7 +386,8 @@ class Grammar
             Tag::T_FN        => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
-            Tag::T_ENUM      => '_enumStmt'
+            Tag::T_ENUM      => '_enumStmt',
+            Tag::T_EXTENSION => '_extensionDeclStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -469,6 +471,42 @@ class Grammar
         $this->parser->match(Tag::T_END);
 
         return new EnumStmt($entries);
+    }
+
+    public function _extensionDeclStmt()
+    {
+        $appliesTo = [];
+        $appliesToRegexes = [];
+        $implements = [];
+
+        $this->parser->match(Tag::T_EXTENSION);
+        $this->parser->match(Tag::T_FOR);
+
+        do {
+            if ($this->parser->is(Tag::T_REGEX)) {
+                $appliesToRegexes[] = $this->parser->consumeAndFetch();
+            } else {
+                $appliesTo[] = $this->qualifiedName();
+            }
+
+            if ($this->parser->is(';')) {
+                $this->parser->consume();
+            } else {
+                break;
+            }
+        } while (true);
+
+        if ($this->parser->is('#')) {
+            do {
+                $this->parser->consume();
+                $implements[] = $this->qualifiedName();
+            } while ($this->parser->is(';'));
+        }
+
+        $body = iterator_to_array($this->_blueprintStmtList());
+        $this->parser->match(Tag::T_END);
+
+        return new ExtensionStmt($appliesTo, $appliesToRegexes, $implements, $body);
     }
 
     public function _blueprintDeclStmt()

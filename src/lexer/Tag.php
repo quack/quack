@@ -45,6 +45,7 @@ class Tag
     const T_INIT = 267;
     const T_MODULE = 269;
     const T_BLUEPRINT = 270;
+    const T_EXTENSION = 271;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
@@ -62,7 +63,6 @@ class Tag
     const T_AND = 511;
     const T_OR = 512;
     const T_XOR = 513;
-    const T_EXTENSION = 800;
     const T_TRY = 515;
     const T_RESCUE = 516;
     const T_FINALLY = 517;
@@ -86,7 +86,8 @@ class Tag
     const T_UNLESS = 307;
     const T_MEMBER = 308;
 
-    public static function & getPartialOperators() {
+    public static function & getPartialOperators()
+    {
         static $op_table = [
             '+',
             '-',
