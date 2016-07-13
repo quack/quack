@@ -1,16 +1,15 @@
-(** vim: syntax=Scala *)
+open fn prelude.{ filter; reduce; union }
 
-module Example.List
-
-let map = &{ fn, xss |
-  {} = {}
-  x:xs = {[fn x]} +++ [map xs]
+let map :- fn { f; xss |
+  { } when xs = { }
+      else f[ head[ xss ] ] ++ tail[ xss ]
 }
 
-letf map f xs = :{ x | f x <- xs }
-letf filter p xs = :{ x | x <- xs, p[x] }
+let my_list :- 1 .. 100
 
-let codes: int+ = { 1, 2, 3 }
-
-users
-|>
+do my_list
+|> map[ &(* 2 ) ]
+|> union[ { 10; 20; 30 } ]
+|> filter[ fn { x | x mod 2 = 0 } ]
+|> reduce[ &(+) ]
+|> write!
