@@ -40,6 +40,29 @@ class ExtensionStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'extension for ';
+
+        $source .= implode('; ', array_map(function ($param) {
+            return implode('', $param);
+        }, $this->appliesTo));
+
+        $source .= implode('; ', array_map(function ($param) {
+            return $param->format($parser);
+        }, $this->appliesToRegexes));
+
+        if (count($this->implements) > 0) {
+            $source .= ' # ';
+            $source .= implode('; ', array_map(function ($param) {
+                return implode('', $param);
+            }, $this->implements));
+        }
+
+        foreach ($this->body as $node) {
+            $node->format($parser);
+        }
+
+        $source .= ' end'. PHP_EOL;
+
+        return $source;
     }
 }

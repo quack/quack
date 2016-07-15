@@ -1,0 +1,29 @@
+%%comments
+
+// The T_REGEX is not working properly.
+//TODO: Implement tests for T_REGEX.
+//TODO: Implement members, fns and more...
+
+// Examples below
+
+extension for    String#      UTF8Encoding ; Base64 member x end
+
+extension for House
+   member nRooms ; nBathrooms
+   fn rooms! ^ self.nRooms end
+end
+
+%%describe
+Supports formatting extensions
+%%source
+extension for    String#      UTF8Encoding ; Base64 end
+extension for House
+end
+
+extension for Igloo      ; Castle;    SpanishColonial
+
+end
+%%expect
+extension for String # UTF8Encoding; Base64 end
+extension for House end
+extension for Igloo; Castle; SpanishColonial end

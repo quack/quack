@@ -88,6 +88,8 @@
     ; Parser is cumulative. You can have multiple and isolated sections
     (for [line lines]
       (cond
+        [(= line "%%comments")
+          (setv tok :none)]
         [(= line "%%describe")
           (setv tok :describe)]
         [(= line "%%source")
