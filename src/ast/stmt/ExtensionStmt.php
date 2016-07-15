@@ -58,7 +58,7 @@ class ExtensionStmt implements Stmt
         }
 
         foreach ($this->body as $node) {
-            $node->format($parser);
+            $source .= $node->format($parser);
         }
 
         $source .= ' end'. PHP_EOL;
