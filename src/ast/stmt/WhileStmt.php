@@ -37,19 +37,21 @@ class WhileStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $is_simple = !($this->body instanceof BlockStmt);
-        $string_builder = ['while '];
-        $string_builder[] = $this->condition->format($parser);
-        $string_builder[] = ' ';
+        $source = 'while ';
+        $source .= $this->condition->format($parser);
+        $source .= PHP_EOL;
 
-        if ($is_simple) {
-            $string_builder[] = "\n";
-            $parser->openScope();
-            $string_builder[] = $parser->indent();
-            $parser->closeScope();
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
         }
 
-        $string_builder[] = $this->body->format($parser);
-        return implode($string_builder);
+        $parser->closeScope();
+        $source .= $parser->indent();
+        $source .= 'end' . PHP_EOL;
+
+        return $source;
     }
 }

@@ -37,6 +37,9 @@ class PostfixExpr extends Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = $this->left->format($parser);
+        $source .= Tag::getOperatorLexeme($this->operator);
+
+        return $source;
     }
 }

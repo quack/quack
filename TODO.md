@@ -37,9 +37,10 @@
 - [x] Support for `super` and `self` call
 - [x] Implement enum
 - [x] Implement support for parenthesized expressions
+- [x] Use INI directives and build a quack.ini file
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
-- [ ] Use INI directives and build a quack.ini file
+- [ ] Flag "when" expression, because it is just syntactic sugar
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
@@ -56,7 +57,7 @@
   - [x] NumberExpr
   - [x] OperatorExpr
   - [x] PartialFuncExpr
-  - [ ] PostfixExpr
+  - [x] PostfixExpr
   - [x] PrefixExpr
   - [x] RangeExpr
   - [x] RegexExpr
@@ -86,3 +87,75 @@
   - [ ] StringExpr
   - [ ] TernaryExpr
   - [ ] WhenExpr
+
+- Implement formatting statements:
+
+  - [ ] BlockStmt.php
+  - [ ] BlueprintStmt.php
+  - [ ] BreakStmt.php
+  - [ ] CaseStmt.php
+  - [ ] ConstStmt.php
+  - [ ] ContinueStmt.php
+  - [ ] DoWhileStmt.php
+  - [ ] ElifStmt.php
+  - [ ] EnumStmt.php
+  - [ ] ExprStmt.php
+  - [ ] ExtensionStmt.php
+  - [ ] FnStmt.php
+  - [ ] ForeachStmt.php
+  - [ ] ForStmt.php
+  - [ ] GlobalStmt.php
+  - [ ] GotoStmt.php
+  - [ ] IfStmt.php
+  - [ ] IntfStmt.php
+  - [ ] LabelStmt.php
+  - [ ] LetStmt.php
+  - [ ] MemberStmt.php
+  - [ ] ModuleStmt.php
+  - [ ] OpenStmt.php
+  - [ ] PieceStmt.php
+  - [ ] PrintStmt.php
+  - [ ] RaiseStmt.php
+  - [ ] RescueStmt.php
+  - [ ] ReturnStmt.php
+  - [ ] Stmt.php
+  - [ ] StructStmt.php
+  - [ ] SwitchStmt.php
+  - [ ] TryStmt.php
+  - [x] WhileStmt.php
+
+- Write tests for statements:
+
+  - [ ] BlockStmt.php
+  - [ ] BlueprintStmt.php
+  - [ ] BreakStmt.php
+  - [ ] CaseStmt.php
+  - [ ] ConstStmt.php
+  - [ ] ContinueStmt.php
+  - [ ] DoWhileStmt.php
+  - [ ] ElifStmt.php
+  - [ ] EnumStmt.php
+  - [ ] ExprStmt.php
+  - [ ] ExtensionStmt.php
+  - [ ] FnStmt.php
+  - [ ] ForeachStmt.php
+  - [ ] ForStmt.php
+  - [ ] GlobalStmt.php
+  - [ ] GotoStmt.php
+  - [ ] IfStmt.php
+  - [ ] IntfStmt.php
+  - [ ] LabelStmt.php
+  - [ ] LetStmt.php
+  - [ ] MemberStmt.php
+  - [ ] ModuleStmt.php
+  - [ ] OpenStmt.php
+  - [ ] PieceStmt.php
+  - [ ] PrintStmt.php
+  - [ ] RaiseStmt.php
+  - [ ] RescueStmt.php
+  - [ ] ReturnStmt.php
+  - [ ] Stmt.php
+  - [ ] StructStmt.php
+  - [ ] SwitchStmt.php
+  - [ ] TryStmt.php
+  - [ ] WhileStmt.php
