@@ -37,6 +37,20 @@ class PartialFuncExpr extends Expr
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = '&(';
+        $source .= Tag::getOperatorLexeme($this->operator);
+
+        if (null !== $this->right) {
+            $source .= ' ';
+            $source .= $this->right->format($parser);
+        }
+
+        $source .= ')';
+
+        if ($this->parenthesize) {
+            $source = '(' . $source . ')';
+        }
+
+        return $source;
     }
 }

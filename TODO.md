@@ -36,8 +36,10 @@
 - [x] Implement built-in support for regexes
 - [x] Support for `super` and `self` call
 - [x] Implement enum
-- [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [x] Implement support for parenthesized expressions
+- [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
+- [ ] Don't remove multiple parenthesis unless it be explicit
+- [ ] Use INI directives and build a quack.ini file
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
@@ -53,7 +55,7 @@
   - [x] NilExpr
   - [x] NumberExpr
   - [x] OperatorExpr
-  - [ ] PartialFuncExpr
+  - [x] PartialFuncExpr
   - [ ] PostfixExpr
   - [x] PrefixExpr
   - [x] RangeExpr
@@ -76,7 +78,7 @@
   - [x] NilExpr
   - [ ] NumberExpr
   - [x] OperatorExpr
-  - [ ] PartialFuncExpr
+  - [x] PartialFuncExpr
   - [ ] PostfixExpr
   - [ ] PrefixExpr
   - [x] RangeExpr
