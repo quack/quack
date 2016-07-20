@@ -97,9 +97,8 @@
   - [ ] CaseStmt.php
   - [ ] ConstStmt.php
   - [x] ContinueStmt.php
-  - [ ] DoWhileStmt.php
   - [ ] ElifStmt.php
-  - [ ] EnumStmt.php
+  - [x] EnumStmt.php
   - [ ] ExprStmt.php
   - [ ] ExtensionStmt.php
   - [ ] FnStmt.php
@@ -115,11 +114,9 @@
   - [ ] ModuleStmt.php
   - [ ] OpenStmt.php
   - [ ] PieceStmt.php
-  - [ ] PrintStmt.php
   - [ ] RaiseStmt.php
   - [ ] RescueStmt.php
   - [ ] ReturnStmt.php
-  - [ ] Stmt.php
   - [ ] StructStmt.php
   - [ ] SwitchStmt.php
   - [ ] TryStmt.php
@@ -133,7 +130,6 @@
   - [ ] CaseStmt.php
   - [ ] ConstStmt.php
   - [ ] ContinueStmt.php
-  - [ ] DoWhileStmt.php
   - [ ] ElifStmt.php
   - [ ] EnumStmt.php
   - [ ] ExprStmt.php
@@ -151,7 +147,6 @@
   - [ ] ModuleStmt.php
   - [ ] OpenStmt.php
   - [ ] PieceStmt.php
-  - [ ] PrintStmt.php
   - [ ] RaiseStmt.php
   - [ ] RescueStmt.php
   - [ ] ReturnStmt.php

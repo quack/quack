@@ -36,6 +36,24 @@ class EnumStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = 'enum ';
+        $source .= $this->name;
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->entries as $entry) {
+            $source .= $parser->indent();
+            $source .= $entry;
+            $source .= PHP_EOL;
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }
