@@ -41,21 +41,30 @@ class ForeachStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $is_simple = !($this->body instanceof BlockStmt);
-        $string_builder = ['foreach '];
-        $string_builder[] = $this->alias;
-        $string_builder[] = ' in ';
-        $string_builder[] = $this->generator->format($parser);
-        $string_builder[] = ' ';
+        $source = 'foreach ';
 
-        if ($is_simple) {
-            $string_builder[] = "\n";
-            $parser->openScope();
-            $string_builder[] = $parser->indent();
-            $parser->closeScope();
+        if ($this->by_reference) {
+            $source .= '*';
         }
 
-        $string_builder[] = $this->body->format($parser);
-        return implode($string_builder);
+        $source .= $this->alias;
+        $source .= ' in ';
+        $source .= $this->generator->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

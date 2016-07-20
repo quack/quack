@@ -42,6 +42,7 @@
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Flag "when" expression, because it is just syntactic sugar
+- [ ] Implement key value in foreach
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
@@ -102,7 +103,7 @@
   - [x] ExprStmt.php
   - [ ] ExtensionStmt.php
   - [ ] FnStmt.php
-  - [ ] ForeachStmt.php
+  - [x] ForeachStmt.php
   - [ ] ForStmt.php
   - [ ] IfStmt.php
   - [x] LabelStmt.php
