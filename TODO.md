@@ -95,7 +95,7 @@
   - [ ] BlueprintStmt.php
   - [x] BreakStmt.php
   - [ ] CaseStmt.php
-  - [ ] ConstStmt.php
+  - [x] ConstStmt.php
   - [x] ContinueStmt.php
   - [ ] ElifStmt.php
   - [x] EnumStmt.php
@@ -107,7 +107,7 @@
   - [ ] IfStmt.php
   - [ ] IntfStmt.php
   - [ ] LabelStmt.php
-  - [ ] LetStmt.php
+  - [x] LetStmt.php
   - [ ] MemberStmt.php
   - [ ] ModuleStmt.php
   - [ ] OpenStmt.php

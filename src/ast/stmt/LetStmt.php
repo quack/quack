@@ -34,6 +34,22 @@ class LetStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'let ';
+        $first = true;
+
+        foreach ($this->definitions as $variable => $value) {
+            if (!$first) {
+                $source .= '  , ';
+            } else {
+                $first = false;
+            }
+
+            $source .= $variable;
+            $source .= ' :- ';
+            $source .= $value->format($parser);
+            $source .= PHP_EOL;
+        }
+
+        return $source;
     }
 }

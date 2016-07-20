@@ -34,6 +34,22 @@ class ConstStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = 'const ';
+        $first = true;
+
+        foreach ($this->definitions as $variable => $value) {
+            if (!$first) {
+                $source .= '    , ';
+            } else {
+                $first = false;
+            }
+
+            $source .= $variable;
+            $source .= ' :- ';
+            $source .= $value->format($parser);
+            $source .= PHP_EOL;
+        }
+
+        return $source;
     }
 }
