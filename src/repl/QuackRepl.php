@@ -71,17 +71,19 @@ function readline_callback($command)
 {
     $command = trim($command);
 
-    if ($command === ':quit' || $command === ':q') {
-        exit;
-    } elseif ($command === 'show c') {
-        print_entire_license();
-        goto next;
-    } elseif ($command === '') {
-        goto next;
-    } elseif ($command === ':clear') {
-        $clear = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'cls' : 'clear';
-        system($clear);
-        goto next;
+    switch (trim($command)) {
+        case ':quit':
+        case ':q':
+            exit;
+        case 'show c':
+            print_entire_license();
+            goto next;
+        case '':
+            goto next;
+        case ':clear':
+            $clear = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'cls' : 'clear';
+            system($clear);
+            goto next;
     }
 
     $lexer = new Tokenizer($command);
@@ -102,13 +104,16 @@ function readline_callback($command)
 
 function repl()
 {
+    $title = "Quack interactive mode";
+    fwrite(STDOUT, "\x1b]2;{$title}\x07");
+
     echo "Type ^C or :quit to leave", PHP_EOL;
     install_stream_handler();
 
     while (true) {
         $write = null;
         $except = null;
-        $stream = stream_select($read = [STDIN], $write, $except, null);
+        $stream = @stream_select($read = [STDIN], $write, $except, null);
 
         if ($stream && in_array(STDIN, $read)) {
             readline_callback_read_char();
