@@ -111,7 +111,6 @@ import(AST, 'stmt/EnumStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
-import(AST, 'stmt/IntfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ModuleStmt');

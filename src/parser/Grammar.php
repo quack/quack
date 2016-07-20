@@ -41,7 +41,6 @@ use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\ForStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
-use \QuackCompiler\Ast\Stmt\IntfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;

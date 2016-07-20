@@ -106,7 +106,7 @@
   - [ ] ForStmt.php
   - [ ] IfStmt.php
   - [ ] IntfStmt.php
-  - [ ] LabelStmt.php
+  - [x] LabelStmt.php
   - [x] LetStmt.php
   - [ ] MemberStmt.php
   - [ ] ModuleStmt.php

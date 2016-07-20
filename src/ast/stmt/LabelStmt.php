@@ -34,9 +34,9 @@ class LabelStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = [':- '];
-        $string_builder[] = $this->label;
-        $string_builder[] = PHP_EOL;
-        return implode($string_builder);
+        $source = ':- ';
+        $source .= $this->label;
+        $source .= PHP_EOL;
+        return $source;
     }
 }
