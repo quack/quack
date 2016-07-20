@@ -104,8 +104,6 @@
   - [ ] FnStmt.php
   - [ ] ForeachStmt.php
   - [ ] ForStmt.php
-  - [ ] GlobalStmt.php
-  - [ ] GotoStmt.php
   - [ ] IfStmt.php
   - [ ] IntfStmt.php
   - [ ] LabelStmt.php
@@ -137,8 +135,6 @@
   - [ ] FnStmt.php
   - [ ] ForeachStmt.php
   - [ ] ForStmt.php
-  - [ ] GlobalStmt.php
-  - [ ] GotoStmt.php
   - [ ] IfStmt.php
   - [ ] IntfStmt.php
   - [ ] LabelStmt.php

@@ -110,8 +110,6 @@ import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/EnumStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
-import(AST, 'stmt/GlobalStmt');
-import(AST, 'stmt/GotoStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/IntfStmt');
 import(AST, 'stmt/LabelStmt');

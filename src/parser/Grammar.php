@@ -40,8 +40,6 @@ use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\ForStmt;
-use \QuackCompiler\Ast\Stmt\GlobalStmt;
-use \QuackCompiler\Ast\Stmt\GotoStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\IntfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
@@ -144,8 +142,6 @@ class Grammar
             Tag::T_TRY      => '_tryStmt',
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
-            Tag::T_GOTO     => '_gotoStmt',
-            Tag::T_GLOBAL   => '_globalStmt',
             Tag::T_RAISE    => '_raiseStmt',
             Tag::T_BEGIN    => '_blockStmt',
             '^'             => '_returnStmt',
@@ -318,20 +314,6 @@ class Grammar
         $this->parser->match(Tag::T_CONTINUE);
         $expression = $this->_optExpr();
         return new ContinueStmt($expression);
-    }
-
-    public function _gotoStmt()
-    {
-        $this->parser->match(Tag::T_GOTO);
-        $label = $this->identifier();
-        return new GotoStmt($label);
-    }
-
-    public function _globalStmt()
-    {
-        $this->parser->match(Tag::T_GLOBAL);
-        $variable = $this->identifier();
-        return new GlobalStmt($variable);
     }
 
     public function _raiseStmt()
