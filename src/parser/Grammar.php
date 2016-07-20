@@ -731,7 +731,7 @@ class Grammar
 
     public function _expr($precedence = 0, $opt = false)
     {
-        $token = $this->parser->consumeAndFetch();
+        $token = $this->parser->lookahead;
         $prefix = $this->parser->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
@@ -746,6 +746,9 @@ class Grammar
             return null;
         }
 
+        // We consume the token only when ensure it has a parselet, thus,
+        // avoiding to rollback in the tape
+        $this->parser->consume();
         $left = $prefix->parse($this, $token);
 
         // Where clause

@@ -34,15 +34,14 @@ class ContinueStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['continue'];
+        $source = 'continue';
 
-        if (!is_null($this->label)) {
-            $string_builder[] = ' ';
-            $string_builder[] = $this->label->format($parser);
+        if (null !== $this->label) {
+            $source .= ' ';
+            $source .= $this->label->format($parser);
         }
 
-        $string_builder[] = PHP_EOL;
-
-        return implode($string_builder);
+        $source .= PHP_EOL;
+        return $source;
     }
 }

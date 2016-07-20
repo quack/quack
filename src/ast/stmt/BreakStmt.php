@@ -34,15 +34,15 @@ class BreakStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['break'];
+        $source = 'break';
 
-        if (!is_null($this->label)) {
-            $string_builder[] = ' ';
-            $string_builder[] = $this->label->format($parser);
+        if (null !== $this->label) {
+            $source .= ' ';
+            $source .= $this->label->format($parser);
         }
 
-        $string_builder[] = PHP_EOL;
+        $source .= PHP_EOL;
 
-        return implode($string_builder);
+        return $source;
     }
 }

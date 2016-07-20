@@ -34,20 +34,20 @@ class BlockStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        if (sizeof($this->stmt_list) == 0) {
-            return "[]\n";
-        }
-
-        $string_builder = ["[\n"];
+        $source = 'begin';
+        $source .= PHP_EOL;
         $parser->openScope();
 
         foreach ($this->stmt_list as $stmt) {
-            $string_builder[] = $parser->indent() . $stmt->format($parser);
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
         }
 
-        $string_builder[] = $parser->dedent();
         $parser->closeScope();
-        $string_builder[] = "]\n";
-        return implode($string_builder);
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

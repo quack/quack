@@ -38,6 +38,7 @@
 - [x] Implement enum
 - [x] Implement support for parenthesized expressions
 - [x] Use INI directives and build a quack.ini file
+- [x] Fix bug on break (consuming tokens it shouldn't)
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Flag "when" expression, because it is just syntactic sugar
@@ -52,7 +53,7 @@
   - [x] IncludeExpr
   - [x] LambdaExpr
   - [x] NameExpr
-  - [x] NewExpr
+  - [x] NewExp
   - [x] NilExpr
   - [x] NumberExpr
   - [x] OperatorExpr
@@ -90,12 +91,12 @@
 
 - Implement formatting statements:
 
-  - [ ] BlockStmt.php
+  - [x] BlockStmt.php
   - [ ] BlueprintStmt.php
-  - [ ] BreakStmt.php
+  - [x] BreakStmt.php
   - [ ] CaseStmt.php
   - [ ] ConstStmt.php
-  - [ ] ContinueStmt.php
+  - [x] ContinueStmt.php
   - [ ] DoWhileStmt.php
   - [ ] ElifStmt.php
   - [ ] EnumStmt.php
