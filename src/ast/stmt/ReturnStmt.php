@@ -34,14 +34,15 @@ class ReturnStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['<<<'];
+        $source = '^';
 
-        if (!is_null($this->expression)) {
-            $string_builder[] = ' ';
-            $string_builder[] = $this->expression->format($parser);
-            $string_builder[] = PHP_EOL;
+        if (null !== $this->expression) {
+            $source .= ' ';
+            $source .= $this->expression->format($parser);
         }
 
-        return implode($string_builder);
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

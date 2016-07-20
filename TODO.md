@@ -99,13 +99,12 @@
   - [x] ContinueStmt.php
   - [ ] ElifStmt.php
   - [x] EnumStmt.php
-  - [ ] ExprStmt.php
+  - [x] ExprStmt.php
   - [ ] ExtensionStmt.php
   - [ ] FnStmt.php
   - [ ] ForeachStmt.php
   - [ ] ForStmt.php
   - [ ] IfStmt.php
-  - [ ] IntfStmt.php
   - [x] LabelStmt.php
   - [x] LetStmt.php
   - [ ] MemberStmt.php
@@ -136,7 +135,6 @@
   - [ ] ForeachStmt.php
   - [ ] ForStmt.php
   - [ ] IfStmt.php
-  - [ ] IntfStmt.php
   - [ ] LabelStmt.php
   - [ ] LetStmt.php
   - [ ] MemberStmt.php

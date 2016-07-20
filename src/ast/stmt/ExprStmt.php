@@ -25,20 +25,30 @@ use \QuackCompiler\Parser\Parser;
 
 class ExprStmt implements Stmt
 {
-    public $expression;
+    public $expr_list;
 
-    public function __construct($expression)
+    public function __construct($expr_list)
     {
-        $this->expression = $expression;
+        $this->expr_list = $expr_list;
     }
 
     public function format(Parser $parser)
     {
-        $source = ['do '];
-        $source[] = implode(', ', array_map(function ($expr) use ($parser) {
-            return $expr->format($parser);
-        }, $this->expression));
-        $source[] = PHP_EOL;
-        return implode($source);
+        $source = 'do ';
+        $first = true;
+
+        foreach ($this->expr_list as $expr) {
+            if (!$first) {
+                $source .= $parser->indent();
+                $source .= ' , ';
+            } else {
+                $first = false;
+            }
+
+            $source .= $expr->format($parser);
+            $source .= PHP_EOL;
+        }
+
+        return $source;
     }
 }

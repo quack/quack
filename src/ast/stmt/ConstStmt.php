@@ -39,6 +39,7 @@ class ConstStmt implements Stmt
 
         foreach ($this->definitions as $variable => $value) {
             if (!$first) {
+                $source .= $parser->indent();
                 $source .= '    , ';
             } else {
                 $first = false;
