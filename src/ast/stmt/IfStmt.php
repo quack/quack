@@ -41,19 +41,40 @@ class IfStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $is_simple = !($this->body instanceof BlockStmt);
-        $string_builder = ['if '];
-        $string_builder[] = $this->condition->format($parser);
-        $string_builder[] = ' ';
+        $source = 'if ';
+        $source .= $this->condition->format($parser);
+        $source .= PHP_EOL;
 
-        if ($is_simple) {
-            $string_builder[] = "\n";
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        foreach ($this->elif as $elif) {
+            $source .= $elif->format($parser);
+        }
+
+        if (null !== $this->else) {
+            $source .= $parser->indent();
+            $source .= 'else';
+            $source .= PHP_EOL;
+
             $parser->openScope();
-            $string_builder[] = $parser->indent();
+
+            $source .= $parser->indent();
+            $source .= $this->else->format($parser);
+
             $parser->closeScope();
         }
 
-        $string_builder[] = $this->body->format($parser);
-        return implode($string_builder);
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

@@ -34,10 +34,9 @@ class RaiseStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['raise'];
-        $string_builder[] = ' ';
-        $string_builder[] = $this->expression->format($parser);
-        $string_builder[] = PHP_EOL;
-        return implode($string_builder);
+        $source = 'raise ';
+        $source .= $this->expression->format($parser);
+        $source .= PHP_EOL;
+        return $source;
     }
 }

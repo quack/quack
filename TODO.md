@@ -43,6 +43,9 @@
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Flag "when" expression, because it is just syntactic sugar
 - [ ] Implement key value in foreach
+- [ ] Tell bang (!) from 0-size call ([])
+- [ ] Implement hints
+- [ ] Review precedence and associativity. Make them standard
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
@@ -98,20 +101,20 @@
   - [ ] CaseStmt.php
   - [x] ConstStmt.php
   - [x] ContinueStmt.php
-  - [ ] ElifStmt.php
+  - [x] ElifStmt.php
   - [x] EnumStmt.php
   - [x] ExprStmt.php
   - [ ] ExtensionStmt.php
   - [ ] FnStmt.php
   - [x] ForeachStmt.php
   - [x] ForStmt.php
-  - [ ] IfStmt.php
+  - [x] IfStmt.php
   - [x] LabelStmt.php
   - [x] LetStmt.php
   - [ ] MemberStmt.php
   - [x] ModuleStmt.php
   - [ ] OpenStmt.php
-  - [ ] RaiseStmt.php
+  - [x] RaiseStmt.php
   - [x] ReturnStmt.php
   - [ ] StructStmt.php
   - [ ] SwitchStmt.php

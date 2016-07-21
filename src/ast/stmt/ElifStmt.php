@@ -36,6 +36,22 @@ class ElifStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO. Not implemented');
+        $source = $parser->indent();
+        $source .= 'elif ';
+        $source .= $this->condition->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        var_dump($this->body);
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        return $source;
     }
 }

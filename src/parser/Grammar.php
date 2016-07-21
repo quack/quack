@@ -342,7 +342,7 @@ class Grammar
         while ($this->parser->is(Tag::T_ELIF)) {
             $this->parser->consume();
             $condition = $this->_expr();
-            $body = $this->_stmt();
+            $body = iterator_to_array($this->_innerStmtList());
             yield new ElifStmt($condition, $body);
         }
     }
