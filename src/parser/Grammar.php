@@ -49,7 +49,6 @@ use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
-use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
@@ -361,7 +360,6 @@ class Grammar
     {
         $branch_table = [
             Tag::T_BLUEPRINT => '_blueprintDeclStmt',
-            Tag::T_STRUCT    => '_structDeclStmt',
             Tag::T_FN        => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
@@ -381,7 +379,6 @@ class Grammar
         $branch_table = [
             Tag::T_FN        => '_fnStmt',
             Tag::T_BLUEPRINT => '_blueprintDeclStmt',
-            Tag::T_STRUCT    => '_structDeclStmt',
             Tag::T_ENUM      => '_enumStmt'
         ];
 
@@ -512,26 +509,6 @@ class Grammar
         $this->parser->match(Tag::T_END);
 
         return new BlueprintStmt($blueprint_name, $extends, $implements, $body);
-    }
-
-    public function _structDeclStmt()
-    {
-        $interfaces = [];
-
-        $this->parser->match(Tag::T_STRUCT);
-
-        if ($this->parser->is(':')) {
-            do {
-                $this->parser->consume();
-                $interfaces[] = $this->qualifiedName();
-            } while ($this->parser->is(';'));
-        }
-
-        $body = iterator_to_array($this->_blueprintStmtList());
-        $this->parser->match(Tag::T_END);
-        $name = $this->identifier();
-
-        return new StructStmt($name, $interfaces, $body);
     }
 
     public function _fnStmt()

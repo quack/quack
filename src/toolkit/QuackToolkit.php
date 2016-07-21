@@ -118,7 +118,6 @@ import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/MemberStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/ReturnStmt');
-import(AST, 'stmt/StructStmt');
 import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');

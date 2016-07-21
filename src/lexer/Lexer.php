@@ -54,7 +54,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_FOR, "for"));
         $this->reserve(new Word(Tag::T_WHILE, "while"));
         $this->reserve(new Word(Tag::T_DO, "do"));
-        $this->reserve(new Word(Tag::T_STRUCT, "struct"));
         $this->reserve(new Word(Tag::T_INIT, "init"));
         $this->reserve(new Word(Tag::T_MODULE, "module"));
         $this->reserve(new Word(Tag::T_BLUEPRINT, "blueprint"));

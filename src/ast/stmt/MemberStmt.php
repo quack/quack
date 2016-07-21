@@ -34,6 +34,26 @@ class MemberStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $first = true;
+        $source = 'member ';
+
+        foreach ($this->definitions as $key => $value) {
+            if ($first) {
+                $first = false;
+            } else {
+                $source .= $parser->indent();
+                $source .= '     , ';
+            }
+
+            $source .= $key;
+
+            if (null !== $value) {
+                $source .= ' :- ';
+                $source .= $value->format($parser);
+            }
+            $source .= PHP_EOL;
+        }
+
+        return $source;
     }
 }

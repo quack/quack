@@ -40,6 +40,36 @@ class BlueprintStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'blueprint ';
+        $source .= $this->name;
+
+        if (null !== $this->extends) {
+            $source .= ' : ';
+            $source .= implode('.', $this->extends);
+        }
+
+        if (sizeof($this->implements) > 0) {
+            $source .= ' # ';
+            $source .= implode('; ', array_map(function ($class) {
+                return implode('.', $class);
+            }, $this->implements));
+        }
+
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

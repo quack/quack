@@ -96,7 +96,7 @@
 - Implement formatting statements:
 
   - [x] BlockStmt.php
-  - [ ] BlueprintStmt.php
+  - [x] BlueprintStmt.php
   - [x] BreakStmt.php
   - [x] CaseStmt.php
   - [x] ConstStmt.php
@@ -111,12 +111,11 @@
   - [x] IfStmt.php
   - [x] LabelStmt.php
   - [x] LetStmt.php
-  - [ ] MemberStmt.php
+  - [x] MemberStmt.php
   - [x] ModuleStmt.php
   - [x] OpenStmt.php
   - [x] RaiseStmt.php
   - [x] ReturnStmt.php
-  - [ ] StructStmt.php
   - [x] SwitchStmt.php
   - [x] TryStmt.php
   - [x] WhileStmt.php
@@ -145,7 +144,6 @@
   - [ ] RaiseStmt.php
   - [ ] ReturnStmt.php
   - [ ] Stmt.php
-  - [ ] StructStmt.php
   - [ ] SwitchStmt.php
   - [ ] TryStmt.php
   - [ ] WhileStmt.php
