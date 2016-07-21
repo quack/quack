@@ -113,7 +113,7 @@
   - [x] LetStmt.php
   - [ ] MemberStmt.php
   - [x] ModuleStmt.php
-  - [ ] OpenStmt.php
+  - [x] OpenStmt.php
   - [x] RaiseStmt.php
   - [x] ReturnStmt.php
   - [ ] StructStmt.php

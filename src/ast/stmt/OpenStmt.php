@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
 class OpenStmt implements Stmt
@@ -40,16 +41,40 @@ class OpenStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['open '];
-        $string_builder[] = implode('.', $this->module);
+        $index = 0;
+        $source = 'open ';
 
-        if (!is_null($this->alias)) {
-            $string_builder[] = ' as ';
-            $string_builder[] = $this->alias;
+        if (null !== $this->type) {
+            switch ($this->type->getTag()) {
+                case Tag::T_CONST:
+                    $source .= 'const ';
+                    break;
+                case Tag::T_FN:
+                    $source .= 'fn ';
+                    break;
+            }
         }
 
-        $string_builder[] = PHP_EOL;
+        if (2 == sizeof($this->module)) {
+            $source .= '.';
+            $index = 1;
+        }
 
-        return implode($string_builder);
+        $source .= implode('.', $this->module[$index]);
+
+        if (null !== $this->alias) {
+            $source .= ' as ';
+            $source .= $this->alias;
+        }
+
+        if (null !== $this->subprops) {
+            $source .= ' { ';
+            $source .= implode('; ', $this->subprops);
+            $source .= ' }';
+        }
+
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }
