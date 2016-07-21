@@ -98,7 +98,7 @@
   - [x] BlockStmt.php
   - [ ] BlueprintStmt.php
   - [x] BreakStmt.php
-  - [ ] CaseStmt.php
+  - [x] CaseStmt.php
   - [x] ConstStmt.php
   - [x] ContinueStmt.php
   - [x] ElifStmt.php
@@ -117,7 +117,7 @@
   - [x] RaiseStmt.php
   - [x] ReturnStmt.php
   - [ ] StructStmt.php
-  - [ ] SwitchStmt.php
+  - [x] SwitchStmt.php
   - [x] TryStmt.php
   - [x] WhileStmt.php
 

@@ -38,6 +38,20 @@ class CaseStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = $this->is_else
+            ? 'else'
+            : 'case ' . $this->value->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        return $source;
     }
 }

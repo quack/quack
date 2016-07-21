@@ -36,6 +36,23 @@ class SwitchStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'switch ';
+        $source .= $this->value->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->cases as $case) {
+            $source .= $parser->indent();
+            $source .= $case->format($parser);
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }
