@@ -104,7 +104,7 @@
   - [ ] ExtensionStmt.php
   - [ ] FnStmt.php
   - [x] ForeachStmt.php
-  - [ ] ForStmt.php
+  - [x] ForStmt.php
   - [ ] IfStmt.php
   - [x] LabelStmt.php
   - [x] LetStmt.php
@@ -112,7 +112,6 @@
   - [x] ModuleStmt.php
   - [ ] OpenStmt.php
   - [ ] RaiseStmt.php
-  - [ ] RescueStmt.php
   - [x] ReturnStmt.php
   - [ ] StructStmt.php
   - [ ] SwitchStmt.php
@@ -141,7 +140,6 @@
   - [ ] ModuleStmt.php
   - [ ] OpenStmt.php
   - [ ] RaiseStmt.php
-  - [ ] RescueStmt.php
   - [ ] ReturnStmt.php
   - [ ] Stmt.php
   - [ ] StructStmt.php

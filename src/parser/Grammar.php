@@ -48,7 +48,6 @@ use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
-use \QuackCompiler\Ast\Stmt\RescueStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
@@ -682,7 +681,11 @@ class Grammar
             $this->parser->match(']');
             $body = iterator_to_array($this->_innerStmtList());
 
-            yield new RescueStmt($exception_class, $variable, $body);
+            yield [
+                "exception_class" => $exception_class,
+                "variable" => $variable,
+                "body" => $body
+            ];
         }
     }
 

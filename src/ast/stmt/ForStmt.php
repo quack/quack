@@ -43,6 +43,32 @@ class ForStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'for ';
+        $source .= $this->variable;
+        $source .= ' from ';
+        $source .= $this->from->format($parser);
+        $source .= ' to ';
+        $source .= $this->to->format($parser);
+
+        if (null !== $this->by) {
+            $source .= ' by ';
+            $source .= $this->by->format($parser);
+        }
+
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+        return $source;
     }
 }
