@@ -38,6 +38,57 @@ class TryStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception('TODO');
+        $source = 'try';
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->try as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        foreach ($this->rescues as $rescue) {
+            $obj = (object) $rescue;
+            $source .= $parser->indent();
+            $source .= 'rescue [';
+            $source .= implode('.', $obj->exception_class);
+            $source .= ' ';
+            $source .= $obj->variable;
+            $source .= ']';
+            $source .= PHP_EOL;
+
+            $parser->openScope();
+
+            foreach ($obj->body as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
+
+            $parser->closeScope();
+        }
+
+        if (null !== $this->finally) {
+            $source .= $parser->indent();
+            $source .= 'finally ';
+            $source .= PHP_EOL;
+
+            $parser->openScope();
+
+            foreach ($this->finally as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
+
+            $parser->closeScope();
+        }
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }

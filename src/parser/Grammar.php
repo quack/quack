@@ -45,7 +45,6 @@ use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
-use \QuackCompiler\Ast\Stmt\PieceStmt;
 use \QuackCompiler\Ast\Stmt\PrintStmt;
 use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;

@@ -109,15 +109,14 @@
   - [x] LabelStmt.php
   - [x] LetStmt.php
   - [ ] MemberStmt.php
-  - [ ] ModuleStmt.php
+  - [x] ModuleStmt.php
   - [ ] OpenStmt.php
-  - [ ] PieceStmt.php
   - [ ] RaiseStmt.php
   - [ ] RescueStmt.php
-  - [ ] ReturnStmt.php
+  - [x] ReturnStmt.php
   - [ ] StructStmt.php
   - [ ] SwitchStmt.php
-  - [ ] TryStmt.php
+  - [x] TryStmt.php
   - [x] WhileStmt.php
 
 - Write tests for statements:
@@ -141,7 +140,6 @@
   - [ ] MemberStmt.php
   - [ ] ModuleStmt.php
   - [ ] OpenStmt.php
-  - [ ] PieceStmt.php
   - [ ] RaiseStmt.php
   - [ ] RescueStmt.php
   - [ ] ReturnStmt.php

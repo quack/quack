@@ -34,9 +34,9 @@ class ModuleStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        $string_builder = ['module '];
-        $string_builder[] = implode('.', $this->qualified_name);
-        $string_builder[] = PHP_EOL;
-        return implode($string_builder);
+        $source = 'module ';
+        $source .= implode('.', $this->qualified_name);
+        $source .= PHP_EOL;
+        return $source;
     }
 }

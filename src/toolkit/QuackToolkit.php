@@ -115,7 +115,6 @@ import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
-import(AST, 'stmt/PieceStmt');
 import(AST, 'stmt/MemberStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/RescueStmt');
