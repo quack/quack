@@ -1,8 +1,5 @@
 %%comments
 
-// The T_REGEX is not working properly.
-//TODO: Implement tests for T_REGEX.
-
 // Examples below
 
 extension for    String#      UTF8Encoding ; Base64 member x end
@@ -30,6 +27,7 @@ extension for House
    member nRooms , nBathrooms
    fn rooms[] ^ self.nRooms end
 end
+extension for    String#      UTF8Encoding ; Base64 member x end
 %%expect
 extension for String # UTF8Encoding; Base64
 end
@@ -47,4 +45,7 @@ extension for House
   fn rooms[]
     ^ self.nRooms
   end
+end
+extension for String # UTF8Encoding; Base64
+  member x
 end

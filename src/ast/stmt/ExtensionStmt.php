@@ -26,14 +26,12 @@ use \QuackCompiler\Parser\Parser;
 class ExtensionStmt implements Stmt
 {
     public $appliesTo;
-    public $appliesToRegexes;
     public $implements;
     public $body;
 
-    public function __construct($appliesTo, $appliesToRegexes, $implements, $body)
+    public function __construct($appliesTo, $implements, $body)
     {
         $this->appliesTo = $appliesTo;
-        $this->appliesToRegexes = $appliesToRegexes;
         $this->implements = $implements;
         $this->body = $body;
     }
@@ -45,10 +43,6 @@ class ExtensionStmt implements Stmt
         $source .= implode('; ', array_map(function ($param) {
             return implode('', $param);
         }, $this->appliesTo));
-
-        $source .= implode('; ', array_map(function ($param) {
-            return $param->format($parser);
-        }, $this->appliesToRegexes));
 
         if (count($this->implements) > 0) {
             $source .= ' # ';
