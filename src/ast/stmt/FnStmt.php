@@ -41,6 +41,11 @@ class FnStmt implements Stmt
     public function format(Parser $parser)
     {
         $source = 'fn ';
+
+        if ($this->by_reference) {
+            $source .= '* ';
+        }
+
         $source .= $this->name;
 
         if (sizeof($this->parameters) > 0) {
