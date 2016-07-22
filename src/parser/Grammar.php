@@ -537,6 +537,7 @@ class Grammar
     public function _fnStmt()
     {
         $by_reference = false;
+        $is_bang = false;
 
         $this->parser->match(Tag::T_FN);
 
@@ -546,12 +547,31 @@ class Grammar
         }
 
         $name = $this->identifier();
-        $parameters = $this->_parameters();
+        $parameters = [];
+
+        if ($is_bang = $this->parser->is('!')) {
+            $this->parser->consume();
+        } else {
+            $this->parser->match('[');
+
+            if ($this->parser->is(']')) {
+                $this->parser->consume();
+            } else {
+                $parameters[] = $this->_parameter();
+
+                while ($this->parser->is(';')) {
+                    $this->parser->consume();
+                    $parameters[] = $this->_parameter();
+                }
+
+                $this->parser->match(']');
+            }
+        }
 
         $body = iterator_to_array($this->_innerStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new FnStmt($name, $by_reference, $body, $parameters);
+        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang);
     }
 
     public function _moduleStmt()
@@ -612,31 +632,6 @@ class Grammar
         }
 
         return new ConstStmt($definitions);
-    }
-
-    public function _parameters()
-    {
-        $parameters = [];
-
-        if ($this->parser->is('!')) {
-            $this->parser->consume();
-            return $parameters;
-        }
-
-        $this->parser->match('[');
-
-        while (!$this->parser->is(']')) {
-            $parameters[] = $this->_parameter();
-
-            if ($this->parser->is(';')) {
-                $this->parser->consume();
-            } else {
-                break;
-            }
-        }
-
-        $this->parser->match(']');
-        return $parameters;
     }
 
     public function _parameter()

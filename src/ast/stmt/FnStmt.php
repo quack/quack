@@ -29,13 +29,15 @@ class FnStmt implements Stmt
     public $by_reference;
     public $body;
     public $parameters;
+    public $is_bang;
 
-    public function __construct($name, $by_reference, $body, $parameters)
+    public function __construct($name, $by_reference, $body, $parameters, $is_bang)
     {
         $this->name = $name;
         $this->by_reference = $by_reference;
         $this->body = $body;
         $this->parameters = $parameters;
+        $this->is_bang = $is_bang;
     }
 
     public function format(Parser $parser)
@@ -70,7 +72,9 @@ class FnStmt implements Stmt
 
             $source .= ' ]';
         } else {
-            $source .= '[]';
+            $source .= $this->is_bang
+                ? '!'
+                : '[]';
         }
 
         $source .= PHP_EOL;

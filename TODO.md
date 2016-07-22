@@ -44,7 +44,8 @@
 - [x] Implement hints
 - [x] Make attribution optional in let stmt
 - [x] Make (!) reference CallParselet
-- [ ] Tell bang (!) from 0-size call ([])
+- [x] Tell bang (!) from 0-size call ([])
+- [ ] Review syntactic sugar for statements (when, unless)
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Review precedence and associativity. Make them standard
