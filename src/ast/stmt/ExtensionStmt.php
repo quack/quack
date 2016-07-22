@@ -57,11 +57,18 @@ class ExtensionStmt implements Stmt
             }, $this->implements));
         }
 
-        foreach ($this->body as $node) {
-            $source .= $node->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
         }
 
-        $source .= ' end'. PHP_EOL;
+        $parser->closeScope();
+        $source .= $parser->indent();
+        $source .= 'end' . PHP_EOL; 
 
         return $source;
     }
