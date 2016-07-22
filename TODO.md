@@ -47,10 +47,9 @@
 - [x] Tell bang (!) from 0-size call ([])
 - [x] Review syntactic sugar for statements (when, unless)
 - [ ] Review where-notation on expressions. Add as postfix instead of syntactic sugar
-- [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
-- [ ] Don't remove multiple parenthesis unless it be explicit
-- [ ] Review precedence and associativity. Make them standard
 - [ ] Disambiguate arrays from objects
+- [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
+- [ ] Review precedence and associativity. Make them standard
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
