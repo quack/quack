@@ -43,11 +43,11 @@
 - [x] Implement key value in foreach
 - [x] Implement hints
 - [x] Make attribution optional in let stmt
+- [x] Make (!) reference CallParselet
+- [ ] Tell bang (!) from 0-size call ([])
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
-- [ ] Tell bang (!) from 0-size call ([])
 - [ ] Review precedence and associativity. Make them standard
-- [ ] Make (!) reference CallParselet
 - [ ] Disambiguate arrays from objects
 
 - Implement formatting in the AST for:

@@ -102,6 +102,7 @@ abstract class Parser
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
         $this->register('[', new CallParselet);
+        $this->register('!', new CallParselet);
         $this->register('{', new ArrayParselet);
         $this->register('{', new AccessParselet);
         $this->register(Tag::T_FN, new FunctionParselet);
@@ -123,8 +124,6 @@ abstract class Parser
         $this->prefix('@', Precedence::PREFIX);
         $this->prefix('~', Precedence::PREFIX);
         $this->prefix(Tag::T_NOT, Precedence::PREFIX);
-
-        $this->postfix('!', Precedence::POSTFIX);
 
         $this->infixLeft('+', Precedence::ADDITIVE);
         $this->infixLeft('-', Precedence::ADDITIVE);

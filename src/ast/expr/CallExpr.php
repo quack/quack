@@ -27,11 +27,13 @@ class CallExpr extends Expr
 {
     public $func;
     public $arguments;
+    public $is_bang;
 
-    public function __construct($func, $arguments)
+    public function __construct($func, $arguments, $is_bang)
     {
         $this->func = $func;
         $this->arguments = $arguments;
+        $this->is_bang = $is_bang;
     }
 
     public function format(Parser $parser)
@@ -45,7 +47,9 @@ class CallExpr extends Expr
             }, $this->arguments));
             $source .= ' ]';
         } else {
-            $source .= '[]';
+            $source .= $this->is_bang
+                ? '!'
+                : '[]';
         }
 
         if ($this->parenthesize) {
