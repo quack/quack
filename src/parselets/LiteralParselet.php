@@ -42,7 +42,8 @@ class LiteralParselet implements IPrefixParselet
                 return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
 
             case Tag::T_STRING:
-                return new StringExpr($grammar->parser->resolveScope($token->getPointer()));
+                return new StringExpr($grammar->parser->resolveScope($token->getPointer()),
+                    $token->metadata['delimiter']);
 
             case Tag::T_DOUBLE:
             case Tag::T_INTEGER:

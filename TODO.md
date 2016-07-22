@@ -48,6 +48,8 @@
 - [ ] Tell bang (!) from 0-size call ([])
 - [ ] Review precedence and associativity. Make them standard
 - [ ] Make (!) reference CallParselet
+- [ ] Make attribution optional in let stmt
+- [ ] Disambiguate arrays from objects
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

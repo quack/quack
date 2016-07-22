@@ -26,14 +26,20 @@ use \QuackCompiler\Parser\Parser;
 class StringExpr extends Expr
 {
     public $value;
+    public $delimiter;
 
-    public function __construct($value)
+    public function __construct($value, $delimiter)
     {
         $this->value = $value;
+        $this->delimiter = $delimiter;
     }
 
     public function format(Parser $parser)
     {
-        return '"' . $this->value . '"';
+        $source = $this->delimiter;
+        $source .= $this->value;
+        $source .= $this->delimiter;
+
+        return $source;
     }
 }
