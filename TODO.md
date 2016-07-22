@@ -42,13 +42,12 @@
 - [x] Implement "Did you mean ..."
 - [x] Implement key value in foreach
 - [x] Implement hints
+- [x] Make attribution optional in let stmt
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
-- [ ] Flag "when" expression, because it is just syntactic sugar
 - [ ] Tell bang (!) from 0-size call ([])
 - [ ] Review precedence and associativity. Make them standard
 - [ ] Make (!) reference CallParselet
-- [ ] Make attribution optional in let stmt
 - [ ] Disambiguate arrays from objects
 
 - Implement formatting in the AST for:
@@ -70,7 +69,7 @@
   - [x] PrefixExpr
   - [x] RangeExpr
   - [x] RegexExpr
-  - [ ] StringExpr
+  - [x] StringExpr
   - [x] TernaryExpr
   - [x] WhenExpr
   - [x] BlockStmt.php

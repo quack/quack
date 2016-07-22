@@ -215,16 +215,26 @@ class Grammar
         // First definition is required (without comma)
         // I could just use a goto, but, Satan would want my soul...
         $name = $this->identifier();
-        $this->parser->match(':-');
-        $value = $this->_expr();
-        $definitions[$name] = $value;
+
+        if ($this->parser->is(':-')) {
+            $this->parser->consume();
+            $value = $this->_expr();
+            $definitions[$name] = $value;
+        } else {
+            $definitions[$name] = null;
+        }
 
         while ($this->parser->is(',')) {
             $this->parser->consume();
             $name = $this->identifier();
-            $this->parser->match(':-');
-            $value = $this->_expr();
-            $definitions[$name] = $value;
+
+            if ($this->parser->is(':-')) {
+                $this->parser->consume();
+                $value = $this->_expr();
+                $definitions[$name] = $value;
+            } else {
+                $definitions[$name] = null;
+            }
         }
 
         return new LetStmt($definitions);

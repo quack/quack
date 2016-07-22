@@ -46,8 +46,11 @@ class LetStmt implements Stmt
             }
 
             $source .= $variable;
-            $source .= ' :- ';
-            $source .= $value->format($parser);
+
+            if (null !== $value) {
+                $source .= ' :- ';
+                $source .= $value->format($parser);
+            }
             $source .= PHP_EOL;
         }
 
