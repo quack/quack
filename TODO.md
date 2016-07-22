@@ -70,33 +70,7 @@
   - [x] RegexExpr
   - [ ] StringExpr
   - [x] TernaryExpr
-  - [ ] WhenExpr
-
-- Write tests for
-  - [x] AccessExpr
-  - [x] ArrayExpr
-  - [x] ArrayPairExpr
-  - [x] AtomExpr
-  - [x] BoolExpr
-  - [x] CallExpr
-  - [x] IncludeExpr
-  - [x] LambdaExpr
-  - [ ] NameExpr
-  - [x] NewExpr
-  - [x] NilExpr
-  - [ ] NumberExpr
-  - [x] OperatorExpr
-  - [x] PartialFuncExpr
-  - [ ] PostfixExpr
-  - [ ] PrefixExpr
-  - [x] RangeExpr
-  - [ ] RegexExpr
-  - [ ] StringExpr
-  - [ ] TernaryExpr
-  - [ ] WhenExpr
-
-- Implement formatting statements:
-
+  - [x] WhenExpr
   - [x] BlockStmt.php
   - [x] BlueprintStmt.php
   - [x] BreakStmt.php
@@ -149,3 +123,24 @@
   - [ ] SwitchStmt.php
   - [ ] TryStmt.php
   - [ ] WhileStmt.php
+  - [x] AccessExpr
+  - [x] ArrayExpr
+  - [x] ArrayPairExpr
+  - [x] AtomExpr
+  - [x] BoolExpr
+  - [x] CallExpr
+  - [x] IncludeExpr
+  - [x] LambdaExpr
+  - [ ] NameExpr
+  - [x] NewExpr
+  - [x] NilExpr
+  - [ ] NumberExpr
+  - [x] OperatorExpr
+  - [x] PartialFuncExpr
+  - [ ] PostfixExpr
+  - [ ] PrefixExpr
+  - [x] RangeExpr
+  - [ ] RegexExpr
+  - [ ] StringExpr
+  - [ ] TernaryExpr
+  - [ ] WhenExpr

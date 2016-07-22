@@ -32,8 +32,40 @@ class WhenExpr extends Expr
         $this->cases = $cases;
     }
 
-    public function format(Parser $_)
+    public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = 'when';
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        for ($i = 0, $l = sizeof($this->cases); $i < $l; $i++) {
+            $obj = $this->cases[$i];
+
+            $source .= $parser->indent();
+            $source .= '| ';
+
+            if (null !== $obj->condition) {
+                $source .= $obj->condition->format($parser);
+                $source .= ' -> ';
+            } else {
+                $source .= 'else ';
+            }
+
+            $source .= $obj->action->format($parser);
+
+            if ($i + 1 !== $l) {
+                $source .= ';';
+                $source .= PHP_EOL;
+            }
+        }
+
+        $parser->closeScope();
+
+        $source .= PHP_EOL;
+        $source .= $parser->indent();
+        $source .= 'end';
+
+        return $source;
     }
 }
