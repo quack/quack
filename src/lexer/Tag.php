@@ -97,6 +97,8 @@ class Tag
                 return 'or';
             case Tag::T_MOD:
                 return 'mod';
+            case Tag::T_XOR:
+                return 'xor';
             default:
                 return $op;
         }
@@ -111,7 +113,7 @@ class Tag
             '/',
             '**',
             Tag::T_MOD,
-            Tag::T_NOT,
+            Tag::T_XOR,
             Tag::T_AND,
             Tag::T_OR,
             '<',
