@@ -27,13 +27,15 @@ use \QuackCompiler\Parser\Parser;
 class ForeachStmt implements Stmt
 {
     public $by_reference;
+    public $key;
     public $alias;
     public $generator;
     public $body;
 
-    public function __construct($by_reference, $alias, $generator, $body)
+    public function __construct($by_reference, $key, $alias, $generator, $body)
     {
         $this->by_reference = $by_reference;
+        $this->key = $key;
         $this->alias = $alias;
         $this->generator = $generator;
         $this->body = $body;
@@ -43,11 +45,17 @@ class ForeachStmt implements Stmt
     {
         $source = 'foreach ';
 
+        if (null !== $this->key) {
+            $source .= $this->key;
+            $source .= ' -> ';
+        }
+
         if ($this->by_reference) {
             $source .= '*';
         }
 
         $source .= $this->alias;
+
         $source .= ' in ';
         $source .= $this->generator->format($parser);
         $source .= PHP_EOL;

@@ -39,15 +39,15 @@
 - [x] Implement support for parenthesized expressions
 - [x] Use INI directives and build a quack.ini file
 - [x] Fix bug on break (consuming tokens it shouldn't)
+- [x] Implement "Did you mean ..."
+- [x] Implement key value in foreach
+- [x] Implement hints
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Flag "when" expression, because it is just syntactic sugar
-- [ ] Implement key value in foreach
 - [ ] Tell bang (!) from 0-size call ([])
-- [ ] Implement hints
 - [ ] Review precedence and associativity. Make them standard
 - [ ] Make (!) reference CallParselet
-- [x] Implement "Did you mean ..."
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

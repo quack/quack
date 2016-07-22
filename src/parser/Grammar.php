@@ -263,16 +263,31 @@ class Grammar
 
     public function _foreachStmt()
     {
+        $key = null;
+        $by_reference = false;
         $this->parser->match(Tag::T_FOREACH);
 
-        ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
-        $alias = $this->identifier();
+        if ($this->parser->is(Tag::T_IDENT)) {
+            $alias = $this->identifier();
+
+            if ($this->parser->is('->')) {
+                $this->parser->consume();
+                $key = $alias;
+
+                ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
+                $alias = $this->identifier();
+            }
+        } else {
+            ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
+            $alias = $this->identifier();
+        }
+
         $this->parser->match(Tag::T_IN);
         $iterable = $this->_expr();
         $body = iterator_to_array($this->_innerStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ForeachStmt($by_reference, $alias, $iterable, $body);
+        return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
     }
 
     public function _switchStmt()
