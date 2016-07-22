@@ -80,7 +80,7 @@
   - [x] ElifStmt.php
   - [x] EnumStmt.php
   - [x] ExprStmt.php
-  - [ ] ExtensionStmt.php
+  - [x] ExtensionStmt.php
   - [x] FnStmt.php
   - [x] ForeachStmt.php
   - [x] ForStmt.php
@@ -107,7 +107,7 @@
   - [ ] ElifStmt.php
   - [ ] EnumStmt.php
   - [ ] ExprStmt.php
-  - [ ] ExtensionStmt.php
+  - [ ] ExtensionStmt.php _// Missing Regex test due to parser error._
   - [ ] FnStmt.php
   - [ ] ForeachStmt.php
   - [ ] ForStmt.php

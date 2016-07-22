@@ -2,7 +2,6 @@
 
 // The T_REGEX is not working properly.
 //TODO: Implement tests for T_REGEX.
-//TODO: Implement members, fns and more...
 
 // Examples below
 
@@ -23,7 +22,29 @@ end
 extension for Igloo      ; Castle;    SpanishColonial
 
 end
+extension for House
+   member nRooms , nBathrooms
+end
+
+extension for House
+   member nRooms , nBathrooms
+   fn rooms[] ^ self.nRooms end
+end
 %%expect
-extension for String # UTF8Encoding; Base64 end
-extension for House end
-extension for Igloo; Castle; SpanishColonial end
+extension for String # UTF8Encoding; Base64
+end
+extension for House
+end
+extension for Igloo; Castle; SpanishColonial
+end
+extension for House
+  member nRooms
+       , nBathrooms
+end
+extension for House
+  member nRooms
+       , nBathrooms
+  fn rooms[]
+    ^ self.nRooms
+  end
+end
