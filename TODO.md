@@ -45,7 +45,8 @@
 - [x] Make attribution optional in let stmt
 - [x] Make (!) reference CallParselet
 - [x] Tell bang (!) from 0-size call ([])
-- [ ] Review syntactic sugar for statements (when, unless)
+- [x] Review syntactic sugar for statements (when, unless)
+- [ ] Review where-notation on expressions. Add as postfix instead of syntactic sugar
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Don't remove multiple parenthesis unless it be explicit
 - [ ] Review precedence and associativity. Make them standard
@@ -73,58 +74,59 @@
   - [x] StringExpr
   - [x] TernaryExpr
   - [x] WhenExpr
-  - [x] BlockStmt.php
-  - [x] BlueprintStmt.php
-  - [x] BreakStmt.php
-  - [x] CaseStmt.php
-  - [x] ConstStmt.php
-  - [x] ContinueStmt.php
-  - [x] ElifStmt.php
-  - [x] EnumStmt.php
-  - [x] ExprStmt.php
-  - [x] ExtensionStmt.php
-  - [x] FnStmt.php
-  - [x] ForeachStmt.php
-  - [x] ForStmt.php
-  - [x] IfStmt.php
-  - [x] LabelStmt.php
-  - [x] LetStmt.php
-  - [x] MemberStmt.php
-  - [x] ModuleStmt.php
-  - [x] OpenStmt.php
-  - [x] RaiseStmt.php
-  - [x] ReturnStmt.php
-  - [x] SwitchStmt.php
-  - [x] TryStmt.php
-  - [x] WhileStmt.php
+  - [x] BlockStmt
+  - [x] BlueprintStmt
+  - [x] BreakStmt
+  - [x] CaseStmt
+  - [x] ConstStmt
+  - [x] ContinueStmt
+  - [x] ElifStmt
+  - [x] EnumStmt
+  - [x] ExprStmt
+  - [x] ExtensionStmt
+  - [x] FnStmt
+  - [x] ForeachStmt
+  - [x] ForStmt
+  - [x] IfStmt
+  - [x] LabelStmt
+  - [x] LetStmt
+  - [x] MemberStmt
+  - [x] ModuleStmt
+  - [x] OpenStmt
+  - [x] RaiseStmt
+  - [x] ReturnStmt
+  - [x] SwitchStmt
+  - [x] TryStmt
+  - [x] WhileStmt
+  - [x] PostConditionalStmt
 
 - Write tests for statements:
 
-  - [ ] BlockStmt.php
-  - [ ] BlueprintStmt.php
-  - [ ] BreakStmt.php
-  - [ ] CaseStmt.php
-  - [ ] ConstStmt.php
-  - [ ] ContinueStmt.php
-  - [ ] ElifStmt.php
-  - [ ] EnumStmt.php
-  - [ ] ExprStmt.php
-  - [ ] ExtensionStmt.php _// Missing Regex test due to parser error._
-  - [ ] FnStmt.php
-  - [ ] ForeachStmt.php
-  - [ ] ForStmt.php
-  - [ ] IfStmt.php
-  - [ ] LabelStmt.php
-  - [ ] LetStmt.php
-  - [ ] MemberStmt.php
-  - [ ] ModuleStmt.php
-  - [ ] OpenStmt.php
-  - [ ] RaiseStmt.php
-  - [ ] ReturnStmt.php
-  - [ ] Stmt.php
-  - [ ] SwitchStmt.php
-  - [ ] TryStmt.php
-  - [ ] WhileStmt.php
+  - [ ] BlockStmt
+  - [ ] BlueprintStmt
+  - [ ] BreakStmt
+  - [ ] CaseStmt
+  - [ ] ConstStmt
+  - [ ] ContinueStmt
+  - [ ] ElifStmt
+  - [ ] EnumStmt
+  - [ ] ExprStmt
+  - [ ] ExtensionStmt _// Missing Regex test due to parser error._
+  - [ ] FnStmt
+  - [ ] ForeachStmt
+  - [ ] ForStmt
+  - [ ] IfStmt
+  - [ ] LabelStmt
+  - [ ] LetStmt
+  - [ ] MemberStmt
+  - [ ] ModuleStmt
+  - [ ] OpenStmt
+  - [ ] RaiseStmt
+  - [ ] ReturnStmt
+  - [ ] Stmt
+  - [ ] SwitchStmt
+  - [ ] TryStmt
+  - [ ] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
   - [x] ArrayPairExpr
@@ -146,3 +148,4 @@
   - [ ] StringExpr
   - [ ] TernaryExpr
   - [ ] WhenExpr
+  - [ ] PostConditionalStmt
