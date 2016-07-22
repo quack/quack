@@ -37,6 +37,9 @@ define('END_BG_RED', "\033[0m");
 define('BEGIN_BOLD', "\033[1m");
 define('END_BOLD', "\033[0m");
 
+define('BEGIN_BLUE', "\033[0;34m");
+define('END_BLUE', "\033[0m");
+
 class SyntaxError extends Exception
 {
     private $expected;
@@ -48,6 +51,9 @@ class SyntaxError extends Exception
         $this->expected = $parameters['expected'];
         $this->found    = $parameters['found'];
         $this->parser   = $parameters['parser'];
+        $this->hint     = array_key_exists('hint', $parameters)
+            ? $parameters['hint']
+            : null;
     }
 
     private function extractPieceOfSource()
@@ -80,12 +86,23 @@ class SyntaxError extends Exception
         return implode($out_buffer);
     }
 
+    public function getFormattedHint()
+    {
+        if (null === $this->hint) {
+            return '';
+        }
+
+        return PHP_EOL . PHP_EOL . BEGIN_BLUE .BEGIN_BOLD . "~Hint:" .
+            " {$this->hint}" . END_BLUE . END_BOLD . PHP_EOL;
+    }
+
     public function __toString()
     {
         $source = $this->extractPieceOfSource();
         $expected = $this->getExpectedTokenName();
         $found = $this->getFoundTokenName();
         $position = $this->getPosition();
+        $hint = $this->getFormattedHint();
 
         return $source . PHP_EOL . join([
             BEGIN_RED,
@@ -94,7 +111,8 @@ class SyntaxError extends Exception
             "    Found     [", BEGIN_GREEN, $found, END_GREEN, BEGIN_RED, "]", PHP_EOL,
             "    Line      {$position['line']}", PHP_EOL,
             "    Column    ", ($position['column'] - $this->getFoundTokenSize() + 1), PHP_EOL,
-            END_RED
+            END_RED,
+            $hint
         ]);
     }
 

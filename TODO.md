@@ -47,6 +47,7 @@
 - [ ] Implement hints
 - [ ] Review precedence and associativity. Make them standard
 - [ ] Make (!) reference CallParselet
+- [x] Implement "Did you mean ..."
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

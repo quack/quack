@@ -33,6 +33,7 @@ abstract class Lexer
     protected $words = [];
 
     public $symbol_table;
+    public $keywords_hash = [];
 
     public function __construct($input)
     {
@@ -100,6 +101,7 @@ abstract class Lexer
 
     private function reserve(Word $t)
     {
+        $this->keywords_hash[$t->getTag()] = $t->lexeme;
         $this->words[$t->lexeme] = $t;
     }
 

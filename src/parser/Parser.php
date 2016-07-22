@@ -157,14 +157,31 @@ abstract class Parser
 
     public function match($tag)
     {
+        $hint = null;
+
         if ($this->lookahead->getTag() === $tag) {
             return $this->consume();
+        }
+
+        // When, after an error, the programmer provided an identifier,
+        // we'll calculate the levenshtein distance between the expected lexeme
+        // and the provided lexeme and give a hint about
+        if (Tag::T_IDENT === $this->lookahead->getTag()) {
+            $expected_lexeme = $this->input->keywords_hash[$tag];
+            $provided_lexeme = $this->resolveScope($this->lookahead->getPointer());
+
+            $distance = levenshtein($expected_lexeme, $provided_lexeme);
+
+            if ($distance <= 2) {
+                $hint = "Did you mean \"{$expected_lexeme}\" instead of \"{$provided_lexeme}\"?";
+            }
         }
 
         throw new SyntaxError([
             'expected' => $tag,
             'found'    => $this->lookahead,
-            'parser'   => $this
+            'parser'   => $this,
+            'hint'     => $hint
         ]);
     }
 
