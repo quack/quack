@@ -51,10 +51,12 @@ class LambdaExpr extends Expr
         $source .= '{ ';
 
         $source .= implode('; ', array_map(function ($param) {
+            $obj = (object) $param;
+
             $source = '';
-            $param->ellipsis && $source .= '... ';
-            $param->by_reference && $source .= '*';
-            $source .= $param->name;
+            $obj->ellipsis && $source .= '... ';
+            $obj->by_reference && $source .= '*';
+            $source .= $obj->name;
             return $source;
         }, $this->parameters));
 
