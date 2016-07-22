@@ -121,4 +121,3 @@ import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
-import(AST, 'helper/Param');

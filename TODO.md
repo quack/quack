@@ -46,6 +46,7 @@
 - [ ] Tell bang (!) from 0-size call ([])
 - [ ] Implement hints
 - [ ] Review precedence and associativity. Make them standard
+- [ ] Make (!) reference CallParselet
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
@@ -105,7 +106,7 @@
   - [x] EnumStmt.php
   - [x] ExprStmt.php
   - [ ] ExtensionStmt.php
-  - [ ] FnStmt.php
+  - [x] FnStmt.php
   - [x] ForeachStmt.php
   - [x] ForStmt.php
   - [x] IfStmt.php

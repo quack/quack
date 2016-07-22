@@ -53,8 +53,6 @@ use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 
-use \QuackCompiler\Ast\Helper\Param;
-
 use \QuackCompiler\Ast\Expr\PrefixExpr;
 
 class Grammar
@@ -631,7 +629,11 @@ class Grammar
 
         $name = $this->identifier();
 
-        return new Param($name, $by_reference, $ellipsis);
+        return [
+            'name' => $name,
+            'by_reference' => $by_reference,
+            'ellipsis' => $ellipsis
+        ];
     }
 
     public function _caseStmtList()

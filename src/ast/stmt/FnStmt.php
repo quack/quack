@@ -40,6 +40,49 @@ class FnStmt implements Stmt
 
     public function format(Parser $parser)
     {
-        throw new \Exception;
+        $source = 'fn ';
+        $source .= $this->name;
+
+        if (sizeof($this->parameters) > 0) {
+            $source .= '[ ';
+
+            $source .= implode('; ', array_map(function ($param) {
+                $subsource = '';
+                $obj = (object) $param;
+
+                if ($obj->ellipsis) {
+                    $subsource .= '... ';
+                }
+
+                if ($obj->by_reference) {
+                    $subsource .= '*';
+                }
+
+                $subsource .= $obj->name;
+
+                return $subsource;
+            }, $this->parameters));
+
+            $source .= ' ]';
+        } else {
+            $source .= '[]';
+        }
+
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
+
+        return $source;
     }
 }
