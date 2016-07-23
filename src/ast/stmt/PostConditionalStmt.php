@@ -19,39 +19,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Expr\CallExpr;
 use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Parser\Precedence;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parser\Parser;
 
-class CallParselet implements IInfixParselet
+class PostConditionalStmt implements Stmt
 {
-    public function parse(Grammar $grammar, Expr $left, Token $token)
+    public $stmt;
+    public $predicate;
+    public $tag;
+
+    public function __construct(Stmt $stmt, Expr $predicate, $tag)
     {
-        $args = [];
-        $is_bang = '!' === $token->getTag();
-
-        if (!$is_bang) {
-            if (!$grammar->parser->is(']')) {
-                $args[] = $grammar->_expr();
-
-                while ($grammar->parser->is(';')) {
-                    $grammar->parser->consume();
-                    $args[] = $grammar->_expr();
-                }
-            }
-
-            $grammar->parser->match(']');
-        }
-
-        return new CallExpr($left, $args, $is_bang);
+        $this->stmt = $stmt;
+        $this->predicate = $predicate;
+        $this->tag = $tag;
     }
 
-    public function getPrecedence()
+    public function format(Parser $parser)
     {
-        return Precedence::CALL;
+        // Remove newline from statement when it exists
+        $source = rtrim($this->stmt->format($parser), PHP_EOL);
+        $source .= Tag::T_WHEN === $this->tag
+            ? ' when '
+            : ' unless ';
+        $source .= $this->predicate->format($parser);
+        $source .= PHP_EOL;
+        return $source;
     }
 }

@@ -23,38 +23,51 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class CallExpr extends Expr
+class WhereExpr extends Expr
 {
-    public $func;
-    public $arguments;
-    public $is_bang;
+    public $expr;
+    public $clauses;
 
-    public function __construct($func, $arguments, $is_bang)
+    public function __construct(Expr $expr, $clauses)
     {
-        $this->func = $func;
-        $this->arguments = $arguments;
-        $this->is_bang = $is_bang;
+        $this->expr = $expr;
+        $this->clauses = $clauses;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->func->format($parser);
+        $first = true;
+        $size = sizeof($this->clauses);
+        $processed = 0;
 
-        if (sizeof($this->arguments) > 0) {
-            $source .= '[ ';
-            $source .= implode('; ', array_map(function (Expr $arg) use ($parser) {
-                return $arg->format($parser);
-            }, $this->arguments));
-            $source .= ' ]';
-        } else {
-            $source .= $this->is_bang
-                ? '!'
-                : '[]';
+        $source = $this->expr->format($parser);
+        $source .= PHP_EOL;
+
+        $parser->openScope();
+
+        $source .= $parser->indent();
+        $source .= 'where ';
+
+        foreach ($this->clauses as $key => $value) {
+            $processed++;
+
+            if (!$first) {
+                $source .= $parser->indent();
+                $source .= '    ; ';
+            } else {
+                $first = false;
+            }
+
+            $source .= $key;
+            $source .= ' :- ';
+            $source .= $value->format($parser);
+
+            if ($processed < $size) {
+                $source .= PHP_EOL;
+            }
         }
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
+        $parser->closeScope();
 
         return $source;
     }

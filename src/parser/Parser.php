@@ -44,6 +44,7 @@ use \QuackCompiler\Parselets\CallParselet;
 use \QuackCompiler\Parselets\AccessParselet;
 use \QuackCompiler\Parselets\RangeParselet;
 use \QuackCompiler\Parselets\PartialFuncParselet;
+use \QuackCompiler\Parselets\WhereParselet;
 
 abstract class Parser
 {
@@ -102,6 +103,7 @@ abstract class Parser
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
         $this->register('[', new CallParselet);
+        $this->register('!', new CallParselet);
         $this->register('{', new ArrayParselet);
         $this->register('{', new AccessParselet);
         $this->register(Tag::T_FN, new FunctionParselet);
@@ -115,6 +117,7 @@ abstract class Parser
         $this->register(Tag::T_NIL, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHEN, new WhenParselet);
+        $this->register(Tag::T_WHERE, new WhereParselet);
 
         $this->prefix('+', Precedence::PREFIX);
         $this->prefix('-', Precedence::PREFIX);
@@ -123,8 +126,6 @@ abstract class Parser
         $this->prefix('@', Precedence::PREFIX);
         $this->prefix('~', Precedence::PREFIX);
         $this->prefix(Tag::T_NOT, Precedence::PREFIX);
-
-        $this->postfix('!', Precedence::POSTFIX);
 
         $this->infixLeft('+', Precedence::ADDITIVE);
         $this->infixLeft('-', Precedence::ADDITIVE);

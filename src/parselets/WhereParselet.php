@@ -21,37 +21,36 @@
  */
 namespace QuackCompiler\Parselets;
 
-use \QuackCompiler\Ast\Expr\CallExpr;
+use \QuackCompiler\Ast\Expr\WhereExpr;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Parser\Precedence;
 
-class CallParselet implements IInfixParselet
+class WhereParselet implements IInfixParselet
 {
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {
-        $args = [];
-        $is_bang = '!' === $token->getTag();
+        $clauses = [];
 
-        if (!$is_bang) {
-            if (!$grammar->parser->is(']')) {
-                $args[] = $grammar->_expr();
+        $name = $grammar->identifier();
+        $grammar->parser->match(':-');
+        $value = $grammar->_expr();
+        $clauses[$name] = $value;
 
-                while ($grammar->parser->is(';')) {
-                    $grammar->parser->consume();
-                    $args[] = $grammar->_expr();
-                }
-            }
-
-            $grammar->parser->match(']');
+        while ($grammar->parser->is(';')) {
+            $grammar->parser->consume();
+            $name = $grammar->identifier();
+            $grammar->parser->match(':-');
+            $value = $grammar->_expr();
+            $clauses[$name] = $value;
         }
 
-        return new CallExpr($left, $args, $is_bang);
+        return new WhereExpr($left, $clauses);
     }
 
     public function getPrecedence()
     {
-        return Precedence::CALL;
+        return Precedence::WHERE;
     }
 }

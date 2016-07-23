@@ -27,6 +27,10 @@ class Token
     private $pointer;
     private $symbol_table;
 
+    // Carries all the metadata about the tokens based in key => value
+    // Obs.: Currently used only to disambiguate ' from "
+    public $metadata = [];
+
     public function __construct($tag, $pointer = null)
     {
         $this->tag = $tag;

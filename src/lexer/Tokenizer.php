@@ -206,7 +206,10 @@ class Tokenizer extends Lexer
             $this->column++;
         }
 
-        return new Token(Tag::T_STRING, $this->symbol_table->add($string));
+        $token = new Token(Tag::T_STRING, $this->symbol_table->add($string));
+        // Inject information about the delimiter for code formatting
+        $token->metadata['delimiter'] = $delimiter;
+        return $token;
     }
 
     private function regex()
