@@ -725,11 +725,6 @@ class Grammar
         $this->parser->consume();
         $left = $prefix->parse($this, $token);
 
-        // Where clause
-        if ($this->parser->is(Tag::T_WHERE)) {
-            $this->appendWhere($left);
-        }
-
         while ($precedence < $this->getPrecedence()) {
             $token = $this->parser->consumeAndFetch();
             $infix = $this->parser->infixParseletForToken($token);
@@ -745,30 +740,6 @@ class Grammar
         return !is_null($parser)
             ? $parser->getPrecedence()
             : 0;
-    }
-
-    /* Coproductions */
-    public function appendWhere(&$expr)
-    {
-        $this->parser->match(Tag::T_WHERE);
-        $where = [];
-
-        $name = $this->identifier();
-        $this->parser->match(':-');
-        $value = $this->_expr();
-        $where[$name] = $value;
-
-        while ($this->parser->is(',')) {
-            $this->parser->consume();
-            $name = $this->identifier();
-            $this->parser->match(':-');
-            $value = $this->_expr();
-            $where[$name] = $value;
-        }
-
-        $this->parser->match(Tag::T_END);
-
-        $expr->where = $where;
     }
 
     public function qualifiedName()
