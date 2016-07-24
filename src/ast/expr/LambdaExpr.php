@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Parselets\FunctionParselet;
 use \QuackCompiler\Parser\Parser;
 
 class LambdaExpr extends Expr
@@ -60,13 +61,40 @@ class LambdaExpr extends Expr
             return $source;
         }, $this->parameters));
 
-        $source .= 'fn { ' !== $source ? ' | ' : '| ';
+        $source .= 'fn { ' !== $source ? ' |' : '|';
 
-        // (*self).type determines whether the lambda expression holds an
-        // expression or a statement
-        // TODO: Implement support for statements on code generation
-        $source .= $this->body->format($parser);
-        $source .= ' }';
+        if (FunctionParselet::TYPE_EXPRESSION === $this->type) {
+            $source .= ' ';
+            $source .= $this->body->format($parser);
+            $source .= ' ';
+        } else {
+            $source .= PHP_EOL;
+
+            $parser->openScope();
+
+            $source .= $parser->indent();
+            $source .= 'begin';
+            $source .= PHP_EOL;
+
+            $parser->openScope();
+
+            foreach ($this->body as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
+
+            $parser->closeScope();
+
+            $source .= $parser->indent();
+            $source .= 'end';
+            $source .= PHP_EOL;
+
+            $parser->closeScope();
+
+            $source .= $parser->indent();
+        }
+
+        $source .= '}';
 
         $size_t_lexical_vars = sizeof($this->lexical_vars);
 

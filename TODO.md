@@ -50,9 +50,9 @@
 - [x] Disambiguate maps/objects/arrays
 - [x] Remove T_PARAM
 - [x] Implement support for first-class blocks
+- [x] Allow lambdas to have statements
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Review precedence and associativity. Make them standard
-- [ ] Allow lambdas to have statements
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
