@@ -49,8 +49,7 @@ use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
-
-use \QuackCompiler\Ast\Expr\PrefixExpr;
+use \QuackCompiler\Ast\Stmt\TraitStmt;
 
 class Grammar
 {
@@ -95,6 +94,13 @@ class Grammar
                 default:
                     break 2;
             }
+        }
+    }
+
+    public function _nonBodiedMethodList()
+    {
+        while ($this->parser->is(Tag::T_FN)) {
+            yield $this->_fnStmt(/* empty body */ true);
         }
     }
 
@@ -356,7 +362,8 @@ class Grammar
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
-            Tag::T_EXTENSION => '_extensionDeclStmt'
+            Tag::T_EXTENSION => '_extensionDeclStmt',
+            Tag::T_TRAIT     => '_traitDeclStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -441,6 +448,16 @@ class Grammar
         return new EnumStmt($name, $entries);
     }
 
+    public function _traitDeclStmt()
+    {
+        $this->parser->match(Tag::T_TRAIT);
+        $name = $this->identifier();
+        $body = iterator_to_array($this->_nonBodiedMethodList());
+        $this->parser->match(Tag::T_END);
+
+        return new TraitStmt($name, $body);
+    }
+
     public function _extensionDeclStmt()
     {
         $appliesTo = [];
@@ -494,10 +511,12 @@ class Grammar
         return new BlueprintStmt($blueprint_name, $extends, $implements, $body);
     }
 
-    public function _fnStmt()
+    public function _fnStmt($needs_empty_body = false)
     {
         $by_reference = false;
         $is_bang = false;
+        $parameters = [];
+        $body = null;
 
         $this->parser->match(Tag::T_FN);
 
@@ -507,7 +526,6 @@ class Grammar
         }
 
         $name = $this->identifier();
-        $parameters = [];
 
         if ($is_bang = $this->parser->is('!')) {
             $this->parser->consume();
@@ -528,8 +546,10 @@ class Grammar
             }
         }
 
-        $body = iterator_to_array($this->_innerStmtList());
-        $this->parser->match(Tag::T_END);
+        if (!$needs_empty_body) {
+            $body = iterator_to_array($this->_innerStmtList());
+            $this->parser->match(Tag::T_END);
+        }
 
         return new FnStmt($name, $by_reference, $body, $parameters, $is_bang);
     }

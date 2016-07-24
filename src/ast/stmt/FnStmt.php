@@ -79,18 +79,20 @@ class FnStmt implements Stmt
 
         $source .= PHP_EOL;
 
-        $parser->openScope();
+        if (null !== $this->body) {
+            $parser->openScope();
 
-        foreach ($this->body as $stmt) {
+            foreach ($this->body as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
+
+            $parser->closeScope();
+
             $source .= $parser->indent();
-            $source .= $stmt->format($parser);
+            $source .= 'end';
+            $source .= PHP_EOL;
         }
-
-        $parser->closeScope();
-
-        $source .= $parser->indent();
-        $source .= 'end';
-        $source .= PHP_EOL;
 
         return $source;
     }

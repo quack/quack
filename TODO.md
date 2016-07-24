@@ -57,7 +57,7 @@
 - [ ] Implement static methods
 
 - Implement rust data structures model
-  - [ ] Implement traits
+  - [x] Implement traits
   - [ ] Implement structs
   - [ ] Rename extensions to impl
   - [ ] Implement impl for traits
