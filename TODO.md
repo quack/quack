@@ -112,7 +112,7 @@
   - [ ] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt
-  - [ ] ExtensionStmt _// Missing Regex test due to parser error._
+  - [x] ExtensionStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
