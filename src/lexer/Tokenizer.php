@@ -271,10 +271,9 @@ class Tokenizer extends Lexer
 
     private function atom()
     {
-        $this->consume(); // :
-
         do {
             $buffer[] = $this->readChar();
+            $this->column++;
         } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
 
         $atom = implode($buffer);
