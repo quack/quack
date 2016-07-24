@@ -54,6 +54,13 @@
 - [x] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [x] Try again to implement multiple parenthesis level
 - [ ] Review precedence and associativity. Make them standard
+- [ ] Implement static methods
+
+- Implement rust data structures model
+  - [ ] Implement traits
+  - [ ] Implement structs
+  - [ ] Rename extensions to impl
+  - [ ] Implement impl for traits
 
 - Implement formatting in the AST for:
   - [x] AccessExpr
