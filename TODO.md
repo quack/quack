@@ -49,7 +49,7 @@
 - [x] Review where-notation on expressions. Add as postfix instead of syntactic sugar
 - [x] Disambiguate maps/objects/arrays
 - [x] Remove T_PARAM
-- [ ] Implement support for first-class blocks
+- [x] Implement support for first-class blocks
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Review precedence and associativity. Make them standard
 

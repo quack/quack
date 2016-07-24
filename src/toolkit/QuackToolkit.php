@@ -70,6 +70,7 @@ import(PARSELETS, 'PartialFuncParselet');
 import(PARSELETS, 'WhereParselet');
 import(PARSELETS, 'MapParselet');
 import(PARSELETS, 'ObjectParselet');
+import(PARSELETS, 'BlockParselet');
 
 /* Ast */
 
@@ -100,6 +101,7 @@ import(AST, 'expr/AtomExpr');
 import(AST, 'expr/PartialFuncExpr');
 import(AST, 'expr/RegexExpr');
 import(AST, 'expr/WhereExpr');
+import(AST, 'expr/BlockExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

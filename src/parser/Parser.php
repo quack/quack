@@ -47,6 +47,7 @@ use \QuackCompiler\Parselets\PartialFuncParselet;
 use \QuackCompiler\Parselets\WhereParselet;
 use \QuackCompiler\Parselets\MapParselet;
 use \QuackCompiler\Parselets\ObjectParselet;
+use \QuackCompiler\Parselets\BlockParselet;
 
 abstract class Parser
 {
@@ -110,6 +111,7 @@ abstract class Parser
         $this->register('{', new AccessParselet);
         $this->register('@{', new ObjectParselet);
         $this->register('${', new MapParselet);
+        $this->register('&{', new BlockParselet);
         $this->register(Tag::T_FN, new FunctionParselet);
         $this->register(Tag::T_REQUIRE, new IncludeParselet);
         $this->register(Tag::T_INCLUDE, new IncludeParselet);
