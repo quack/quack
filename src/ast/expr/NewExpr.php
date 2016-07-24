@@ -49,10 +49,6 @@ class NewExpr extends Expr
             $source .= '[]';
         }
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

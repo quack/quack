@@ -41,10 +41,6 @@ class AccessExpr extends Expr
         $source .= $this->index->format($parser);
         $source .= '}';
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

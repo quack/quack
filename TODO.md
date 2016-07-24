@@ -52,8 +52,8 @@
 - [x] Implement support for first-class blocks
 - [x] Allow lambdas to have statements
 - [x] Fix column counter bug { (in atom), (column 0) } on error reporting
+- [x] Try again to implement multiple parenthesis level
 - [ ] Review precedence and associativity. Make them standard
-- [ ] Try again to implement multiple parenthesis level
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

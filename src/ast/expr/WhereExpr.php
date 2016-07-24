@@ -69,6 +69,6 @@ class WhereExpr extends Expr
 
         $parser->closeScope();
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

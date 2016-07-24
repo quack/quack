@@ -40,6 +40,6 @@ class StringExpr extends Expr
         $source .= $this->value;
         $source .= $this->delimiter;
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

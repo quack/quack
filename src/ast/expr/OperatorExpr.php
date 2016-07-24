@@ -49,10 +49,6 @@ class OperatorExpr extends Expr
         $source .= $blanks;
         $source .= $this->right->format($parser);
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

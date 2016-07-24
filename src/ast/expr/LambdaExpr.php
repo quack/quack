@@ -109,10 +109,6 @@ class LambdaExpr extends Expr
                 );
         }
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

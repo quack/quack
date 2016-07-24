@@ -28,11 +28,6 @@ class NilExpr extends Expr
     public function format(Parser $_)
     {
         $source = 'nil';
-
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

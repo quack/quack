@@ -35,11 +35,6 @@ class NameExpr extends Expr
     public function format(Parser $parser)
     {
         $source = $this->token;
-
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

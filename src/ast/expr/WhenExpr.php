@@ -66,6 +66,6 @@ class WhenExpr extends Expr
         $source .= $parser->indent();
         $source .= 'end';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

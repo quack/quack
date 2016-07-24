@@ -43,10 +43,6 @@ class PrefixExpr extends Expr
             : $this->operator;
         $source .= $this->right->format($parser);
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }

@@ -65,6 +65,6 @@ class ObjectExpr extends Expr
 
         $source .= '}';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

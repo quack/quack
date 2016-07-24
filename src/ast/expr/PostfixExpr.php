@@ -40,6 +40,6 @@ class PostfixExpr extends Expr
         $source = $this->left->format($parser);
         $source .= Tag::getOperatorLexeme($this->operator);
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

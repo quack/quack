@@ -49,10 +49,6 @@ class IncludeExpr extends Expr
 
         $source .= $this->file->format($parser);
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
-        return $source;
+        return $this->parenthesize($source);
     }
 }
