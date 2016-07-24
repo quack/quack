@@ -31,7 +31,6 @@ class Tag
     const T_DOUBLE = 400;
     const T_STRING = 600;
     const T_ATOM = 601;
-    const T_PARAM = 1000;
     const T_REGEX = 1001;
 
     /* Keywords */

@@ -24,8 +24,6 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
-use \QuackCompiler\Ast\Expr\ArrayPairExpr;
-
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
@@ -98,27 +96,6 @@ class Grammar
                     break 2;
             }
         }
-    }
-
-    public function _arrayPairList()
-    {
-        while (!$this->parser->is('}')) {
-            $left = $this->_expr();
-            $right = null;
-
-            if ($this->parser->is('->')) {
-                $this->parser->consume();
-                $right = $this->_expr();
-            }
-
-            if (!$this->parser->is('}')) {
-                $this->parser->match(';');
-            }
-
-            yield new ArrayPairExpr($left, $right);
-        }
-
-        $this->parser->match('}');
     }
 
     public function _stmt()

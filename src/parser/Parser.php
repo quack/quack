@@ -45,6 +45,8 @@ use \QuackCompiler\Parselets\AccessParselet;
 use \QuackCompiler\Parselets\RangeParselet;
 use \QuackCompiler\Parselets\PartialFuncParselet;
 use \QuackCompiler\Parselets\WhereParselet;
+use \QuackCompiler\Parselets\MapParselet;
+use \QuackCompiler\Parselets\ObjectParselet;
 
 abstract class Parser
 {
@@ -106,6 +108,8 @@ abstract class Parser
         $this->register('!', new CallParselet);
         $this->register('{', new ArrayParselet);
         $this->register('{', new AccessParselet);
+        $this->register('@{', new ObjectParselet);
+        $this->register('${', new MapParselet);
         $this->register(Tag::T_FN, new FunctionParselet);
         $this->register(Tag::T_REQUIRE, new IncludeParselet);
         $this->register(Tag::T_INCLUDE, new IncludeParselet);

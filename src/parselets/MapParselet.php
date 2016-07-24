@@ -22,28 +22,33 @@
 namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ArrayExpr;
+use \QuackCompiler\Ast\Expr\MapExpr;
 use \QuackCompiler\Lexer\Token;
 
-class ArrayParselet implements IPrefixParselet
+class MapParselet implements IPrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {
-        $items = [];
+        $keys = [];
+        $values = [];
 
         if ($grammar->parser->is('}')) {
             $grammar->parser->consume();
         } else {
-            $items[] = $grammar->_expr();
+            $keys[] = $grammar->_expr();
+            $grammar->parser->match('->');
+            $values[] = $grammar->_expr();
 
             while ($grammar->parser->is(';')) {
                 $grammar->parser->consume();
-                $items[] = $grammar->_expr();
+                $keys[] = $grammar->_expr();
+                $grammar->parser->match('->');
+                $values[] = $grammar->_expr();
             }
 
             $grammar->parser->match('}');
         }
 
-        return new ArrayExpr($items);
+        return new MapExpr($keys, $values);
     }
 }

@@ -1,0 +1,11 @@
+%%describe
+Supports formatting objects
+%%source
+let person :- @{ name->"Marcelo";surname->"Camargo"}
+do @{ }
+%%expect
+let person :- @{
+  name -> "Marcelo";
+  surname -> "Camargo"
+}
+do @{}

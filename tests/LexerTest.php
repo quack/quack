@@ -76,15 +76,6 @@ class LexerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testParam()
-    {
-        $some_parameters = "&0, &1, &(2)";
-        $this->assertEquals(
-            "[T_PARAM, 0][,][T_PARAM, 1][,][&(][T_INTEGER, 2][)]",
-            $this->tokenize($some_parameters, SHOW_SYMBOL_TABLE)
-        );
-    }
-
     public function testKeywords()
     {
         $keywords = [

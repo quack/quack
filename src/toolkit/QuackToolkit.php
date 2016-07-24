@@ -68,6 +68,8 @@ import(PARSELETS, 'RangeParselet');
 import(PARSELETS, 'LiteralParselet');
 import(PARSELETS, 'PartialFuncParselet');
 import(PARSELETS, 'WhereParselet');
+import(PARSELETS, 'MapParselet');
+import(PARSELETS, 'ObjectParselet');
 
 /* Ast */
 
@@ -76,9 +78,10 @@ import(AST, 'Node');
 
 import(AST, 'expr/Expr');
 import(AST, 'expr/ArrayExpr');
-import(AST, 'expr/ArrayPairExpr');
 import(AST, 'expr/IncludeExpr');
 import(AST, 'expr/LambdaExpr');
+import(AST, 'expr/MapExpr');
+import(AST, 'expr/ObjectExpr');
 import(AST, 'expr/NameExpr');
 import(AST, 'expr/NewExpr');
 import(AST, 'expr/NumberExpr');

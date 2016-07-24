@@ -23,25 +23,39 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
-class ArrayPairExpr extends Expr
+class MapExpr extends Expr
 {
-    public $left;
-    public $right;
+    public $keys;
+    public $values;
 
-    public function __construct($left, $right)
+    public function __construct($keys, $values)
     {
-        $this->left = $left;
-        $this->right = $right;
+        $this->keys = $keys;
+        $this->values = $values;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->left->format($parser);
+        $source = '${';
+        $keys = &$this->keys;
+        $values = &$this->values;
 
-        if (null !== $this->right) {
-            $source .= ' -> ';
-            $source .= $this->right->format($parser);
+        if (sizeof($this->keys) > 0) {
+            $source .= ' ';
+            // Iterate based on index
+            $source .= implode('; ',
+                array_map(function ($index) use (&$keys, &$values, $parser) {
+                    $subsource = $keys[$index]->format($parser);
+                    $subsource .= ' -> ';
+                    $subsource .= $values[$index]->format($parser);
+
+                    return $subsource;
+                }, range(0, sizeof($keys) - 1))
+            );
+            $source .= ' ';
         }
+
+        $source .= '}';
 
         return $source;
     }

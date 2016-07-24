@@ -47,7 +47,9 @@
 - [x] Tell bang (!) from 0-size call ([])
 - [x] Review syntactic sugar for statements (when, unless)
 - [x] Review where-notation on expressions. Add as postfix instead of syntactic sugar
-- [ ] Disambiguate arrays from objects
+- [x] Disambiguate maps/objects/arrays
+- [x] Remove T_PARAM
+- [ ] Implement support for first-class blocks
 - [ ] Fix column counter bug { (in atom), (column 0) } on error reporting
 - [ ] Review precedence and associativity. Make them standard
 
