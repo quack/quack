@@ -58,7 +58,7 @@
 
 - Implement rust data structures model
   - [x] Implement traits
-  - [ ] Implement structs
+  - [x] Implement structs
   - [ ] Rename extensions to impl
   - [ ] Implement impl for traits
 

@@ -1,0 +1,12 @@
+%%describe
+Supports formatting structs
+%%source
+struct Point x y end
+struct Empty end
+%%expect
+struct Point
+  x
+  y
+end
+struct Empty
+end

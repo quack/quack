@@ -50,6 +50,7 @@ use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 use \QuackCompiler\Ast\Stmt\TraitStmt;
+use \QuackCompiler\Ast\Stmt\StructStmt;
 
 class Grammar
 {
@@ -363,7 +364,8 @@ class Grammar
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
             Tag::T_EXTENSION => '_extensionDeclStmt',
-            Tag::T_TRAIT     => '_traitDeclStmt'
+            Tag::T_TRAIT     => '_traitDeclStmt',
+            Tag::T_STRUCT    => '_structDeclStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -456,6 +458,21 @@ class Grammar
         $this->parser->match(Tag::T_END);
 
         return new TraitStmt($name, $body);
+    }
+
+    public function _structDeclStmt()
+    {
+        $this->parser->match(Tag::T_STRUCT);
+        $name = $this->identifier();
+        $members = [];
+
+        while ($this->parser->is(Tag::T_IDENT)) {
+            $members[] = $this->identifier();
+        }
+
+        $this->parser->match(Tag::T_END);
+
+        return new StructStmt($name, $members);
     }
 
     public function _extensionDeclStmt()
