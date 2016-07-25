@@ -59,8 +59,9 @@
 - Implement rust data structures model
   - [x] Implement traits
   - [x] Implement structs
-  - [ ] Rename extensions to impl
-  - [ ] Implement impl for traits
+  - [x] Rename extensions to impl
+  - [x] Implement impl for traits
+  - [ ] 'init' should be valid
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

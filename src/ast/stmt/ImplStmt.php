@@ -21,34 +21,37 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class ExtensionStmt implements Stmt
+class ImplStmt implements Stmt
 {
-    public $appliesTo;
-    public $implements;
+    public $type;
+    public $trait_or_struct;
+    public $trait_for;
     public $body;
 
-    public function __construct($appliesTo, $implements, $body)
+    public function __construct($type, $trait_or_struct, $trait_for, $body)
     {
-        $this->appliesTo = $appliesTo;
-        $this->implements = $implements;
+        $this->type = $type;
+        $this->trait_or_struct = $trait_or_struct;
+        $this->trait_for = $trait_for;
         $this->body = $body;
+    }
+
+    private function formatQualifiedName($name)
+    {
+        return implode('.', $name);
     }
 
     public function format(Parser $parser)
     {
-        $source = 'extension for ';
+        $source = 'impl ';
+        $source .= $this->formatQualifiedName($this->trait_or_struct);
 
-        $source .= implode('; ', array_map(function ($param) {
-            return implode('', $param);
-        }, $this->appliesTo));
-
-        if (count($this->implements) > 0) {
-            $source .= ' # ';
-            $source .= implode('; ', array_map(function ($param) {
-                return implode('', $param);
-            }, $this->implements));
+        if (Tag::T_TRAIT === $this->type) {
+            $source .= ' for ';
+            $source .= $this->formatQualifiedName($this->trait_for);
         }
 
         $source .= PHP_EOL;
@@ -61,8 +64,10 @@ class ExtensionStmt implements Stmt
         }
 
         $parser->closeScope();
+
         $source .= $parser->indent();
-        $source .= 'end' . PHP_EOL; 
+        $source .= 'end';
+        $source .= PHP_EOL;
 
         return $source;
     }

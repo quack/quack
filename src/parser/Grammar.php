@@ -28,7 +28,7 @@ use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\BlueprintStmt;
-use \QuackCompiler\Ast\Stmt\ExtensionStmt;
+use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
@@ -87,8 +87,6 @@ class Grammar
         while (!$this->checker->isEoF()) {
             switch ($this->parser->lookahead->getTag()) {
                 case Tag::T_FN:
-                case Tag::T_CONST:
-                case Tag::T_OPEN:
                 case Tag::T_MEMBER:
                     yield $this->_blueprintStmt();
                     continue 2;
@@ -363,7 +361,7 @@ class Grammar
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
-            Tag::T_EXTENSION => '_extensionDeclStmt',
+            Tag::T_IMPL      => '_implStmt',
             Tag::T_TRAIT     => '_traitDeclStmt',
             Tag::T_STRUCT    => '_structDeclStmt'
         ];
@@ -393,7 +391,6 @@ class Grammar
     public function _blueprintStmt()
     {
         $branch_table = [
-            Tag::T_OPEN   => '_openStmt',
             Tag::T_FN     => '_fnStmt',
             Tag::T_MEMBER => '_memberStmt'
         ];
@@ -475,31 +472,25 @@ class Grammar
         return new StructStmt($name, $members);
     }
 
-    public function _extensionDeclStmt()
+    public function _implStmt()
     {
-        $appliesTo = [];
-        $implements = [];
-
-        $this->parser->match(Tag::T_EXTENSION);
-        $this->parser->match(Tag::T_FOR);
-
-        $appliesTo[] = $this->qualifiedName();
-        while($this->parser->is(';')) {
+        // Structs are for properties
+        // Traits are for methods
+        $type = Tag::T_STRUCT;
+        $this->parser->match(Tag::T_IMPL);
+        $trait_or_struct = $this->qualifiedName();
+        $trait_for = null;
+        // When it contains "for", it is being applied for a trait
+        if ($this->parser->is(Tag::T_FOR)) {
+            $type = Tag::T_TRAIT;
             $this->parser->consume();
-            $appliesTo[] = $this->qualifiedName();
-        }
-
-        if ($this->parser->is('#')) {
-            do {
-                $this->parser->consume();
-                $implements[] = $this->qualifiedName();
-            } while ($this->parser->is(';'));
+            $trait_for = $this->qualifiedName();
         }
 
         $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ExtensionStmt($appliesTo, $implements, $body);
+        return new ImplStmt($type, $trait_or_struct, $trait_for, $body);
     }
 
     public function _blueprintDeclStmt()
