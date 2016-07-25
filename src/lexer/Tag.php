@@ -40,8 +40,6 @@ class Tag
     const T_FOR = 263;
     const T_WHILE = 264;
     const T_DO = 265;
-    const T_STRUCT = 266;
-    const T_INIT = 267;
     const T_MODULE = 269;
     const T_BLUEPRINT = 270;
     const T_EXTENSION = 271;
@@ -84,6 +82,9 @@ class Tag
     const T_WHEN = 306;
     const T_UNLESS = 307;
     const T_MEMBER = 308;
+    const T_IMPL = 309;
+    const T_TRAIT = 310;
+    const T_STRUCT = 311;
 
     public static function getOperatorLexeme($op)
     {
@@ -131,7 +132,6 @@ class Tag
             '.',
             '?.',
             '??',
-            '+++',
             '++',
         ];
 

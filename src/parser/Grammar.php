@@ -28,7 +28,7 @@ use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\BlueprintStmt;
-use \QuackCompiler\Ast\Stmt\ExtensionStmt;
+use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
@@ -49,8 +49,8 @@ use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
-
-use \QuackCompiler\Ast\Expr\PrefixExpr;
+use \QuackCompiler\Ast\Stmt\TraitStmt;
+use \QuackCompiler\Ast\Stmt\StructStmt;
 
 class Grammar
 {
@@ -87,14 +87,19 @@ class Grammar
         while (!$this->checker->isEoF()) {
             switch ($this->parser->lookahead->getTag()) {
                 case Tag::T_FN:
-                case Tag::T_CONST:
-                case Tag::T_OPEN:
                 case Tag::T_MEMBER:
                     yield $this->_blueprintStmt();
                     continue 2;
                 default:
                     break 2;
             }
+        }
+    }
+
+    public function _nonBodiedMethodList()
+    {
+        while ($this->parser->is(Tag::T_FN)) {
+            yield $this->_fnStmt(/* empty body */ true);
         }
     }
 
@@ -356,7 +361,9 @@ class Grammar
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
-            Tag::T_EXTENSION => '_extensionDeclStmt'
+            Tag::T_IMPL      => '_implStmt',
+            Tag::T_TRAIT     => '_traitDeclStmt',
+            Tag::T_STRUCT    => '_structDeclStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
@@ -384,7 +391,6 @@ class Grammar
     public function _blueprintStmt()
     {
         $branch_table = [
-            Tag::T_OPEN   => '_openStmt',
             Tag::T_FN     => '_fnStmt',
             Tag::T_MEMBER => '_memberStmt'
         ];
@@ -441,31 +447,50 @@ class Grammar
         return new EnumStmt($name, $entries);
     }
 
-    public function _extensionDeclStmt()
+    public function _traitDeclStmt()
     {
-        $appliesTo = [];
-        $implements = [];
+        $this->parser->match(Tag::T_TRAIT);
+        $name = $this->identifier();
+        $body = iterator_to_array($this->_nonBodiedMethodList());
+        $this->parser->match(Tag::T_END);
 
-        $this->parser->match(Tag::T_EXTENSION);
-        $this->parser->match(Tag::T_FOR);
+        return new TraitStmt($name, $body);
+    }
 
-        $appliesTo[] = $this->qualifiedName();
-        while($this->parser->is(';')) {
-            $this->parser->consume();
-            $appliesTo[] = $this->qualifiedName();
+    public function _structDeclStmt()
+    {
+        $this->parser->match(Tag::T_STRUCT);
+        $name = $this->identifier();
+        $members = [];
+
+        while ($this->parser->is(Tag::T_IDENT)) {
+            $members[] = $this->identifier();
         }
 
-        if ($this->parser->is('#')) {
-            do {
-                $this->parser->consume();
-                $implements[] = $this->qualifiedName();
-            } while ($this->parser->is(';'));
+        $this->parser->match(Tag::T_END);
+
+        return new StructStmt($name, $members);
+    }
+
+    public function _implStmt()
+    {
+        // Structs are for properties
+        // Traits are for methods
+        $type = Tag::T_STRUCT;
+        $this->parser->match(Tag::T_IMPL);
+        $trait_or_struct = $this->qualifiedName();
+        $trait_for = null;
+        // When it contains "for", it is being applied for a trait
+        if ($this->parser->is(Tag::T_FOR)) {
+            $type = Tag::T_TRAIT;
+            $this->parser->consume();
+            $trait_for = $this->qualifiedName();
         }
 
         $body = iterator_to_array($this->_blueprintStmtList());
         $this->parser->match(Tag::T_END);
 
-        return new ExtensionStmt($appliesTo, $implements, $body);
+        return new ImplStmt($type, $trait_or_struct, $trait_for, $body);
     }
 
     public function _blueprintDeclStmt()
@@ -494,10 +519,12 @@ class Grammar
         return new BlueprintStmt($blueprint_name, $extends, $implements, $body);
     }
 
-    public function _fnStmt()
+    public function _fnStmt($needs_empty_body = false)
     {
         $by_reference = false;
         $is_bang = false;
+        $parameters = [];
+        $body = null;
 
         $this->parser->match(Tag::T_FN);
 
@@ -507,7 +534,6 @@ class Grammar
         }
 
         $name = $this->identifier();
-        $parameters = [];
 
         if ($is_bang = $this->parser->is('!')) {
             $this->parser->consume();
@@ -528,8 +554,10 @@ class Grammar
             }
         }
 
-        $body = iterator_to_array($this->_innerStmtList());
-        $this->parser->match(Tag::T_END);
+        if (!$needs_empty_body) {
+            $body = iterator_to_array($this->_innerStmtList());
+            $this->parser->match(Tag::T_END);
+        }
 
         return new FnStmt($name, $by_reference, $body, $parameters, $is_bang);
     }

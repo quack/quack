@@ -23,46 +23,36 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class ExtensionStmt implements Stmt
+class StructStmt implements Stmt
 {
-    public $appliesTo;
-    public $implements;
-    public $body;
+    public $name;
+    public $members;
 
-    public function __construct($appliesTo, $implements, $body)
+    public function __construct($name, $members)
     {
-        $this->appliesTo = $appliesTo;
-        $this->implements = $implements;
-        $this->body = $body;
+        $this->name = $name;
+        $this->members = $members;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'extension for ';
-
-        $source .= implode('; ', array_map(function ($param) {
-            return implode('', $param);
-        }, $this->appliesTo));
-
-        if (count($this->implements) > 0) {
-            $source .= ' # ';
-            $source .= implode('; ', array_map(function ($param) {
-                return implode('', $param);
-            }, $this->implements));
-        }
-
+        $source = 'struct ';
+        $source .= $this->name;
         $source .= PHP_EOL;
 
         $parser->openScope();
 
-        foreach ($this->body as $stmt) {
+        foreach ($this->members as $member) {
             $source .= $parser->indent();
-            $source .= $stmt->format($parser);
+            $source .= $member;
+            $source .= PHP_EOL;
         }
 
         $parser->closeScope();
+
         $source .= $parser->indent();
-        $source .= 'end' . PHP_EOL; 
+        $source .= 'end';
+        $source .= PHP_EOL;
 
         return $source;
     }
