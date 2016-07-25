@@ -61,7 +61,7 @@
   - [x] Implement structs
   - [x] Rename extensions to impl
   - [x] Implement impl for traits
-  - [ ] 'init' should be valid
+  - [x] Remove init clause
 
 - Implement formatting in the AST for:
   - [x] AccessExpr

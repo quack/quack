@@ -40,7 +40,6 @@ class Tag
     const T_FOR = 263;
     const T_WHILE = 264;
     const T_DO = 265;
-    const T_INIT = 267;
     const T_MODULE = 269;
     const T_BLUEPRINT = 270;
     const T_EXTENSION = 271;
