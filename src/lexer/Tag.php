@@ -85,6 +85,7 @@ class Tag
     const T_IMPL = 309;
     const T_TRAIT = 310;
     const T_STRUCT = 311;
+    const T_PUB = 312;
 
     public static function getOperatorLexeme($op)
     {

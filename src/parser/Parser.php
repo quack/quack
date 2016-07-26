@@ -173,7 +173,7 @@ abstract class Parser
         // When, after an error, the programmer provided an identifier,
         // we'll calculate the levenshtein distance between the expected lexeme
         // and the provided lexeme and give a hint about
-        if (Tag::T_IDENT === $this->lookahead->getTag()) {
+        if (Tag::T_IDENT === $this->lookahead->getTag() && array_key_exists($tag, $this->input->keywords_hash)) {
             $expected_lexeme = $this->input->keywords_hash[$tag];
             $provided_lexeme = $this->resolveScope($this->lookahead->getPointer());
 

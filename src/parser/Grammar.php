@@ -358,6 +358,7 @@ class Grammar
         $branch_table = [
             Tag::T_BLUEPRINT => '_blueprintDeclStmt',
             Tag::T_FN        => '_fnStmt',
+            Tag::T_PUB       => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
@@ -523,8 +524,14 @@ class Grammar
     {
         $by_reference = false;
         $is_bang = false;
+        $is_pub = false;
         $parameters = [];
         $body = null;
+
+        if ($this->parser->is(Tag::T_PUB)) {
+            $is_pub = true;
+            $this->parser->consume();
+        }
 
         $this->parser->match(Tag::T_FN);
 
@@ -559,7 +566,7 @@ class Grammar
             $this->parser->match(Tag::T_END);
         }
 
-        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang);
+        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub);
     }
 
     public function _moduleStmt()

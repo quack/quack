@@ -30,19 +30,23 @@ class FnStmt implements Stmt
     public $body;
     public $parameters;
     public $is_bang;
+    public $is_pub;
 
-    public function __construct($name, $by_reference, $body, $parameters, $is_bang)
+    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub)
     {
         $this->name = $name;
         $this->by_reference = $by_reference;
         $this->body = $body;
         $this->parameters = $parameters;
         $this->is_bang = $is_bang;
+        $this->is_pub = $is_pub;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'fn ';
+        $source = $this->is_pub
+            ? 'pub fn '
+            : 'fn ';
 
         if ($this->by_reference) {
             $source .= '* ';

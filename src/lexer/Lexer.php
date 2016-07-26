@@ -98,6 +98,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_IMPL, "impl"));
         $this->reserve(new Word(Tag::T_TRAIT, "trait"));
         $this->reserve(new Word(Tag::T_STRUCT, "struct"));
+        $this->reserve(new Word(Tag::T_PUB, "pub"));
     }
 
     private function reserve(Word $t)
