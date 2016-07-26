@@ -1,5 +1,5 @@
 %%describe
-Supports formatting extensions (for traits and structs)
+Supports formatting impls (for traits and structs)
 %%source
 trait Base64 fn base64_encode! fn base64_encode! end
 impl Base64 for String fn base64_encode!
