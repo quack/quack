@@ -128,7 +128,7 @@
   - [ ] IfStmt
   - [ ] LabelStmt
   - [ ] LetStmt
-  - [ ] MemberStmt
+  - [x] MemberStmt
   - [ ] ModuleStmt
   - [ ] OpenStmt
   - [ ] RaiseStmt

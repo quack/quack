@@ -9,7 +9,7 @@ name
 end
 trait Duckify
   fn quack! 
-  fn wearFeatherCostume!
+  fn wearFeatherCostume!  
 end
 impl Duckify for Person member featherColor :- Color.Red fn quack! do console.write [ self.name ++ ": Quack!" ] end 
 fn wearFeatherCostume! do console.write [ "Not Implemented" ] end
