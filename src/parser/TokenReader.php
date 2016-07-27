@@ -23,25 +23,7 @@ namespace QuackCompiler\Parser;
 
 use \Exception;
 
-use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Tokenizer;
-
-use \QuackCompiler\Ast\Stmt\BlockStmt;
-use \QuackCompiler\Ast\Stmt\BreakStmt;
-use \QuackCompiler\Ast\Stmt\ContinueStmt;
-use \QuackCompiler\Ast\Stmt\DefStmt;
-use \QuackCompiler\Ast\Stmt\ExprStmt;
-use \QuackCompiler\Ast\Stmt\ForeachStmt;
-use \QuackCompiler\Ast\Stmt\GlobalStmt;
-use \QuackCompiler\Ast\Stmt\GotoStmt;
-use \QuackCompiler\Ast\Stmt\IfStmt;
-use \QuackCompiler\Ast\Stmt\LabelStmt;
-use \QuackCompiler\Ast\Stmt\PrintStmt;
-use \QuackCompiler\Ast\Stmt\RaiseStmt;
-use \QuackCompiler\Ast\Stmt\ReturnStmt;
-use \QuackCompiler\Ast\Stmt\WhileStmt;
-
-use \QuackCompiler\Ast\Helper\Param;
 
 class TokenReader extends Parser
 {
