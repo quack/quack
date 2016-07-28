@@ -193,9 +193,9 @@ class Grammar
         if ($this->parser->is(':-')) {
             $this->parser->consume();
             $value = $this->_expr();
-            $definitions[$name] = $value;
+            $definitions[] = [$name, $value];
         } else {
-            $definitions[$name] = null;
+            $definitions[] = [$name, null];
         }
 
         while ($this->parser->is(',')) {
@@ -205,9 +205,9 @@ class Grammar
             if ($this->parser->is(':-')) {
                 $this->parser->consume();
                 $value = $this->_expr();
-                $definitions[$name] = $value;
+                $definitions[] = [$name, $value];
             } else {
-                $definitions[$name] = null;
+                $definitions[] = [$name, null];
             }
         }
 
@@ -616,14 +616,14 @@ class Grammar
         $name = $this->identifier();
         $this->parser->match(':-');
         $value = $this->_expr();
-        $definitions[$name] = $value;
+        $definitions[] = [$name, $value];
 
         while ($this->parser->is(',')) {
             $this->parser->consume();
             $name = $this->identifier();
             $this->parser->match(':-');
             $value = $this->_expr();
-            $definitions[$name] = $value;
+            $definitions[] = [$name, $value];
         }
 
         return new ConstStmt($definitions);

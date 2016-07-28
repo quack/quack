@@ -37,7 +37,7 @@ class LetStmt implements Stmt
         $source = 'let ';
         $first = true;
 
-        foreach ($this->definitions as $variable => $value) {
+        foreach ($this->definitions as $def) {
             if (!$first) {
                 $source .= $parser->indent();
                 $source .= '  , ';
@@ -45,11 +45,11 @@ class LetStmt implements Stmt
                 $first = false;
             }
 
-            $source .= $variable;
+            $source .= $def[0];
 
-            if (null !== $value) {
+            if (null !== $def[1]) {
                 $source .= ' :- ';
-                $source .= $value->format($parser);
+                $source .= $def[1]->format($parser);
             }
             $source .= PHP_EOL;
         }

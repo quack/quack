@@ -25,6 +25,7 @@ require_once(BASE_PATH . '/toolkit/QuackToolkit.php');
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Scope;
 
 function start_repl()
 {
@@ -91,9 +92,14 @@ function readline_callback($command)
 
     try {
         $parser->parse();
+
+        $global_scope = new Scope\Scope;
+        Scope\scope_injector($parser->ast, $global_scope);
+        var_dump($parser->ast);
+
         # /* when */ args_have('-a', '--ast') && $parser->dumpAst();
-        /* when */ args_have('-f', '--format') && $parser->format();
-    } catch (SyntaxError $e) {
+        # /* when */ args_have('-f', '--format') && $parser->format();
+    } catch (\Exception $e) {
         echo $e;
     }
 

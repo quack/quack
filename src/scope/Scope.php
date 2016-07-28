@@ -19,38 +19,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Scope;
 
-use \QuackCompiler\Parser\Parser;
-
-class ConstStmt implements Stmt
+class Scope
 {
-    public $definitions;
+    public $table = [];
+    public $parent;
 
-    public function __construct($definitions)
+    public function symbolInScope($symbol)
     {
-        $this->definitions = $definitions;
+        return array_key_exists($symbol, $this->table);
     }
 
-    public function format(Parser $parser)
+    public function insert($symbol, $value)
     {
-        $source = 'const ';
-        $first = true;
+        $this->table[$symbol] = $value;
+    }
 
-        foreach ($this->definitions as $def) {
-            if (!$first) {
-                $source .= $parser->indent();
-                $source .= '    , ';
-            } else {
-                $first = false;
-            }
-
-            $source .= $def[0];
-            $source .= ' :- ';
-            $source .= $def[1]->format($parser);
-            $source .= PHP_EOL;
+    public function lookup($symbol)
+    {
+        if ($this->symbolInScope($symbol)) {
+            return $this->table[$symbol];
         }
 
-        return $source;
+        return null !== $this->parent
+            ? $this->parent->lookup($symbol)
+            : null;
     }
 }

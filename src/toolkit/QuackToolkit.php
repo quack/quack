@@ -23,6 +23,7 @@ define('AST', 'ast');
 define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
 define('PARSER', 'parser');
+define('SCOPE', 'scope');
 
 function import($module, $file)
 {
@@ -131,3 +132,8 @@ import(AST, 'stmt/SwitchStmt');
 import(AST, 'stmt/TraitStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
+
+/* Scope */
+
+import(SCOPE, 'Scope');
+import(SCOPE, 'scope_injector');
