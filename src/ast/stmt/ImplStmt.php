@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class ImplStmt implements Stmt
+class ImplStmt extends Stmt
 {
     public $type;
     public $trait_or_struct;

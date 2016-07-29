@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class ElifStmt implements Stmt
+class ElifStmt extends Stmt
 {
     public $condition;
     public $body;

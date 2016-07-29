@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast;
 
 use \QuackCompiler\Parser\Parser;
 
-interface Node
+abstract class Node
 {
-    public function format(Parser $parser);
+    abstract public function format(Parser $parser);
 }

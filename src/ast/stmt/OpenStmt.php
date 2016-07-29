@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class OpenStmt implements Stmt
+class OpenStmt extends Stmt
 {
     public $module;
     public $alias;

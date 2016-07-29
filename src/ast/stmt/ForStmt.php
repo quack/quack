@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 
-class ForStmt implements Stmt
+class ForStmt extends Stmt
 {
     public $variable;
     public $from;

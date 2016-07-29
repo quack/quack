@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class ModuleStmt implements Stmt
+class ModuleStmt extends Stmt
 {
     public $qualified_name;
 

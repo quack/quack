@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class LetStmt implements Stmt
+class LetStmt extends Stmt
 {
     public $definitions;
 

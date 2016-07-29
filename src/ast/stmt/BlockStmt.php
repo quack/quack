@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class BlockStmt implements Stmt
+class BlockStmt extends Stmt
 {
     public $stmt_list;
 

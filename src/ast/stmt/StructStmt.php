@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class StructStmt implements Stmt
+class StructStmt extends Stmt
 {
     public $name;
     public $members;

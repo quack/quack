@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 
-class WhileStmt implements Stmt
+class WhileStmt extends Stmt
 {
     public $condition;
     public $body;

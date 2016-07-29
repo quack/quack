@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class TraitStmt implements Stmt
+class TraitStmt extends Stmt
 {
     public $name;
     public $body;

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class TryStmt implements Stmt
+class TryStmt extends Stmt
 {
     public $try;
     public $rescues;

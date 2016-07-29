@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class SwitchStmt implements Stmt
+class SwitchStmt extends Stmt
 {
     public $value;
     public $cases;

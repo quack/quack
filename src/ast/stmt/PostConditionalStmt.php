@@ -25,7 +25,7 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class PostConditionalStmt implements Stmt
+class PostConditionalStmt extends Stmt
 {
     public $stmt;
     public $predicate;

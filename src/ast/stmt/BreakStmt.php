@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class BreakStmt implements Stmt
+class BreakStmt extends Stmt
 {
     public $label;
 

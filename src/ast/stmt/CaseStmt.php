@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class CaseStmt implements Stmt
+class CaseStmt extends Stmt
 {
     public $value;
     public $body;

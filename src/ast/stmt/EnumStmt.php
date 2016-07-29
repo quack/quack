@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class EnumStmt implements Stmt
+class EnumStmt extends Stmt
 {
     public $entries;
     public $name;

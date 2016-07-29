@@ -24,7 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Util;
 use \QuackCompiler\Parser\Parser;
 
-class ForeachStmt implements Stmt
+class ForeachStmt extends Stmt
 {
     public $by_reference;
     public $key;
