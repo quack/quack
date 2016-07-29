@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parser;
+namespace QuackCompiler\Scope;
 
 use \Exception;
 
@@ -27,7 +27,6 @@ class ScopeError extends Exception
 {
     private $begin;
     private $end;
-    private $source;
     private $qk_message;
 
     public function __construct($parameters)
@@ -35,14 +34,17 @@ class ScopeError extends Exception
         $this->begin = $parameters['begin'];
         $this->end = $parameters['end'];
         $this->qk_message = $parameters['message'];
-        $this->source = $parameters['source'];
     }
 
     public function __toString()
     {
-        return $source . PHP_EOL . join([
+        return join([
             BEGIN_RED,
-            "*** Quack, there is a semantic issue, friend!", PHP_EOL,
+            "*** Quack, there is a ", BEGIN_GREEN, "semantic", END_GREEN,
+            BEGIN_RED, " issue, friend!", PHP_EOL,
+            "    ", $this->qk_message, PHP_EOL,
+            "    Beggining at line {$this->begin->line}, column {$this->begin->column}", PHP_EOL,
+            "    Ending at line {$this->end->line}, column {$this->end->column}", PHP_EOL,
             END_RED,
         ]);
     }

@@ -617,6 +617,8 @@ class Grammar
 
     public function _constStmt()
     {
+        $begin_position = (object) $this->parser->position();
+
         $this->parser->match(Tag::T_CONST);
         $definitions = [];
 
@@ -633,7 +635,12 @@ class Grammar
             $definitions[] = [$name, $value];
         }
 
-        return new ConstStmt($definitions);
+        $end_position = (object) $this->parser->position();
+
+        $node = new ConstStmt($definitions);
+        $node->begin = $begin_position;
+        $node->end = $end_position;
+        return $node;
     }
 
     public function _parameter()
