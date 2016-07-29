@@ -55,6 +55,10 @@
 - [x] Try again to implement multiple parenthesis level
 - [ ] Review precedence and associativity. Make them standard
 
+- Scope
+  - [x] Implement a logic for some nodes to carry information about line and column
+  - [ ] Migrate for classes
+
 - Implement rust data structures model
   - [x] Implement traits
   - [x] Implement structs

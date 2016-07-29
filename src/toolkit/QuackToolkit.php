@@ -136,4 +136,5 @@ import(AST, 'stmt/WhileStmt');
 /* Scope */
 
 import(SCOPE, 'Scope');
+import(SCOPE, 'ScopeError');
 import(SCOPE, 'scope_injector');

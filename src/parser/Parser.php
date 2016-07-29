@@ -227,7 +227,7 @@ abstract class Parser
 
     public function position()
     {
-        return ["line" => &$this->input->line, "column" => &$this->input->column];
+        return ["line" => $this->input->line, "column" => $this->input->column];
     }
 
     public function infixParseletForToken(Token $token)

@@ -183,6 +183,8 @@ class Grammar
 
     public function _letStmt()
     {
+        $begin_position = (object) $this->parser->position();
+
         $this->parser->match(Tag::T_LET);
         $definitions = [];
 
@@ -211,7 +213,12 @@ class Grammar
             }
         }
 
-        return new LetStmt($definitions);
+        $end_position = (object) $this->parser->position();
+
+        $node = new LetStmt($definitions);
+        $node->begin = $begin_position;
+        $node->end = $end_position;
+        return $node;
     }
 
     public function _whileStmt()

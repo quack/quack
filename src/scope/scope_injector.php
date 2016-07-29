@@ -96,7 +96,10 @@ function bind_let(&$node, &$parent_scope)
 
     foreach ($node->definitions as $def) {
         if (in_array($def[0], $bound_names, true)) {
-            throw new ScopeViolation("Variable declared twice: {$def[0]}");
+            throw new ScopeError([
+                'begin' => $def->begin,
+                'end'   => $def->end
+            ]);
         }
 
         $bound_names[] = $def[0];

@@ -19,14 +19,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast;
+namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Parser\Parser;
+use \Exception;
 
-abstract class Node
+class ScopeError extends Exception
 {
-    public $begin;
-    public $end;
+    private $begin;
+    private $end;
+    private $source;
+    private $qk_message;
 
-    abstract public function format(Parser $parser);
+    public function __construct($parameters)
+    {
+        $this->begin = $parameters['begin'];
+        $this->end = $parameters['end'];
+        $this->qk_message = $parameters['message'];
+        $this->source = $parameters['source'];
+    }
+
+    public function __toString()
+    {
+        return $source . PHP_EOL . join([
+            BEGIN_RED,
+            "*** Quack, there is a semantic issue, friend!", PHP_EOL,
+            END_RED,
+        ]);
+    }
 }
