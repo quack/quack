@@ -53,4 +53,9 @@ class ConstStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return false;
+    }
 }

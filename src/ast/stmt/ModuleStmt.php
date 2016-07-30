@@ -39,4 +39,9 @@ class ModuleStmt extends Stmt
         $source .= PHP_EOL;
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return false;
+    }
 }

@@ -77,4 +77,9 @@ class IfStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return true;
+    }
 }

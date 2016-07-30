@@ -91,4 +91,9 @@ class TryStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return true;
+    }
 }

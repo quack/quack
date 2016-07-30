@@ -45,4 +45,9 @@ class ReturnStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return false;
+    }
 }

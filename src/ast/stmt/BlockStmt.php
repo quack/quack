@@ -50,4 +50,9 @@ class BlockStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return true;
+    }
 }

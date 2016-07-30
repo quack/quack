@@ -22,7 +22,15 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use QuackCompiler\Ast\Node;
+use QuackCompiler\Scope\Scope;
 
 abstract class Stmt extends Node
 {
+    abstract public function shouldHaveOwnScope();
+
+    public function createScopeWithParent(Scope &$parent)
+    {
+        $this->scope = new Scope;
+        $this->scope->parent = &$parent;
+    }
 }

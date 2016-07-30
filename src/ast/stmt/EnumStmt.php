@@ -56,4 +56,9 @@ class EnumStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return false;
+    }
 }

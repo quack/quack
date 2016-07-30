@@ -71,4 +71,9 @@ class ImplStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return true;
+    }
 }

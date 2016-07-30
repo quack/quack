@@ -54,4 +54,9 @@ class WhileStmt extends Stmt
 
         return $source;
     }
+
+    public function shouldHaveOwnScope()
+    {
+        return true;
+    }
 }
