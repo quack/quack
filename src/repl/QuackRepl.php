@@ -93,9 +93,10 @@ function readline_callback($command)
 
     try {
         $parser->parse();
-        $global_scope = new Scope;
-        $meaningful_ast = new ScopeInjector($parser->ast, $global_scope);
-        var_dump($meaningful_ast->process());
+        var_dump($parser->ast);
+        //$global_scope = new Scope;
+        //$meaningful_ast = new ScopeInjector($parser->ast, $global_scope);
+        //var_dump($meaningful_ast->process());
 
         # /* when */ args_have('-a', '--ast') && $parser->dumpAst();
         # /* when */ args_have('-f', '--format') && $parser->format();
