@@ -24,6 +24,45 @@ namespace QuackCompiler\Scope;
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Stmt;
 
+/**
+ * This piece specifies, currently, how the scope control works in Quack.
+ * We have an initial global symbol table, that comes by default to this class,
+ * ok?
+ * The lookup is made by reference (bottom-up), *EVERY* scope *MUST* have a
+ * &parent, except by the *GLOBAL* scope, right?
+ * Later, we'll need to keep track of the line and columns, but, currently,
+ * let's just ignore them, otherwise, it'll be very hard to analyse the AST
+ * visually.
+ * I'll make dozens of prototypes until I have something really efficient, not
+ * a workaround-traversal.
+ *
+ * RULES
+ *
+ * The following expressions may contain own scopes:
+ *  -   LambdaExpr
+ *  -   WhereExpr
+ * However, as much as expr ::= lambda-expr, we must traverse all expr anyway,
+ * ALL. ALL!
+ *
+ * Unlike JS, Quack has own scope for blocks!
+ *
+ * The following statements may contain own scopes:
+ *  -   BlockStmt, ElifStmt (elif), FnStmt, ForStmt, ForeachStmt
+ *  -   IfStmt (if/else), ImplStmt, (StructStmt TraitStmt?), TryStmt
+ *  -   WhileStmt
+ *  -   BlueprintStmt (this is an exception, we must take a special care with it)
+ *  -   CaseStmt (not applied to Switch, only to case)
+ *
+ * The other statements don't need to be traversed over (and cannot), only their
+ * expressions
+ *
+ * The following nodes may create symbols:
+ *  -   WhereExpr, BlueprintStmt
+ *  -   FnStmt, StructStmt
+ *  -   MemberStmt, TraitStmt
+ *  -   LetStmt
+ *  -   ConstStmt
+ */
 class ScopeInjector
 {
     private $ast;
