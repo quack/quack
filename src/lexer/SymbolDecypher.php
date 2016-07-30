@@ -23,11 +23,6 @@ namespace QuackCompiler\Lexer;
 
 class SymbolDecypher
 {
-    public static function add($x, $y)
-    {
-        return $x + $y;
-    }
-
     public static function __callStatic($method, $args)
     {
         $context = &$args[0];
