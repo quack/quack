@@ -44,18 +44,12 @@ class TokenReader extends Parser
 
     public function format()
     {
-        foreach ($this->ast as $stmt) {
-            echo $stmt->format($this);
-        }
+        echo $this->beautify();
     }
 
     public function beautify()
     {
-        $source = [];
-        foreach ($this->ast as $stmt) {
-            $source[] = $stmt->format($this);
-        }
-        return implode($source);
+        return $this->ast->format($this);
     }
 
     public function parse()

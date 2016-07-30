@@ -76,7 +76,7 @@ class ScopeInjector
 
     public function process()
     {
-        $this->inject($this->ast, $this->global_scope);
+        //$this->inject($this->ast, $this->global_scope);
         return $this->ast;
     }
 

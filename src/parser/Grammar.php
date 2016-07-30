@@ -43,6 +43,7 @@ use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PostConditionalStmt;
+use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
@@ -65,7 +66,7 @@ class Grammar
 
     public function start()
     {
-        return iterator_to_array($this->_topStmtList());
+        return new ProgramStmt(iterator_to_array($this->_topStmtList()));
     }
 
     public function _topStmtList()
@@ -183,8 +184,6 @@ class Grammar
 
     public function _letStmt()
     {
-        $begin_position = (object) $this->parser->position();
-
         $this->parser->match(Tag::T_LET);
         $definitions = [];
 
@@ -213,12 +212,7 @@ class Grammar
             }
         }
 
-        $end_position = (object) $this->parser->position();
-
-        $node = new LetStmt($definitions);
-        $node->begin = $begin_position;
-        $node->end = $end_position;
-        return $node;
+        return new LetStmt($definitions);
     }
 
     public function _whileStmt()
@@ -617,8 +611,6 @@ class Grammar
 
     public function _constStmt()
     {
-        $begin_position = (object) $this->parser->position();
-
         $this->parser->match(Tag::T_CONST);
         $definitions = [];
 
@@ -635,12 +627,7 @@ class Grammar
             $definitions[] = [$name, $value];
         }
 
-        $end_position = (object) $this->parser->position();
-
-        $node = new ConstStmt($definitions);
-        $node->begin = $begin_position;
-        $node->end = $end_position;
-        return $node;
+        return new ConstStmt($definitions);
     }
 
     public function _parameter()

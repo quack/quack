@@ -125,6 +125,7 @@ import(AST, 'stmt/MemberStmt');
 import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/PostConditionalStmt');
+import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/StructStmt');

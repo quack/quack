@@ -19,11 +19,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast;
+namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-abstract class Node
+class ProgramStmt extends Stmt
 {
-    abstract public function format(Parser $parser);
+    public $stmt_list;
+
+    public function __construct($stmt_list)
+    {
+        $this->stmt_list = $stmt_list;
+    }
+
+    public function format(Parser $parser)
+    {
+        $source = '';
+
+        foreach ($this->stmt_list as $stmt) {
+            $source .= $stmt->format($parser);
+        }
+
+        return $source;
+    }
 }

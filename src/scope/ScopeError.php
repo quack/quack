@@ -25,14 +25,10 @@ use \Exception;
 
 class ScopeError extends Exception
 {
-    private $begin;
-    private $end;
     private $qk_message;
 
     public function __construct($parameters)
     {
-        $this->begin = $parameters['begin'];
-        $this->end = $parameters['end'];
         $this->qk_message = $parameters['message'];
     }
 
@@ -43,9 +39,7 @@ class ScopeError extends Exception
             "*** Quack, there is a ", BEGIN_GREEN, "semantic", END_GREEN,
             BEGIN_RED, " issue, friend!", PHP_EOL,
             "    ", $this->qk_message, PHP_EOL,
-            "    Beggining at line {$this->begin->line}, column {$this->begin->column}", PHP_EOL,
-            "    Ending at line {$this->end->line}, column {$this->end->column}", PHP_EOL,
-            END_RED,
+            END_RED
         ]);
     }
 }
