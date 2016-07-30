@@ -50,4 +50,9 @@ class ReturnStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

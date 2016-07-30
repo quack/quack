@@ -59,4 +59,10 @@ class ElifStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        // TODO: Unused until we solve the if-else problem
+        return $this->body;
+    }
 }

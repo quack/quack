@@ -76,4 +76,9 @@ class ForStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        return $this->body;
+    }
 }

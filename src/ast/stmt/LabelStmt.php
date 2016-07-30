@@ -44,4 +44,9 @@ class LabelStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

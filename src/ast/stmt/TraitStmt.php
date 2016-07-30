@@ -61,4 +61,9 @@ class TraitStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        return $this->body;
+    }
 }

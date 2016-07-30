@@ -55,4 +55,9 @@ class BlockStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        return $this->stmt_list;
+    }
 }

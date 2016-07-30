@@ -82,4 +82,9 @@ class OpenStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

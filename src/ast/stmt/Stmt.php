@@ -28,6 +28,8 @@ abstract class Stmt extends Node
 {
     abstract public function shouldHaveOwnScope();
 
+    abstract function getStmtList();
+
     public function createScopeWithParent(Scope &$parent)
     {
         $this->scope = new Scope;

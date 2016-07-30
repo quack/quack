@@ -82,4 +82,10 @@ class IfStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        // TODO: How to deal with elif and else?
+        return $this->body;
+    }
 }

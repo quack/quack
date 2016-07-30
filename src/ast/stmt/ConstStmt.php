@@ -58,4 +58,9 @@ class ConstStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

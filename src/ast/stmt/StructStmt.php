@@ -61,4 +61,10 @@ class StructStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        // TODO: Members should be wrapped in member class in order to work
+        return $this->members;
+    }
 }

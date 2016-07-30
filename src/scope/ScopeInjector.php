@@ -76,8 +76,20 @@ class ScopeInjector
 
     public function process()
     {
-        //$this->inject($this->ast, $this->global_scope);
+        $this->traverse($this->ast, $this->global_scope);
         return $this->ast;
+    }
+
+    private function traverse(&$node, Scope &$parent)
+    {
+        // Bind scope
+        if ($node instanceof Stmt\Stmt && $node->shouldHaveOwnScope()) {
+            $node->createScopeWithParent($parent);
+
+            $stmt_list = $node->getStmtList();
+        }
+
+        // Continue traversing
     }
 
     private function inject(&$node, Scope &$parent_scope)

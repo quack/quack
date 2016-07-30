@@ -54,4 +54,11 @@ class PostConditionalStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        // TODO: It doesn't create scope, but it has ONE statement inside it,
+        // and it must be exposed
+        return [$this->stmt];
+    }
 }

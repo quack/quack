@@ -47,4 +47,9 @@ class ProgramStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        return $this->stmt_list;
+    }
 }

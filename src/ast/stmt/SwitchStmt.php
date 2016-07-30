@@ -60,4 +60,9 @@ class SwitchStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return $this->cases;
+    }
 }

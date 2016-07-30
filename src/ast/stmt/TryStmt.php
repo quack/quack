@@ -96,4 +96,10 @@ class TryStmt extends Stmt
     {
         return true;
     }
+
+    public function getStmtList()
+    {
+        // TODO: How will we deal with rescues and finally?
+        return [$this->try];
+    }
 }

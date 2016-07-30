@@ -44,4 +44,9 @@ class RaiseStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

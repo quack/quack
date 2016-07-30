@@ -44,4 +44,9 @@ class ModuleStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        return [];
+    }
 }

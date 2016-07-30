@@ -61,4 +61,10 @@ class EnumStmt extends Stmt
     {
         return false;
     }
+
+    public function getStmtList()
+    {
+        // TODO: Members are scoped, right?
+        return $this->entries;
+    }
 }
