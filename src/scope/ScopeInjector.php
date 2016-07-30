@@ -82,62 +82,60 @@ class ScopeInjector
 
     private function traverse(&$node, Scope &$parent)
     {
-        // Bind scope
+        // Bind scope (for everything that satisfies the interface!)
         if ($node instanceof Stmt\Stmt && $node->shouldHaveOwnScope()) {
             $node->createScopeWithParent($parent);
 
-            $stmt_list = $node->getStmtList();
-        }
+            // When it is a function, pre-inject its parameters
+            if ($node instanceof Stmt\FnStmt) {
+                foreach ($node->parameters as $item) {
+                    $param = (object) $item;
+                    if ($node->scope->symbolInScope($param->name)) {
+                        throw new ScopeError(['message' => "Parameter `{$param->name}' declared twice for function {$node->name}"]);
+                    }
+                    $node->scope->insert($param->name, [
+                        'initialized' => true,
+                        'kind'        => 'variable|parameter',
+                        'mutable'     => false
+                    ]);
+                }
+            }
 
-        // Continue traversing
-    }
+            foreach ($node->getStmtList() as $sub) {
 
-    private function inject(&$node, Scope &$parent_scope)
-    {
-        // Each symbol will be stored here
-        $scope = new Scope;
-        $scope->parent = $parent_scope;
-
-        // Recursive case, list of statements
-        if (is_array($node)) {
-            // We'll walk through the statements (and futurely, over the expressions)
-            // and extract the local symbols, also, binding the parent scope reference
-            foreach ($node as $stmt) {
-                if ($stmt instanceof Stmt\LetStmt || $stmt instanceof Stmt\ConstStmt) {
-                    foreach ($stmt->definitions as $def) {
-                        // For each definition, check if it exists in the table of symbol
-                        // definitions. If, so, it is an error, because the variable
-                        // is being defined twice
-                        if ($scope->symbolInScope($def[0])) {
-                            throw new ScopeError([
-                                'begin'   => $stmt->begin,
-                                'end'     => $stmt->end,
-                                'message' => "Symbol `" . BEGIN_GREEN . $def[0] . END_GREEN . BEGIN_RED . "' declared twice"
-                            ]);
+                if ($sub instanceof Stmt\LetStmt || $sub instanceof Stmt\ConstStmt) {
+                    foreach ($sub->definitions as $def) {
+                        if ($node->scope->symbolInScope($def[0])) {
+                            throw new ScopeError(['message' => "Symbol `{$def[0]}' declared twice"]);
                         }
 
-                        $scope->insert($def[0], ['initialized' => null !== $def[1]]);
+                        $node->scope->insert($def[0], [
+                            'initialized' => null !== $def[1],
+                            'kind'        => 'variable',
+                            'mutable'     => $sub instanceof Stmt\LetStmt
+                        ]);
                     }
                 }
 
-                $this->inject($stmt, $parent_scope);
+                if ($sub instanceof Stmt\FnStmt) {
+                    if ($node->scope->symbolInScope($sub->name)) {
+                        throw new ScopeError(['message' => "Symbol for function `{$sub->name}' declared twice"]);
+                    }
+                    $node->scope->insert($sub->name, [
+                        'initialized' => true,
+                        'kind'        => 'function',
+                        'mutable'     => false
+                    ]);
+                }
             }
-
-            // TODO: Remove latter. Clear values from AST for better visibility
-            foreach ($node as $stmt) {
-                unset($stmt->begin);
-                unset($stmt->end);
-            }
-
-            // Temp. Hold in an object later
-            $node['scope'] = $scope;
-        } else {
-            $node->scope = $scope;
         }
 
-        // Deal with all sort of blocks
-        if ($node instanceof Stmt\BlockStmt) {
-            $this->inject($node->stmt_list, $node->scope);
+        // Continue traversing sub-elements and deal with exceptions (1/1!)
+        if ($node instanceof Stmt\BlockStmt || $node instanceof Stmt\ProgramStmt
+            || $node instanceof Stmt\WhileStmt || $node instanceof Stmt\FnStmt) {
+            foreach ($node->getStmtList() as $sub) {
+                $this->traverse($sub, $node->scope);
+            }
         }
     }
 }
