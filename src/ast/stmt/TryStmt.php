@@ -43,10 +43,7 @@ class TryStmt extends Stmt
 
         $parser->openScope();
 
-        foreach ($this->try as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
+        $source .= $this->try->format($parser);
 
         $parser->closeScope();
 
@@ -62,10 +59,7 @@ class TryStmt extends Stmt
 
             $parser->openScope();
 
-            foreach ($obj->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
+            $source .= $obj->body->format($parser);
 
             $parser->closeScope();
         }
@@ -77,10 +71,7 @@ class TryStmt extends Stmt
 
             $parser->openScope();
 
-            foreach ($this->finally as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
+            $source .= $this->finally->format($parser);
 
             $parser->closeScope();
         }
@@ -92,14 +83,48 @@ class TryStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        // Inject scope on try body
+        $this->try->createScopeWithParent($parent_scope);
+        $this->try->bindDeclarations($this->try->stmt_list);
 
-    public function getStmtList()
-    {
-        // TODO: How will we deal with rescues and finally?
-        return [$this->try];
+        // Continue depth-based traversal on try body
+        foreach ($this->try->stmt_list as $node) {
+            $node->injectScope($this->try->scope);
+        }
+
+        // Inject scope in all the rescue cases
+        foreach (array_map(function ($item) {
+            return (object) $item;
+        }, $this->rescues) as $rescue) {
+            $rescue->body->createScopeWithParent($parent_scope);
+
+            // Pre-bind rescue variable
+            $rescue->body->scope->insert($rescue->variable, [
+                'initialized' => true,
+                'kind'        => 'variable',
+                'mutable'     => false
+            ]);
+
+            // Bind rescue body
+            $rescue->body->bindDeclarations($rescue->body->stmt_list);
+
+            // Traverse rescue body
+            foreach ($rescue->body->stmt_list as $node) {
+                $node->injectScope($rescue->body->scope);
+            }
+        }
+
+        // When finally is provided, inject scope and traverse
+        if (null !== $this->finally) {
+            $this->finally->createScopeWithParent($parent_scope);
+            $this->finally->bindDeclarations($this->finally->stmt_list);
+
+            // Continue depth-based traversal
+            foreach ($this->finally->stmt_list as $node) {
+                $node->injectScope($this->finally->scope);
+            }
+        }
     }
 }

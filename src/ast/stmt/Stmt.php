@@ -35,9 +35,9 @@ abstract class Stmt extends Node
         $this->scope->parent = &$parent;
     }
 
-    private function bindVariableDecl($decl)
+    private function bindVariableDecl($var)
     {
-        foreach ($decl->definitions as $def) {
+        foreach ($var->definitions as $def) {
             $name = &$def[0];
             $value = &$def[1];
 
@@ -50,7 +50,7 @@ abstract class Stmt extends Node
             $this->scope->insert($name, [
                 'initialized' => null !== $value,
                 'kind'        => 'variable',
-                'mutable'     => !($decl instanceof ConstStmt)
+                'mutable'     => !($var instanceof ConstStmt)
             ]);
         }
     }
