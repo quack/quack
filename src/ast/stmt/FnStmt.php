@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class FnStmt extends Stmt
 {
     public $name;
@@ -101,13 +103,31 @@ class FnStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        // Pre-inject parameters
+        foreach (array_map(function ($item) {
+            return (object) $item;
+        }, $this->parameters) as $param) {
+            if ($this->scope->hasLocal($param->name)) {
+                throw new ScopeError([
+                    'message' => "Duplicated parameter `{$param->name}' in function {$this->name}"
+                ]);
+            }
+
+            $this->scope->insert($param->name, [
+                'initialized' => true,
+                'kind'        => 'variable|parameter',
+                'mutable'     => false
+            ]);
+        }
+
+        $this->bindDeclarations($this->body);
+
+        foreach ($this->body as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }

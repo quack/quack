@@ -63,7 +63,7 @@ abstract class Stmt extends Node
             ]);
         }
 
-        $this->scope->insert($name, [
+        $this->scope->insert($func->name, [
             'initialized' => true,
             'kind'        => 'function',
             'mutable'     => false
