@@ -418,7 +418,7 @@ class Grammar
             $value = $this->_expr();
         }
 
-        $definitions[$name] = $value;
+        $definitions[] = [$name, $value];
 
         while ($this->parser->is(',')) {
             $this->parser->consume();
@@ -430,7 +430,7 @@ class Grammar
                 $value = $this->_expr();
             }
 
-            $definitions[$name] = $value;
+            $definitions[] = [$name, $value];
         }
 
         return new MemberStmt($definitions);
@@ -517,7 +517,7 @@ class Grammar
             } while ($this->parser->is(';'));
         }
 
-        $body = iterator_to_array($this->_blueprintStmtList());
+        $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
         $this->parser->match(Tag::T_END);
 
         return new BlueprintStmt($blueprint_name, $extends, $implements, $body);

@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class EnumStmt extends Stmt
 {
     public $entries;
@@ -57,14 +59,24 @@ class EnumStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
+        $this->createScopeWithParent($parent_scope);
 
-    public function getStmtList()
-    {
-        // TODO: Members are scoped, right?
-        return $this->entries;
+        // Inject its own members
+        foreach ($this->entries as $entry) {
+            if ($this->scope->hasLocal($entry)) {
+                throw new ScopeError([
+                    'message' => "Duplicated declaration of `{$entry}' for enum " .
+                                 $this->name
+                ]);
+            }
+
+            $this->scope->insert($entry, [
+                'initialized' => true,
+                'kind'        => 'enum_member',
+                'mutable'     => false
+            ]);
+        }
     }
 }

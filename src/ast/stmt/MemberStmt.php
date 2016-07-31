@@ -37,7 +37,10 @@ class MemberStmt extends Stmt
         $first = true;
         $source = 'member ';
 
-        foreach ($this->definitions as $key => $value) {
+        foreach ($this->definitions as $def) {
+            $key = $def[0];
+            $value = $def[1];
+
             if ($first) {
                 $first = false;
             } else {
@@ -57,13 +60,8 @@ class MemberStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
-
-    public function getStmtList()
-    {
-        return [];
+        // TODO
     }
 }

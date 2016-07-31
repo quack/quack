@@ -70,6 +70,36 @@ abstract class Stmt extends Node
         ]);
     }
 
+    private function bindBlueprintDecl($blueprint)
+    {
+        if ($this->scope->hasLocal($blueprint->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for blueprint `{$blueprint->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($blueprint->name, [
+            'initialized' => true,
+            'kind'        => 'blueprint',
+            'mutable'     => false
+        ]);
+    }
+
+    private function bindEnumDecl($enum)
+    {
+        if ($this->scope->hasLocal($enum->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for enum `{$enum->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($enum->name, [
+            'initialized' => true,
+            'kind'        => 'enum',
+            'mutable'     => false
+        ]);
+    }
+
     private function getNodeType($node)
     {
         $reflect = new ReflectionClass($node);
@@ -82,10 +112,17 @@ abstract class Stmt extends Node
             switch ($this->getNodeType($node)) {
                 case 'LetStmt':
                 case 'ConstStmt':
+                case 'MemberStmt':
                     $this->bindVariableDecl($node);
                     break;
                 case 'FnStmt':
                     $this->bindFunctionDecl($node);
+                    break;
+                case 'BlueprintStmt':
+                    $this->bindBlueprintDecl($node);
+                    break;
+                case 'EnumStmt':
+                    $this->bindEnumDecl($node);
                     break;
             }
         }
