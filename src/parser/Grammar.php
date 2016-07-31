@@ -53,6 +53,8 @@ use \QuackCompiler\Ast\Stmt\WhileStmt;
 use \QuackCompiler\Ast\Stmt\TraitStmt;
 use \QuackCompiler\Ast\Stmt\StructStmt;
 
+use \QuackCompiler\Ast\Stmt\StmtList;
+
 class Grammar
 {
     public $parser;
@@ -240,7 +242,7 @@ class Grammar
             $by = $this->_expr();
         }
 
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
         $this->parser->match(Tag::T_END);
 
         return new ForStmt($variable, $from, $to, $by, $body);
@@ -288,7 +290,7 @@ class Grammar
     public function _tryStmt()
     {
         $this->parser->match(Tag::T_TRY);
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
         $rescues = iterator_to_array($this->_rescueStmtList());
         $finally = $this->_optFinally();
         $this->parser->match(Tag::T_END);
@@ -453,7 +455,7 @@ class Grammar
     {
         $this->parser->match(Tag::T_TRAIT);
         $name = $this->identifier();
-        $body = iterator_to_array($this->_nonBodiedMethodList());
+        $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
         $this->parser->match(Tag::T_END);
 
         return new TraitStmt($name, $body);
@@ -674,7 +676,7 @@ class Grammar
             $exception_class = $this->qualifiedName();
             $variable = $this->identifier();
             $this->parser->match(']');
-            $body = iterator_to_array($this->_innerStmtList());
+            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
 
             yield [
                 "exception_class" => $exception_class,
@@ -688,7 +690,7 @@ class Grammar
     {
         if ($this->parser->is(Tag::T_FINALLY)) {
             $this->parser->consume();
-            $body = iterator_to_array($this->_innerStmtList());
+            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
             return $body;
         }
 

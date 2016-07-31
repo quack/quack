@@ -26,7 +26,6 @@ use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Scope\ScopeInjector;
 
 function start_repl()
 {
@@ -95,10 +94,9 @@ function readline_callback($command)
         $global_scope = new Scope;
         $parser->parse();
         $parser->ast->injectScope($global_scope);
-        var_dump($parser->ast);
 
-        # /* when */ args_have('-a', '--ast') && $parser->dumpAst();
-        # /* when */ args_have('-f', '--format') && $parser->format();
+        /* when */ args_have('-a', '--ast') && var_dump($parser->ast);
+        /* when */ args_have('-f', '--format') && $parser->format();
     } catch (\Exception $e) {
         echo $e;
     }

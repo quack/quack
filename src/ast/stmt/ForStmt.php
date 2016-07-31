@@ -56,29 +56,30 @@ class ForStmt extends Stmt
         }
 
         $source .= PHP_EOL;
-
         $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
+        $source .= $this->body->format($parser);
         $parser->closeScope();
-
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->body->createScopeWithParent($parent_scope);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        // Bind for-variable for its local scope
+        $this->body->scope->insert($this->variable, [
+            'initialized' => true,
+            'kind'        => 'variable',
+            'mutable'     => true
+        ]);
+
+        $this->body->bindDeclarations($this->body->stmt_list);
+
+        foreach ($this->body->stmt_list as $node) {
+            $node->injectScope($this->body->scope);
+        }
     }
 }

@@ -40,16 +40,9 @@ class TraitStmt extends Stmt
         $source .= $this->name;
         $source .= $parser->indent();
         $source .= PHP_EOL;
-
         $parser->openScope();
-
-        foreach ($this->body as $non_bodied_stmt) {
-            $source .= $parser->indent();
-            $source .= $non_bodied_stmt->format($parser);
-        }
-
+        $source .= $this->body->format($parser);
         $parser->closeScope();
-
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
@@ -57,13 +50,13 @@ class TraitStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->body->createScopeWithParent($parent_scope);
+        $this->body->bindDeclarations($this->body->stmt_list);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        foreach ($this->body->stmt_list as $node) {
+            $node->injectScope($this->body->scope);
+        }
     }
 }

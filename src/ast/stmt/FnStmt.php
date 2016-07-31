@@ -124,10 +124,12 @@ class FnStmt extends Stmt
             ]);
         }
 
-        $this->bindDeclarations($this->body);
+        if (null !== $this->body) {
+            $this->bindDeclarations($this->body);
 
-        foreach ($this->body as $node) {
-            $node->injectScope($this->scope);
+            foreach ($this->body as $node) {
+                $node->injectScope($this->scope);
+            }
         }
     }
 }
