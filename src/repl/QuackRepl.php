@@ -92,11 +92,10 @@ function readline_callback($command)
     $parser = new TokenReader($lexer);
 
     try {
-        $parser->parse();
-        // var_dump($parser->ast);
         $global_scope = new Scope;
-        $meaningful_ast = new ScopeInjector($parser->ast, $global_scope);
-        var_dump($meaningful_ast->process());
+        $parser->parse();
+        $parser->ast->injectScope($global_scope);
+        var_dump($parser->ast);
 
         # /* when */ args_have('-a', '--ast') && $parser->dumpAst();
         # /* when */ args_have('-f', '--format') && $parser->format();

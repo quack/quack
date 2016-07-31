@@ -55,13 +55,13 @@ class WhileStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations($this->body);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        foreach ($this->body as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }

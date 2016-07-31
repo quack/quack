@@ -26,7 +26,7 @@ class Scope
     public $table = [];
     public $parent;
 
-    public function symbolInScope($symbol)
+    public function hasLocal($symbol)
     {
         return array_key_exists($symbol, $this->table);
     }
@@ -38,7 +38,7 @@ class Scope
 
     public function lookup($symbol)
     {
-        if ($this->symbolInScope($symbol)) {
+        if ($this->hasLocal($symbol)) {
             return $this->table[$symbol];
         }
 

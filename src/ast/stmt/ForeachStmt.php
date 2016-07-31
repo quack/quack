@@ -24,6 +24,8 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Util;
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class ForeachStmt extends Stmt
 {
     public $by_reference;
@@ -76,13 +78,36 @@ class ForeachStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        // Pre-inject key and value in block scope
+        if (null !== $this->key) {
+            $this->scope->insert($this->key, [
+                'initialized' => true,
+                'kind'        => 'variable',
+                'mutable'     => 'false'
+            ]);
+        }
+
+        if ($this->key === $this->alias) {
+            throw new ScopeError([
+                'message' => "Same key and value variable name " .
+                             "(`{$this->alias}') supplied for foreach"
+            ]);
+        }
+
+        $this->scope->insert($this->alias, [
+            'initialized' => true,
+            'kind'        => 'variable',
+            'mutable'     => 'false'
+        ]);
+
+        $this->bindDeclarations($this->body);
+
+        foreach ($this->body as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }

@@ -23,16 +23,71 @@ namespace QuackCompiler\Ast\Stmt;
 
 use QuackCompiler\Ast\Node;
 use QuackCompiler\Scope\Scope;
+use QuackCompiler\Scope\ScopeError;
+
+use \ReflectionClass;
 
 abstract class Stmt extends Node
 {
-    abstract public function shouldHaveOwnScope();
-
-    abstract function getStmtList();
-
     public function createScopeWithParent(Scope &$parent)
     {
         $this->scope = new Scope;
         $this->scope->parent = &$parent;
+    }
+
+    private function bindVariableDecl($decl)
+    {
+        foreach ($decl->definitions as $def) {
+            $name = &$def[0];
+            $value = &$def[1];
+
+            if ($this->scope->hasLocal($name)) {
+                throw new ScopeError([
+                    'message' => "Symbol `{$name}' declared twice"
+                ]);
+            }
+
+            $this->scope->insert($name, [
+                'initialized' => null !== $value,
+                'kind'        => 'variable',
+                'mutable'     => !($decl instanceof ConstStmt)
+            ]);
+        }
+    }
+
+    private function bindFunctionDecl($func)
+    {
+        if ($this->scope->hasLocal($func->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for function `{$func->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($name, [
+            'initialized' => true,
+            'kind'        => 'function',
+            'mutable'     => false
+        ]);
+    }
+
+    private function getNodeType($node)
+    {
+        $reflect = new ReflectionClass($node);
+        return $reflect->getShortName();
+    }
+
+    public function bindDeclarations($stmt_list)
+    {
+        foreach ($stmt_list as $node) {
+            switch ($this->getNodeType($node)) {
+                case 'LetStmt':
+                case 'ConstStmt':
+                    $this->bindVariableDecl($node);
+                    break;
+                case 'FnStmt':
+                    $this->bindFunctionDecl($node);
+                    break;
+            }
+        }
     }
 }

@@ -51,13 +51,13 @@ class BlockStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations($this->stmt_list);
 
-    public function getStmtList()
-    {
-        return $this->stmt_list;
+        foreach ($this->stmt_list as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }
