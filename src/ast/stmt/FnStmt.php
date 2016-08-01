@@ -34,6 +34,9 @@ class FnStmt extends Stmt
     public $is_bang;
     public $is_pub;
 
+    private $flag_bind_self = false;
+    private $flag_bind_super = false;
+
     public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub)
     {
         $this->name = $name;
@@ -107,6 +110,25 @@ class FnStmt extends Stmt
     {
         $this->createScopeWithParent($parent_scope);
 
+        // Pre-inject `self' if it should
+        if ($this->flag_bind_self) {
+            $this->scope->insert('self', [
+                'initialized' => true,
+                'kind'        => 'variable|special',
+                'mutable'     => false
+            ]);
+        }
+
+        // When we are in the blueprint context and it extends another
+        // blueprint, insert `super'
+        if ($this->flag_bind_super) {
+            $this->scope->insert('super', [
+                'initialized' => true,
+                'kind'        => 'variable|special',
+                'mutable'     => false
+            ]);
+        }
+
         // Pre-inject parameters
         foreach (array_map(function ($item) {
             return (object) $item;
@@ -131,5 +153,15 @@ class FnStmt extends Stmt
                 $node->injectScope($this->scope);
             }
         }
+    }
+
+    public function flagBindSelf()
+    {
+        $this->flag_bind_self = true;
+    }
+
+    public function flagBindSuper()
+    {
+        $this->flag_bind_super = true;
     }
 }

@@ -44,14 +44,8 @@ class IfStmt extends Stmt
         $source = 'if ';
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
-
         $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
+        $source .= $this->body->format($parser);
         $parser->closeScope();
 
         foreach ($this->elif as $elif) {
@@ -78,14 +72,29 @@ class IfStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
-    {
-        return true;
-    }
+    public function injectScope(&$parent_scope) {
+        // Bind scope in the body of if-statement
+        $this->body->createScopeWithParent($parent_scope);
+        $this->body->bindDeclarations($this->body->stmt_list);
 
-    public function getStmtList()
-    {
-        // TODO: How to deal with elif and else?
-        return $this->body;
+        foreach ($this->body->stmt_list as $node) {
+            $node->injectScope($this->body->scope);
+        }
+
+        // Bind scope for every elif. This class is just a
+        // bridge for that
+        foreach ($this->elif as $elif) {
+            $elif->injectScope($parent_scope);
+        }
+
+        // If we have `else', bind in depth
+        if (null !== $this->else) {
+            $this->else->createScopeWithParent($parent_scope);
+            $this->else->bindDeclarations($this->else->stmt_list);
+
+            foreach ($this->else->stmt_list as $node) {
+                $node->injectScope($this->else->scope);
+            }
+        }
     }
 }

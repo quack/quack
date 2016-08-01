@@ -67,19 +67,19 @@ class ForStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->body->createScopeWithParent($parent_scope);
+        $this->createScopeWithParent($parent_scope);
 
         // Bind for-variable for its local scope
-        $this->body->scope->insert($this->variable, [
+        $this->scope->insert($this->variable, [
             'initialized' => true,
             'kind'        => 'variable',
             'mutable'     => true
         ]);
 
-        $this->body->bindDeclarations($this->body->stmt_list);
+        $this->bindDeclarations($this->body->stmt_list);
 
         foreach ($this->body->stmt_list as $node) {
-            $node->injectScope($this->body->scope);
+            $node->injectScope($this->scope);
         }
     }
 }

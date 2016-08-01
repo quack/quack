@@ -72,6 +72,15 @@ class BlueprintStmt extends Stmt
         $this->body->bindDeclarations($this->body->stmt_list);
 
         foreach ($this->body->stmt_list as $node) {
+            if ($node instanceof FnStmt) {
+                $node->flagBindSelf();
+
+                // When the class extends another, bind `super'
+                if (null !== $this->extends) {
+                    $node->flagBindSuper();
+                }
+            }
+
             $node->injectScope($this->body->scope);
         }
     }

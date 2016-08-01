@@ -176,7 +176,7 @@ class Grammar
     {
         $this->parser->match(Tag::T_IF);
         $condition = $this->_expr();
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
         $elif = iterator_to_array($this->_elifList());
         $else = $this->_optElse();
         $this->parser->match(Tag::T_END);
@@ -353,7 +353,7 @@ class Grammar
         }
 
         $this->parser->consume();
-        return $this->_stmt();
+        return new StmtList(iterator_to_array($this->_innerStmtList()));
     }
 
     public function _topStmt()
