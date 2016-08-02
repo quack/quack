@@ -100,6 +100,21 @@ abstract class Stmt extends Node
         ]);
     }
 
+    private function bindTraitStmt($trait)
+    {
+        if ($this->scope->hasLocal($trait->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for trait `{$trait->name}` declared twice"
+            ]);
+        }
+
+        $this->scope->insert($trait->name, [
+            'initialized' => true,
+            'kind'        => 'trait',
+            'mutable'     => false
+        ]);
+    }
+
     private function getNodeType($node)
     {
         $reflect = new ReflectionClass($node);
@@ -123,6 +138,9 @@ abstract class Stmt extends Node
                     break;
                 case 'EnumStmt':
                     $this->bindEnumDecl($node);
+                    break;
+                case 'TraitStmt':
+                    $this->bindTraitDecl($node);
                     break;
             }
         }
