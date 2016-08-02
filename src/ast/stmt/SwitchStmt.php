@@ -56,13 +56,11 @@ class SwitchStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
-
-    public function getStmtList()
-    {
-        return $this->cases;
+        // Just act like a bridge for cases
+        foreach ($this->cases as $case) {
+            $case->injectScope($parent_scope);
+        }
     }
 }

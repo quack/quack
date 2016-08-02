@@ -46,13 +46,8 @@ class BreakStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
-
-    public function getStmtList()
-    {
-        return [];
+        // TODO: Link expression
     }
 }

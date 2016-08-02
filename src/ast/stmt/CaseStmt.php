@@ -42,26 +42,20 @@ class CaseStmt extends Stmt
             ? 'else'
             : 'case ' . $this->value->format($parser);
         $source .= PHP_EOL;
-
         $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
+        $source .= $this->body->format($parser);
         $parser->closeScope();
 
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations($this->body->stmt_list);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        foreach ($this->body->stmt_list as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class StructStmt extends Stmt
 {
     public $name;
@@ -57,14 +59,25 @@ class StructStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope($parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
 
-    public function getStmtList()
-    {
-        // TODO: Members should be wrapped in member class in order to work
-        return $this->members;
+        // Manual binding, because properties without `member'
+        // are exclusive for structs
+
+        foreach ($this->members as $member) {
+            if ($this->scope->hasLocal($member)) {
+                throw new ScopeError([
+                    'message' => "Duplicated entry `{$member}' for struct {$this->name}"
+                ]);
+            }
+
+            $this->scope->insert($member, [
+                'initialized' => true,
+                'type'        => 'member_property',
+                'mutable'     => false
+            ]);
+        }
     }
 }

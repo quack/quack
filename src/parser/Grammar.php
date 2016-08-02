@@ -491,7 +491,7 @@ class Grammar
             $trait_for = $this->qualifiedName();
         }
 
-        $body = iterator_to_array($this->_blueprintStmtList());
+        $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
         $this->parser->match(Tag::T_END);
 
         return new ImplStmt($type, $trait_or_struct, $trait_for, $body);
@@ -662,7 +662,7 @@ class Grammar
             $is_else = $this->parser->is(Tag::T_ELSE);
             $this->parser->consume();
             $value = $is_else ? null : $this->_expr();
-            $body = iterator_to_array($this->_innerStmtList());
+            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
 
             yield new CaseStmt($value, $body, $is_else);
         }

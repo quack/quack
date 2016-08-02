@@ -50,15 +50,12 @@ class PostConditionalStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return false;
-    }
-
-    public function getStmtList()
-    {
-        // TODO: It doesn't create scope, but it has ONE statement inside it,
-        // and it must be exposed
-        return [$this->stmt];
+        // As much as it is conditional, and there may be conditional variable
+        // declarations, we must give to the post conditional an own scope
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations([$this->stmt]);
+        $this->stmt->injectScope($this->scope);
     }
 }

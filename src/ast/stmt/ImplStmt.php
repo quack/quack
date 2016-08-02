@@ -55,16 +55,9 @@ class ImplStmt extends Stmt
         }
 
         $source .= PHP_EOL;
-
         $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
+        $source .= $this->body->format($parser);
         $parser->closeScope();
-
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
@@ -72,13 +65,17 @@ class ImplStmt extends Stmt
         return $source;
     }
 
-    public function shouldHaveOwnScope()
+    public function injectScope(&$parent_scope)
     {
-        return true;
-    }
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations($this->body->stmt_list);
 
-    public function getStmtList()
-    {
-        return $this->body;
+        foreach ($this->body->stmt_list as $node) {
+            if ($node instanceof FnStmt) {
+                $node->flagBindSelf();
+            }
+
+            $node->injectScope($this->scope);
+        }
     }
 }
