@@ -24,6 +24,8 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class ImplStmt extends Stmt
 {
     public $type;
@@ -67,6 +69,53 @@ class ImplStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
+        // Try to locate the trait/struct
+        $unqualified_first = $this->formatQualifiedName($this->trait_or_struct);
+        $first = $parent_scope->lookup($unqualified_first);
+        $type = Tag::T_TRAIT === $this->type
+            ? 'trait'
+            : 'struct';
+
+        if (null === $first) {
+            throw new ScopeError([
+                'message' => ucfirst($type) . " `{$unqualified_first}' not found"
+            ]);
+        }
+
+        // Check type for the symbols
+        if ('struct' === $type) {
+            if ('struct' !== $first['kind']) {
+                throw new ScopeError([
+                    'message' => "`{$unqualified_first}' is not a struct"
+                ]);
+            }
+        } else {
+            // Continue, assert this is a trait and locate the struct
+            if ('trait' !== $first['kind']) {
+                throw new ScopeError([
+                    'message' => "`{$unqualified_first}' is not a trait"
+                ]);
+            }
+
+            $struct_name = $this->formatQualifiedName($this->trait_for);
+            $struct = $parent_scope->lookup($struct_name);
+
+            // Struct not declared
+            if (null === $struct) {
+                throw new ScopeError([
+                    'message' => "Struct `{$struct_name}' not found"
+                ]);
+            }
+
+            // Not a struct
+            if ('struct' !== $struct['kind']) {
+                throw new ScopeError([
+                    'message' => "`{$struct_name}' is not a struct"
+                ]);
+            }
+        }
+
+
         $this->createScopeWithParent($parent_scope);
         $this->bindDeclarations($this->body->stmt_list);
 

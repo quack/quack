@@ -54,6 +54,8 @@ class ExprStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
-        // TODO: Link expression
+        foreach ($this->expr_list as $expr) {
+            $expr->injectScope($parent_scope);
+        }
     }
 }

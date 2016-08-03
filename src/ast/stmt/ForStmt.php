@@ -78,6 +78,13 @@ class ForStmt extends Stmt
 
         $this->bindDeclarations($this->body->stmt_list);
 
+        $this->from->injectScope($this->scope);
+        $this->to->injectScope($this->scope);
+
+        if (null !== $this->by) {
+            $this->by->injectScope($this->scope);
+        }
+
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);
         }

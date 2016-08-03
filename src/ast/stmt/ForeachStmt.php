@@ -106,6 +106,8 @@ class ForeachStmt extends Stmt
 
         $this->bindDeclarations($this->body);
 
+        $this->generator->injectScope($this->scope);
+
         foreach ($this->body as $node) {
             $node->injectScope($this->scope);
         }

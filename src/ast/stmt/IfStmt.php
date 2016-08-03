@@ -77,6 +77,8 @@ class IfStmt extends Stmt
         $this->body->createScopeWithParent($parent_scope);
         $this->body->bindDeclarations($this->body->stmt_list);
 
+        $this->condition->injectScope($this->body->scope);
+
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->body->scope);
         }

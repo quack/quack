@@ -115,6 +115,21 @@ abstract class Stmt extends Node
         ]);
     }
 
+    private function bindStructDecl($struct)
+    {
+        if ($this->scope->hasLocal($struct->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for struct `{$struct->name}` declared twice"
+            ]);
+        }
+
+        $this->scope->insert($struct->name, [
+            'initialized' => true,
+            'kind'        => 'struct',
+            'mutable'     => false
+        ]);
+    }
+
     private function getNodeType($node)
     {
         $reflect = new ReflectionClass($node);
@@ -141,6 +156,9 @@ abstract class Stmt extends Node
                     break;
                 case 'TraitStmt':
                     $this->bindTraitDecl($node);
+                    break;
+                case 'StructStmt':
+                    $this->bindStructDecl($node);
                     break;
             }
         }

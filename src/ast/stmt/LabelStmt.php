@@ -45,6 +45,16 @@ class LabelStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // TODO: Inject expression
+        $this->createScopeWithParent($parent_scope);
+        // Pre-inject label symbol
+        $this->scope->insert($this->name, [
+            'initialized' => true,
+            'kind'        => 'label',
+            'mutable'     => false
+        ]);
+
+        // Bind other symbols of the received scope
+        $this->bindDeclarations([$this->stmt]);
+        $this->stmt->injectScope($this->scope);
     }
 }

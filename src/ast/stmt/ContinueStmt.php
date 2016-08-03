@@ -49,13 +49,6 @@ class ContinueStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // By rule, the declared label shouldn't be of this scope, but upper
-        if ($parent_scope->hasLocal($this->label)) {
-            throw new ScopeError([
-                'message' => "Called `continue' on self scope label declaration of `{$this->label}'"
-            ]);
-        }
-
         // Assert that we are receiving a declared label
         $label = $parent_scope->lookup($this->label);
 
