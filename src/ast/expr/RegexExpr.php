@@ -42,4 +42,9 @@ class RegexExpr extends Expr
 
         return $source;
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // Pass
+    }
 }

@@ -44,10 +44,13 @@ class TernaryExpr extends Expr
         $source .= ' else ';
         $source .= $this->else->format($parser);
 
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
         return $source;
+    }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->condition->injectScope($parent_scope);
+        $this->then->injectScope($parent_scope);
+        $this->else->injectScope($parent_scope);
     }
 }

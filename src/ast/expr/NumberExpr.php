@@ -39,4 +39,9 @@ class NumberExpr extends Expr
         $source = $this->value;
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // Pass
+    }
 }

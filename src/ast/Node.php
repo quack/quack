@@ -22,8 +22,148 @@
 namespace QuackCompiler\Ast;
 
 use \QuackCompiler\Parser\Parser;
+use QuackCompiler\Scope\Scope;
+use QuackCompiler\Scope\ScopeError;
+
+use \ReflectionClass;
 
 abstract class Node
 {
     abstract public function format(Parser $parser);
+    // TODO abstract public function injectScope(&$parent_scope);
+
+    public function createScopeWithParent(Scope &$parent)
+    {
+        $this->scope = new Scope;
+        $this->scope->parent = &$parent;
+    }
+
+    private function bindVariableDecl($var)
+    {
+        foreach ($var->definitions as $def) {
+            $name = &$def[0];
+            $value = &$def[1];
+
+            if ($this->scope->hasLocal($name)) {
+                throw new ScopeError([
+                    'message' => "Symbol `{$name}' declared twice"
+                ]);
+            }
+
+            $this->scope->insert($name, [
+                'initialized' => null !== $value,
+                'kind'        => 'variable',
+                'mutable'     => !($var instanceof ConstStmt)
+            ]);
+        }
+    }
+
+    private function bindFunctionDecl($func)
+    {
+        if ($this->scope->hasLocal($func->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for function `{$func->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($func->name, [
+            'initialized' => true,
+            'kind'        => 'function',
+            'mutable'     => false
+        ]);
+    }
+
+    private function bindBlueprintDecl($blueprint)
+    {
+        if ($this->scope->hasLocal($blueprint->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for blueprint `{$blueprint->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($blueprint->name, [
+            'initialized' => true,
+            'kind'        => 'blueprint',
+            'mutable'     => false
+        ]);
+    }
+
+    private function bindEnumDecl($enum)
+    {
+        if ($this->scope->hasLocal($enum->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for enum `{$enum->name}' declared twice"
+            ]);
+        }
+
+        $this->scope->insert($enum->name, [
+            'initialized' => true,
+            'kind'        => 'enum',
+            'mutable'     => false
+        ]);
+    }
+
+    private function bindTraitDecl($trait)
+    {
+        if ($this->scope->hasLocal($trait->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for trait `{$trait->name}` declared twice"
+            ]);
+        }
+
+        $this->scope->insert($trait->name, [
+            'initialized' => true,
+            'kind'        => 'trait',
+            'mutable'     => false
+        ]);
+    }
+
+    private function bindStructDecl($struct)
+    {
+        if ($this->scope->hasLocal($struct->name)) {
+            throw new ScopeError([
+                'message' => "Symbol for struct `{$struct->name}` declared twice"
+            ]);
+        }
+
+        $this->scope->insert($struct->name, [
+            'initialized' => true,
+            'kind'        => 'struct',
+            'mutable'     => false
+        ]);
+    }
+
+    private function getNodeType($node)
+    {
+        $reflect = new ReflectionClass($node);
+        return $reflect->getShortName();
+    }
+
+    public function bindDeclarations($stmt_list)
+    {
+        foreach ($stmt_list as $node) {
+            switch ($this->getNodeType($node)) {
+                case 'LetStmt':
+                case 'ConstStmt':
+                case 'MemberStmt':
+                    $this->bindVariableDecl($node);
+                    break;
+                case 'FnStmt':
+                    $this->bindFunctionDecl($node);
+                    break;
+                case 'BlueprintStmt':
+                    $this->bindBlueprintDecl($node);
+                    break;
+                case 'EnumStmt':
+                    $this->bindEnumDecl($node);
+                    break;
+                case 'TraitStmt':
+                    $this->bindTraitDecl($node);
+                    break;
+                case 'StructStmt':
+                    $this->bindStructDecl($node);
+                    break;
+            }
+        }
+    }
 }

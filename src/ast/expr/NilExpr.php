@@ -30,4 +30,9 @@ class NilExpr extends Expr
         $source = 'nil';
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // Pass
+    }
 }

@@ -51,4 +51,12 @@ class NewExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // TODO: Check for class existance
+        foreach ($this->ctor_args as $arg) {
+            $arg->injectScope($parent_scope);
+        }
+    }
 }

@@ -45,4 +45,9 @@ class PrefixExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->right->injectScope($parent_scope);
+    }
 }

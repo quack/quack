@@ -67,4 +67,11 @@ class ObjectExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        foreach ($this->value as $value) {
+            $value->injectScope($parent_scope);
+        }
+    }
 }

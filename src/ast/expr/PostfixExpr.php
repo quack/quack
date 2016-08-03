@@ -42,4 +42,9 @@ class PostfixExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->left->injectScope($parent_scope);
+    }
 }

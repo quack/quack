@@ -49,4 +49,14 @@ class RangeExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->from->injectScope($parent_scope);
+        $this->to->injectScope($parent_scope);
+
+        if (null !== $this->by) {
+            $this->by->injectScope($parent_scope);
+        }
+    }
 }

@@ -59,4 +59,15 @@ class MapExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        foreach ($this->keys as $key) {
+            $key->injectScope($parent_scope);
+        }
+
+        foreach ($this->values as $value) {
+            $value->injectScope($parent_scope);
+        }
+    }
 }

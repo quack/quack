@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class WhereExpr extends Expr
 {
     public $expr;
@@ -48,7 +50,10 @@ class WhereExpr extends Expr
         $source .= $parser->indent();
         $source .= 'where ';
 
-        foreach ($this->clauses as $key => $value) {
+        foreach ($this->clauses as $clause) {
+            $key = &$clause[0];
+            $value = &$clause[1];
+
             $processed++;
 
             if (!$first) {
@@ -70,5 +75,30 @@ class WhereExpr extends Expr
         $parser->closeScope();
 
         return $this->parenthesize($source);
+    }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->createScopeWithParent($parent_scope);
+
+        // Bind where-symbols
+        foreach ($this->clauses as $clause) {
+            $key = &$clause[0];
+            $value = &$clause[1];
+
+            if ($this->scope->hasLocal($key)) {
+                throw new ScopeError([
+                    'message' => "Duplicated declaration of `{$key}' on where-clause"
+                ]);
+            }
+
+            $this->scope->insert($key, [
+                'initialized' => true,
+                'kind'        => 'variable|alias',
+                'mutable'     => false
+            ]);
+        }
+
+        $this->expr->injectScope($this->scope);
     }
 }
