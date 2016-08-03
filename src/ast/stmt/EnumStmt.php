@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class EnumStmt extends Stmt
@@ -72,11 +72,7 @@ class EnumStmt extends Stmt
                 ]);
             }
 
-            $this->scope->insert($entry, [
-                'initialized' => true,
-                'kind'        => 'enum_member',
-                'mutable'     => false
-            ]);
+            $this->scope->insert($entry, K_MEMBER);
         }
     }
 }

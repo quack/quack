@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 
 class ForStmt extends Stmt
 {
@@ -70,11 +72,7 @@ class ForStmt extends Stmt
         $this->createScopeWithParent($parent_scope);
 
         // Bind for-variable for its local scope
-        $this->scope->insert($this->variable, [
-            'initialized' => true,
-            'kind'        => 'variable',
-            'mutable'     => true
-        ]);
+        $this->scope->insert($this->variable, Kind::K_VARIABLE | Kind::K_MUTABLE | Kind::K_INITIALIZED);
 
         $this->bindDeclarations($this->body->stmt_list);
 

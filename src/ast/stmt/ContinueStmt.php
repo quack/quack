@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class ContinueStmt extends Stmt
@@ -57,7 +57,7 @@ class ContinueStmt extends Stmt
             throw new ScopeError([
                 'message' => "Called `continue' with undeclared label `{$this->label}'"
             ]);
-        } elseif ('label' !== $label['kind']) {
+        } elseif (!($label & Kind::K_LABEL)) {
             // When the symbol exist, but it's not a label
             throw new ScopeError([
                 'message' => "Called `continue' with invalid label `{$this->label}'"

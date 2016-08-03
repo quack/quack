@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class ImplStmt extends Stmt
@@ -84,14 +84,14 @@ class ImplStmt extends Stmt
 
         // Check type for the symbols
         if ('struct' === $type) {
-            if ('struct' !== $first['kind']) {
+            if (!($first & Kind::K_STRUCT)) {
                 throw new ScopeError([
                     'message' => "`{$unqualified_first}' is not a struct"
                 ]);
             }
         } else {
             // Continue, assert this is a trait and locate the struct
-            if ('trait' !== $first['kind']) {
+            if (!($first & Kind::K_TRAIT)) {
                 throw new ScopeError([
                     'message' => "`{$unqualified_first}' is not a trait"
                 ]);
@@ -108,7 +108,7 @@ class ImplStmt extends Stmt
             }
 
             // Not a struct
-            if ('struct' !== $struct['kind']) {
+            if (!($struct & Kind::K_STRUCT)) {
                 throw new ScopeError([
                     'message' => "`{$struct_name}' is not a struct"
                 ]);

@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class FnStmt extends Stmt
@@ -112,21 +112,13 @@ class FnStmt extends Stmt
 
         // Pre-inject `self' if it should
         if ($this->flag_bind_self) {
-            $this->scope->insert('self', [
-                'initialized' => true,
-                'kind'        => 'variable|special',
-                'mutable'     => false
-            ]);
+            $this->scope->insert('self', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
         }
 
         // When we are in the blueprint context and it extends another
         // blueprint, insert `super'
         if ($this->flag_bind_super) {
-            $this->scope->insert('super', [
-                'initialized' => true,
-                'kind'        => 'variable|special',
-                'mutable'     => false
-            ]);
+            $this->scope->insert('super', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
         }
 
         // Pre-inject parameters
@@ -139,11 +131,7 @@ class FnStmt extends Stmt
                 ]);
             }
 
-            $this->scope->insert($param->name, [
-                'initialized' => true,
-                'kind'        => 'variable|parameter',
-                'mutable'     => false
-            ]);
+            $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
         }
 
         if (null !== $this->body) {

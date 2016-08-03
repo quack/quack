@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
 class TryStmt extends Stmt
 {
@@ -101,11 +103,7 @@ class TryStmt extends Stmt
             $rescue->body->createScopeWithParent($parent_scope);
 
             // Pre-bind rescue variable
-            $rescue->body->scope->insert($rescue->variable, [
-                'initialized' => true,
-                'kind'        => 'variable',
-                'mutable'     => false
-            ]);
+            $rescue->body->scope->insert($rescue->variable, Kind::K_VARIABLE | Kind::K_INITIALIZED);
 
             // Bind rescue body
             $rescue->body->bindDeclarations($rescue->body->stmt_list);

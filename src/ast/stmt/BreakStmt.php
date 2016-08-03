@@ -58,7 +58,7 @@ class BreakStmt extends Stmt
             throw new ScopeError([
                 'message' => "Called `break' with undeclared label `{$this->label}'"
             ]);
-        } elseif ('label' !== $label['kind']) {
+        } elseif (!($label & Kind::K_LABEL)) {
             // When the symbol exist, but it's not a label
             throw new ScopeError([
                 'message' => "Called `break' with invalid label `{$this->label}'"

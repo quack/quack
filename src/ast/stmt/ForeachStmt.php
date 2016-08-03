@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Util;
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class ForeachStmt extends Stmt
@@ -84,11 +84,7 @@ class ForeachStmt extends Stmt
 
         // Pre-inject key and value in block scope
         if (null !== $this->key) {
-            $this->scope->insert($this->key, [
-                'initialized' => true,
-                'kind'        => 'variable',
-                'mutable'     => 'false'
-            ]);
+            $this->scope->insert($this->key, Kind::K_VARIABLE | Kind::K_INITIALIZED);
         }
 
         if ($this->key === $this->alias) {
@@ -98,14 +94,8 @@ class ForeachStmt extends Stmt
             ]);
         }
 
-        $this->scope->insert($this->alias, [
-            'initialized' => true,
-            'kind'        => 'variable',
-            'mutable'     => 'false'
-        ]);
-
+        $this->scope->insert($this->alias, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
         $this->bindDeclarations($this->body);
-
         $this->generator->injectScope($parent_scope);
 
         foreach ($this->body as $node) {

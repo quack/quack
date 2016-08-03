@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class WhereExpr extends Expr
@@ -92,11 +93,7 @@ class WhereExpr extends Expr
                 ]);
             }
 
-            $this->scope->insert($key, [
-                'initialized' => true,
-                'kind'        => 'variable|alias',
-                'mutable'     => false
-            ]);
+            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_VIRTUAL | Kind::K_INITIALIZED);
         }
 
         $this->expr->injectScope($this->scope);

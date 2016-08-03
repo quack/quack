@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parselets\FunctionParselet;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
 class LambdaExpr extends Expr
 {
@@ -125,11 +127,7 @@ class LambdaExpr extends Expr
                 ]);
             }
 
-            $this->scope->insert($param->name, [
-                'initialized' => true,
-                'kind'        => 'variable|parameter',
-                'mutable'     => false
-            ]);
+            $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
         }
 
         if (FunctionParselet::TYPE_STATEMENT === $this->type) {
