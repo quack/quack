@@ -68,4 +68,14 @@ class WhenExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        foreach (array_map(function ($case) {
+            return (object) $case;
+        }, $this->cases) as $case) {
+            $case->condition->injectScope($parent_scope);
+            $case->action->injectScope($parent_scope);
+        }
+    }
 }

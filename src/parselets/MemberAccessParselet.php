@@ -39,7 +39,7 @@ class MemberAccessParselet implements IInfixParselet
         return new OperatorExpr(
             $left,
             $token->getTag(),
-            new NameExpr($grammar->parser->resolveScope($right->getPointer()))
+            $grammar->parser->resolveScope($right->getPointer())
         );
     }
 

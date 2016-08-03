@@ -30,30 +30,37 @@ class OperatorExpr extends Expr
     public $operator;
     public $right;
 
-    public function __construct(Expr $left, $operator, Expr $right)
+    public function __construct(Expr $left, $operator, $right)
     {
         $this->left = $left;
         $this->operator = $operator;
         $this->right = $right;
     }
 
+    private function isMemberAccess()
+    {
+        return '.' === $this->operator || '?.' === $this->operator;
+    }
+
     public function format(Parser $parser)
     {
-        $blanks = '.' !== $this->operator && '?.' !== $this->operator
-            ? ' '
-            : '';
+        $blanks = $this->isMemberAccess() ? '' : ' ';
 
         $source = $this->left->format($parser);
         $source .= $blanks;
         $source .= Tag::getOperatorLexeme($this->operator);
         $source .= $blanks;
-        $source .= $this->right->format($parser);
+        $source .= $this->isMemberAccess() ? $this->right : $this->right->format($parser);
 
         return $this->parenthesize($source);
     }
 
     public function injectScope(&$parent_scope)
     {
-        // TODO
+        $this->left->injectScope($parent_scope);
+
+        if (!$this->isMemberAccess()) {
+            $this->right->injectScope($parent_scope);
+        }
     }
 }

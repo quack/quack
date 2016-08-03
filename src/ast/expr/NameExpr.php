@@ -23,18 +23,32 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class NameExpr extends Expr
 {
-    public $token;
+    public $name;
 
-    public function __construct($token)
+    public function __construct($name)
     {
-        $this->token = $token;
+        $this->name = $name;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->token;
+        $source = $this->name;
         return $this->parenthesize($source);
+    }
+
+    public function injectScope(&$parent_scope)
+    {
+        // TODO: Check symbol kind in order to provide better messages
+        $symbol = $parent_scope->lookup($this->name);
+
+        if (null === $symbol) {
+            throw new ScopeError([
+                'message' => "Use of undefined variable `{$this->name}'"
+            ]);
+        }
     }
 }
