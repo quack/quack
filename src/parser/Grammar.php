@@ -332,8 +332,9 @@ class Grammar
     {
         $this->parser->match(':-');
         $label_name = $this->identifier();
+        $stmt = $this->_innerStmt();
 
-        return new LabelStmt($label_name);
+        return new LabelStmt($label_name, $stmt);
     }
 
     public function _elifList()

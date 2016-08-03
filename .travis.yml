@@ -14,5 +14,4 @@ install:
 
 script:
   - make test module=lexer
-  - make test module=parser
   - hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"

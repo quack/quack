@@ -115,22 +115,6 @@ abstract class Stmt extends Node
         ]);
     }
 
-    private function bindLabelDecl($label)
-    {
-        if ($this->scope->hasLocal($label->name)) {
-            throw new ScopeError([
-                'message' => "Symbol for label `{$label->name}` declared twice"
-            ]);
-        }
-
-        $this->scope->insert($label->name, [
-            'initialized' => true,
-            'kind'        => 'label',
-            'mutable'     => false
-        ]);
-
-    }
-
     private function getNodeType($node)
     {
         $reflect = new ReflectionClass($node);
@@ -157,9 +141,6 @@ abstract class Stmt extends Node
                     break;
                 case 'TraitStmt':
                     $this->bindTraitDecl($node);
-                    break;
-                case 'LabelStmt':
-                    $this->bindLabelDecl($node);
                     break;
             }
         }

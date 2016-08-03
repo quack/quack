@@ -26,10 +26,12 @@ use \QuackCompiler\Parser\Parser;
 class LabelStmt extends Stmt
 {
     public $name;
+    public $stmt;
 
-    public function __construct($name)
+    public function __construct($name, $stmt)
     {
         $this->name = $name;
+        $this->stmt = $stmt;
     }
 
     public function format(Parser $parser)
@@ -37,6 +39,7 @@ class LabelStmt extends Stmt
         $source = ':- ';
         $source .= $this->name;
         $source .= PHP_EOL;
+        $source .= $this->stmt->format($parser);
         return $source;
     }
 
