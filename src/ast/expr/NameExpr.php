@@ -22,7 +22,6 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-
 use \QuackCompiler\Scope\ScopeError;
 
 class NameExpr extends Expr

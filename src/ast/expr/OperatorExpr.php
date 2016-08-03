@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
 class OperatorExpr extends Expr
 {
@@ -61,6 +63,15 @@ class OperatorExpr extends Expr
 
         if (!$this->isMemberAccess()) {
             $this->right->injectScope($parent_scope);
+        } if (':-' === $this->operator && $this->left instanceof NameExpr) {
+            // When it is an attribution by name, ensure the variable is mutable
+            $symbol = $parent_scope->lookup($this->left->name);
+
+            if (!($symbol & Kind::K_MUTABLE)) {
+                throw new ScopeError([
+                    'message' => "Symbol `{$this->left->name}' is immutable"
+                ]);
+            }
         }
     }
 }
