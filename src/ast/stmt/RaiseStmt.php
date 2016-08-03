@@ -42,6 +42,6 @@ class RaiseStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // TODO: Inject expression
+        $this->expression->injectScope($parent_scope);
     }
 }

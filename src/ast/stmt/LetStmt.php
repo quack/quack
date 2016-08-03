@@ -59,6 +59,10 @@ class LetStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // TODO: Deal with expressions
+        foreach ($this->definitions as $def) {
+            if (null !== $def[1]) {
+                $def[1]->injectScope($parent_scope);
+            }
+        }
     }
 }

@@ -60,7 +60,7 @@ class ElifStmt extends Stmt
         $this->createScopeWithParent($parent_scope);
         $this->bindDeclarations($this->body);
 
-        $this->condition->injectScope($this->scope);
+        $this->condition->injectScope($parent_scope);
 
         foreach ($this->body as $node) {
             $node->injectScope($this->scope);

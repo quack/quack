@@ -56,6 +56,7 @@ class PostConditionalStmt extends Stmt
         // declarations, we must give to the post conditional an own scope
         $this->createScopeWithParent($parent_scope);
         $this->bindDeclarations([$this->stmt]);
+        $this->predicate->injectScope($parent_scope);
         $this->stmt->injectScope($this->scope);
     }
 }

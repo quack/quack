@@ -58,6 +58,7 @@ class SwitchStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
+        $this->value->injectScope($parent_scope);
         // Just act like a bridge for cases
         foreach ($this->cases as $case) {
             $case->injectScope($parent_scope);

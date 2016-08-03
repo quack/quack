@@ -115,7 +115,6 @@ class ImplStmt extends Stmt
             }
         }
 
-
         $this->createScopeWithParent($parent_scope);
         $this->bindDeclarations($this->body->stmt_list);
 

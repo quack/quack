@@ -62,6 +62,10 @@ class MemberStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // TODO
+        foreach ($this->definitions as $def) {
+            if (null !== $def[1]) {
+                $def[1]->injectScope($parent_scope);
+            }
+        }
     }
 }

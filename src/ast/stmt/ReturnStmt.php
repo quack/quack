@@ -46,8 +46,8 @@ class ReturnStmt extends Stmt
         return $source;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope(&$parent_scope)
     {
-        // TODO: Inject expression
+        $this->expression->injectScope($parent_scope);
     }
 }

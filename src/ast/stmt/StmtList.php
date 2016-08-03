@@ -43,4 +43,9 @@ class StmtList extends Stmt
 
         return $source;
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // Never reaches
+    }
 }
