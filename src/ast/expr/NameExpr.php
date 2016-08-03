@@ -49,5 +49,19 @@ class NameExpr extends Expr
                 'message' => "Use of undefined variable `{$this->name}'"
             ]);
         }
+
+        // When we reach here, we can compute that this symbol is being used
+        // We store this info in metatables (like Lua) that can be reached
+        // later with Quack compile-time reflection function qk_get_meta(prop, symbol)
+        // TODO: Implement reference counter for labels, functions, blueprints, enums,
+        //       structs and traits
+        // TODO: Assert a variable is initialized in order to use it. We need
+        //       a better fork algorithm in order order to check for conditional nodes
+        $refcount = &$parent_scope->getMeta('refcount', $this->name);
+        if (null === $refcount) {
+            $parent_scope->setMeta('refcount', $this->name, 1);
+        } else {
+            $parent_scope->setMeta('refcount', $this->name, $refcount + 1);
+        }
     }
 }

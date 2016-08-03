@@ -25,6 +25,7 @@ class Scope
 {
     public $table = [];
     public $parent;
+    public $meta = [];
 
     public function hasLocal($symbol)
     {
@@ -44,6 +45,44 @@ class Scope
 
         return null !== $this->parent
             ? $this->parent->lookup($symbol)
+            : null;
+    }
+
+    public function setMeta($property, $symbol, $value)
+    {
+        // The first thing we need is to locate the scope to inject
+        // the metadata
+        $scope = &$this->getSymbolScope($symbol);
+
+        // Initialize meta table when it doesn't exist
+        if (!array_key_exists($symbol, $scope->meta)) {
+            $scope->meta[$symbol] = [];
+        }
+
+        $scope->meta[$symbol][$property] = $value;
+    }
+
+    public function getMeta($property, $symbol)
+    {
+        $scope = &$this->getSymbolScope($symbol);
+
+        if (!array_key_exists($symbol, $scope->meta)) {
+            return null;
+        }
+
+        return array_key_exists($property, $scope->meta[$symbol])
+            ? $scope->meta[$symbol][$property]
+            : null;
+    }
+
+    public function & getSymbolScope($symbol)
+    {
+        if ($this->hasLocal($symbol)) {
+            return $this;
+        }
+
+        return null !== $this->parent
+            ? $this->parent->getSymbolScope($symbol)
             : null;
     }
 }
