@@ -57,7 +57,6 @@ import(PARSELETS, 'PostfixOperatorParselet');
 import(PARSELETS, 'TernaryParselet');
 import(PARSELETS, 'GroupParselet');
 import(PARSELETS, 'FunctionParselet');
-import(PARSELETS, 'IncludeParselet');
 import(PARSELETS, 'ArrayParselet');
 import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
@@ -80,7 +79,6 @@ import(AST, 'Node');
 
 import(AST, 'expr/Expr');
 import(AST, 'expr/ArrayExpr');
-import(AST, 'expr/IncludeExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/MapExpr');
 import(AST, 'expr/ObjectExpr');

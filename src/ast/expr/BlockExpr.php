@@ -36,15 +36,10 @@ class BlockExpr extends Expr
     {
         $source = '&{';
 
-        if (sizeof($this->body) > 0) {
+        if (sizeof($this->body->stmt_list) > 0) {
             $source .= PHP_EOL;
             $parser->openScope();
-
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
+            $source .= $this->body->format($parser);
             $parser->closeScope();
             $source .= $parser->indent();
         }
@@ -52,5 +47,15 @@ class BlockExpr extends Expr
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->createScopeWithParent($parent_scope);
+        $this->bindDeclarations($this->body->stmt_list);
+
+        foreach ($this->body->stmt_list as $node) {
+            $node->injectScope($this->scope);
+        }
     }
 }

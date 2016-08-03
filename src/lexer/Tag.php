@@ -70,9 +70,6 @@ class Tag
     const T_MOD = 292;
     const T_NOT = 293;
     const T_FN = 294;
-    const T_INCLUDE = 295;
-    const T_REQUIRE = 296;
-    const T_ONCE = 297;
     const T_THEN = 300;
     const T_BEGIN = 301;
     const T_END = 302;

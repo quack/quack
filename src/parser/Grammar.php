@@ -301,15 +301,15 @@ class Grammar
     public function _breakStmt()
     {
         $this->parser->match(Tag::T_BREAK);
-        $expression = $this->_optExpr();
-        return new BreakStmt($expression);
+        $label = $this->_optLabel();
+        return new BreakStmt($label);
     }
 
     public function _continueStmt()
     {
         $this->parser->match(Tag::T_CONTINUE);
-        $expression = $this->_optExpr();
-        return new ContinueStmt($expression);
+        $label = $this->_optLabel();
+        return new ContinueStmt($label);
     }
 
     public function _raiseStmt()
@@ -707,6 +707,13 @@ class Grammar
     public function _optExpr()
     {
         return $this->_expr(0, true);
+    }
+
+    public function _optLabel()
+    {
+        return $this->parser->is(Tag::T_IDENT)
+            ? $this->identifier()
+            : null;
     }
 
     public function _expr($precedence = 0, $opt = false)

@@ -35,7 +35,6 @@ use \QuackCompiler\Parselets\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\TernaryParselet;
 use \QuackCompiler\Parselets\GroupParselet;
 use \QuackCompiler\Parselets\FunctionParselet;
-use \QuackCompiler\Parselets\IncludeParselet;
 use \QuackCompiler\Parselets\ArrayParselet;
 use \QuackCompiler\Parselets\NewParselet;
 use \QuackCompiler\Parselets\MemberAccessParselet;
@@ -113,8 +112,6 @@ abstract class Parser
         $this->register('${', new MapParselet);
         $this->register('&{', new BlockParselet);
         $this->register(Tag::T_FN, new FunctionParselet);
-        $this->register(Tag::T_REQUIRE, new IncludeParselet);
-        $this->register(Tag::T_INCLUDE, new IncludeParselet);
         $this->register('#', new NewParselet);
         $this->register('.', new MemberAccessParselet);
         $this->register('?.', new MemberAccessParselet);

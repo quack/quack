@@ -23,13 +23,14 @@ namespace QuackCompiler\Parselets;
 
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\BlockExpr;
+use \QuackCompiler\Ast\Stmt\StmtList;
 use \QuackCompiler\Lexer\Token;
 
 class BlockParselet implements IPrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {
-        $body = iterator_to_array($grammar->_innerStmtList());
+        $body = new StmtList(iterator_to_array($grammar->_innerStmtList()));
         $grammar->parser->match('}');
         return new BlockExpr($body);
     }

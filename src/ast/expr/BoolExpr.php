@@ -37,4 +37,9 @@ class BoolExpr extends Expr
         $source = $this->value ? 'true' : 'false';
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        // Pass
+    }
 }

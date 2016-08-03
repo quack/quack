@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
+use \QuackCompiler\Scope\ScopeError;
+
 class BreakStmt extends Stmt
 {
     public $label;
@@ -38,7 +40,7 @@ class BreakStmt extends Stmt
 
         if (null !== $this->label) {
             $source .= ' ';
-            $source .= $this->label->format($parser);
+            $source .= $this->label;
         }
 
         $source .= PHP_EOL;
@@ -48,6 +50,26 @@ class BreakStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // TODO: Link expression
+        // By rule, the declared label shouldn't be of this scope, but upper
+        if ($parent_scope->hasLocal($this->label)) {
+            throw new ScopeError([
+                'message' => "Called `break' on self scope label declaration of `{$this->label}'"
+            ]);
+        }
+
+        // Assert that we are receiving a declared label
+        $label = $parent_scope->lookup($this->label);
+
+        if (null === $label) {
+            // When the label doesn't exist
+            throw new ScopeError([
+                'message' => "Called `break' with undeclared label `{$this->label}'"
+            ]);
+        } elseif ('label' !== $label['kind']) {
+            // When the symbol exist, but it's not a label
+            throw new ScopeError([
+                'message' => "Called `break' with invalid label `{$this->label}'"
+            ]);
+        }
     }
 }

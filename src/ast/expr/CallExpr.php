@@ -54,4 +54,13 @@ class CallExpr extends Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope(&$parent_scope)
+    {
+        $this->func->injectScope($parent_scope);
+
+        foreach ($this->arguments as $arg) {
+            $arg->injectScope($parent_scope);
+        }
+    }
 }
