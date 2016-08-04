@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class BreakStmt extends Stmt
@@ -63,6 +63,14 @@ class BreakStmt extends Stmt
             throw new ScopeError([
                 'message' => "Called `break' with invalid label `{$this->label}'"
             ]);
+        }
+
+        // Usages of the label
+        $refcount = &$parent_scope->getMeta('refcount', $this->label);
+        if (null === $refcount) {
+            $parent_scope->setMeta('refcount', $this->label, 1);
+        } else {
+            $parent_scope->setMeta('refcount', $this->label, $refcount + 1);
         }
     }
 }

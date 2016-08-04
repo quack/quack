@@ -63,14 +63,37 @@ class OperatorExpr extends Expr
 
         if (!$this->isMemberAccess()) {
             $this->right->injectScope($parent_scope);
-        } if (':-' === $this->operator && $this->left instanceof NameExpr) {
-            // When it is an attribution by name, ensure the variable is mutable
-            $symbol = $parent_scope->lookup($this->left->name);
+        } if (':-' === $this->operator) {
+            if ($this->left instanceof NameExpr) {
+                // When it is an attribution by name, ensure the variable is mutable
+                $symbol = $parent_scope->lookup($this->left->name);
 
-            if (!($symbol & Kind::K_MUTABLE)) {
-                throw new ScopeError([
-                    'message' => "Symbol `{$this->left->name}' is immutable"
-                ]);
+                if (!($symbol & Kind::K_MUTABLE)) {
+                    throw new ScopeError([
+                        'message' => "Symbol `{$this->left->name}' is immutable"
+                    ]);
+                }
+            } else {
+                // We have a range of specific nodes that are allowed
+                $valid_assignment = $this->left instanceof AccessExpr ||
+                    $this->left instanceof ArrayExpr; // Array destructuring
+
+                if (!$valid_assignment) {
+                    throw new ScopeError([
+                        'message' => "Invalid left-hand side in assignment"
+                    ]);
+                }
+
+                // When it is array destructuring, ensure all the subnodes are names
+                if ($this->left instanceof ArrayExpr) {
+                    foreach ($this->left->items as $item) {
+                        if (!($item instanceof NameExpr)) {
+                            throw new ScopeError([
+                                'message' => "Array destructuring expects all children to be names"
+                            ]);
+                        }
+                    }
+                }
             }
         }
     }

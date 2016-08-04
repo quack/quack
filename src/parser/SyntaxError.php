@@ -58,7 +58,6 @@ class SyntaxError extends Exception
 
     private function extractPieceOfSource()
     {
-        // TODO: do-end example not working
         $out_buffer = [];
         $position = $this->getPosition();
         $token_size = $this->getFoundTokenSize();
