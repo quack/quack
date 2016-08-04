@@ -1,0 +1,64 @@
+module prelude
+
+fn map<a, b>[ f: fn [a] -> b; xss: list<a> ] -> list<b>
+  ^ when
+    | 0 = length[ xss ] -> { };
+    | else { f[ x ] } ++ map[ f; xs ]
+      where
+        x  :- head[ xss ],
+        xs :- tail[ xss ]
+    end
+end
+
+fn filter<a>[ f: fn [a] -> bool; xss: list<a> ] -> list<a>
+  ^ when
+    | 0 = length[ xss ] -> { };
+    | else (f[ x ]
+        then { x } ++ filter[ f; xs ]
+        else filter[ f; xs ]
+      ) where
+      x  :- head[ xss ],
+      xs :- tail[ xss ]
+    end
+end
+
+fn reduce<a>[ f: fn [a; a] -> a; z: a; xss: list<a> ] -> a
+  ^ when
+    | 0 = length[ xss ] -> z;
+    | else f[ x; reduce[ f; z; xs ] ]
+      where
+        x  :- head[ xss ],
+        xs :- tail[ xss ]
+    end
+end
+
+fn length<a>[xss: list<a>]
+  ^ xss
+  |> reduce[ fn { acc; _ | acc + 1 }; 0 ]
+end
+
+fn head<a>[xss: list<a>]
+  ^ when
+    | 0 = length[ xss ] -> nil
+    | else (fn {|
+      begin
+        let { h } :- xss
+        ^ h
+      end
+    })!
+    end
+end
+
+fn tail<a>[xss: list<a>]
+  ^ when
+    | 0 = length[ xss ] -> { }
+    | else (fn {|
+      begin
+        let { _; ...tail } :- xss
+        ^ tail
+      end
+    })!
+    end
+end
+
+do 'vim: syntax=elixir
