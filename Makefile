@@ -43,5 +43,7 @@ qtest:
 dev_test:
 	$(MAKE) dev_dependencies
 	$(MAKE) test module=lexer
-	$(MAKE) test module=parser
 	$(MAKE) qtest
+
+todo:
+	grep -r 'TODO' src/
