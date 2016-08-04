@@ -86,11 +86,11 @@ class BlueprintStmt extends Stmt
         }
 
         foreach ($this->implements as $impl) {
-            $trait = implode('.', $impl);
-            // TODO: Verify if it is really a trait
-            if (null === $parent_scope->lookup($trait)) {
+            $trait_name = implode('.', $impl);
+            $trait = $parent_scope->lookup($trait_name);
+            if (null === $trait || !($trait & Kind::K_TRAIT)) {
                 throw new ScopeError([
-                    'message' => "Trait `{$trait}' not found"
+                    'message' => "Trait `{$trait_name}' not found"
                 ]);
             }
         }
