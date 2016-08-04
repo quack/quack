@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class BlueprintStmt extends Stmt
@@ -75,9 +75,10 @@ class BlueprintStmt extends Stmt
         // This is valid for both extension and implentation
         if (null !== $this->extends) {
             $extends_from = implode('.', $this->extends);
-            if (null === $parent_scope->lookup($extends_from)) {
-                // TODO: Verify if it is really a blueprint
-                // TODO: Add a reference counter for GC
+            $extension = $parent_scope->lookup($extends_from);
+
+            // Assert we have a base blueprint and it is really a blueprint
+            if (null === $extension || !($extension & Kind::K_BLUEPRINT)) {
                 throw new ScopeError([
                     'message' => "Blueprint `{$extends_from}' not found"
                 ]);
