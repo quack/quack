@@ -32,7 +32,8 @@ use \ReflectionClass;
 abstract class Node
 {
     abstract public function format(Parser $parser);
-    // TODO abstract public function injectScope(&$parent_scope);
+
+    abstract public function injectScope(&$parent_scope);
 
     public function createScopeWithParent(Scope &$parent)
     {

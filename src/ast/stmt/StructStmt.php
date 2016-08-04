@@ -59,7 +59,7 @@ class StructStmt extends Stmt
         return $source;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
 

@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
 class NewExpr extends Expr
 {
@@ -54,7 +56,23 @@ class NewExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        // TODO: Check for class existance
+        $name = implode('.', $this->class_name);
+        $class = $parent_scope->lookup($name);
+
+        // When symbol doesn't exist
+        if (null === $class) {
+            throw new ScopeError([
+                'message' => "Undefined struct or blueprint `{$name}'"
+            ]);
+        }
+
+        // When symbol is not a blueprint or struct
+        if (!($class & (Kind::K_BLUEPRINT | Kind::K_STRUCT))) {
+            throw new ScopeError([
+                'message' => "Cannot instantiate `{$name}'. Not a blueprint nor a struct"
+            ]);
+        }
+
         foreach ($this->ctor_args as $arg) {
             $arg->injectScope($parent_scope);
         }

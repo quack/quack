@@ -52,7 +52,7 @@ class ExprStmt extends Stmt
         return $source;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope(&$parent_scope)
     {
         foreach ($this->expr_list as $expr) {
             $expr->injectScope($parent_scope);
