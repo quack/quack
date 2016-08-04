@@ -63,5 +63,13 @@ class ContinueStmt extends Stmt
                 'message' => "Called `continue' with invalid label `{$this->label}'"
             ]);
         }
+
+        // Usages of the label
+        $refcount = &$parent_scope->getMeta('refcount', $this->label);
+        if (null === $refcount) {
+            $parent_scope->setMeta('refcount', $this->label, 1);
+        } else {
+            $parent_scope->setMeta('refcount', $this->label, $refcount + 1);
+        }
     }
 }
