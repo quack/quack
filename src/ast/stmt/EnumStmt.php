@@ -22,10 +22,11 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Accessible;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
-class EnumStmt extends Stmt
+class EnumStmt extends Stmt implements Accessible
 {
     public $entries;
     public $name;
@@ -74,5 +75,18 @@ class EnumStmt extends Stmt
 
             $this->scope->insert($entry, K_MEMBER);
         }
+    }
+
+    public function getMembers()
+    {
+        $members = [];
+
+        foreach ($this->entries as $entry) {
+            $members[$entry] = [
+                'type' => $this->name
+            ];
+        }
+
+        return $members;
     }
 }

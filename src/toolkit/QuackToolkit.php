@@ -29,7 +29,6 @@ function import($module, $file)
 {
     require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
 }
-
 /* Lexer */
 
 import(LEXER, 'Lexer');
@@ -39,6 +38,9 @@ import(LEXER, 'Tag');
 import(LEXER, 'Token');
 import(LEXER, 'Tokenizer');
 import(LEXER, 'Word');
+
+// Scope base interface
+import(SCOPE, 'Accessible');
 
 /* Parser */
 
