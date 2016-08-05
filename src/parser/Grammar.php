@@ -52,7 +52,6 @@ use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 use \QuackCompiler\Ast\Stmt\TraitStmt;
 use \QuackCompiler\Ast\Stmt\StructStmt;
-
 use \QuackCompiler\Ast\Stmt\StmtList;
 
 class Grammar
@@ -773,4 +772,43 @@ class Grammar
     {
         return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
     }
+
+    /* Type declaration/signature branch */
+    public function typeDecl()
+    {
+        // When type literal
+        $type_literal = $this->getLiteralType();
+    }
+
+    private function getLiteralType()
+    {
+        if (!$this->parser->is(Tag::T_IDENT)) {
+            return null;
+        }
+
+        $name = $this->identifier();
+        switch ($name) {
+            case 'int':
+                return self::TYPE_LITERAL_INT;
+            case 'str':
+                return self::TYPE_LITERAL_STR;
+            case 'double':
+                return self::TYPE_LITERAL_DOUBLE;
+            case 'num':
+                return self::TYPE_LITERAL_NUM;
+            case 'dyn':
+                return self::TYPE_LITERAL_DYN;
+            case 'bool':
+                return self::TYPE_LITERAL_BOOL;
+            default:
+                return null;
+        }
+    }
+
+    const TYPE_LITERAL_INT    = 1 << 0;
+    const TYPE_LITERAL_STR    = 1 << 1;
+    const TYPE_LITERAL_DOUBLE = 1 << 2;
+    const TYPE_LITERAL_NUM    = 1 << 3;
+    const TYPE_LITERAL_DYN    = 1 << 4;
+    const TYPE_LITERAL_BOOL   = 1 << 5;
 }
