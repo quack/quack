@@ -778,4 +778,18 @@ class Grammar
     {
         return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
     }
+
+    public function _optTypeDecl()
+    {
+        if ($this->parser->is(':')) {
+            $this->parser->consume();
+            return $this->_typeDecl();
+        }
+
+        return null;
+    }
+
+    public function _typeDecl() {
+        // TODO: Implement LL(1) for type-decl
+    }
 }
