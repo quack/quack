@@ -33,11 +33,12 @@ class FnStmt extends Stmt
     public $parameters;
     public $is_bang;
     public $is_pub;
+    public $is_rec;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub)
+    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec)
     {
         $this->name = $name;
         $this->by_reference = $by_reference;
@@ -45,6 +46,7 @@ class FnStmt extends Stmt
         $this->parameters = $parameters;
         $this->is_bang = $is_bang;
         $this->is_pub = $is_pub;
+        $this->is_rec = $is_rec;
     }
 
     public function format(Parser $parser)
@@ -55,6 +57,10 @@ class FnStmt extends Stmt
 
         if ($this->by_reference) {
             $source .= '* ';
+        }
+
+        if ($this->is_rec) {
+            $source .= 'rec ';
         }
 
         $source .= $this->name;

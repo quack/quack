@@ -528,6 +528,7 @@ class Grammar
         $by_reference = false;
         $is_bang = false;
         $is_pub = false;
+        $is_rec = false;
         $parameters = [];
         $body = null;
 
@@ -541,6 +542,11 @@ class Grammar
         if ($this->parser->is('*')) {
             $this->parser->consume();
             $by_reference = true;
+        }
+
+        if ($this->parser->is(Tag::T_REC)) {
+            $this->parser->consume();
+            $is_rec = true;
         }
 
         $name = $this->identifier();
@@ -569,7 +575,7 @@ class Grammar
             $this->parser->match(Tag::T_END);
         }
 
-        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub);
+        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec);
     }
 
     public function _moduleStmt()
