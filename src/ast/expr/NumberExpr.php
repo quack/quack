@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
 
 class NumberExpr extends Expr
 {
@@ -43,5 +44,17 @@ class NumberExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         // Pass
+    }
+
+    public function getType()
+    {
+        switch ($this->type) {
+            case 'int':
+                return NativeQuackType::T_INT;
+            case 'double':
+                return NativeQuackType::T_DOUBLE;
+            default:
+                return null;
+        }
     }
 }

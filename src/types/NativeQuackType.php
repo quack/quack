@@ -21,14 +21,17 @@
  */
 namespace QuackCompiler\Types;
 
-class Type
+class NativeQuackType
 {
-    // LIT = Literal type
-    // SUP = Super type (nominal covariant subtyping)
-
-    const LIT_STR    = 1 << 0;
-    const LIT_INT    = 1 << 1;
-    const LIT_DOUBLE = 1 << 2;
-    const SUP_LIST   = 1 << 3;
-    const SUP_MAP    = 1 << 4;
+    const T_STR      = 0;
+    const T_INT      = 1;
+    const T_DOUBLE   = 2;
+    const T_BOOL     = 3;
+    const T_OBJ      = 4;
+    const T_MAP      = 5;
+    const T_LIST     = 6;
+    const T_DYN      = 7;
+    const T_RESOURCE = 8;
+    const T_ATOM     = 9;
 }
+

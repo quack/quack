@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
 
 class BoolExpr extends Expr
 {
@@ -41,5 +42,10 @@ class BoolExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         // Pass
+    }
+
+    public function getType()
+    {
+        return NativeQuackType::T_BOOL;
     }
 }

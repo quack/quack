@@ -24,6 +24,7 @@ define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
 define('PARSER', 'parser');
 define('SCOPE', 'scope');
+define('TYPES', 'types');
 
 function import($module, $file)
 {
@@ -139,3 +140,7 @@ import(AST, 'stmt/StmtList');
 import(SCOPE, 'Scope');
 import(SCOPE, 'ScopeError');
 import(SCOPE, 'Kind');
+
+/* Type inference and checking */
+
+import(TYPES, 'NativeQuackType');

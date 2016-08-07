@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
 
 class StringExpr extends Expr
 {
@@ -46,5 +47,10 @@ class StringExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         // Pass
+    }
+
+    public function getType()
+    {
+        return NativeQuackType::T_STR;
     }
 }
