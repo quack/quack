@@ -25,6 +25,7 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
 
 class OperatorExpr extends Expr
 {
@@ -63,7 +64,9 @@ class OperatorExpr extends Expr
 
         if (!$this->isMemberAccess()) {
             $this->right->injectScope($parent_scope);
-        } if (':-' === $this->operator) {
+        }
+
+        if (':-' === $this->operator) {
             if ($this->left instanceof NameExpr) {
                 // When it is an attribution by name, ensure the variable is mutable
                 $symbol = $parent_scope->lookup($this->left->name);
@@ -96,5 +99,36 @@ class OperatorExpr extends Expr
                 }
             }
         }
+
+        // Type checker rules. TODO: Isolate as a function
+        if (in_array($this->operator, ['+', '-', '*', '/'], true)) {
+            $type = (object)[
+                'left'  => $this->left->getType(),
+                'right' => $this->right->getType()
+            ];
+
+            $is_double = in_array(NativeQuackType::T_DOUBLE, [$type->left, $type->right], true);
+            $is_valid_num = function ($type) {
+                return NativeQuackType::T_INT === $type || NativeQuackType::T_DOUBLE === $type;
+            };
+
+            if (!$is_valid_num($type->left)) {
+                // TODO: Should throw type error (create /src/types/TypeError.php
+                throw new ScopeError([
+                    'message' => "TypeError: left operand of `{$this->operator}' not a number"
+                ]);
+            }
+
+            if (!$is_valid_num($type->right)) {
+                throw new ScopeError([
+                    'message' => "TypeError: right operand of `{$this->operator}' not a number"
+                ]);
+            }
+        }
+    }
+
+    public function getType()
+    {
+        return max($this->left->getType(), $this->right->getType());
     }
 }

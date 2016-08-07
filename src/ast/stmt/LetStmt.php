@@ -64,5 +64,12 @@ class LetStmt extends Stmt
                 $def[1]->injectScope($parent_scope);
             }
         }
+
+        // After all, process type inference rules
+        foreach ($this->definitions as $def) {
+            $parent_scope->setMeta('type', $def[0], null === $def[1]
+                ? null
+                : $def[1]->getType());
+        }
     }
 }
