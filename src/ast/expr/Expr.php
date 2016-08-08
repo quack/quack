@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use QuackCompiler\Ast\Node;
+use QuackCompiler\Types\Type;
 
 abstract class Expr extends Node
 {
@@ -45,6 +46,6 @@ abstract class Expr extends Node
 
     public /* temporary */ function getType()
     {
-        return null;
+        return new Type(null);
     }
 }

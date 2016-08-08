@@ -19,34 +19,41 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Expr;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
-
-class BoolExpr extends Expr
+class Type
 {
-    public $value;
+    public $code;
 
-    public function __construct($value)
+    public function __construct($code)
     {
-        $this->value = (bool) $value;
+        $this->code = $code;
     }
 
-    public function format(Parser $_)
+    public function __toString()
     {
-        $source = $this->value ? 'true' : 'false';
-        return $this->parenthesize($source);
+        if (null === $this->code) {
+            return 'unknown';
+        }
+
+        switch ($this->code) {
+            case NativeQuackType::T_STR:
+                return 'string';
+            case NativeQuackType::_INT:
+                return 'integer';
+            case NativeQuackType::T_DOUBLE:
+                return 'double';
+            case NativeQuackType::T_BOOL:
+                return 'boolean';
+            case NativeQuackType::T_ATOM:
+                return 'atom';
+            default:
+                return 'unknown';
+        }
     }
 
-    public function injectScope(&$parent_scope)
+    public function isType($other)
     {
-        // Pass
-    }
-
-    public function getType()
-    {
-        return new Type(NativeQuackType::T_BOOL);
+        return $this->code === $other;
     }
 }

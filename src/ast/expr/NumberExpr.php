@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class NumberExpr extends Expr
 {
@@ -50,11 +51,11 @@ class NumberExpr extends Expr
     {
         switch ($this->type) {
             case 'int':
-                return NativeQuackType::T_INT;
+                return new Type(NativeQuackType::T_INT);
             case 'double':
-                return NativeQuackType::T_DOUBLE;
+                return new Type(NativeQuackType::T_DOUBLE);
             default:
-                return null;
+                return new Type(null);
         }
     }
 }

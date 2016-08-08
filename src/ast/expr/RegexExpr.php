@@ -35,11 +35,6 @@ class RegexExpr extends Expr
     public function format(Parser $parser)
     {
         $source = $this->value;
-
-        if ($this->parenthesize) {
-            $source = '(' . $source . ')';
-        }
-
         return $source;
     }
 

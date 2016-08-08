@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class StringExpr extends Expr
 {
@@ -51,6 +52,6 @@ class StringExpr extends Expr
 
     public function getType()
     {
-        return NativeQuackType::T_STR;
+        return new Type(NativeQuackType::T_STR);
     }
 }

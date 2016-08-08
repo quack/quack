@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class AtomExpr extends Expr
 {
@@ -46,6 +47,6 @@ class AtomExpr extends Expr
 
     public function getType()
     {
-        return NativeQuackType::T_ATOM;
+        return new Type(NativeQuackType::T_ATOM);
     }
 }

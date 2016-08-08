@@ -26,6 +26,7 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class OperatorExpr extends Expr
 {
@@ -100,28 +101,27 @@ class OperatorExpr extends Expr
             }
         }
 
-        // Type checker rules. TODO: Isolate as a function
+        // Type checker rules. TODO: Isolate as a function. `getType` should do it. Seriously!
         if (in_array($this->operator, ['+', '-', '*', '/'], true)) {
             $type = (object)[
                 'left'  => $this->left->getType(),
                 'right' => $this->right->getType()
             ];
 
-            $is_double = in_array(NativeQuackType::T_DOUBLE, [$type->left, $type->right], true);
             $is_valid_num = function ($type) {
-                return NativeQuackType::T_INT === $type || NativeQuackType::T_DOUBLE === $type;
+                return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
             };
 
             if (!$is_valid_num($type->left)) {
-                // TODO: Should throw type error (create /src/types/TypeError.php
+                // TODO: Should throw type error (create /src/types/TypeError.php)
                 throw new ScopeError([
-                    'message' => "TypeError: left operand of `{$this->operator}' not a number"
+                    'message' => "TypeError: left operand of `{$this->operator}' not a number. Got {$type->left}"
                 ]);
             }
 
             if (!$is_valid_num($type->right)) {
                 throw new ScopeError([
-                    'message' => "TypeError: right operand of `{$this->operator}' not a number"
+                    'message' => "TypeError: right operand of `{$this->operator}' not a number. Got {$type->right}"
                 ]);
             }
         }
@@ -129,6 +129,6 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        return max($this->left->getType(), $this->right->getType());
+        return new Type(max($this->left->getType()->code, $this->right->getType()->code));
     }
 }
