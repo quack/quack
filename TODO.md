@@ -57,7 +57,7 @@
 
 - Scope
   - [x] Implement a logic for some nodes to carry information about line and column
-  - [ ] Migrate for classes
+  - [x] Migrate for classes
 
 - Implement rust data structures model
   - [x] Implement traits
