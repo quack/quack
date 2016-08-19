@@ -39,7 +39,7 @@ class Type
         switch ($this->code) {
             case NativeQuackType::T_STR:
                 return 'string';
-            case NativeQuackType::_INT:
+            case NativeQuackType::T_INT:
                 return 'integer';
             case NativeQuackType::T_DOUBLE:
                 return 'double';
