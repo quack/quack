@@ -64,7 +64,10 @@ class Tokenizer extends Lexer
             }
 
             if ($this->is('/')) {
-                return $this->regex();
+                $regex = $this->regex();
+                if ($regex) {
+                    return $regex;
+                }
             }
 
             // Multichar symbol analysis
@@ -214,6 +217,7 @@ class Tokenizer extends Lexer
 
     private function regex()
     {
+        $position = $this->position;
         $buffer = [];
         $buffer[] = $this->readChar();
         $this->column++;
@@ -223,23 +227,32 @@ class Tokenizer extends Lexer
             $this->column++;
         }
 
-        if (!$this->isEnd()) {
-            $buffer[] = $this->readChar();
-            $this->column++;
-
-            // Regex modifiers
-            $allowed_modifiers = [
-                'i', 'm', 's', 'x', 'e', 'A', 'D', 'S', 'U', 'X', 'J', 'u'
-            ];
-
-            while (in_array($this->peek, $allowed_modifiers, true)) {
-                $buffer[] = $this->readChar();
-                $this->column++;
-            }
+        if ($this->peek != '/') {
+            // consume a negative number moves backwards, 
+            // so we go back to the 1st '/' as we will parse it again
+            $this->consume($position - $this->position);
+            return NULL;
         }
 
-        $regex = implode($buffer);
+        $buffer[] = $this->readChar();
+        $this->column++;
 
+        // Regex modifiers
+        $allowed_modifiers = [
+            'i', 'm', 's', 'x', 'e', 'A', 'D', 'S', 'U', 'X', 'J', 'u'
+        ];
+
+        while (!$this->isEnd()) {
+            $char = $this->readChar();
+            if (in_array($char, $allowed_modifiers, true)) {
+                $buffer[] = $char;
+                $this->column++;
+            } else {
+                break;
+            }
+        }
+        
+        $regex = implode($buffer);
         return new Token(Tag::T_REGEX, $this->symbol_table->add($regex));
     }
 
