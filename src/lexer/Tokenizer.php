@@ -228,9 +228,9 @@ class Tokenizer extends Lexer
         }
 
         if ($this->peek != '/') {
-            // consume a negative number moves backwards, 
-            // so we go back to the 1st '/' as we will parse it again
-            $this->consume($position - $this->position);
+            $steps = $this->position - $position;
+            $this->column -= $steps;
+            $this->stepback($steps);
             return NULL;
         }
 
@@ -248,6 +248,8 @@ class Tokenizer extends Lexer
                 $buffer[] = $char;
                 $this->column++;
             } else {
+                $this->column--;
+                $this->stepback();
                 break;
             }
         }
