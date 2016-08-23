@@ -47,6 +47,8 @@ class Type
                 return 'boolean';
             case NativeQuackType::T_ATOM:
                 return 'atom';
+            case NativeQuackType::T_REGEX:
+                return 'regex';
             default:
                 return 'unknown';
         }
