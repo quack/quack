@@ -131,9 +131,7 @@ abstract class Lexer
     public function stepback($n = 1)
     {
         $pos = $this->position - $n;
-        $this->position = $pos >= 0
-            ? $pos
-            : 0;
+        $this->position = max($pos, 0);
         $this->peek = $this->input[$this->position];        
     }
 
