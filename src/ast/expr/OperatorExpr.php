@@ -100,35 +100,36 @@ class OperatorExpr extends Expr
                 }
             }
         }
+    }
 
-        // Type checker rules. TODO: Isolate as a function. `getType` should do it. Seriously!
-        if (in_array($this->operator, ['+', '-', '*', '/'], true)) {
+    public function getType()
+    {
+        $arithmetic = ['+', '-', '*', '**', '/'];
+        if (in_array($this->operator, $arithmetic, true)) {
             $type = (object)[
                 'left'  => $this->left->getType(),
                 'right' => $this->right->getType()
             ];
 
             $is_valid_num = function ($type) {
-                return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
+                return $type->isType(NativeQuackType::T_INT) || $this->isType(NativeQuackType::T_DOUBLE);
             };
 
             if (!$is_valid_num($type->left)) {
-                // TODO: Should throw type error (create /src/types/TypeError.php)
                 throw new ScopeError([
-                    'message' => "TypeError: left operand of `{$this->operator}' not a number. Got {$type->left}"
+                    'message' => "TypeError: left operand of `{$this->operator}' should be a number. Got {$type->left}"
                 ]);
             }
 
             if (!$is_valid_num($type->right)) {
                 throw new ScopeError([
-                    'message' => "TypeError: right operand of `{$this->operator}' not a number. Got {$type->right}"
+                    'message' => "TypeError: right operand of `{$this->operator}' should be a number. Got {$type->right}"
                 ]);
             }
-        }
-    }
 
-    public function getType()
-    {
-        return new Type(max($this->left->getType()->code, $this->right->getType()->code));
+            return new Type(max($type->left, $type->right));
+        } else {
+            // TODO: Implement type checker for other operators
+        }
     }
 }

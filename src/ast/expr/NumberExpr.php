@@ -54,8 +54,6 @@ class NumberExpr extends Expr
                 return new Type(NativeQuackType::T_INT);
             case 'double':
                 return new Type(NativeQuackType::T_DOUBLE);
-            default:
-                return new Type(null);
         }
     }
 }

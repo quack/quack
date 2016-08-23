@@ -33,5 +33,6 @@ class NativeQuackType
     const T_DYN      = 7;
     const T_RESOURCE = 8;
     const T_ATOM     = 9;
+    const T_REGEX    = 10;
 }
 
