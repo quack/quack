@@ -118,7 +118,7 @@
      :expect (joiner expect)
      :command
       (if (empty? command)
-        "php5 ./src/Quack.php %s"
+        "php ./src/Quack.php %s"
         (joiner command)) }))
 
 (defn create-tmp-folder []
