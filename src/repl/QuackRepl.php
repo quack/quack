@@ -94,8 +94,9 @@ function readline_callback($command)
         $global_scope = new Scope;
         $parser->parse();
         $parser->ast->injectScope($global_scope);
+        $parser->ast->runTypeChecker();
 
-        /* when */ args_have('-a', '--ast') && var_dump($parser->ast);
+        /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
         /* when */ args_have('-f', '--format') && $parser->format();
     } catch (\Exception $e) {
         echo $e;

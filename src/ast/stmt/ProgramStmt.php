@@ -52,4 +52,11 @@ class ProgramStmt extends Stmt
             $node->injectScope($this->scope);
         }
     }
+
+    public function runTypeChecker()
+    {
+        foreach ($this->stmt_list as $node) {
+            $node->runTypeChecker();
+        }
+    }
 }

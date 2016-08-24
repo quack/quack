@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class RegexExpr extends Expr
 {
@@ -41,5 +43,10 @@ class RegexExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         // Pass
+    }
+
+    public function getType()
+    {
+        return new Type(NativeQuackType::T_REGEX);
     }
 }
