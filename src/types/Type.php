@@ -36,6 +36,8 @@ class Type
             return 'unknown';
         }
 
+        var_dump($this->code);
+
         switch ($this->code) {
             case NativeQuackType::T_STR:
                 return 'string';

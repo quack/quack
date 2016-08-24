@@ -111,8 +111,10 @@ class OperatorExpr extends Expr
                 'right' => $this->right->getType()
             ];
 
+            var_dump($type);
+
             $is_valid_num = function ($type) {
-                return $type->isType(NativeQuackType::T_INT) || $this->isType(NativeQuackType::T_DOUBLE);
+                return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
             };
 
             if (!$is_valid_num($type->left)) {
@@ -127,7 +129,7 @@ class OperatorExpr extends Expr
                 ]);
             }
 
-            return new Type(max($type->left, $type->right));
+            return new Type(max($type->left->code, $type->right->code));
         } else {
             // TODO: Implement type checker for other operators
         }

@@ -58,4 +58,14 @@ class ExprStmt extends Stmt
             $expr->injectScope($parent_scope);
         }
     }
+
+    public function runTypeChecker()
+    {
+        $type_list = [];
+        foreach ($this->expr_list as $expr) {
+            $type_list[] = $expr->getType();
+        }
+
+        var_dump(array_map(function ($type) { return (string) $type; }, $type_list));
+    }
 }
