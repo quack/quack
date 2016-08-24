@@ -40,6 +40,7 @@
   Returns the parameters passed to the script (parsed)
   """
   (car
+    ; Keeping exe= for retrocompatibilty. It'll be taken away
     (getopt args "v" ["dir=" "exe="])))
 
 (defn version []
@@ -84,10 +85,13 @@
   (setv describe []) ; File description
   (setv source [])   ; Source code
   (setv expect [])   ; Expected output
+  (setv command [])  ; Command to run
   (let [[lines (-> input (.split linesep))]]
     ; Parser is cumulative. You can have multiple and isolated sections
     (for [line lines]
       (cond
+        [(= line "%%command")
+          (setv tok :command)]
         [(= line "%%comments")
           (setv tok :none)]
         [(= line "%%describe")
@@ -98,6 +102,10 @@
           (setv tok :expect)]
         [True
           (cond
+            [(= tok :command)
+              (do
+                (-> command (.append line))
+                (setv tok :none))]
             [(= tok :describe)
               (-> describe (.append line))]
             [(= tok :source)
@@ -107,7 +115,11 @@
   (let [[joiner (fn [lst] (-> linesep (.join lst)))]]
    { :describe (joiner describe)
      :source (joiner source)
-     :expect (joiner expect) }))
+     :expect (joiner expect)
+     :command
+      (if (empty? command)
+        "php5 ./src/Quack.php %s"
+        (joiner command)) }))
 
 (defn create-tmp-folder []
   """
@@ -128,7 +140,7 @@
   (with [[f (open (join **tmp-folder** (-> name (+ ".tmp"))) "w")]]
     (-> f (.write source))))
 
-(defn run-tests [generator exe]
+(defn run-tests [generator]
   """
     The test suite!
   """
@@ -142,6 +154,7 @@
   (for [file generator]
     (setv filename (basename file))
     (setv section (group-sections (file-get-contents file)))
+    (setv exe (:command section))
     ; Store the source for future queries
     (persist-source filename (:source section))
     (setv command (-> exe (.replace "%s" (join **tmp-folder** (-> filename (+ ".tmp"))))))
@@ -225,12 +238,10 @@
         (version))
       ; Define directory params
       (setv dir-tuple (tuple-contains-key "--dir" params))
-      (setv exe-tuple (tuple-contains-key "--exe" params))
-      (if (->> (first dir-tuple) (and (first exe-tuple)))
+      (if (->> (first dir-tuple))
         (do
           (setv dir (second dir-tuple))
-          (setv exe (second exe-tuple))
-          (setv result (run-tests (get-all-test-files dir) exe))
+          (setv result (run-tests (get-all-test-files dir)))
           (if (> result 0)
             (exit 666)))
-        (throw-error "--dir and --exe are obligatory")))))
+        (throw-error "--dir is obligatory")))))
