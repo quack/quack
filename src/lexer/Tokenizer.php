@@ -63,11 +63,8 @@ class Tokenizer extends Lexer
                 return $this->string($this->peek);
             }
 
-            if ($this->is('/')) {
-                $regex = $this->regex();
-                if ($regex) {
-                    return $regex;
-                }
+            if ($this->matches('&/')) {
+                return $this->regex();
             }
 
             // Multichar symbol analysis
@@ -217,25 +214,20 @@ class Tokenizer extends Lexer
 
     private function regex()
     {
-        $position = $this->position;
         $buffer = [];
         $buffer[] = $this->readChar();
-        $this->column++;
+        $buffer[] = $this->readChar();
+        $this->column += 2;
 
         while (!$this->isEnd() && !($this->is('/') && $this->previous() !== '\\')) {
             $buffer[] = $this->readChar();
             $this->column++;
         }
 
-        if ($this->peek != '/') {
-            $steps = $this->position - $position;
-            $this->column -= $steps;
-            $this->stepback($steps);
-            return NULL;
+        if (!$this->isEnd()) {
+            $buffer[] = $this->readChar();
+            $this->column++;
         }
-
-        $buffer[] = $this->readChar();
-        $this->column++;
 
         // Regex modifiers
         $allowed_modifiers = [
