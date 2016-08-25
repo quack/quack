@@ -140,5 +140,15 @@ class OperatorExpr extends Expr
                             "{{$type->left} {$this->operator} {$type->right}}"
             ]);
         }
+
+        // Type checking for string matched by regex
+        if ('=~' === $this->operator) {
+            if (!$type->left->isString() || !$type->right->isRegex()) {
+                throw new ScopeError([
+                    'message' => "No type overload found for operator `=~' at " .
+                                "{{$type->left} =~ {$type->right}}"
+                ]);
+            }
+        }
     }
 }
