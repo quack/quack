@@ -109,8 +109,10 @@ class OperatorExpr extends Expr
             'right' => $this->right->getType()
         ];
 
+        $op_name = Tag::getOperatorLexeme($this->operator);
+
         // Type checking for numeric and string concat operations
-        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<='];
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<=', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
 
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
@@ -122,8 +124,8 @@ class OperatorExpr extends Expr
             }
 
             throw new ScopeError([
-                'message' => "No type overload found for operator `{$this->operator}' at " .
-                            "{{$type->left} {$this->operator} {$type->right}}"
+                'message' => "No type overload found for operator `{$op_name}' at " .
+                            "{{$type->left} {$op_name} {$type->right}}"
             ]);
         }
 
@@ -137,7 +139,7 @@ class OperatorExpr extends Expr
 
             throw new ScopeError([
                 'message' => "Why in the world are you trying to compare two expressions of different types? at " .
-                            "{{$type->left} {$this->operator} {$type->right}}"
+                            "{{$type->left} {$op_name} {$type->right}}"
             ]);
         }
 
