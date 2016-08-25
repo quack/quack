@@ -104,8 +104,8 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        $arithmetic = ['+', '-', '*', '**', '/', '>>', '<<'];
-        if (in_array($this->operator, $arithmetic, true)) {
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<='];
+        if (in_array($this->operator, $numeric_op, true)) {
             $type = (object)[
                 'left'  => $this->left->getType(),
                 'right' => $this->right->getType()
