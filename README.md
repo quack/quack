@@ -16,6 +16,7 @@
 
   <a href="https://codeclimate.com/github/quack/quack"><img alt="Issue Count" src="https://codeclimate.com/github/quack/quack/badges/issue_count.svg"></a>
 
+  <a href="#"><img alt="Issue Count" src="https://img.shields.io/badge/language-quack-green.svg"></a>
 </p>
 
 ### What is Quack?
