@@ -104,12 +104,14 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
+        $type = (object)[
+            'left'  => $this->left->getType(),
+            'right' => $this->right->getType()
+        ];
+
+        // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<='];
         if (in_array($this->operator, $numeric_op, true)) {
-            $type = (object)[
-                'left'  => $this->left->getType(),
-                'right' => $this->right->getType()
-            ];
 
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
                 return new Type(NativeQuackType::T_STR);
@@ -123,8 +125,20 @@ class OperatorExpr extends Expr
                 'message' => "No type overload found for operator `{$this->operator}' at " .
                             "{{$type->left} {$this->operator} {$type->right}}"
             ]);
-        } else {
-            // TODO: Implement type checker for other operators
+        }
+
+        // Type checking for equality operators
+        $eq_op = ['=', '<>'];
+        if (in_array($this->operator, $eq_op, true)) {
+
+            if ($type->left === $type->right || ($type->left->isNumber() && $type->right->isNumber())) {
+                return new Type(NativeQuackType::T_BOOL);
+            }
+
+            throw new ScopeError([
+                'message' => "Why in the world are you trying to compare two expressions of different types? at " .
+                            "{{$type->left} {$this->operator} {$type->right}}"
+            ]);
         }
     }
 }
