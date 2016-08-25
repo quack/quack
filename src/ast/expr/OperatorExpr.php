@@ -111,25 +111,26 @@ class OperatorExpr extends Expr
                 'right' => $this->right->getType()
             ];
 
-            var_dump($type);
-
             $is_valid_num = function ($type) {
                 return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
             };
 
-            if (!$is_valid_num($type->left)) {
-                throw new ScopeError([
-                    'message' => "TypeError: left operand of `{$this->operator}' should be a number. Got {$type->left}"
-                ]);
+            $is_valid_string = function ($type) {
+                return $type->isType(NativeQuackType::T_STR);
+            };
+
+            if ($is_valid_string($type->left) && $is_valid_string($type->right)) {
+                return new Type(NativeQuackType::T_STR);
             }
 
-            if (!$is_valid_num($type->right)) {
-                throw new ScopeError([
-                    'message' => "TypeError: right operand of `{$this->operator}' should be a number. Got {$type->right}"
-                ]);
+            if ($is_valid_num($type->left) && $is_valid_num($type->right)) {
+                return new Type(max($type->left->code, $type->right->code));
             }
 
-            return new Type(max($type->left->code, $type->right->code));
+            throw new ScopeError([
+                'message' => "No type overload found for operator `{$this->operator}' at " .
+                            "{{$type->left} {$this->operator} {$type->right}}"
+            ]);
         } else {
             // TODO: Implement type checker for other operators
         }
