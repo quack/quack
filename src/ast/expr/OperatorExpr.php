@@ -104,34 +104,66 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        $arithmetic = ['+', '-', '*', '**', '/'];
-        if (in_array($this->operator, $arithmetic, true)) {
-            $type = (object)[
-                'left'  => $this->left->getType(),
-                'right' => $this->right->getType()
-            ];
+        $type = (object)[
+            'left'  => $this->left->getType(),
+            'right' => $this->right->getType()
+        ];
 
-            var_dump($type);
+        $op_name = Tag::getOperatorLexeme($this->operator);
 
-            $is_valid_num = function ($type) {
-                return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
-            };
+        // Type checking for numeric and string concat operations
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<=', Tag::T_MOD];
+        if (in_array($this->operator, $numeric_op, true)) {
 
-            if (!$is_valid_num($type->left)) {
+            if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
+                return new Type(NativeQuackType::T_STR);
+            }
+
+            if ($type->left->isNumber() && $type->right->isNumber()) {
+                return new Type(max($type->left->code, $type->right->code));
+            }
+
+            throw new ScopeError([
+                'message' => "No type overload found for operator `{$op_name}' at " .
+                             "{{$type->left} {$op_name} {$type->right}}"
+            ]);
+        }
+
+        // Type checking for equality operators
+        $eq_op = ['=', '<>'];
+        if (in_array($this->operator, $eq_op, true)) {
+
+            if ($type->left === $type->right || ($type->left->isNumber() && $type->right->isNumber())) {
+                return new Type(NativeQuackType::T_BOOL);
+            }
+
+            throw new ScopeError([
+                'message' => "Why in the world are you trying to compare two expressions of different types? at " .
+                             "{{$type->left} {$op_name} {$type->right}}"
+            ]);
+        }
+
+        // Type checking for string matched by regex
+        if ('=~' === $this->operator) {
+            if (!$type->left->isString() || !$type->right->isRegex()) {
                 throw new ScopeError([
-                    'message' => "TypeError: left operand of `{$this->operator}' should be a number. Got {$type->left}"
+                    'message' => "No type overload found for operator `=~' at " .
+                                 "{{$type->left} =~ {$type->right}}"
+                ]);
+            }
+        }
+
+        // Boolean algebra
+        $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
+        if (in_array($this->operator, $bool_op, true)) {
+            if (!$type->left->isBoolean() || !$type->right->isBoolean()) {
+                throw new ScopeError([
+                    'message' => "No type overload found for operator `{$op_name}' " .
+                                 "{{$type->left} {$op_name} {$type->right}}"
                 ]);
             }
 
-            if (!$is_valid_num($type->right)) {
-                throw new ScopeError([
-                    'message' => "TypeError: right operand of `{$this->operator}' should be a number. Got {$type->right}"
-                ]);
-            }
-
-            return new Type(max($type->left->code, $type->right->code));
-        } else {
-            // TODO: Implement type checker for other operators
+            return new Type(NativeQuackType::T_BOOL);
         }
     }
 }

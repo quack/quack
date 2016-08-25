@@ -56,8 +56,38 @@ class Type
         }
     }
 
-    public function isType($other)
+    public function isString()
     {
-        return $this->code === $other;
+        return NativeQuackType::T_STR === $this->code;
+    }
+
+    public function isInteger()
+    {
+        return NativeQuackType::T_INT === $this->code;
+    }
+
+    public function isDouble()
+    {
+        return NativeQuackType::T_DOUBLE === $this->code;
+    }
+
+    public function isBoolean()
+    {
+        return NativeQuackType::T_BOOL === $this->code;
+    }
+
+    public function isAtom()
+    {
+        return NativeQuackType::T_ATOM === $this->code;
+    }
+
+    public function isRegex()
+    {
+        return NativeQuackType::T_REGEX === $this->code;
+    }
+
+    public function isNumber()
+    {
+        return $this->isInteger() || $this->isDouble();
     }
 }
