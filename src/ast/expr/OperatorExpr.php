@@ -104,7 +104,7 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        $arithmetic = ['+', '-', '*', '**', '/'];
+        $arithmetic = ['+', '-', '*', '**', '/', '>>', '<<'];
         if (in_array($this->operator, $arithmetic, true)) {
             $type = (object)[
                 'left'  => $this->left->getType(),
