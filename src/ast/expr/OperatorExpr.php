@@ -125,7 +125,7 @@ class OperatorExpr extends Expr
 
             throw new ScopeError([
                 'message' => "No type overload found for operator `{$op_name}' at " .
-                            "{{$type->left} {$op_name} {$type->right}}"
+                             "{{$type->left} {$op_name} {$type->right}}"
             ]);
         }
 
@@ -139,7 +139,7 @@ class OperatorExpr extends Expr
 
             throw new ScopeError([
                 'message' => "Why in the world are you trying to compare two expressions of different types? at " .
-                            "{{$type->left} {$op_name} {$type->right}}"
+                             "{{$type->left} {$op_name} {$type->right}}"
             ]);
         }
 
@@ -148,9 +148,22 @@ class OperatorExpr extends Expr
             if (!$type->left->isString() || !$type->right->isRegex()) {
                 throw new ScopeError([
                     'message' => "No type overload found for operator `=~' at " .
-                                "{{$type->left} =~ {$type->right}}"
+                                 "{{$type->left} =~ {$type->right}}"
                 ]);
             }
+        }
+
+        // Boolean algebra
+        $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
+        if (in_array($this->operator, $bool_op, true)) {
+            if (!$type->left->isBoolean() || !$type->right->isBoolean()) {
+                throw new ScopeError([
+                    'message' => "No type overload found for operator `{$op_name}' " .
+                                 "{{$type->left} {$op_name} {$type->right}}"
+                ]);
+            }
+
+            return new Type(NativeQuackType::T_BOOL);
         }
     }
 }
