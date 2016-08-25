@@ -111,19 +111,11 @@ class OperatorExpr extends Expr
                 'right' => $this->right->getType()
             ];
 
-            $is_valid_num = function ($type) {
-                return $type->isType(NativeQuackType::T_INT) || $type->isType(NativeQuackType::T_DOUBLE);
-            };
-
-            $is_valid_string = function ($type) {
-                return $type->isType(NativeQuackType::T_STR);
-            };
-
-            if ($is_valid_string($type->left) && $is_valid_string($type->right)) {
+            if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
                 return new Type(NativeQuackType::T_STR);
             }
 
-            if ($is_valid_num($type->left) && $is_valid_num($type->right)) {
+            if ($type->left->isNumber() && $type->right->isNumber()) {
                 return new Type(max($type->left->code, $type->right->code));
             }
 
