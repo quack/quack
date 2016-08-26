@@ -108,4 +108,18 @@ class Type
     {
         return null !== $this->subtype;
     }
+
+    public function isCompatibleWith(Type $other)
+    {
+        if ($this->isNumber() && $other->isNumber()) {
+            return true;
+        }
+
+        if ($this->hasSubtype() && $other->hasSubtype()) {
+            return $this->code === $other->code
+                && $this->subtype->isCompatibleWith($other->subtype);
+        }
+
+        return $this->code === $other->code;
+    }
 }

@@ -133,7 +133,7 @@ class OperatorExpr extends Expr
         $eq_op = ['=', '<>'];
         if (in_array($this->operator, $eq_op, true)) {
 
-            if ($type->left === $type->right || ($type->left->isNumber() && $type->right->isNumber())) {
+            if ($type->left->isCompatibleWith($type->right)) {
                 return new Type(NativeQuackType::T_BOOL);
             }
 

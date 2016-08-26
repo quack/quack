@@ -61,8 +61,6 @@ class ArrayExpr extends Expr
 
     public function getType()
     {
-        // TODO: Implement subtyping literal representation
-        // TODO: Implement deep compare on types
         $newtype = new Type(NativeQuackType::T_LIST);
         $newtype->subtype = null;
         $type_list = [];
@@ -72,7 +70,7 @@ class ArrayExpr extends Expr
             $type_list[] = $type;
 
             if (null !== $newtype->subtype) {
-                if ($type->code !== $newtype->subtype->code && !($newtype->subtype->isNumber() && $type->isNumber())) {
+                if (!$type->isCompatibleWith($newtype->subtype)) {
                     throw new ScopeError([
                         'message' => "Cannot add element of type `{$type}' to `{$newtype}'"
                     ]);
@@ -88,6 +86,7 @@ class ArrayExpr extends Expr
         } else if ($newtype->subtype->isNumber()) {
             $newtype->subtype->code = max(array_map(function ($type) { return $type->code; }, $type_list));
         }
+        // TODO: Implement base-type lookup (with parent reference). Use Hindley-Milner theory
 
         return $newtype;
     }
