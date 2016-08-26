@@ -37,8 +37,6 @@ class Type
             return 'unknown';
         }
 
-        var_dump($this->code);
-
         switch ($this->code) {
             case NativeQuackType::T_STR:
                 return 'string';
@@ -54,6 +52,8 @@ class Type
                 return 'regex';
             case NativeQuackType::T_LIST:
                 return 'list.of(' . $this->subtype . ')';
+            case NativeQuackType::T_LAZY:
+                return '?';
             default:
                 return 'unknown';
         }
@@ -97,6 +97,11 @@ class Type
     public function isNumber()
     {
         return $this->isInteger() || $this->isDouble();
+    }
+
+    public function isLazy()
+    {
+        return NativeQuackType::T_LAZY === $this->code;
     }
 
     public function hasSubtype()

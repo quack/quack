@@ -22,6 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class ArrayExpr extends Expr
 {
@@ -54,5 +57,38 @@ class ArrayExpr extends Expr
         foreach ($this->items as $item) {
             $item->injectScope($parent_scope);
         }
+    }
+
+    public function getType()
+    {
+        // TODO: Implement subtyping literal representation
+        // TODO: Implement deep compare on types
+        $newtype = new Type(NativeQuackType::T_LIST);
+        $newtype->subtype = null;
+        $type_list = [];
+
+        foreach ($this->items as $item) {
+            $type = $item->getType();
+            $type_list[] = $type;
+
+            if (null !== $newtype->subtype) {
+                if ($type->code !== $newtype->subtype->code && !($newtype->subtype->isNumber() && $type->isNumber())) {
+                    throw new ScopeError([
+                        'message' => "Cannot add element of type `{$type}' to `{$newtype}'"
+                    ]);
+                }
+            } else {
+                // Infer according to the first type
+                $newtype->subtype = $item->getType();
+            }
+        }
+
+        if (null === $newtype->subtype) {
+            $newtype->subtype = new Type(NativeQuackType::T_LAZY);
+        } else if ($newtype->subtype->isNumber()) {
+            $newtype->subtype->code = max(array_map(function ($type) { return $type->code; }, $type_list));
+        }
+
+        return $newtype;
     }
 }
