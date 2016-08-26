@@ -24,6 +24,7 @@ namespace QuackCompiler\Types;
 class Type
 {
     public $code;
+    public $subtype;
 
     public function __construct($code)
     {
@@ -51,6 +52,8 @@ class Type
                 return 'atom';
             case NativeQuackType::T_REGEX:
                 return 'regex';
+            case NativeQuackType::T_LIST:
+                return 'list.of(' . $this->subtype . ')';
             default:
                 return 'unknown';
         }
@@ -86,8 +89,18 @@ class Type
         return NativeQuackType::T_REGEX === $this->code;
     }
 
+    public function isList()
+    {
+        return NativeQuackType::T_LIST === $this->code;
+    }
+
     public function isNumber()
     {
         return $this->isInteger() || $this->isDouble();
+    }
+
+    public function hasSubtype()
+    {
+        return null !== $this->subtype;
     }
 }

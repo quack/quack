@@ -22,6 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class RangeExpr extends Expr
 {
@@ -58,5 +61,44 @@ class RangeExpr extends Expr
         if (null !== $this->by) {
             $this->by->injectScope($parent_scope);
         }
+    }
+
+    public function getType()
+    {
+        $newtype = new Type(NativeQuackType::T_LIST);
+
+        $type = (object)[
+            'from' => $this->from->getType(),
+            'to'   => $this->to->getType(),
+            'by'   => null !== $this->by ? $this->by->getType() : null
+        ];
+
+        $throw_error_on = function ($operand, $got) {
+            throw new ScopeError([
+                'message' => "Expected number on operand `{$operand}' of range expression. Got {$got}"
+            ]);
+        };
+
+        if (!$type->from->isNumber()) {
+            $throw_error_on('from', $type->from);
+        }
+
+        if (!$type->to->isNumber()) {
+            $throw_error_on('to', $type->to);
+        }
+
+        if (null !== $type->by && !$type->by->isNumber()) {
+            $throw_error_on('by', $type->by);
+        }
+
+        $elem_types = array_map(function ($t) { return $t->code; },
+            array_filter(array_values((array) $type), function ($t) {
+                return $t !== null;
+            })
+        );
+
+        $newtype->subtype = new Type(max($elem_types));
+
+        return $newtype;
     }
 }
