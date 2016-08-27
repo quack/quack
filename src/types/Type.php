@@ -128,4 +128,13 @@ class Type
 
         return $this->code === $other->code;
     }
+
+    public function getDeepestSubtype()
+    {
+        // subtype (Literal a) = a
+        // subtype (Subtyped a) = subtype a
+        return !$this->hasSubtype()
+            ? $this
+            : $this->subtype->getDeepestSubtype();
+    }
 }

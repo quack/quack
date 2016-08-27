@@ -73,12 +73,7 @@ class ArrayExpr extends Expr
                 if (!$type->isCompatibleWith($newtype->subtype)) {
                     // Simulate non previous inference on subtypes
                     if ($newtype->hasSubtype()) {
-                        $deepest_ref = &$newtype->subtype;
-                        while ($deepest_ref->hasSubtype()) {
-                            // While has subtypes, change the subtype reference
-                            $deepest_ref = &$deepest_ref->subtype;
-                        }
-
+                        $deepest_ref = $newtype->subtype->getDeepestSubtype();
                         $deepest_ref->code = NativeQuackType::T_LAZY;
                     }
 
@@ -106,16 +101,8 @@ class ArrayExpr extends Expr
             $covariant_types = [];
 
             foreach ($this->items as $item) {
-                $item_type = $item->getType();
-
-                $deepest_covariant_type = $item_type->subtype;
-                while ($deepest_covariant_type->hasSubtype()) {
-                    // While has subtypes, change the subtype reference
-                    $deepest_covariant_type = $deepest_covariant_type->subtype;
-                }
-
                 // Push reference to list of possible covariant types
-                $covariant_types[] = $deepest_covariant_type;
+                $covariant_types[] = $item->getType()->subtype->getDeepestSubtype();
             }
 
             // When we reach here, there is a covariance possibility. If we reach any number,
@@ -126,14 +113,8 @@ class ArrayExpr extends Expr
 
             if ($has_any_number) {
                 $base_type = max(array_map(function ($type) { return $type->code; }, $covariant_types));
-
                 // Access the deepest subtype and redefine the type for array based on type rules
-                $deepest_ref = &$newtype->subtype;
-                while ($deepest_ref->hasSubtype()) {
-                    $deepest_ref = &$deepest_ref->subtype;
-                }
-
-                $deepest_ref->code = $base_type;
+                $newtype->subtype->getDeepestSubtype()->code = $base_type;
             }
         }
 
