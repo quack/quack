@@ -71,6 +71,17 @@ class ArrayExpr extends Expr
 
             if (null !== $newtype->subtype) {
                 if (!$type->isCompatibleWith($newtype->subtype)) {
+                    // Simulate non previous inference on subtypes
+                    if ($newtype->hasSubtype()) {
+                        $deepest_ref = &$newtype->subtype;
+                        while ($deepest_ref->hasSubtype()) {
+                            // While has subtypes, change the subtype reference
+                            $deepest_ref = &$deepest_ref->subtype;
+                        }
+
+                        $deepest_ref->code = NativeQuackType::T_LAZY;
+                    }
+
                     throw new ScopeError([
                         'message' => "Cannot add element of type `{$type}' to `{$newtype}'"
                     ]);
