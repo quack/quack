@@ -78,6 +78,8 @@ class ArrayExpr extends Expr
             } else {
                 // Infer according to the first type
                 $newtype->subtype = $item->getType();
+                // Insert reference to supertype
+                $newtype->subtype->supertype = &$newtype;
             }
         }
 
@@ -85,8 +87,44 @@ class ArrayExpr extends Expr
             $newtype->subtype = new Type(NativeQuackType::T_LAZY);
         } else if ($newtype->subtype->isNumber()) {
             $newtype->subtype->code = max(array_map(function ($type) { return $type->code; }, $type_list));
+        } else if (NativeQuackType::T_LIST === $newtype->subtype->code && !$newtype->hasSupertype()) {
+            // When this is a base type (T in T<U<V>>) and there is a remaining possible
+            // contravariant subtype
+            // Currently, this is being used to allow infering `{{1};{1.0}}' as `list.of(list.of(double))'
+            // instead of a most `integer' subtype.
+            $covariant_types = [];
+
+            foreach ($this->items as $item) {
+                $item_type = $item->getType();
+
+                $deepest_covariant_type = $item_type->subtype;
+                while ($deepest_covariant_type->hasSubtype()) {
+                    // While has subtypes, change the subtype reference
+                    $deepest_covariant_type = $deepest_covariant_type->subtype;
+                }
+
+                // Push reference to list of possible covariant types
+                $covariant_types[] = $deepest_covariant_type;
+            }
+
+            // When we reach here, there is a covariance possibility. If we reach any number,
+            // let's get the most base type
+            $has_any_number = sizeof(
+                array_filter($covariant_types, function ($type) { return $type->isNumber(); })
+            ) > 0;
+
+            if ($has_any_number) {
+                $base_type = max(array_map(function ($type) { return $type->code; }, $covariant_types));
+
+                // Access the deepest subtype and redefine the type for array based on type rules
+                $deepest_ref = &$newtype->subtype;
+                while ($deepest_ref->hasSubtype()) {
+                    $deepest_ref = &$deepest_ref->subtype;
+                }
+
+                $deepest_ref->code = $base_type;
+            }
         }
-        // TODO: Implement base-type lookup (with parent reference). Use Hindley-Milner theory
 
         return $newtype;
     }

@@ -25,6 +25,7 @@ class Type
 {
     public $code;
     public $subtype;
+    public $supertype;
 
     public function __construct($code)
     {
@@ -107,6 +108,11 @@ class Type
     public function hasSubtype()
     {
         return null !== $this->subtype;
+    }
+
+    public function hasSuperType()
+    {
+        return null !== $this->supertype;
     }
 
     public function isCompatibleWith(Type $other)
