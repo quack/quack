@@ -73,8 +73,7 @@ class ArrayExpr extends Expr
                 if (!$type->isCompatibleWith($newtype->subtype)) {
                     // Simulate non previous inference on subtypes
                     if ($newtype->hasSubtype()) {
-                        $deepest_ref = $newtype->subtype->getDeepestSubtype();
-                        $deepest_ref->code = NativeQuackType::T_LAZY;
+                        $newtype->subtype->getDeepestSubtype()->code = NativeQuackType::T_LAZY;
                     }
 
                     throw new ScopeError([
