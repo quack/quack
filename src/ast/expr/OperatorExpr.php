@@ -151,6 +151,8 @@ class OperatorExpr extends Expr
                                  "{{$type->left} =~ {$type->right}}"
                 ]);
             }
+
+            return new Type(NativeQuackType::T_BOOL);
         }
 
         // Boolean algebra
