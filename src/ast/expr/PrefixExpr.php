@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
 
 class PrefixExpr extends Expr
 {
@@ -49,5 +50,45 @@ class PrefixExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         $this->right->injectScope($parent_scope);
+    }
+
+    public function getType()
+    {
+        // TODO: Check how @ operator should work
+        $right_type = $this->right->getType();
+        $op_name = Tag::getOperatorLexeme($this->operator);
+
+        $type_error = new ScopeError([
+            'message' => "No type overload for operator `{$op_name}' for `{$right_type}'"
+        ]);
+
+        switch ($this->operator) {
+            case '+':
+            case '-':
+                if ($right_type->isString() || $right_type->isNumber()) {
+                    return clone $right_type;
+                }
+
+                throw $type_error;
+            case '~':
+                if ($right_type->isNumber()) {
+                    return clone $right_type;
+                }
+
+                throw $type_error;
+            case Tag::T_NOT:
+                if ($right_type->isBoolean()) {
+                    return clone $right_type;
+                }
+
+                throw $type_error;
+            case '^^':
+                // TODO: Throw error when cloning `nil'
+                return clone $right_type;
+            case '*':
+                $clone_type = clone $right_type;
+                $clone_type->isref = true;
+                return $clone_type;
+        }
     }
 }

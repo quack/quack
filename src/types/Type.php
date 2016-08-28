@@ -26,10 +26,12 @@ class Type
     public $code;
     public $subtype;
     public $supertype;
+    public $isref;
 
     public function __construct($code)
     {
         $this->code = $code;
+        $this->isref = false;
     }
 
     public function __toString()
@@ -38,25 +40,30 @@ class Type
             return 'unknown';
         }
 
+        $self = $this;
+        $transform = function ($text) use ($self) {
+            return $self->isref ? "*{$text}" : $text;
+        };
+
         switch ($this->code) {
             case NativeQuackType::T_STR:
-                return 'string';
+                return $transform('string');
             case NativeQuackType::T_INT:
-                return 'integer';
+                return $transform('integer');
             case NativeQuackType::T_DOUBLE:
-                return 'double';
+                return $transform('double');
             case NativeQuackType::T_BOOL:
-                return 'boolean';
+                return $transform('boolean');
             case NativeQuackType::T_ATOM:
-                return 'atom';
+                return $transform('atom');
             case NativeQuackType::T_REGEX:
-                return 'regex';
+                return $transform('regex');
             case NativeQuackType::T_LIST:
-                return 'list.of(' . $this->subtype . ')';
+                return $transform("list.of({$this->subtype})");
             case NativeQuackType::T_LAZY:
-                return '?';
+                return $transform('?');
             default:
-                return 'unknown';
+                return transform('unknown');
         }
     }
 

@@ -132,7 +132,6 @@ abstract class Parser
 
         $this->infixLeft('+', Precedence::ADDITIVE);
         $this->infixLeft('-', Precedence::ADDITIVE);
-        $this->infixLeft('++', Precedence::ADDITIVE);
         $this->infixLeft('*', Precedence::MULTIPLICATIVE);
         $this->infixLeft('/', Precedence::MULTIPLICATIVE);
         $this->infixLeft(Tag::T_MOD, Precedence::MULTIPLICATIVE);
