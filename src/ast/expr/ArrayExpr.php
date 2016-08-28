@@ -104,18 +104,13 @@ class ArrayExpr extends Expr
                 $covariant_types[] = $item->getType()->subtype->getDeepestSubtype();
             }
 
-            // When we reach here, there is a covariance possibility. If we reach any number,
-            // let's get the most base type
-            $has_any_number = sizeof(array_filter($covariant_types, function ($type) { return $type->isNumber(); })) > 0;
-
-            if ($has_any_number) {
-                // Access the deepest subtype and redefine the type for array based on type rules
-                $basetype = Type::getBaseType($covariant_types);
-                $deepref = &$newtype->subtype->getDeepestSubtype();
-                $deepref->code = $basetype->code;
-                $deepref->subtype = $basetype->subtype;
-                $deepref->supertype = $basetype->supertype;
-            }
+            // When we reach here, there is a covariance possibility!
+            // Access the deepest subtype and redefine the type for array based on type rules
+            $basetype = Type::getBaseType($covariant_types);
+            $deepref = &$newtype->subtype->getDeepestSubtype();
+            $deepref->code = $basetype->code;
+            $deepref->subtype = $basetype->subtype;
+            $deepref->supertype = $basetype->supertype;
         }
 
         return $newtype;
