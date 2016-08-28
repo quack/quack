@@ -112,7 +112,7 @@ class OperatorExpr extends Expr
         $op_name = Tag::getOperatorLexeme($this->operator);
 
         // Type checking for numeric and string concat operations
-        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<=', Tag::T_MOD];
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '>=', '<=', '^', '&', '|', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
 
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
