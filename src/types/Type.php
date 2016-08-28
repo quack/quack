@@ -26,12 +26,10 @@ class Type
     public $code;
     public $subtype;
     public $supertype;
-    public $isref;
 
     public function __construct($code)
     {
         $this->code = $code;
-        $this->isref = false;
     }
 
     public function __toString()
@@ -40,30 +38,25 @@ class Type
             return 'unknown';
         }
 
-        $self = $this;
-        $transform = function ($text) use ($self) {
-            return $self->isref ? "*{$text}" : $text;
-        };
-
         switch ($this->code) {
             case NativeQuackType::T_STR:
-                return $transform('string');
+                return 'string';
             case NativeQuackType::T_INT:
-                return $transform('integer');
+                return 'integer';
             case NativeQuackType::T_DOUBLE:
-                return $transform('double');
+                return 'double';
             case NativeQuackType::T_BOOL:
-                return $transform('boolean');
+                return 'boolean';
             case NativeQuackType::T_ATOM:
-                return $transform('atom');
+                return 'atom';
             case NativeQuackType::T_REGEX:
-                return $transform('regex');
+                return 'regex';
             case NativeQuackType::T_LIST:
-                return $transform("list.of({$this->subtype})");
+                return "list.of({$this->subtype})";
             case NativeQuackType::T_LAZY:
-                return $transform('?');
+                return '?';
             default:
-                return transform('unknown');
+                return 'unknown';
         }
     }
 
@@ -143,5 +136,23 @@ class Type
         return !$this->hasSubtype()
             ? $this
             : $this->subtype->getDeepestSubtype();
+    }
+
+    public static function getBaseType($types)
+    {
+        if (0 === sizeof($types)) {
+            return null;
+        }
+
+        // Currently, implemented only for numbers
+        if ($types[0]->isNumber()) {
+            return new Type(max(array_map(
+                function ($type) { return $type->code; },
+                $types
+            )));
+        }
+
+        // No base type. Let's clone the initial type
+        return clone $types[0];
     }
 }

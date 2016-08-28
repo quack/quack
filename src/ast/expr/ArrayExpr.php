@@ -91,7 +91,7 @@ class ArrayExpr extends Expr
         if (null === $newtype->subtype) {
             $newtype->subtype = new Type(NativeQuackType::T_LAZY);
         } else if ($newtype->subtype->isNumber()) {
-            $newtype->subtype->code = max(array_map(function ($type) { return $type->code; }, $type_list));
+            $newtype->subtype = Type::getBaseType($type_list);
         } else if (NativeQuackType::T_LIST === $newtype->subtype->code && !$newtype->hasSupertype()) {
             // When this is a base type (T in T<U<V>>) and there is a remaining possible
             // contravariant subtype
@@ -106,14 +106,15 @@ class ArrayExpr extends Expr
 
             // When we reach here, there is a covariance possibility. If we reach any number,
             // let's get the most base type
-            $has_any_number = sizeof(
-                array_filter($covariant_types, function ($type) { return $type->isNumber(); })
-            ) > 0;
+            $has_any_number = sizeof(array_filter($covariant_types, function ($type) { return $type->isNumber(); })) > 0;
 
             if ($has_any_number) {
-                $base_type = max(array_map(function ($type) { return $type->code; }, $covariant_types));
                 // Access the deepest subtype and redefine the type for array based on type rules
-                $newtype->subtype->getDeepestSubtype()->code = $base_type;
+                $basetype = Type::getBaseType($covariant_types);
+                $deepref = &$newtype->subtype->getDeepestSubtype();
+                $deepref->code = $basetype->code;
+                $deepref->subtype = $basetype->subtype;
+                $deepref->supertype = $basetype->supertype;
             }
         }
 

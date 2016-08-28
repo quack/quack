@@ -91,13 +91,11 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        $elem_types = array_map(function ($t) { return $t->code; },
-            array_filter(array_values((array) $type), function ($t) {
-                return $t !== null;
-            })
-        );
+        $basetype = Type::getBaseType(array_filter(array_values((array) $type), function ($t) {
+            return null !== $t;
+        }));
 
-        $newtype->subtype = new Type(max($elem_types));
+        $newtype->subtype = $basetype;
 
         return $newtype;
     }

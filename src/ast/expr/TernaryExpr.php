@@ -77,11 +77,7 @@ class TernaryExpr extends Expr
         }
 
         // We need to get the base between the two type
-        $newtype = clone $when_true_type;
-        if ($newtype->isNumber()) {
-            $newtype->code = max($when_true_type->code, $when_false_type->code);
-        }
-
+        $newtype = Type::getBaseType([$when_true_type, $when_false_type]);
         return $newtype;
     }
 }

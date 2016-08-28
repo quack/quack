@@ -120,7 +120,7 @@ class OperatorExpr extends Expr
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new Type(max($type->left->code, $type->right->code));
+                return Type::getBaseType([$type->left, $type->right]);
             }
 
             throw new ScopeError([
@@ -129,12 +129,14 @@ class OperatorExpr extends Expr
             ]);
         }
 
-        // Type checking for equality operators
-        $eq_op = ['=', '<>'];
+        // Type checking for equality operators and coalescence
+        $eq_op = ['=', '<>', '??'];
         if (in_array($this->operator, $eq_op, true)) {
 
             if ($type->left->isCompatibleWith($type->right)) {
-                return new Type(NativeQuackType::T_BOOL);
+                return '??' === $this->operator
+                    ? Type::getBaseType([$type->left, $type->right])
+                    : new Type(NativeQuackType::T_BOOL);
             }
 
             throw new ScopeError([

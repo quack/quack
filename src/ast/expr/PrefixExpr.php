@@ -83,12 +83,8 @@ class PrefixExpr extends Expr
 
                 throw $type_error;
             case '^^':
-                // TODO: Throw error when cloning `nil'
-                return clone $right_type;
             case '*':
-                $clone_type = clone $right_type;
-                $clone_type->isref = true;
-                return $clone_type;
+                return clone $right_type;
         }
     }
 }
