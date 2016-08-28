@@ -22,6 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class TernaryExpr extends Expr
 {
@@ -52,5 +55,33 @@ class TernaryExpr extends Expr
         $this->condition->injectScope($parent_scope);
         $this->then->injectScope($parent_scope);
         $this->else->injectScope($parent_scope);
+    }
+
+    public function getType()
+    {
+        $condition_type = $this->condition->getType();
+        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+            throw new ScopeError([
+                'message' => "Condition of ternary operator should de `boolean'. Got `{$condition_type}'"
+            ]);
+        }
+
+        $when_true_type = $this->then->getType();
+        $when_false_type = $this->else->getType();
+
+        if (!$when_true_type->isCompatibleWith($when_false_type)) {
+            throw new ScopeError([
+                'message' => "Both sides of ternary expression must have the same type. Got " .
+                             "`$when_true_type' and `$when_false_type'"
+            ]);
+        }
+
+        // We need to get the base between the two types
+        $type_code = $when_true_type->code;
+        if ($when_true_type->isNumber()) {
+            $type_code = max($when_true_type->code, $when_false_type->code);
+        }
+
+        return new Type($type_code);
     }
 }
