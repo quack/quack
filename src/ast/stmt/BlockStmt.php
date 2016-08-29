@@ -60,4 +60,11 @@ class BlockStmt extends Stmt
             $node->injectScope($this->scope);
         }
     }
+
+    public function runTypeChecker()
+    {
+        foreach ($this->stmt_list as $stmt) {
+            $stmt->runTypeChecker();
+        }
+    }
 }

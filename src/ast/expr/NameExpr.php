@@ -23,10 +23,12 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\Type;
 
 class NameExpr extends Expr
 {
     public $name;
+    private $scoperef;
 
     public function __construct($name)
     {
@@ -41,6 +43,7 @@ class NameExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
+        $this->scoperef = &$parent_scope;
         // TODO: Check symbol kind in order to provide better messages
         $symbol = $parent_scope->lookup($this->name);
 
@@ -61,5 +64,12 @@ class NameExpr extends Expr
         } else {
             $parent_scope->setMeta('refcount', $this->name, $refcount + 1);
         }
+    }
+
+    public function getType()
+    {
+        $variable_scope = $this->scoperef->getSymbolScope($this->name);
+        $vartype = $variable_scope->getMeta('type', $this->name);
+        return $vartype;
     }
 }

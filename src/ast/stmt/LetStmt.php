@@ -22,10 +22,13 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class LetStmt extends Stmt
 {
     public $definitions;
+    private $scoperef;
 
     public function __construct($definitions = [])
     {
@@ -59,6 +62,8 @@ class LetStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
+        $this->scoperef = &$parent_scope;
+
         foreach ($this->definitions as $def) {
             if (null !== $def[1]) {
                 $def[1]->injectScope($parent_scope);
@@ -70,6 +75,20 @@ class LetStmt extends Stmt
             $parent_scope->setMeta('type', $def[0], null === $def[1]
                 ? null
                 : $def[1]->getType());
+        }
+    }
+
+    public function runTypeChecker()
+    {
+        $type_list = [];
+        foreach ($this->definitions as $def) {
+            $vartype = null !== $def[1]
+                ? $def[1]->getType()
+                : new Type(NativeQuackType::T_LAZY);
+
+            $type_list[] = $vartype;
+            // Store type in the meta-scope
+            $this->scoperef->setMeta('type', $def[0], $vartype);
         }
     }
 }

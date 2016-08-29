@@ -75,7 +75,7 @@ class Scope
             : null;
     }
 
-    public function & getSymbolScope($symbol)
+    public function getSymbolScope($symbol)
     {
         if ($this->hasLocal($symbol)) {
             return $this;
