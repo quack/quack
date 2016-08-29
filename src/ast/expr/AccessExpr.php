@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
 
 class AccessExpr extends Expr
 {
@@ -47,5 +49,29 @@ class AccessExpr extends Expr
     public function injectScope(&$parent_scope) {
         $this->left->injectScope($parent_scope);
         $this->index->injectScope($parent_scope);
+    }
+
+    public function getType()
+    {
+        $left_type = $this->left->getType();
+        $index_type = $this->index->getType();
+
+        // TODO: Extend for maps
+        if (NativeQuackType::T_LIST === $left_type->code) {
+            // Expected numeric, integer index
+            if (!$index_type->isNumber()) {
+                throw new ScopeError([
+                    'message' => "Expected index of array to be a number. Got `{$index_type}'"
+                ]);
+            }
+
+            return clone $left_type->subtype;
+        } else if ($left_type->isString()) {
+            return clone $left_type;
+        } else {
+            throw new ScopeError([
+                'message' => "Trying to access by index an element of type  `$left_type' that is not accessible"
+            ]);
+        }
     }
 }
