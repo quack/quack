@@ -22,6 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class WhenExpr extends Expr
 {
@@ -74,8 +77,32 @@ class WhenExpr extends Expr
         foreach (array_map(function ($case) {
             return (object) $case;
         }, $this->cases) as $case) {
-            $case->condition->injectScope($parent_scope);
+            if (null !== $case->condition) {
+                $case->condition->injectScope($parent_scope);
+            }
             $case->action->injectScope($parent_scope);
+        }
+    }
+
+    public function getType()
+    {
+        $conds = 1;
+        foreach (array_map(function ($case) {
+            return (object) $case;
+        }, $this->cases) as $case) {
+            if (null !== $case->condition) {
+                $condition_type = $case->condition->getType();
+                if (NativeQuackType::T_BOOL !== $condition_type->code) {
+                    throw new ScopeError([
+                        'message' => "Expected condition {$conds} of `when' to be boolean. Got `$condition_type'"
+                    ]);
+                }
+            }
+
+            // TODO: Use 1st element as default type
+            // TODO: Infer based on base type
+
+            $conds++;
         }
     }
 }
