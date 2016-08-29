@@ -35,6 +35,7 @@ class NativeQuackType
     const T_ATOM     = 9;
     const T_REGEX    = 10;
     const T_LAZY     = 11;
+    const T_BLOCK    = 12;
 
     // Please note that T_LAZY represents lazy type inference. It should be used
     // to represent unknown subtypes (such as empty arrays), and it must allow

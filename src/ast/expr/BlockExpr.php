@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class BlockExpr extends Expr
 {
@@ -57,5 +59,10 @@ class BlockExpr extends Expr
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);
         }
+    }
+
+    public function getType()
+    {
+        return new Type(NativeQuackType::T_BLOCK);
     }
 }

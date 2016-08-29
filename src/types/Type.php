@@ -55,6 +55,8 @@ class Type
                 return "list.of({$this->subtype})";
             case NativeQuackType::T_LAZY:
                 return '?';
+            case NativeQuackType::T_BLOCK:
+                return 'block';
             default:
                 return 'unknown';
         }
@@ -103,6 +105,11 @@ class Type
     public function isLazy()
     {
         return NativeQuackType::T_LAZY === $this->code;
+    }
+
+    public function isBlock()
+    {
+        return NativeQuackType::T_BLOCK === $this->code;
     }
 
     public function hasSubtype()
