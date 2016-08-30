@@ -87,9 +87,12 @@ class WhenExpr extends Expr
     public function getType()
     {
         $conds = 1;
+        $type = null;
         foreach (array_map(function ($case) {
             return (object) $case;
         }, $this->cases) as $case) {
+
+            // Assert all conditions are booleans
             if (null !== $case->condition) {
                 $condition_type = $case->condition->getType();
                 if (NativeQuackType::T_BOOL !== $condition_type->code) {
@@ -99,10 +102,13 @@ class WhenExpr extends Expr
                 }
             }
 
-            // TODO: Use 1st element as default type
-            // TODO: Infer based on base type
-
+            $action_type = $case->action->getType();
+            $type = null === $type
+                ? $action_type
+                : Type::getBaseType([$type, $action_type]);
             $conds++;
         }
+
+        return $type;
     }
 }
