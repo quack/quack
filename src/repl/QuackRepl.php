@@ -31,11 +31,10 @@ function isPOSIX()
 {
     static $value;
     if (null === $value) {
-        $value = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $value = strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN';
     }
     return $value;
 }
-
 
 function start_repl()
 {
