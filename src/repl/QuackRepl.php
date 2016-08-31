@@ -27,10 +27,21 @@ use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
 
+function isPOSIX()
+{
+    static $value;
+    if (null === $value) {
+        $value = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+    }
+    return $value;
+}
+
+
 function start_repl()
 {
+    $dot = isPOSIX() ? '·' : '-';
     echo <<<LICENSE
-Quack · Copyright (C) 2016 Marcelo Camargo
+Quack {$dot} Copyright (C) 2016 Marcelo Camargo
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'show c' for details.\n
@@ -48,9 +59,13 @@ LICENSE
 
 function install_stream_handler()
 {
-    begin_yellow();
-    readline_callback_handler_install("Quack> ", 'readline_callback');
-    end_yellow();
+    if (isPOSIX()) {
+        begin_yellow();
+        readline_callback_handler_install("Quack> ", 'readline_callback');
+        end_yellow();
+    } else {
+        echo "Quack> ";
+    }
 }
 
 function begin_yellow()
@@ -82,7 +97,7 @@ function readline_callback($command)
         case '':
             goto next;
         case ':clear':
-            $clear = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'cls' : 'clear';
+            $clear = isPOSIX() ? 'clear' : 'cls';
             system($clear);
             goto next;
     }
@@ -103,25 +118,37 @@ function readline_callback($command)
     }
 
     next:
-    readline_add_history($command);
+    if (isPOSIX()) {
+        readline_add_history($command);
+    }
+
     install_stream_handler();
 }
 
 function repl()
 {
     $title = "Quack interactive mode";
-    fwrite(STDOUT, "\x1b]2;{$title}\x07");
+    if (isPOSIX()) {
+        fwrite(STDOUT, "\x1b]2;{$title}\x07");
+    } else {
+        `title {$title}`;
+    }
 
     echo "Type ^C or :quit to leave", PHP_EOL;
     install_stream_handler();
 
     while (true) {
-        $write = null;
-        $except = null;
-        $stream = @stream_select($read = [STDIN], $write, $except, null);
+        if (isPOSIX()) {
+            $write = null;
+            $except = null;
+            $stream = @stream_select($read = [STDIN], $write, $except, null);
 
-        if ($stream && in_array(STDIN, $read)) {
-            readline_callback_read_char();
+            if ($stream && in_array(STDIN, $read)) {
+                readline_callback_read_char();
+            }
+        } else {
+            $line = stream_get_line(STDIN, 1024, PHP_EOL);
+            readline_callback($line);
         }
     }
 }
