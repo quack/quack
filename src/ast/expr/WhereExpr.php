@@ -30,6 +30,7 @@ class WhereExpr extends Expr
 {
     public $expr;
     public $clauses;
+    private $scoperef;
 
     public function __construct(Expr $expr, $clauses)
     {
@@ -81,6 +82,7 @@ class WhereExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
+        $this->scoperef = $this->scope;
 
         // Bind where-symbols
         foreach ($this->clauses as $clause) {
@@ -93,9 +95,20 @@ class WhereExpr extends Expr
                 ]);
             }
 
+            $value->injectScope($this->scope);
             $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_VIRTUAL | Kind::K_INITIALIZED);
         }
 
         $this->expr->injectScope($this->scope);
+    }
+
+    public function getType()
+    {
+        // Infer type for each declaration in this scope
+        foreach ($this->clauses as $clause) {
+            $this->scoperef->setMeta('type', $clause[0], $clause[1]->getType());
+        }
+        // Retain type based on previous inference.
+        return $this->expr->getType();
     }
 }
