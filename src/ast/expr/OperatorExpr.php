@@ -106,10 +106,41 @@ class OperatorExpr extends Expr
     {
         $type = (object)[
             'left'  => $this->left->getType(),
-            'right' => $this->right->getType()
+            'right' => 'string' === gettype($this->right) ? null : $this->right->getType()
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
+
+        $member_access = ['.', '?.'];
+        if (in_array($this->operator, $member_access, true)) {
+            if ('array' === gettype($type->left->props) && array_key_exists($this->right, $type->left->props)) {
+                return $type->left->props[$this->right];
+            }
+
+            throw new ScopeError([
+                'message' => "Expression of type `{$type->left}' has no property `{$this->right}'"
+            ]);
+        }
+
+        // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
+        // scope injection
+        if (':-' === $this->operator) {
+            // When right side cannot be attributed to left side
+            if (!$type->right->isCompatibleWith($type->left)) {
+                // TODO: Implement array destructuring in `let' expression
+                $target = (string) $type->right;
+
+                if ($this->left instanceof NameExpr) {
+                    $target = "variable `{$this->left->name}' :: {$type->left}";
+                }
+
+                throw new ScopeError([
+                    'message' => "Trying to set value of type `{$type->right}` to {$target}"
+                ]);
+            }
+
+            return Type::getBaseType([$type->left, $type->right]);
+        }
 
         // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '^', '&', '|', Tag::T_MOD];

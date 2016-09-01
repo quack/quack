@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class PostfixExpr extends Expr
 {
@@ -46,5 +48,12 @@ class PostfixExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         $this->left->injectScope($parent_scope);
+    }
+
+    public function getType()
+    {
+        // TODO: Check implementations of postfix expressions.
+        // Currently, there is none
+        return new Type(NativeQuackType::T_LAZY);
     }
 }
