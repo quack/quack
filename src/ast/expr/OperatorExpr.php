@@ -106,10 +106,21 @@ class OperatorExpr extends Expr
     {
         $type = (object)[
             'left'  => $this->left->getType(),
-            'right' => $this->right->getType()
+            'right' => 'string' === gettype($this->right) ? null : $this->right->getType()
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
+
+        $member_access = ['.', '?.'];
+        if (in_array($this->operator, $member_access, true)) {
+            if ('array' === gettype($type->left->props) && array_key_exists($this->right, $type->left->props)) {
+                return $type->left->props[$this->right];
+            }
+
+            throw new ScopeError([
+                'message' => "Expression of type `{$type->left}' has no property `{$this->right}'"
+            ]);
+        }
 
         // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
         // scope injection
