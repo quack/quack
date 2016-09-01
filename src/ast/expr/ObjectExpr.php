@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class ObjectExpr extends Expr
 {
@@ -73,5 +75,17 @@ class ObjectExpr extends Expr
         foreach ($this->values as $value) {
             $value->injectScope($parent_scope);
         }
+    }
+
+    public function getType()
+    {
+        $newtype = new Type(NativeQuackType::T_OBJ);
+        $newtype->props = [];
+
+        for ($i = 0, $size_t = sizeof($this->keys); $i < $size_t; $i++) {
+            $newtype->props[$this->keys[$i]] = $this->values[$i]->getType();
+        }
+
+        return $newtype;
     }
 }

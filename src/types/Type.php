@@ -26,6 +26,7 @@ class Type
     public $code;
     public $subtype;
     public $supertype;
+    public $props; // For objects and multiple subtyping access
 
     public function __construct($code)
     {
@@ -57,6 +58,19 @@ class Type
                 return '?';
             case NativeQuackType::T_BLOCK:
                 return 'block';
+            case NativeQuackType::T_OBJ:
+                // TODO: Implement indent-level for types
+                $space = sizeof($this->props) > 0 ? " " : "";
+                $src = "object.of(?).with {{$space}";
+                foreach ($this->props as $key => $value) {
+                    $src .= "{$key} :: {$value}";
+                    // When is not the last one, append comma
+                    if ($key !== key(array_slice($this->props, -1, 1, true))) {
+                        $src .= ', ';
+                    }
+                }
+                $src .= "{$space}}";
+                return $src;
             default:
                 return 'unknown';
         }

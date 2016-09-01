@@ -111,6 +111,26 @@ class OperatorExpr extends Expr
 
         $op_name = Tag::getOperatorLexeme($this->operator);
 
+        // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
+        // scope injection
+        if (':-' === $this->operator) {
+            // When right side cannot be attributed to left side
+            if (!$type->right->isCompatibleWith($type->left)) {
+                // TODO: Implement array destructuring in `let' expression
+                $target = (string) $type->right;
+
+                if ($this->left instanceof NameExpr) {
+                    $target = "variable `{$this->left->name}' :: {$type->left}";
+                }
+
+                throw new ScopeError([
+                    'message' => "Trying to set value of type `{$type->right}` to {$target}"
+                ]);
+            }
+
+            return Type::getBaseType([$type->left, $type->right]);
+        }
+
         // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '^', '&', '|', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
