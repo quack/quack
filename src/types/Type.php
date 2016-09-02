@@ -71,6 +71,8 @@ class Type
                 }
                 $src .= "{$space}}";
                 return $src;
+            case NativeQuackType::T_MAP:
+                return "map.of({$this->props['key']} -> {$this->props['value']})";
             default:
                 return 'unknown';
         }

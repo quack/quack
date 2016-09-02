@@ -22,6 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class MapExpr extends Expr
 {
@@ -69,5 +72,51 @@ class MapExpr extends Expr
         foreach ($this->values as $value) {
             $value->injectScope($parent_scope);
         }
+    }
+
+    public function getType()
+    {
+        $newtype = new Type(NativeQuackType::T_MAP);
+        // TODO: Implement contravariance by subtyping of a -> b
+        // TODO: ${ 1->${}; 2-> ${ 1 -> 1 } } should throw error
+
+        $size = sizeof($this->keys);
+        if ($size > 0) {
+            $newtype->props = ['key' => null, 'value' => null];
+
+            for ($i = 0; $i < $size; $i++) {
+                $my_key_type = $this->keys[$i]->getType();
+                $my_val_type = $this->values[$i]->getType();
+
+                if (null === $newtype->props['key']) {
+                    // First time. We don't even need to check value
+                    $newtype->props['key'] = $my_key_type;
+                    $newtype->props['value'] = $my_val_type;
+                } else {
+                    if (!$newtype->props['key']->isCompatibleWith($my_key_type)) {
+                        throw new ScopeError([
+                            'message' => "Key number {$i} of map expected to be `{$newtype->props['key']}'. Got `{$my_key_type}'"
+                        ]);
+                    }
+
+                    if (!$newtype->props['value']->isCompatibleWith($my_val_type)) {
+                        throw new ScopeError([
+                            'message' => "Value number {$i} of map expected to be `{$newtype->props['value']}'. Got `{$my_val_type}'"
+                        ]);
+                    }
+
+                    // When we reach here, we can infer the base
+                    $newtype->props['key'] = Type::getBaseType([$newtype->props['key'], $my_key_type]);
+                    $newtype->props['value'] = Type::getBaseType([$newtype->props['value'], $my_val_type]);
+                }
+            }
+        } else {
+            $newtype->props = [
+                'key'   => new Type(NativeQuackType::T_LAZY),
+                'value' => new Type(NativeQuackType::T_LAZY)
+            ];
+        }
+
+        return $newtype;
     }
 }
