@@ -29,10 +29,12 @@ use \QuackCompiler\Types\Type;
 class ArrayExpr extends Expr
 {
     public $items;
+    private $memoized_type;
 
     public function __construct($items)
     {
         $this->items = $items;
+        $this->memoized_type = null;
     }
 
     public function format(Parser $parser)
@@ -61,64 +63,45 @@ class ArrayExpr extends Expr
 
     public function getType()
     {
+        if (null !== $this->memoized_type) {
+            return $this->memoized_type;
+        }
+
         $newtype = new Type(NativeQuackType::T_LIST);
-        $newtype->subtype = null;
-        $type_list = [];
+        $list_size = sizeof($this->items);
 
-        foreach ($this->items as $item) {
-            $type = $item->getType();
-            $type_list[] = $type;
-
-            if (null !== $newtype->subtype) {
-                if (!$type->isCompatibleWith($newtype->subtype)) {
-                    // Simulate non previous inference on subtypes
-                    if ($newtype->hasSubtype()) {
-                        $newtype->subtype->getDeepestSubtype()->code = NativeQuackType::T_LAZY;
-                    }
-
-                    throw new ScopeError([
-                        'message' => "Cannot add element of type `{$type}' to `{$newtype}'"
-                    ]);
-                }
-            } else {
-                // Infer according to the first type
-                $newtype->subtype = $item->getType();
-                // Insert reference to supertype
-                $newtype->subtype->supertype = &$newtype;
-            }
-        }
-
-        if (null === $newtype->subtype) {
+        if (0 === $list_size) {
             $newtype->subtype = new Type(NativeQuackType::T_LAZY);
-        } else if ($newtype->subtype->isNumber()) {
-            $newtype->subtype = Type::getBaseType($type_list);
-        } else if ($newtype->hasSubtype() && !$newtype->hasSupertype()) {
-            switch ($newtype->subtype->code) {
+            return $newtype;
+        }
 
-                case NativeQuackType::T_LIST:
-                    $newtype->getDeepestSubtype()->importFrom(Type::getBaseType(array_map(function ($item) {
-                        return $item->getType()->getDeepestSubtype();
-                    }, $this->items)));
-                    break;
+        $newtype->subtype = $this->items[0]->getType();
 
-                case NativeQuackType::T_MAP:
-                    $self = &$this;
-                    $item_types = array_map(function ($item) {
-                        return $item->getType();
-                    }, $this->items);
+        foreach (array_slice($this->items, 1) as $item) {
+            $type = $item->getType();
 
-                    $rebase_props = function ($name) use ($item_types, &$newtype) {
-                        $newtype->subtype->props[$name]->importFrom(Type::getBaseType(array_map(function ($item) use ($name) {
-                            return $item->props[$name]->getDeepestSubtype();
-                        }, $item_types)));
-                    };
-
-                    $rebase_props('key');
-                    $rebase_props('value');
-                    break;
+            if (!$type->isCompatibleWith($newtype->subtype)) {
+                throw new ScopeError(['message' => "Cannot add element of type `{$type}' to `{$newtype}'"]);
             }
         }
 
+        // Apply Liskov substitution principle
+        if ($newtype->hasSubtype()) {
+            $out = new \stdClass;
+            Type::getDeepestSubtype($newtype, $out);
+
+            $subtype_list = array_map(function ($item) {
+                $ref = new \stdClass;
+                Type::getDeepestSubtype($item->getType(), $ref);
+                return $ref->{'*'};
+            }, $this->items);
+
+            $base_type = Type::getBaseType($subtype_list);
+
+            $out->{'*'}->importFrom($base_type);
+        }
+
+        $this->memoized_type = &$newtype;
         return $newtype;
     }
 }

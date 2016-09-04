@@ -25,7 +25,6 @@ class Type
 {
     public $code;
     public $subtype;
-    public $supertype;
     public $props; // For objects and multiple subtyping access
 
     public function __construct($code)
@@ -130,12 +129,7 @@ class Type
 
     public function hasSubtype()
     {
-        return null !== $this->subtype || (null !== $this->props && sizeof($props) > 0);
-    }
-
-    public function hasSuperType()
-    {
-        return null !== $this->supertype;
+        return null !== $this->subtype;
     }
 
     public function isCompatibleWith(Type $other)
@@ -166,21 +160,12 @@ class Type
         return $this->code === $other->code;
     }
 
-    public function getDeepestSubtype()
+    static public function getDeepestSubtype(Type &$initial, \stdClass &$result)
     {
-        // subtype :: (MonadType a, b) => a -> b
-        // subtype (Literal a) = a
-        // subtype (Subtyped a) = subtype a
-        // subtype (Proped (Type a) (Type b)) = Type { props = map subtype [a, b] } -- <*>
-        if (!$this->hasSubtype()) {
-            return $this;
-        }
-
-        switch ($this->code) {
-            case NativeQuackType::T_LIST:
-                return $this->subtype->getDeepestSubtype();
-            default: // ?
-                return $this;
+        if ($initial->hasSubtype()) {
+            Type::getDeepestSubtype($initial->subtype, $result);
+        } else {
+            $result->{'*'} = &$initial;
         }
     }
 
@@ -188,7 +173,6 @@ class Type
     {
         $this->code = $type->code;
         $this->subtype = $type->subtype;
-        $this->supertype = $type->supertype;
         $this->props = $type->props;
     }
 
