@@ -92,25 +92,31 @@ class ArrayExpr extends Expr
             $newtype->subtype = new Type(NativeQuackType::T_LAZY);
         } else if ($newtype->subtype->isNumber()) {
             $newtype->subtype = Type::getBaseType($type_list);
-        } else if (NativeQuackType::T_LIST === $newtype->subtype->code && !$newtype->hasSupertype()) {
-            // When this is a base type (T in T<U<V>>) and there is a remaining possible
-            // contravariant subtype
-            // Currently, this is being used to allow infering `{{1};{1.0}}' as `list.of(list.of(double))'
-            // instead of a most `integer' subtype.
-            $covariant_types = [];
+        } else if ($newtype->hasSubtype() && !$newtype->hasSupertype()) {
+            switch ($newtype->subtype->code) {
 
-            foreach ($this->items as $item) {
-                // Push reference to list of possible covariant types
-                $covariant_types[] = $item->getType()->subtype->getDeepestSubtype();
+                case NativeQuackType::T_LIST:
+                    $newtype->getDeepestSubtype()->importFrom(Type::getBaseType(array_map(function ($item) {
+                        return $item->getType()->getDeepestSubtype();
+                    }, $this->items)));
+                    break;
+
+                case NativeQuackType::T_MAP:
+                    $self = &$this;
+                    $item_types = array_map(function ($item) {
+                        return $item->getType();
+                    }, $this->items);
+
+                    $rebase_props = function ($name) use ($item_types, &$newtype) {
+                        $newtype->subtype->props[$name]->importFrom(Type::getBaseType(array_map(function ($item) use ($name) {
+                            return $item->props[$name]->getDeepestSubtype();
+                        }, $item_types)));
+                    };
+
+                    $rebase_props('key');
+                    $rebase_props('value');
+                    break;
             }
-
-            // When we reach here, there is a covariance possibility!
-            // Access the deepest subtype and redefine the type for array based on type rules
-            $basetype = Type::getBaseType($covariant_types);
-            $deepref = &$newtype->subtype->getDeepestSubtype();
-            $deepref->code = $basetype->code;
-            $deepref->subtype = $basetype->subtype;
-            $deepref->supertype = $basetype->supertype;
         }
 
         return $newtype;

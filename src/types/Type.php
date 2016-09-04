@@ -130,7 +130,7 @@ class Type
 
     public function hasSubtype()
     {
-        return null !== $this->subtype;
+        return null !== $this->subtype || (null !== $this->props && sizeof($props) > 0);
     }
 
     public function hasSuperType()
@@ -145,6 +145,20 @@ class Type
         }
 
         if ($this->hasSubtype() && $other->hasSubtype()) {
+            if ($this->code !== $other->code) {
+                return false;
+            }
+
+            switch ($this->code) {
+                case NativeQuackType::T_LIST:
+                    return $this->subtype->isCompatibleWith($other->subtype);
+                case NativeQuackType::T_MAP:
+                    return $this->props['key']->isCompatibleWith($other->props['key'])
+                        && $this->props['value']->isCompatibleWith($other->props['value']);
+                default:
+                    return false; // NonImplemented
+            }
+
             return $this->code === $other->code
                 && $this->subtype->isCompatibleWith($other->subtype);
         }
@@ -154,11 +168,28 @@ class Type
 
     public function getDeepestSubtype()
     {
+        // subtype :: (MonadType a, b) => a -> b
         // subtype (Literal a) = a
         // subtype (Subtyped a) = subtype a
-        return !$this->hasSubtype()
-            ? $this
-            : $this->subtype->getDeepestSubtype();
+        // subtype (Proped (Type a) (Type b)) = Type { props = map subtype [a, b] } -- <*>
+        if (!$this->hasSubtype()) {
+            return $this;
+        }
+
+        switch ($this->code) {
+            case NativeQuackType::T_LIST:
+                return $this->subtype->getDeepestSubtype();
+            default: // ?
+                return $this;
+        }
+    }
+
+    public function importFrom(Type $type)
+    {
+        $this->code = $type->code;
+        $this->subtype = $type->subtype;
+        $this->supertype = $type->supertype;
+        $this->props = $type->props;
     }
 
     public static function getBaseType($types)

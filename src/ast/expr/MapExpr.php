@@ -77,44 +77,65 @@ class MapExpr extends Expr
     public function getType()
     {
         $newtype = new Type(NativeQuackType::T_MAP);
-        // TODO: Implement contravariance by subtyping of a -> b
+        $newtype->props = ['key' => null, 'value' => null];
+        $prop_types = ['key' => [], 'value' => []];
         // TODO: ${ 1->${}; 2-> ${ 1 -> 1 } } should throw error
 
         $size = sizeof($this->keys);
-        if ($size > 0) {
-            $newtype->props = ['key' => null, 'value' => null];
+        for ($i = 0; $i < $size; $i++) {
+            $my_key_type = $this->keys[$i]->getType();
+            $my_val_type = $this->values[$i]->getType();
 
-            for ($i = 0; $i < $size; $i++) {
-                $my_key_type = $this->keys[$i]->getType();
-                $my_val_type = $this->values[$i]->getType();
+            $prop_types['key'][] = $my_key_type;
+            $prop_types['value'][] = $my_val_type;
 
-                if (null === $newtype->props['key']) {
-                    // First time. We don't even need to check value
-                    $newtype->props['key'] = $my_key_type;
-                    $newtype->props['value'] = $my_val_type;
-                } else {
-                    if (!$newtype->props['key']->isCompatibleWith($my_key_type)) {
-                        throw new ScopeError([
-                            'message' => "Key number {$i} of map expected to be `{$newtype->props['key']}'. Got `{$my_key_type}'"
-                        ]);
-                    }
-
-                    if (!$newtype->props['value']->isCompatibleWith($my_val_type)) {
-                        throw new ScopeError([
-                            'message' => "Value number {$i} of map expected to be `{$newtype->props['value']}'. Got `{$my_val_type}'"
-                        ]);
-                    }
-
-                    // When we reach here, we can infer the base
-                    $newtype->props['key'] = Type::getBaseType([$newtype->props['key'], $my_key_type]);
-                    $newtype->props['value'] = Type::getBaseType([$newtype->props['value'], $my_val_type]);
+            if (null === $newtype->props['key']) {
+                // First time. We don't even need to check value
+                $newtype->props['key'] = $my_key_type;
+                $newtype->props['value'] = $my_val_type;
+                $newtype->subtype->supertype = &$newtype;
+            } else {
+                if (!$newtype->props['key']->isCompatibleWith($my_key_type)) {
+                    // TODO: Make it ~lazy~ here
+                    throw new ScopeError([
+                        'message' => "Key number {$i} of map expected to be `{$newtype->props['key']}'. Got `{$my_key_type}'"
+                    ]);
                 }
+
+                // TODO: Solve map -> map problem
+                if (!$newtype->props['value']->isCompatibleWith($my_val_type)) {
+                    // TODO: Make it ~lazy~ here too
+                    throw new ScopeError([
+                        'message' => "Value number {$i} of map expected to be `{$newtype->props['value']}'. Got `{$my_val_type}'"
+                    ]);
+                }
+
+                // When we reach here, we can infer the base
+                $newtype->props['key'] = Type::getBaseType([$newtype->props['key'], $my_key_type]);
+                $newtype->props['value'] = Type::getBaseType([$newtype->props['value'], $my_val_type]);
             }
-        } else {
+        }
+
+        if (0 === $size) {
             $newtype->props = [
                 'key'   => new Type(NativeQuackType::T_LAZY),
                 'value' => new Type(NativeQuackType::T_LAZY)
             ];
+
+            return $newtype;
+        }
+
+        foreach ($newtype->props as $key => $prop) if ($prop->hasSubtype() && !$prop->hasSupertype()) {
+            switch ($prop->code) {
+                case NativeQuackType::T_LIST:
+                case NativeQuackType::T_MAP:
+                    // TODO: Not working. Resolve later. Make better researches on Liskov
+                    // substitution principle
+                    $prop->getDeepestSubtype()->importFrom(Type::getBaseType(array_map(function ($item) {
+                        return $item->getDeepestSubtype();
+                    }, $prop_types[$key])));
+                    break;
+            }
         }
 
         return $newtype;
