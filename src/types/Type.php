@@ -25,7 +25,7 @@ class Type
 {
     public $code;
     public $subtype;
-    public $props; // For objects and multiple subtyping access
+    public $props; // For objects access
 
     public function __construct($code)
     {
@@ -71,7 +71,7 @@ class Type
                 $src .= "{$space}}";
                 return $src;
             case NativeQuackType::T_MAP:
-                return "map.of({$this->props['key']} -> {$this->props['value']})";
+                return "map.of({$this->subtype['key']} -> {$this->subtype['value']})";
             default:
                 return 'unknown';
         }
@@ -163,10 +163,15 @@ class Type
     public function getDeepestSubtype()
     {
         if ($this->hasSubtype()) {
-            return $this->subtype->getDeepestSubtype();
-        } else {
-            return $this;
+            switch ($this->code) {
+                case NativeQuackType::T_LIST:
+                    return $this->subtype->getDeepestSubtype();
+                case NativeQuackType::T_MAP:
+                    return [$this->subtype['key']->getDeepestSubtype(), $this->subtype['value']->getDeepestSubtype()];
+            }
         }
+
+        return $this;
     }
 
     public function importFrom(Type $type)
