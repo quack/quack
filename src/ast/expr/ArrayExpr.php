@@ -87,18 +87,15 @@ class ArrayExpr extends Expr
 
         // Apply Liskov substitution principle
         if ($newtype->hasSubtype()) {
-            $out = new \stdClass;
-            Type::getDeepestSubtype($newtype, $out);
+            $out = $newtype->getDeepestSubtype($newtype);
 
             $subtype_list = array_map(function ($item) {
-                $ref = new \stdClass;
-                Type::getDeepestSubtype($item->getType(), $ref);
-                return $ref->{'*'};
+                return $item->getType()->getDeepestSubtype($item->getType());
             }, $this->items);
 
             $base_type = Type::getBaseType($subtype_list);
 
-            $out->{'*'}->importFrom($base_type);
+            $out->importFrom($base_type);
         }
 
         $this->memoized_type = &$newtype;

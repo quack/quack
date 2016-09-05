@@ -160,12 +160,12 @@ class Type
         return $this->code === $other->code;
     }
 
-    static public function getDeepestSubtype(Type &$initial, \stdClass &$result)
+    public function getDeepestSubtype()
     {
-        if ($initial->hasSubtype()) {
-            Type::getDeepestSubtype($initial->subtype, $result);
+        if ($this->hasSubtype()) {
+            return $this->subtype->getDeepestSubtype();
         } else {
-            $result->{'*'} = &$initial;
+            return $this;
         }
     }
 
