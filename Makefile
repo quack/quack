@@ -28,7 +28,7 @@ deploy:
 	git push origin master
 
 count_lines:
-	cd src; git ls-files | xargs wc -l
+	@(cd src; git ls-files | xargs wc -l | awk '{$$1=$$1}1;' | sort -t '_' -k 1n | sed -E "s/([0-9]+) (.*)/| \1 - \2/g" | column)
 
 install:
 	cp bin/quack /usr/bin
