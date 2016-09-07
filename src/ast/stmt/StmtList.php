@@ -48,4 +48,11 @@ class StmtList extends Stmt
     {
         // Never reaches
     }
+
+    public function runTypeChecker()
+    {
+        foreach ($this->stmt_list as $stmt) {
+            $stmt->runTypeChecker();
+        }
+    }
 }
