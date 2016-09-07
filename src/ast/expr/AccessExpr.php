@@ -70,7 +70,7 @@ class AccessExpr extends Expr
             return clone $left_type;
         } else {
             throw new ScopeError([
-                'message' => "Trying to access by index an element of type  `$left_type' that is not accessible"
+                'message' => "Trying to access by index an element of type `$left_type' that is not accessible"
             ]);
         }
     }

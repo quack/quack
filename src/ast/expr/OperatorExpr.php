@@ -33,6 +33,7 @@ class OperatorExpr extends Expr
     public $left;
     public $operator;
     public $right;
+    private $scoperef;
 
     public function __construct(Expr $left, $operator, $right)
     {
@@ -61,6 +62,7 @@ class OperatorExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
+        $this->scoperef = &$parent_scope;
         $this->left->injectScope($parent_scope);
 
         if (!$this->isMemberAccess()) {
@@ -139,7 +141,15 @@ class OperatorExpr extends Expr
                 ]);
             }
 
-            return Type::getBaseType([$type->left, $type->right]);
+            $contravariant_type = Type::getBaseType([$type->left, $type->right]);
+            // When it is a name, reset to its contravariant type
+            // TODO: This must happen for array access too (?)
+            if ($this->left instanceof NameExpr) {
+                $name_scope = $this->scoperef->getSymbolScope($this->left->name);
+                $name_scope->setMeta('type', $this->left->name, $contravariant_type);
+            }
+
+            return $contravariant_type;
         }
 
         // Type checking for numeric and string concat operations

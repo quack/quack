@@ -26,6 +26,7 @@ use \QuackCompiler\Parser\Parser;
 class ConstStmt extends Stmt
 {
     public $definitions;
+    private $scoperef;
 
     public function __construct($definitions)
     {
@@ -56,8 +57,18 @@ class ConstStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
+        $this->scoperef = &$parent_scope;
         foreach ($this->definitions as $def) {
             $def[1]->injectScope($parent_scope);
+        }
+    }
+
+    public function runTypeChecker()
+    {
+        foreach ($this->definitions as $def) {
+            $vartype = $def[1]->getType();
+            // Store type in the meta-scope
+            $this->scoperef->setMeta('type', $def[0], $vartype);
         }
     }
 }
