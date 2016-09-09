@@ -13,7 +13,7 @@ Sprint 1:
 - [ ] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [ ] Run typechecker on ForeachStmt
-- [ ] Run typechecker on ForStmt
+- [x] Run typechecker on ForStmt
 - [ ] Create default class TypeError and replace some of ScopeError that are specific for types
 - [ ] Record, in the AST, the positions of the symbols, in order to give better error messages
 - [ ] Run typechecker and see type rules for bluerprints, traits, structs and impls

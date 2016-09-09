@@ -24,7 +24,9 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\NativeQuackType;
 
 class ForStmt extends Stmt
 {
@@ -86,5 +88,25 @@ class ForStmt extends Stmt
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);
         }
+    }
+
+    public function runTypeChecker()
+    {
+        $keys = ['from', 'to'];
+
+        if (null !== $this->by) {
+            $keys[] = 'by';
+        }
+
+        foreach ($keys as $key) {
+            $type = $this->{$key}->getType();
+            if (!$type->isNumber()) {
+                throw new ScopeError([
+                    'message' => "Expecting type of field `{$key}' of foreach-statement to be number. Got `{$type}'"
+                ]);
+            }
+        }
+
+        $this->body->runTypeChecker();
     }
 }
