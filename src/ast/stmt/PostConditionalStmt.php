@@ -24,6 +24,8 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
 
 class PostConditionalStmt extends Stmt
 {
@@ -58,5 +60,13 @@ class PostConditionalStmt extends Stmt
         $this->bindDeclarations([$this->stmt]);
         $this->predicate->injectScope($parent_scope);
         $this->stmt->injectScope($this->scope);
+    }
+
+    public function runTypeChecker()
+    {
+        $condition_type = $this->predicate->getType();
+        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+            throw new ScopeError(['message' => "The type of post-conditional-statement should be boolean, not `{$condition_type}'"]);
+        }
     }
 }
