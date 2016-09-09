@@ -23,3 +23,5 @@ Sprint 1:
 - [ ] Run typechecker for RaiseStmt, ensure derivation from \Exception
 - [ ] Assert the context of ReturnStmt and pass the expected return type to it when inside functions
 - [ ] Implement subtyping for arrays and maps (check implementation of sum-types)
+- [x] Inject type for variable in ForStmt
+- [ ] Inject type for variable in ForeachStmt

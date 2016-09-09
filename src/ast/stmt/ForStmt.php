@@ -27,6 +27,7 @@ use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class ForStmt extends Stmt
 {
@@ -106,6 +107,11 @@ class ForStmt extends Stmt
                 ]);
             }
         }
+
+        // Bind inferred type for variable
+        $this->scope->setMeta('type', $this->variable, new Type(array_reduce($keys, function ($acc, $key) {
+            return max($acc, $this->{$key}->getType()->code);
+        })));
 
         $this->body->runTypeChecker();
     }
