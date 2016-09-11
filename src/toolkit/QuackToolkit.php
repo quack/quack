@@ -108,7 +108,6 @@ import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
 import(AST, 'stmt/CaseStmt');
-import(AST, 'stmt/BlueprintStmt');
 import(AST, 'stmt/ImplStmt');
 import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
