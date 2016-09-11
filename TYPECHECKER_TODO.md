@@ -3,7 +3,7 @@ Tasks in Quack Compiler
 Sprint 1:
 
 - [ ] Remove blueprints
-- [ ] Remove members
+- [x] Remove members
 - [ ] Short method syntax
 - [ ] Classes over traits
 - [ ] Shapes over structs

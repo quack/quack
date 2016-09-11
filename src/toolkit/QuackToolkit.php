@@ -121,7 +121,6 @@ import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
-import(AST, 'stmt/MemberStmt');
 import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/PostConditionalStmt');

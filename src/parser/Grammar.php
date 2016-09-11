@@ -44,7 +44,6 @@ use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PostConditionalStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
-use \QuackCompiler\Ast\Stmt\MemberStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
@@ -89,7 +88,6 @@ class Grammar
         while (!$this->checker->isEoF()) {
             switch ($this->parser->lookahead->getTag()) {
                 case Tag::T_FN:
-                case Tag::T_MEMBER:
                     yield $this->_blueprintStmt();
                     continue 2;
                 default:
@@ -396,44 +394,12 @@ class Grammar
     {
         $branch_table = [
             Tag::T_FN     => '_fnStmt',
-            Tag::T_MEMBER => '_memberStmt'
         ];
 
         return call_user_func([
             $this,
             $branch_table[$this->parser->lookahead->getTag()]
         ]);
-    }
-
-    public function _memberStmt()
-    {
-        $this->parser->match(Tag::T_MEMBER);
-        $definitions = [];
-
-        $name = $this->identifier();
-        $value = null;
-
-        if ($this->parser->is(':-')) {
-            $this->parser->consume();
-            $value = $this->_expr();
-        }
-
-        $definitions[] = [$name, $value];
-
-        while ($this->parser->is(',')) {
-            $this->parser->consume();
-            $name = $this->identifier();
-            $value = null;
-
-            if ($this->parser->is(':-')) {
-                $this->parser->consume();
-                $value = $this->_expr();
-            }
-
-            $definitions[] = [$name, $value];
-        }
-
-        return new MemberStmt($definitions);
     }
 
     public function _enumStmt()

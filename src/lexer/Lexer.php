@@ -91,7 +91,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_BY, "by"));
         $this->reserve(new Word(Tag::T_WHEN, "when"));
         $this->reserve(new Word(Tag::T_UNLESS, "unless"));
-        $this->reserve(new Word(Tag::T_MEMBER, "member"));
         $this->reserve(new Word(Tag::T_IMPL, "impl"));
         $this->reserve(new Word(Tag::T_TRAIT, "trait"));
         $this->reserve(new Word(Tag::T_STRUCT, "struct"));
@@ -132,7 +131,7 @@ abstract class Lexer
     {
         $pos = $this->position - $n;
         $this->position = max($pos, 0);
-        $this->peek = $this->input[$this->position];        
+        $this->peek = $this->input[$this->position];
     }
 
     public function preview($n = 1)
