@@ -2,13 +2,13 @@
 Supports formatting traits
 %%source
 trait Walkable
-fn walk[steps]
-fn join[*other]
-fn join[...*rst]
+fn walk(steps)
+fn join( *other)
+fn join(...*rst)
 end
 %%expect
 trait Walkable
-  fn walk[ steps ]
-  fn join[ *other ]
-  fn join[ ... *rst ]
+  fn walk( steps )
+  fn join( *other )
+  fn join( ... *rst )
 end

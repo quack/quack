@@ -52,11 +52,11 @@ class TryStmt extends Stmt
         foreach ($this->rescues as $rescue) {
             $obj = (object) $rescue;
             $source .= $parser->indent();
-            $source .= 'rescue [';
+            $source .= 'rescue (';
             $source .= implode('.', $obj->exception_class);
             $source .= ' ';
             $source .= $obj->variable;
-            $source .= ']';
+            $source .= ')';
             $source .= PHP_EOL;
 
             $parser->openScope();

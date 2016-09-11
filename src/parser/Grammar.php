@@ -520,9 +520,9 @@ class Grammar
         if ($is_bang = $this->parser->is('!')) {
             $this->parser->consume();
         } else {
-            $this->parser->match('[');
+            $this->parser->match('(');
 
-            if ($this->parser->is(']')) {
+            if ($this->parser->is(')')) {
                 $this->parser->consume();
             } else {
                 $parameters[] = $this->_parameter();
@@ -532,7 +532,7 @@ class Grammar
                     $parameters[] = $this->_parameter();
                 }
 
-                $this->parser->match(']');
+                $this->parser->match(')');
             }
         }
 
@@ -644,10 +644,10 @@ class Grammar
     {
         while ($this->parser->is(Tag::T_RESCUE)) {
             $this->parser->consume();
-            $this->parser->match('[');
+            $this->parser->match('(');
             $exception_class = $this->qualifiedName();
             $variable = $this->identifier();
-            $this->parser->match(']');
+            $this->parser->match(')');
             $body = new StmtList(iterator_to_array($this->_innerStmtList()));
 
             yield [

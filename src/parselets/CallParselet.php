@@ -35,7 +35,7 @@ class CallParselet implements IInfixParselet
         $is_bang = '!' === $token->getTag();
 
         if (!$is_bang) {
-            if (!$grammar->parser->is(']')) {
+            if (!$grammar->parser->is(')')) {
                 $args[] = $grammar->_expr();
 
                 while ($grammar->parser->is(';')) {
@@ -44,7 +44,7 @@ class CallParselet implements IInfixParselet
                 }
             }
 
-            $grammar->parser->match(']');
+            $grammar->parser->match(')');
         }
 
         return new CallExpr($left, $args, $is_bang);

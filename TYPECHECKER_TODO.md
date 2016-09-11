@@ -8,8 +8,9 @@ Sprint 1:
 - [ ] Classes over traits
 - [ ] Shapes over structs
 - [ ] Object initializer with maps
-- [ ] Parenthesis on function calls and definitions
+- [x] Parenthesis on function calls and definitions
 - [ ] Impl with implicit `fn'
+- [ ] Change syntax for comments
 
 Sprint 2:
 

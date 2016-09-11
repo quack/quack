@@ -66,7 +66,7 @@ class FnStmt extends Stmt
         $source .= $this->name;
 
         if (sizeof($this->parameters) > 0) {
-            $source .= '[ ';
+            $source .= '( ';
 
             $source .= implode('; ', array_map(function ($param) {
                 $subsource = '';
@@ -85,11 +85,11 @@ class FnStmt extends Stmt
                 return $subsource;
             }, $this->parameters));
 
-            $source .= ' ]';
+            $source .= ' )';
         } else {
             $source .= $this->is_bang
                 ? '!'
-                : '[]';
+                : '()';
         }
 
         $source .= PHP_EOL;

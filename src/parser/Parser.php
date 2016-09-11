@@ -104,7 +104,7 @@ abstract class Parser
         $this->register(Tag::T_THEN, new TernaryParselet);
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
-        $this->register('[', new CallParselet);
+        $this->register('(', new CallParselet);
         $this->register('!', new CallParselet);
         $this->register('{', new ArrayParselet);
         $this->register('{', new AccessParselet);

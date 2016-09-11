@@ -7,7 +7,7 @@ do fn{a | fn {b| b }} do fn { | 1 }
 do fn{c|c} in {c}
 do fn{c|c} in c
 do fn {c|c} in {a;b;c}
-do fn {| begin do console.writeline["Pass"] end }
+do fn {| begin do console.writeline("Pass") end }
 do fn {| begin
   do fn {| begin
     do 1..100
@@ -25,7 +25,7 @@ do fn { c | c } in c
 do fn { c | c } in { a; b; c }
 do fn { |
   begin
-    do console.writeline[ "Pass" ]
+    do console.writeline( "Pass" )
   end
 }
 do fn { |

@@ -41,15 +41,15 @@ class CallExpr extends Expr
         $source = $this->func->format($parser);
 
         if (sizeof($this->arguments) > 0) {
-            $source .= '[ ';
+            $source .= '( ';
             $source .= implode('; ', array_map(function (Expr $arg) use ($parser) {
                 return $arg->format($parser);
             }, $this->arguments));
-            $source .= ' ]';
+            $source .= ' )';
         } else {
             $source .= $this->is_bang
                 ? '!'
-                : '[]';
+                : '()';
         }
 
         return $this->parenthesize($source);
