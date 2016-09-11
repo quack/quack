@@ -25,6 +25,7 @@ use \QuackCompiler\Ast\Util;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
 
 class ForeachStmt extends Stmt
 {
@@ -101,5 +102,12 @@ class ForeachStmt extends Stmt
         foreach ($this->body as $node) {
             $node->injectScope($this->scope);
         }
+    }
+
+    public function runTypeChecker()
+    {
+        // Currently, the rules are:
+        // Only first variable present: List | Map
+        // First and second variable presents: Map
     }
 }
