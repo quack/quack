@@ -11,12 +11,9 @@ Sprint 1:
 - [x] Parenthesis on function calls and definitions
 - [ ] Impl with implicit `fn'
 - [ ] Change syntax for comments
+- [x] Isolate declarations from simple statements
 
 Sprint 2:
-
-- [ ] Isolate declarations from simple statements
-
-Sprint 3:
 
 - [ ] Run typechecker on TryStmt
 - [ ] Traverse AST first time to get declarations and bind to scope

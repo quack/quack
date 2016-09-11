@@ -45,6 +45,7 @@ import(SCOPE, 'Accessible');
 
 /* Parser */
 
+import(PARSER, 'DeclParser');
 import(PARSER, 'Parser');
 import(PARSER, 'Grammar');
 import(PARSER, 'TokenChecker');

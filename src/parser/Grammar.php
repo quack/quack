@@ -27,20 +27,15 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
-use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
-use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
-use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\ForStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
-use \QuackCompiler\Ast\Stmt\ModuleStmt;
-use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\PostConditionalStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\RaiseStmt;
@@ -48,12 +43,12 @@ use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\SwitchStmt;
 use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
-use \QuackCompiler\Ast\Stmt\TraitStmt;
-use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
 
 class Grammar
 {
+    use DeclParser;
+
     public $parser;
     public $checker;
 
@@ -397,161 +392,6 @@ class Grammar
             $this,
             $branch_table[$this->parser->lookahead->getTag()]
         ]);
-    }
-
-    public function _enumStmt()
-    {
-        $this->parser->match(Tag::T_ENUM);
-        $entries = [];
-        $name = $this->identifier();
-
-        while ($this->parser->is(Tag::T_IDENT)) {
-            $entries[] = $this->identifier();
-        }
-
-        $this->parser->match(Tag::T_END);
-
-        return new EnumStmt($name, $entries);
-    }
-
-    public function _traitDeclStmt()
-    {
-        $this->parser->match(Tag::T_TRAIT);
-        $name = $this->identifier();
-        $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
-        $this->parser->match(Tag::T_END);
-
-        return new TraitStmt($name, $body);
-    }
-
-    public function _structDeclStmt()
-    {
-        $this->parser->match(Tag::T_STRUCT);
-        $name = $this->identifier();
-        $members = [];
-
-        while ($this->parser->is(Tag::T_IDENT)) {
-            $members[] = $this->identifier();
-        }
-
-        $this->parser->match(Tag::T_END);
-
-        return new StructStmt($name, $members);
-    }
-
-    public function _implStmt()
-    {
-        // Structs are for properties
-        // Traits are for methods
-        $type = Tag::T_STRUCT;
-        $this->parser->match(Tag::T_IMPL);
-        $trait_or_struct = $this->qualifiedName();
-        $trait_for = null;
-        // When it contains "for", it is being applied for a trait
-        if ($this->parser->is(Tag::T_FOR)) {
-            $type = Tag::T_TRAIT;
-            $this->parser->consume();
-            $trait_for = $this->qualifiedName();
-        }
-
-        $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
-        $this->parser->match(Tag::T_END);
-
-        return new ImplStmt($type, $trait_or_struct, $trait_for, $body);
-    }
-
-    public function _fnStmt($needs_empty_body = false)
-    {
-        $by_reference = false;
-        $is_bang = false;
-        $is_pub = false;
-        $is_rec = false;
-        $parameters = [];
-        $body = null;
-
-        if ($this->parser->is(Tag::T_PUB)) {
-            $is_pub = true;
-            $this->parser->consume();
-        }
-
-        $this->parser->match(Tag::T_FN);
-
-        if ($this->parser->is('*')) {
-            $this->parser->consume();
-            $by_reference = true;
-        }
-
-        if ($this->parser->is(Tag::T_REC)) {
-            $this->parser->consume();
-            $is_rec = true;
-        }
-
-        $name = $this->identifier();
-
-        if ($is_bang = $this->parser->is('!')) {
-            $this->parser->consume();
-        } else {
-            $this->parser->match('(');
-
-            if ($this->parser->is(')')) {
-                $this->parser->consume();
-            } else {
-                $parameters[] = $this->_parameter();
-
-                while ($this->parser->is(';')) {
-                    $this->parser->consume();
-                    $parameters[] = $this->_parameter();
-                }
-
-                $this->parser->match(')');
-            }
-        }
-
-        if (!$needs_empty_body) {
-            $body = iterator_to_array($this->_innerStmtList());
-            $this->parser->match(Tag::T_END);
-        }
-
-        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec);
-    }
-
-    public function _moduleStmt()
-    {
-        $this->parser->match(Tag::T_MODULE);
-        return new ModuleStmt($this->qualifiedName());
-    }
-
-    public function _openStmt()
-    {
-        $this->parser->match(Tag::T_OPEN);
-        $type = null;
-        if ($this->parser->is(Tag::T_CONST) || $this->parser->is(Tag::T_FN)) {
-            $type = $this->parser->consumeAndFetch();
-        }
-
-        $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
-        $name[] = $this->qualifiedName();
-        $alias = null;
-        $subprops = null;
-
-        if ($this->parser->is(Tag::T_AS)) {
-            $this->parser->consume();
-            $alias = $this->identifier();
-        } elseif ($this->parser->is('{')) {
-            $this->parser->consume();
-            $subprops[] = $this->identifier();
-
-            if ($this->parser->is(';')) {
-                do {
-                    $this->parser->match(';');
-                    $subprops[] = $this->identifier();
-                } while ($this->parser->is(';'));
-            }
-
-            $this->parser->match('}');
-        }
-
-        return new OpenStmt($name, $alias, $type, $subprops);
     }
 
     public function _constStmt()

@@ -74,7 +74,7 @@ abstract class Node
         }
 
         // When it is a function and it is marked as public
-        if (Kind::K_FUNCTION === $kind && $node->is_pub) {
+        if (Kind::K_FUNCTION === $kind && $named_node->is_pub) {
             $kind |= Kind::K_PUB;
         }
 
