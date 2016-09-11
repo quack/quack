@@ -108,8 +108,8 @@ abstract class Node
                 case 'TraitStmt':
                     $this->bindDecl($node, 'trait', Kind::K_TRAIT);
                     break;
-                case 'StructStmt':
-                    $this->bindDecl($node, 'struct', Kind::K_STRUCT);
+                case 'ShapeStmt':
+                    $this->bindDecl($node, 'shape', Kind::K_SHAPE);
                     break;
             }
         }

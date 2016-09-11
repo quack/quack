@@ -29,14 +29,15 @@ use \QuackCompiler\Scope\ScopeError;
 class ImplStmt extends Stmt
 {
     public $type;
-    public $trait_or_struct;
+    public $trait_or_shape;
+
     public $trait_for;
     public $body;
 
-    public function __construct($type, $trait_or_struct, $trait_for, $body)
+    public function __construct($type, $trait_or_shape, $trait_for, $body)
     {
         $this->type = $type;
-        $this->trait_or_struct = $trait_or_struct;
+        $this->trait_or_shape = $trait_or_shape;
         $this->trait_for = $trait_for;
         $this->body = $body;
     }
@@ -49,7 +50,7 @@ class ImplStmt extends Stmt
     public function format(Parser $parser)
     {
         $source = 'impl ';
-        $source .= $this->formatQualifiedName($this->trait_or_struct);
+        $source .= $this->formatQualifiedName($this->trait_or_shape);
 
         if (Tag::T_TRAIT === $this->type) {
             $source .= ' for ';
@@ -69,12 +70,12 @@ class ImplStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // Try to locate the trait/struct
-        $unqualified_first = $this->formatQualifiedName($this->trait_or_struct);
+        // Try to locate the trait/shape
+        $unqualified_first = $this->formatQualifiedName($this->trait_or_shape);
         $first = $parent_scope->lookup($unqualified_first);
         $type = Tag::T_TRAIT === $this->type
             ? 'trait'
-            : 'struct';
+            : 'shape';
 
         if (null === $first) {
             throw new ScopeError([
@@ -83,34 +84,34 @@ class ImplStmt extends Stmt
         }
 
         // Check type for the symbols
-        if ('struct' === $type) {
-            if (!($first & Kind::K_STRUCT)) {
+        if ('shape' === $type) {
+            if (!($first & Kind::K_SHAPE)) {
                 throw new ScopeError([
-                    'message' => "`{$unqualified_first}' is not a struct"
+                    'message' => "`{$unqualified_first}' is not a shape"
                 ]);
             }
         } else {
-            // Continue, assert this is a trait and locate the struct
+            // Continue, assert this is a trait and locate the shape
             if (!($first & Kind::K_TRAIT)) {
                 throw new ScopeError([
                     'message' => "`{$unqualified_first}' is not a trait"
                 ]);
             }
 
-            $struct_name = $this->formatQualifiedName($this->trait_for);
-            $struct = $parent_scope->lookup($struct_name);
+            $shape_name = $this->formatQualifiedName($this->trait_for);
+            $shape = $parent_scope->lookup($shape_name);
 
-            // Struct not declared
-            if (null === $struct) {
+            // Shape not declared
+            if (null === $shape) {
                 throw new ScopeError([
-                    'message' => "Struct `{$struct_name}' not found"
+                    'message' => "Shape `{$shape_name}' not found"
                 ]);
             }
 
-            // Not a struct
-            if (!($struct & Kind::K_STRUCT)) {
+            // Not a shape
+            if (!($shape & Kind::K_SHAPE)) {
                 throw new ScopeError([
-                    'message' => "`{$struct_name}' is not a struct"
+                    'message' => "`{$shape_name}' is not a shape"
                 ]);
             }
         }

@@ -62,14 +62,14 @@ class NewExpr extends Expr
         // When symbol doesn't exist
         if (null === $class) {
             throw new ScopeError([
-                'message' => "Undefined struct or blueprint `{$name}'"
+                'message' => "Undefined shape `{$name}'"
             ]);
         }
 
-        // When symbol is not a blueprint or struct
-        if (!($class & (Kind::K_BLUEPRINT | Kind::K_STRUCT))) {
+        // When symbol is not a shape
+        if (!($class & Kind::K_SHAPE)) {
             throw new ScopeError([
-                'message' => "Cannot instantiate `{$name}'. Not a blueprint nor a struct"
+                'message' => "Cannot instantiate `{$name}'. Not a shape"
             ]);
         }
 

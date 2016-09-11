@@ -1,12 +1,12 @@
 %%describe
 Supports formatting structs
 %%source
-struct Point x y end
-struct Empty end
+shape Point x y end
+shape Empty end
 %%expect
-struct Point
+shape Point
   x
   y
 end
-struct Empty
+shape Empty
 end

@@ -35,8 +35,7 @@ class TokenChecker
     public function startsInnerStmt()
     {
         $possible_inner_stmts = [
-            Tag::T_BLUEPRINT,
-            Tag::T_STRUCT,
+            Tag::T_SHAPE,
             Tag::T_FN,
             Tag::T_ENUM
         ];

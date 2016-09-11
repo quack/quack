@@ -6,7 +6,7 @@ Sprint 1:
 - [x] Remove members
 - [ ] Short method syntax
 - [ ] Classes over traits
-- [ ] Shapes over structs
+- [x] Shapes over structs
 - [ ] Object initializer with maps
 - [x] Parenthesis on function calls and definitions
 - [ ] Impl with implicit `fn'

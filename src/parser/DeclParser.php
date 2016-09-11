@@ -29,8 +29,8 @@ use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
+use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
-use \QuackCompiler\Ast\Stmt\StructStmt;
 use \QuackCompiler\Ast\Stmt\TraitStmt;
 
 trait DeclParser
@@ -113,7 +113,7 @@ trait DeclParser
         // Traits are for methods
         $type = Tag::T_STRUCT;
         $this->parser->match(Tag::T_IMPL);
-        $trait_or_struct = $this->qualifiedName();
+        $trait_or_shape = $this->qualifiedName();
         $trait_for = null;
         // When it contains "for", it is being applied for a trait
         if ($this->parser->is(Tag::T_FOR)) {
@@ -125,7 +125,7 @@ trait DeclParser
         $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
         $this->parser->match(Tag::T_END);
 
-        return new ImplStmt($type, $trait_or_struct, $trait_for, $body);
+        return new ImplStmt($type, $trait_or_shape, $trait_for, $body);
     }
 
     public function _moduleStmt()
@@ -167,9 +167,9 @@ trait DeclParser
         return new OpenStmt($name, $alias, $type, $subprops);
     }
 
-    public function _structDeclStmt()
+    public function _shapeDeclStmt()
     {
-        $this->parser->match(Tag::T_STRUCT);
+        $this->parser->match(Tag::T_SHAPE);
         $name = $this->identifier();
         $members = [];
 
@@ -179,7 +179,7 @@ trait DeclParser
 
         $this->parser->match(Tag::T_END);
 
-        return new StructStmt($name, $members);
+        return new ShapeStmt($name, $members);
     }
 
     public function _traitDeclStmt()

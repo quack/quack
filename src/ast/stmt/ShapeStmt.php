@@ -25,7 +25,7 @@ use \QuackCompiler\Parser\Parser;
 
 use \QuackCompiler\Scope\ScopeError;
 
-class StructStmt extends Stmt
+class ShapeStmt extends Stmt
 {
     public $name;
     public $members;
@@ -38,7 +38,7 @@ class StructStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = 'struct ';
+        $source = 'shape ';
         $source .= $this->name;
         $source .= PHP_EOL;
 
@@ -63,13 +63,10 @@ class StructStmt extends Stmt
     {
         $this->createScopeWithParent($parent_scope);
 
-        // Manual binding, because properties without `member'
-        // are exclusive for structs
-
         foreach ($this->members as $member) {
             if ($this->scope->hasLocal($member)) {
                 throw new ScopeError([
-                    'message' => "Duplicated entry `{$member}' for struct {$this->name}"
+                    'message' => "Duplicated entry `{$member}' for shape {$this->name}"
                 ]);
             }
 

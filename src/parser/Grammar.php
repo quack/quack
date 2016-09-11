@@ -358,7 +358,7 @@ class Grammar
             Tag::T_ENUM      => '_enumStmt',
             Tag::T_IMPL      => '_implStmt',
             Tag::T_TRAIT     => '_traitDeclStmt',
-            Tag::T_STRUCT    => '_structDeclStmt'
+            Tag::T_SHAPE     => '_shapeDeclStmt'
         ];
 
         $next_tag = $this->parser->lookahead->getTag();

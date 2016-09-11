@@ -41,7 +41,6 @@ class Tag
     const T_WHILE = 264;
     const T_DO = 265;
     const T_MODULE = 269;
-    const T_BLUEPRINT = 270;
     const T_EXTENSION = 271;
     const T_NIL = 272;
     const T_LET = 273;
@@ -78,10 +77,9 @@ class Tag
     const T_BY = 305;
     const T_WHEN = 306;
     const T_UNLESS = 307;
-    const T_MEMBER = 308;
     const T_IMPL = 309;
     const T_TRAIT = 310;
-    const T_STRUCT = 311;
+    const T_SHAPE = 311;
     const T_PUB = 312;
     const T_REC = 313;
 
