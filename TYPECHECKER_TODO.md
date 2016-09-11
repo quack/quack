@@ -2,6 +2,21 @@ Tasks in Quack Compiler
 
 Sprint 1:
 
+- [ ] Remove blueprints
+- [ ] Remove members
+- [ ] Short method syntax
+- [ ] Classes over traits
+- [ ] Shapes over structs
+- [ ] Object initializer with maps
+- [ ] Parenthesis on function calls and definitions
+- [ ] Impl with implicit `fn'
+
+Sprint 2:
+
+- [ ] Isolate declarations from simple statements
+
+Sprint 3:
+
 - [ ] Run typechecker on TryStmt
 - [ ] Traverse AST first time to get declarations and bind to scope
 - [ ] Run typechecker on ContinueStmt
