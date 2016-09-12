@@ -129,7 +129,7 @@ import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/ShapeStmt');
 import(AST, 'stmt/SwitchStmt');
-import(AST, 'stmt/TraitStmt');
+import(AST, 'stmt/ClassStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/StmtList');
