@@ -24,6 +24,7 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
+use \QuackCompiler\Ast\Stmt\ClassStmt;
 use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\ImplStmt;
@@ -31,10 +32,19 @@ use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
-use \QuackCompiler\Ast\Stmt\TraitStmt;
 
 trait DeclParser
 {
+    public function _classDeclStmt()
+    {
+        $this->parser->match(Tag::T_CLASS);
+        $name = $this->identifier();
+        $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
+        $this->parser->match(Tag::T_END);
+
+        return new ClassStmt($name, $body);
+    }
+
     public function _enumStmt()
     {
         $this->parser->match(Tag::T_ENUM);
@@ -110,22 +120,22 @@ trait DeclParser
     public function _implStmt()
     {
         // Structs are for properties
-        // Traits are for methods
+        // Classes are for methods
         $type = Tag::T_STRUCT;
         $this->parser->match(Tag::T_IMPL);
-        $trait_or_shape = $this->qualifiedName();
-        $trait_for = null;
-        // When it contains "for", it is being applied for a trait
+        $class_or_shape = $this->qualifiedName();
+        $class_for = null;
+        // When it contains "for", it is being applied for a class
         if ($this->parser->is(Tag::T_FOR)) {
-            $type = Tag::T_TRAIT;
+            $type = Tag::T_CLASS;
             $this->parser->consume();
-            $trait_for = $this->qualifiedName();
+            $class_for = $this->qualifiedName();
         }
 
         $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
         $this->parser->match(Tag::T_END);
 
-        return new ImplStmt($type, $trait_or_shape, $trait_for, $body);
+        return new ImplStmt($type, $class_or_shape, $class_for, $body);
     }
 
     public function _moduleStmt()
@@ -180,15 +190,5 @@ trait DeclParser
         $this->parser->match(Tag::T_END);
 
         return new ShapeStmt($name, $members);
-    }
-
-    public function _traitDeclStmt()
-    {
-        $this->parser->match(Tag::T_TRAIT);
-        $name = $this->identifier();
-        $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
-        $this->parser->match(Tag::T_END);
-
-        return new TraitStmt($name, $body);
     }
 }

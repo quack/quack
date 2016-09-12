@@ -1,13 +1,13 @@
 %%describe
-Supports formatting traits
+Supports formatting classes
 %%source
-trait Walkable
+class Walkable
 fn walk(steps)
 fn join( *other)
 fn join(...*rst)
 end
 %%expect
-trait Walkable
+class Walkable
   fn walk( steps )
   fn join( *other )
   fn join( ... *rst )

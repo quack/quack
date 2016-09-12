@@ -29,16 +29,16 @@ use \QuackCompiler\Scope\ScopeError;
 class ImplStmt extends Stmt
 {
     public $type;
-    public $trait_or_shape;
+    public $class_or_shape;
 
-    public $trait_for;
+    public $class_for;
     public $body;
 
-    public function __construct($type, $trait_or_shape, $trait_for, $body)
+    public function __construct($type, $class_or_shape, $class_for, $body)
     {
         $this->type = $type;
-        $this->trait_or_shape = $trait_or_shape;
-        $this->trait_for = $trait_for;
+        $this->class_or_shape = $class_or_shape;
+        $this->class_for = $class_for;
         $this->body = $body;
     }
 
@@ -50,11 +50,11 @@ class ImplStmt extends Stmt
     public function format(Parser $parser)
     {
         $source = 'impl ';
-        $source .= $this->formatQualifiedName($this->trait_or_shape);
+        $source .= $this->formatQualifiedName($this->class_or_shape);
 
-        if (Tag::T_TRAIT === $this->type) {
+        if (Tag::T_CLASS === $this->type) {
             $source .= ' for ';
-            $source .= $this->formatQualifiedName($this->trait_for);
+            $source .= $this->formatQualifiedName($this->class_for);
         }
 
         $source .= PHP_EOL;
@@ -70,11 +70,11 @@ class ImplStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // Try to locate the trait/shape
-        $unqualified_first = $this->formatQualifiedName($this->trait_or_shape);
+        // Try to locate the class/shape
+        $unqualified_first = $this->formatQualifiedName($this->class_or_shape);
         $first = $parent_scope->lookup($unqualified_first);
-        $type = Tag::T_TRAIT === $this->type
-            ? 'trait'
+        $type = Tag::T_CLASS === $this->type
+            ? 'class'
             : 'shape';
 
         if (null === $first) {
@@ -91,14 +91,14 @@ class ImplStmt extends Stmt
                 ]);
             }
         } else {
-            // Continue, assert this is a trait and locate the shape
-            if (!($first & Kind::K_TRAIT)) {
+            // Continue, assert this is a class and locate the shape
+            if (!($first & Kind::K_CLASS)) {
                 throw new ScopeError([
-                    'message' => "`{$unqualified_first}' is not a trait"
+                    'message' => "`{$unqualified_first}' is not a class"
                 ]);
             }
 
-            $shape_name = $this->formatQualifiedName($this->trait_for);
+            $shape_name = $this->formatQualifiedName($this->class_for);
             $shape = $parent_scope->lookup($shape_name);
 
             // Shape not declared

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class TraitStmt extends Stmt
+class ClassStmt extends Stmt
 {
     public $name;
     public $body;
@@ -36,7 +36,7 @@ class TraitStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = 'trait ';
+        $source = 'class ';
         $source .= $this->name;
         $source .= $parser->indent();
         $source .= PHP_EOL;

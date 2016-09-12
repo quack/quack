@@ -91,7 +91,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_WHEN, "when"));
         $this->reserve(new Word(Tag::T_UNLESS, "unless"));
         $this->reserve(new Word(Tag::T_IMPL, "impl"));
-        $this->reserve(new Word(Tag::T_TRAIT, "trait"));
+        $this->reserve(new Word(Tag::T_CLASS, "class"));
         $this->reserve(new Word(Tag::T_SHAPE, "shape"));
         $this->reserve(new Word(Tag::T_PUB, "pub"));
         $this->reserve(new Word(Tag::T_REC, "rec"));

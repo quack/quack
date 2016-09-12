@@ -105,8 +105,8 @@ abstract class Node
                 case 'EnumStmt':
                     $this->bindDecl($node, 'enum', Kind::K_ENUM);
                     break;
-                case 'TraitStmt':
-                    $this->bindDecl($node, 'trait', Kind::K_TRAIT);
+                case 'ClassStmt':
+                    $this->bindDecl($node, 'class', Kind::K_CLASS);
                     break;
                 case 'ShapeStmt':
                     $this->bindDecl($node, 'shape', Kind::K_SHAPE);

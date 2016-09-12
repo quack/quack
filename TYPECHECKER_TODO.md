@@ -5,7 +5,7 @@ Sprint 1:
 - [x] Remove blueprints
 - [x] Remove members
 - [ ] Short method syntax
-- [ ] Classes over traits
+- [x] Classes over traits
 - [x] Shapes over structs
 - [ ] Object initializer with maps
 - [x] Parenthesis on function calls and definitions

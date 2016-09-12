@@ -357,7 +357,7 @@ class Grammar
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
             Tag::T_IMPL      => '_implStmt',
-            Tag::T_TRAIT     => '_traitDeclStmt',
+            Tag::T_CLASS     => '_classDeclStmt',
             Tag::T_SHAPE     => '_shapeDeclStmt'
         ];
 

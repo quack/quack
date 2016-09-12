@@ -78,7 +78,7 @@ class Tag
     const T_WHEN = 306;
     const T_UNLESS = 307;
     const T_IMPL = 309;
-    const T_TRAIT = 310;
+    const T_CLASS = 310;
     const T_SHAPE = 311;
     const T_PUB = 312;
     const T_REC = 313;
