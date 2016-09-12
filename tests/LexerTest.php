@@ -79,18 +79,18 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function testKeywords()
     {
         $keywords = [
-            "true", "false", "let", "if", "for", "while", "do", "impl", "trait", "struct",
+            "true", "false", "let", "if", "for", "while", "do", "impl", "class", "shape",
             "module", "goto", "foreach", "in", "where",
             "const", "nil", "open", "global", "as", "enum", "continue", "switch",
             "break", "and", "or", "xor", "try", "rescue", "finally", "raise", "elif",
-            "else", "case", "not", "blueprint"
+            "else", "case", "not"
         ];
 
         $this->assertEquals(
-            "[true][false][let][if][for][while][do][impl][trait][struct]" .
+            "[true][false][let][if][for][while][do][impl][class][shape]" .
             "[module][goto][foreach][in][where][const][nil]" .
             "[open][global][as][enum][continue][switch][break][and][or][xor][try]" .
-            "[rescue][finally][raise][elif][else][case][not][blueprint]",
+            "[rescue][finally][raise][elif][else][case][not]",
             $this->tokenize(implode(' ', $keywords))
         );
     }
