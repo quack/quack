@@ -34,11 +34,12 @@ class FnStmt extends Stmt
     public $is_bang;
     public $is_pub;
     public $is_rec;
+    public $is_method;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec)
+    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec, $is_method)
     {
         $this->name = $name;
         $this->by_reference = $by_reference;
@@ -47,13 +48,18 @@ class FnStmt extends Stmt
         $this->is_bang = $is_bang;
         $this->is_pub = $is_pub;
         $this->is_rec = $is_rec;
+        $this->is_method = $is_method;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->is_pub
-            ? 'pub fn '
-            : 'fn ';
+        $source = '';
+
+        if (!$this->is_method) {
+            $source = $this->is_pub
+                ? 'pub fn '
+                : 'fn ';
+        }
 
         if ($this->by_reference) {
             $source .= '* ';
@@ -94,20 +100,18 @@ class FnStmt extends Stmt
 
         $source .= PHP_EOL;
 
-        if (null !== $this->body) {
-            $parser->openScope();
+        $parser->openScope();
 
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
-            $parser->closeScope();
-
+        foreach ($this->body as $stmt) {
             $source .= $parser->indent();
-            $source .= 'end';
-            $source .= PHP_EOL;
+            $source .= $stmt->format($parser);
         }
+
+        $parser->closeScope();
+
+        $source .= $parser->indent();
+        $source .= 'end';
+        $source .= PHP_EOL;
 
         return $source;
     }

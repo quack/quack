@@ -39,10 +39,11 @@ trait DeclParser
     {
         $this->parser->match(Tag::T_CLASS);
         $name = $this->identifier();
-        $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
+        // TODO: Modify to receive implicit functions
+        // TODO: $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
         $this->parser->match(Tag::T_END);
 
-        return new ClassStmt($name, $body);
+        return null; # new ClassStmt($name, $body);
     }
 
     public function _enumStmt()
@@ -60,7 +61,7 @@ trait DeclParser
         return new EnumStmt($name, $entries);
     }
 
-    public function _fnStmt($needs_empty_body = false)
+    public function _fnStmt($is_method = false)
     {
         $by_reference = false;
         $is_bang = false;
@@ -69,12 +70,14 @@ trait DeclParser
         $parameters = [];
         $body = null;
 
-        if ($this->parser->is(Tag::T_PUB)) {
-            $is_pub = true;
-            $this->parser->consume();
-        }
+        if (!$is_method) {
+            if ($this->parser->is(Tag::T_PUB)) {
+                $is_pub = true;
+                $this->parser->consume();
+            }
 
-        $this->parser->match(Tag::T_FN);
+            $this->parser->match(Tag::T_FN);
+        }
 
         if ($this->parser->is('*')) {
             $this->parser->consume();
@@ -107,21 +110,19 @@ trait DeclParser
             }
         }
 
-        if (!$needs_empty_body) {
-            $body = iterator_to_array($this->_innerStmtList());
-            $this->parser->match(Tag::T_END);
-        }
+        $body = iterator_to_array($this->_innerStmtList());
+        $this->parser->match(Tag::T_END);
 
-        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec);
+        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec, $is_method);
     }
 
 
 
-    public function _implStmt()
+    public function _implDeclStmt()
     {
         // Structs are for properties
         // Classes are for methods
-        $type = Tag::T_STRUCT;
+        $type = Tag::T_SHAPE;
         $this->parser->match(Tag::T_IMPL);
         $class_or_shape = $this->qualifiedName();
         $class_for = null;
@@ -132,10 +133,17 @@ trait DeclParser
             $class_for = $this->qualifiedName();
         }
 
-        $body = new StmtList(iterator_to_array($this->_blueprintStmtList()));
+        $body = new StmtList(iterator_to_array($this->_implStmtList()));
         $this->parser->match(Tag::T_END);
 
         return new ImplStmt($type, $class_or_shape, $class_for, $body);
+    }
+
+    public function _implStmtList()
+    {
+        while ($this->parser->is(Tag::T_IDENT)) {
+            yield $this->_fnStmt(/* implicit */ true);
+        }
     }
 
     public function _moduleStmt()

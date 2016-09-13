@@ -9,8 +9,8 @@ Sprint 1:
 - [x] Shapes over structs
 - [ ] Object initializer with maps
 - [x] Parenthesis on function calls and definitions
-- [ ] Impl with implicit `fn'
-- [ ] Change syntax for comments
+- [x] Impl with implicit `fn'
+- [x] Change syntax for comments
 - [x] Isolate declarations from simple statements
 
 Sprint 2:

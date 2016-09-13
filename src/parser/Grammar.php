@@ -90,13 +90,6 @@ class Grammar
         }
     }
 
-    public function _nonBodiedMethodList()
-    {
-        while ($this->parser->is(Tag::T_FN)) {
-            yield $this->_fnStmt(/* empty body */ true);
-        }
-    }
-
     public function _stmt()
     {
         $branch_table = [
@@ -356,7 +349,7 @@ class Grammar
             Tag::T_MODULE    => '_moduleStmt',
             Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
-            Tag::T_IMPL      => '_implStmt',
+            Tag::T_IMPL      => '_implDeclStmt',
             Tag::T_CLASS     => '_classDeclStmt',
             Tag::T_SHAPE     => '_shapeDeclStmt'
         ];
@@ -385,7 +378,7 @@ class Grammar
     public function _blueprintStmt()
     {
         $branch_table = [
-            Tag::T_FN     => '_fnStmt',
+            Tag::T_FN => '_fnStmt',
         ];
 
         return call_user_func([
