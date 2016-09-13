@@ -12,6 +12,7 @@ Sprint 1:
 - [x] Impl with implicit `fn'
 - [x] Change syntax for comments
 - [x] Isolate declarations from simple statements
+- [ ] New syntax for lambda-expr
 
 Sprint 2:
 
