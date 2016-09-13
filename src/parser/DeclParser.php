@@ -67,6 +67,7 @@ trait DeclParser
         $is_bang = false;
         $is_pub = false;
         $is_rec = false;
+        $is_short = false;
         $parameters = [];
         $body = null;
 
@@ -110,10 +111,26 @@ trait DeclParser
             }
         }
 
-        $body = iterator_to_array($this->_innerStmtList());
-        $this->parser->match(Tag::T_END);
+        // Is short method?
+        if ($is_short = $this->parser->is(':-')) {
+            $this->parser->consume(); // :-
+            $body = $this->_expr();
+        } else {
+            $body = iterator_to_array($this->_innerStmtList());
+            $this->parser->match(Tag::T_END);
+        }
 
-        return new FnStmt($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec, $is_method);
+        return new FnStmt(
+            $name,
+            $by_reference,
+            $body,
+            $parameters,
+            $is_bang,
+            $is_pub,
+            $is_rec,
+            $is_method,
+            $is_short
+        );
     }
 
 

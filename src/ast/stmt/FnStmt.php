@@ -35,11 +35,13 @@ class FnStmt extends Stmt
     public $is_pub;
     public $is_rec;
     public $is_method;
+    public $is_short;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec, $is_method)
+    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec,
+        $is_method, $is_short)
     {
         $this->name = $name;
         $this->by_reference = $by_reference;
@@ -49,6 +51,7 @@ class FnStmt extends Stmt
         $this->is_pub = $is_pub;
         $this->is_rec = $is_rec;
         $this->is_method = $is_method;
+        $this->is_short = $is_short;
     }
 
     public function format(Parser $parser)
@@ -98,19 +101,25 @@ class FnStmt extends Stmt
                 : '()';
         }
 
-        $source .= PHP_EOL;
+        if ($this->is_short) {
+            $source .= ' :- ';
+            $source .= $this->body->format($parser);
+        } else {
+            $source .= PHP_EOL;
 
-        $parser->openScope();
+            $parser->openScope();
 
-        foreach ($this->body as $stmt) {
+            foreach ($this->body as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
+
+            $parser->closeScope();
+
             $source .= $parser->indent();
-            $source .= $stmt->format($parser);
+            $source .= 'end';
         }
 
-        $parser->closeScope();
-
-        $source .= $parser->indent();
-        $source .= 'end';
         $source .= PHP_EOL;
 
         return $source;
@@ -144,9 +153,10 @@ class FnStmt extends Stmt
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
         }
 
-        if (null !== $this->body) {
+        if ($this->is_short) {
+            $this->body->injectScope($this->scope);
+        } else {
             $this->bindDeclarations($this->body);
-
             foreach ($this->body as $node) {
                 $node->injectScope($this->scope);
             }
@@ -161,5 +171,18 @@ class FnStmt extends Stmt
     public function flagBindSuper()
     {
         $this->flag_bind_super = true;
+    }
+
+    public function runTypeChecker()
+    {
+        if ($this->is_short) {
+            // TODO: Type-check functions
+            $return_type = $this->body->getType();
+            var_dump('Return type: ' . $return_type);
+        } else {
+            foreach ($this->body as $stmt) {
+                $stmt->runTypeChecker();
+            }
+        }
     }
 }
