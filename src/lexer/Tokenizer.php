@@ -54,8 +54,13 @@ class Tokenizer extends Lexer
                 return $this->atom();
             }
 
-            if ($this->matches('(*') && $this->previous() !== '&') {
-                $this->comment();
+            if ($this->matches('--')) {
+                $this->singlelineComment();
+                continue;
+            }
+
+            if ($this->matches('{-')) {
+                $this->multilineComment();
                 continue;
             }
 
@@ -245,30 +250,40 @@ class Tokenizer extends Lexer
                 break;
             }
         }
-        
+
         $regex = implode($buffer);
         return new Token(Tag::T_REGEX, $this->symbol_table->add($regex));
     }
 
-    private function comment()
+    private function singleLineComment()
     {
-        $new_line = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+        $newline = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+        $this->consume(2); // --
 
-        $this->consume(2);
-        $this->column += 2;
-
-        $buffer = [];
-        while (!$this->isEnd() && !($this->is('*') && $this->preview() === ')')) {
-            $chr = $this->readChar();
+        while (!$this->isEnd()) {
+            $code = ord($this->readChar());
             $this->column++;
 
-            if (in_array($chr, $new_line, true)) {
-                $this->column = 1;
+            if (in_array($code, $newline, true)) {
+                $this->line++;
+                break;
+            }
+        }
+    }
+
+    private function multilineComment()
+    {
+        $newline = array_map('ord', ["\r", "\n", "\r\n", PHP_EOL]);
+        $this->consume(2); // {-
+
+        while (!$this->isEnd() && !$this->matches('-}')) {
+            $code = ord($this->readChar());
+            $this->column++;
+
+            if (in_array($code, $newline, true)) {
                 $this->line++;
             }
         }
-
-        $comment = implode($buffer);
 
         if (!$this->isEnd()) {
             $this->consume(2);

@@ -1,0 +1,11 @@
+%%describe
+Expects comments to be ignored
+%%source
+let x :- 10 -- This is a comment
+do x {- This is a multiline comment
+    Therefore, this must not be in STDOUT
+    -} do 10
+%%expect
+let x :- 10
+do x
+do 10
