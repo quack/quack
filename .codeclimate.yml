@@ -9,13 +9,6 @@ engines:
       - php
   fixme:
     enabled: true
-  phpmd:
-    enabled: true
-    checks:
-      Controversial/CamelCaseVariableName:
-        enabled: false
-      CleanCode/StaticAccess:
-        enabled: false
 ratings:
   paths:
   - "**.inc"
