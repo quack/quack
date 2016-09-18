@@ -21,62 +21,58 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Parselets\FunctionParselet;
+use \QuackCompiler\Parselets\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 
 class LambdaExpr extends Expr
 {
-    public $by_reference;
     public $parameters;
-    public $type;
+    public $kind;
     public $body;
-    public $lexical_vars;
+    public $has_brackets;
 
-    public function __construct($by_reference, $parameters, $type, $body, $lexical_vars)
+    public function __construct($parameters, $kind, $body, $has_brackets)
     {
-        $this->by_reference = $by_reference;
         $this->parameters = $parameters;
-        $this->type = $type;
+        $this->kind = $kind;
         $this->body = $body;
-        $this->lexical_vars = $lexical_vars;
+        $this->has_brackets = $has_brackets;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'fn ';
+        $source = '&';
 
-        if ($this->by_reference) {
-            $source .= '* ';
+        switch (sizeof($this->parameters)) {
+            case 0:
+                $source .= '[]';
+                break;
+            case 1:
+                if ($this->has_brackets) {
+                    $source .= '[ '
+                             . ($this->parameters[0]->is_reference ? '*' : '')
+                             . $this->parameters[0]->name
+                             . ' ]';
+                } else {
+                    $source .= $this->parameters[0]->name;
+                }
+                break;
+            default:
+                $source .= '[ ';
+                $source .= implode(', ', array_map(function ($param) {
+                    return ($param->is_reference ? '*' : '') . $param->name;
+                }, $this->parameters));
+                $source .= ' ]';
         }
 
-        $source .= '{ ';
+        $source .= ' -> ';
 
-        $source .= implode('; ', array_map(function ($param) {
-            $obj = (object) $param;
-
-            $source = '';
-            $obj->ellipsis && $source .= '... ';
-            $obj->by_reference && $source .= '*';
-            $source .= $obj->name;
-            return $source;
-        }, $this->parameters));
-
-        $source .= 'fn { ' !== $source ? ' |' : '|';
-
-        if (FunctionParselet::TYPE_EXPRESSION === $this->type) {
-            $source .= ' ';
+        if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
             $source .= $this->body->format($parser);
-            $source .= ' ';
         } else {
-            $source .= PHP_EOL;
-
-            $parser->openScope();
-
-            $source .= $parser->indent();
-            $source .= 'begin';
-            $source .= PHP_EOL;
+            $source .= 'begin' . PHP_EOL;
 
             $parser->openScope();
 
@@ -86,29 +82,9 @@ class LambdaExpr extends Expr
             }
 
             $parser->closeScope();
-
             $source .= $parser->indent();
             $source .= 'end';
             $source .= PHP_EOL;
-
-            $parser->closeScope();
-
-            $source .= $parser->indent();
-        }
-
-        $source .= '}';
-
-        $size_t_lexical_vars = sizeof($this->lexical_vars);
-
-        if ($size_t_lexical_vars > 0) {
-            $source .= ' in ';
-            $source .= 1 === $size_t_lexical_vars
-                ? $this->lexical_vars[0]
-                : (
-                    '{ ' .
-                    implode('; ', $this->lexical_vars) .
-                    ' }'
-                );
         }
 
         return $this->parenthesize($source);
@@ -118,9 +94,7 @@ class LambdaExpr extends Expr
     {
         $this->createScopeWithParent($parent_scope);
 
-        foreach (array_map(function ($item) {
-            return (object) $item;
-        }, $this->parameters) as $param) {
+        foreach ($this->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
                 throw new ScopeError([
                     'message' => "Duplicated parameter `{$param->name}' in anonymous function"
@@ -130,7 +104,7 @@ class LambdaExpr extends Expr
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
         }
 
-        if (FunctionParselet::TYPE_STATEMENT === $this->type) {
+        if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
             $this->bindDeclarations($this->body);
 
             foreach ($this->body as $node) {

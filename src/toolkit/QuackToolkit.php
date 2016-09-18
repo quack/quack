@@ -60,7 +60,7 @@ import(PARSELETS, 'BinaryOperatorParselet');
 import(PARSELETS, 'PostfixOperatorParselet');
 import(PARSELETS, 'TernaryParselet');
 import(PARSELETS, 'GroupParselet');
-import(PARSELETS, 'FunctionParselet');
+import(PARSELETS, 'LambdaParselet');
 import(PARSELETS, 'ArrayParselet');
 import(PARSELETS, 'NameParselet');
 import(PARSELETS, 'NewParselet');
