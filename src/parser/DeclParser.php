@@ -105,11 +105,7 @@ trait DeclParser
         $body = null;
 
         if (!$is_method) {
-            if ($is_pub = $this->parser->is(Tag::T_PUB)) {
-                $is_pub = true;
-                $this->parser->consume();
-            }
-
+            $is_pub = $this->parser->consumeIf(Tag::T_PUB);
             $this->parser->match(Tag::T_FN);
         }
 

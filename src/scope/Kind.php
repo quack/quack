@@ -40,4 +40,5 @@ class Kind
     const K_SPECIAL     = 0x800;
     const K_MEMBER      = 0x1000;
     const K_INITIALIZED = 0x2000;
+    const K_PUB         = 0x4000;
 }
