@@ -9,6 +9,8 @@ engines:
       - php
   fixme:
     enabled: true
+  phpmd:
+    enabled: true
 ratings:
   paths:
   - "**.inc"
