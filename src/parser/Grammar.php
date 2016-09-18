@@ -139,8 +139,7 @@ class Grammar
 
         $expr_list = [$this->_expr()];
 
-        while ($this->parser->is(',')) {
-            $this->parser->consume();
+        while ($this->parser->consumeIf(',')) {
             $expr_list[] = $this->_expr();
         }
 
@@ -177,20 +176,17 @@ class Grammar
         // I could just use a goto, but, Satan would want my soul...
         $name = $this->identifier();
 
-        if ($this->parser->is(':-')) {
-            $this->parser->consume();
+        if ($this->parser->consumeIf(':-')) {
             $value = $this->_expr();
             $definitions[] = [$name, $value];
         } else {
             $definitions[] = [$name, null];
         }
 
-        while ($this->parser->is(',')) {
-            $this->parser->consume();
+        while ($this->parser->consumeIf(',')) {
             $name = $this->identifier();
 
-            if ($this->parser->is(':-')) {
-                $this->parser->consume();
+            if ($this->parser->consumeIf(':-')) {
                 $value = $this->_expr();
                 $definitions[] = [$name, $value];
             } else {
@@ -221,8 +217,7 @@ class Grammar
         $to = $this->_expr();
         $by = null;
 
-        if ($this->parser->is(Tag::T_BY)) {
-            $this->parser->consume();
+        if ($this->parser->consumeIf(Tag::T_BY)) {
             $by = $this->_expr();
         }
 
@@ -241,15 +236,14 @@ class Grammar
         if ($this->parser->is(Tag::T_IDENT)) {
             $alias = $this->identifier();
 
-            if ($this->parser->is('->')) {
-                $this->parser->consume();
+            if ($this->parser->consumeIf('->')) {
                 $key = $alias;
 
-                ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
+                $by_reference = $this->parser->consumeIf('*');
                 $alias = $this->identifier();
             }
         } else {
-            ($by_reference = $this->parser->is('*')) && /* then */ $this->parser->consume();
+            $by_reference = $this->parser->consumeIf('*');
             $alias = $this->identifier();
         }
 
@@ -323,8 +317,7 @@ class Grammar
 
     public function _elifList()
     {
-        while ($this->parser->is(Tag::T_ELIF)) {
-            $this->parser->consume();
+        while ($this->parser->consumeIf(Tag::T_ELIF)) {
             $condition = $this->_expr();
             $body = iterator_to_array($this->_innerStmtList());
             yield new ElifStmt($condition, $body);
@@ -397,8 +390,7 @@ class Grammar
         $value = $this->_expr();
         $definitions[] = [$name, $value];
 
-        while ($this->parser->is(',')) {
-            $this->parser->consume();
+        while ($this->parser->consumeIf(',')) {
             $name = $this->identifier();
             $this->parser->match(':-');
             $value = $this->_expr();
@@ -435,8 +427,7 @@ class Grammar
 
     public function _rescueStmtList()
     {
-        while ($this->parser->is(Tag::T_RESCUE)) {
-            $this->parser->consume();
+        while ($this->parser->consumeIf(Tag::T_RESCUE)) {
             $this->parser->match('(');
             $exception_class = $this->qualifiedName();
             $variable = $this->identifier();
@@ -453,8 +444,7 @@ class Grammar
 
     public function _optFinally()
     {
-        if ($this->parser->is(Tag::T_FINALLY)) {
-            $this->parser->consume();
+        if ($this->parser->consumeIf(Tag::T_FINALLY)) {
             $body = new StmtList(iterator_to_array($this->_innerStmtList()));
             return $body;
         }
@@ -522,33 +512,18 @@ class Grammar
 
     public function qualifiedName()
     {
-        $symbol_pointers = [$this->parser->match(Tag::T_IDENT)];
-        while ($this->parser->is('.')) {
-            $this->parser->consume();
-            $symbol_pointers[] = $this->parser->match(Tag::T_IDENT);
+        $symbols = [$this->parser->match(Tag::T_IDENT)];
+        while ($this->parser->consumeIf('.')) {
+            $symbols[] = $this->parser->match(Tag::T_IDENT);
         }
 
         return array_map(function ($name) {
             return $this->parser->resolveScope($name);
-        }, $symbol_pointers);
+        }, $symbols);
     }
 
     public function identifier()
     {
         return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
-    }
-
-    public function _optTypeDecl()
-    {
-        if ($this->parser->is(':')) {
-            $this->parser->consume();
-            return $this->_typeDecl();
-        }
-
-        return null;
-    }
-
-    public function _typeDecl() {
-        // TODO: Implement LL(1) for type-decl
     }
 }
