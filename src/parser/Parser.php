@@ -208,6 +208,16 @@ abstract class Parser
         return $pointer;
     }
 
+    public function consumeIf($symbol)
+    {
+        if ($this->is($symbol)) {
+            $this->consume();
+            return true;
+        }
+
+        return false;
+    }
+
     public function consumeAndFetch()
     {
         $clone = $this->lookahead;

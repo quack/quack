@@ -39,11 +39,10 @@ trait DeclParser
     {
         $this->parser->match(Tag::T_CLASS);
         $name = $this->identifier();
-        // TODO: Modify to receive implicit functions
-        // TODO: $body = new StmtList(iterator_to_array($this->_nonBodiedMethodList()));
+        $body = iterator_to_array($this->_fnSignatureList());
         $this->parser->match(Tag::T_END);
 
-        return null; # new ClassStmt($name, $body);
+        return new ClassStmt($name, $body);
     }
 
     public function _enumStmt()
@@ -61,18 +60,52 @@ trait DeclParser
         return new EnumStmt($name, $entries);
     }
 
+    public function _fnSignature()
+    {
+        $state = (object)[
+            'is_recursive' => false,
+            'is_reference' => false,
+            'is_bang'      => false,
+            'name'         => '<anonymous function>',
+            'parameters'   => []
+        ];
+
+        $state->is_recursive = $this->parser->consumeIf(Tag::T_REC);
+        $state->is_reference = $this->parser->consumeIf('*');
+        $state->name = $this->identifier();
+
+        if (!($state->is_bang = $this->parser->consumeIf('!'))) {
+            $this->parser->match('(');
+
+            if (!$this->parser->consumeIf(')')) {
+                $state->parameters[] = $this->_parameter();
+
+                while ($this->parser->consumeIf(',')) {
+                    $state->parameters[] = $this->_parameter();
+                }
+
+                $this->parser->match(')');
+            }
+        }
+
+        return $state;
+    }
+
+    public function _fnSignatureList()
+    {
+        while ($this->parser->is(Tag::T_IDENT)) {
+            yield $this->_fnSignature();
+        }
+    }
+
     public function _fnStmt($is_method = false)
     {
-        $by_reference = false;
-        $is_bang = false;
         $is_pub = false;
-        $is_rec = false;
         $is_short = false;
-        $parameters = [];
         $body = null;
 
         if (!$is_method) {
-            if ($this->parser->is(Tag::T_PUB)) {
+            if ($is_pub = $this->parser->is(Tag::T_PUB)) {
                 $is_pub = true;
                 $this->parser->consume();
             }
@@ -80,36 +113,7 @@ trait DeclParser
             $this->parser->match(Tag::T_FN);
         }
 
-        if ($this->parser->is('*')) {
-            $this->parser->consume();
-            $by_reference = true;
-        }
-
-        if ($this->parser->is(Tag::T_REC)) {
-            $this->parser->consume();
-            $is_rec = true;
-        }
-
-        $name = $this->identifier();
-
-        if ($is_bang = $this->parser->is('!')) {
-            $this->parser->consume();
-        } else {
-            $this->parser->match('(');
-
-            if ($this->parser->is(')')) {
-                $this->parser->consume();
-            } else {
-                $parameters[] = $this->_parameter();
-
-                while ($this->parser->is(';')) {
-                    $this->parser->consume();
-                    $parameters[] = $this->_parameter();
-                }
-
-                $this->parser->match(')');
-            }
-        }
+        $signature = $this->_fnSignature();
 
         // Is short method?
         if ($is_short = $this->parser->is(':-')) {
@@ -120,17 +124,7 @@ trait DeclParser
             $this->parser->match(Tag::T_END);
         }
 
-        return new FnStmt(
-            $name,
-            $by_reference,
-            $body,
-            $parameters,
-            $is_bang,
-            $is_pub,
-            $is_rec,
-            $is_method,
-            $is_short
-        );
+        return new FnStmt($signature, $body, $is_pub, $is_method, $is_short);
     }
 
 

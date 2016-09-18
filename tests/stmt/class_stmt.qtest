@@ -2,13 +2,17 @@
 Supports formatting classes
 %%source
 class Walkable
-fn walk(steps)
-fn join( *other)
-fn join(...*rst)
+walk(steps)
+join( *other)
+    bang!
+    not_bang()
+multiple_args(a,b,*c)
 end
 %%expect
 class Walkable
-  fn walk( steps )
-  fn join( *other )
-  fn join( ... *rst )
+  walk( steps )
+  join( *other )
+  bang!
+  not_bang()
+  multiple_args( a, b, *c )
 end

@@ -410,23 +410,12 @@ class Grammar
 
     public function _parameter()
     {
-        $ellipsis = false;
-        $by_reference = false;
-
-        if ($ellipsis = $this->parser->is('...')) {
-            $this->parser->consume();
-        }
-
-        if ($by_reference = $this->parser->is('*')) {
-            $this->parser->consume();
-        }
-
+        $by_reference = $this->parser->consumeIf('*');
         $name = $this->identifier();
 
-        return [
-            'name' => $name,
-            'by_reference' => $by_reference,
-            'ellipsis' => $ellipsis
+        return (object)[
+            'name'         => $name,
+            'is_reference' => $by_reference
         ];
     }
 

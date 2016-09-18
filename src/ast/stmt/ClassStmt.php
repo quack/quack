@@ -41,7 +41,27 @@ class ClassStmt extends Stmt
         $source .= $parser->indent();
         $source .= PHP_EOL;
         $parser->openScope();
-        $source .= $this->body->format($parser);
+
+        foreach ($this->body as $sign) {
+            $source .= $parser->indent()
+                . ($sign->is_recursive ? 'rec ' : '')
+                . ($sign->is_reference ? '*' : '')
+                . $sign->name;
+
+            if (sizeof($sign->parameters) > 0) {
+                $source .= '( ';
+                $source .= implode(', ', array_map(function ($param) {
+                    return ($param->is_reference ? '*' : '') . $param->name;
+                }, $sign->parameters));
+
+                $source .= ' )';
+            } else {
+                $source .= $sign->is_bang ? '!' : '()';
+            }
+
+            $source .= PHP_EOL;
+        }
+
         $parser->closeScope();
         $source .= $parser->indent();
         $source .= 'end';
@@ -52,11 +72,11 @@ class ClassStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->body->createScopeWithParent($parent_scope);
-        $this->body->bindDeclarations($this->body->stmt_list);
+        // Pass :)
+    }
 
-        foreach ($this->body->stmt_list as $node) {
-            $node->injectScope($this->body->scope);
-        }
+    public function runTypeChecker()
+    {
+        // Pass :)
     }
 }

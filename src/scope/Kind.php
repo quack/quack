@@ -28,7 +28,7 @@ class Kind
     const K_VARIABLE    = 0x2;
     const K_BLUEPRINT   = 0x4;
     const K_SHAPE       = 0x8;
-    const K_TRAIT       = 0x10;
+    const K_CLASS       = 0x10;
     const K_ENUM        = 0x20;
 
     // Additional flags

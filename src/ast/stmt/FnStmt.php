@@ -27,31 +27,24 @@ use \QuackCompiler\Scope\ScopeError;
 
 class FnStmt extends Stmt
 {
-    public $name;
-    public $by_reference;
+    public $signature;
     public $body;
-    public $parameters;
-    public $is_bang;
     public $is_pub;
-    public $is_rec;
     public $is_method;
     public $is_short;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($name, $by_reference, $body, $parameters, $is_bang, $is_pub, $is_rec,
-        $is_method, $is_short)
+    public function __construct($signature, $body, $is_pub, $is_method, $is_short)
     {
-        $this->name = $name;
-        $this->by_reference = $by_reference;
+        $this->signature = $signature;
         $this->body = $body;
-        $this->parameters = $parameters;
-        $this->is_bang = $is_bang;
         $this->is_pub = $is_pub;
-        $this->is_rec = $is_rec;
         $this->is_method = $is_method;
         $this->is_short = $is_short;
+        // Standard compatibilization for `Named'
+        $this->name = $this->signature->name;
     }
 
     public function format(Parser $parser)
@@ -59,46 +52,22 @@ class FnStmt extends Stmt
         $source = '';
 
         if (!$this->is_method) {
-            $source = $this->is_pub
-                ? 'pub fn '
-                : 'fn ';
+            $source = $this->is_pub ? 'pub fn ' : 'fn ';
         }
 
-        if ($this->by_reference) {
-            $source .= '* ';
-        }
+        $source .= ($this->signature->is_recursive ? 'rec ' : '')
+                 . ($this->signature->is_reference ? '*' : '')
+                 . $this->signature->name;
 
-        if ($this->is_rec) {
-            $source .= 'rec ';
-        }
-
-        $source .= $this->name;
-
-        if (sizeof($this->parameters) > 0) {
+        if (sizeof($this->signature->parameters) > 0) {
             $source .= '( ';
-
-            $source .= implode('; ', array_map(function ($param) {
-                $subsource = '';
-                $obj = (object) $param;
-
-                if ($obj->ellipsis) {
-                    $subsource .= '... ';
-                }
-
-                if ($obj->by_reference) {
-                    $subsource .= '*';
-                }
-
-                $subsource .= $obj->name;
-
-                return $subsource;
-            }, $this->parameters));
+            $source .= implode(', ', array_map(function ($param) {
+                return ($param->is_reference ? '*' : '') . $param->name;
+            }, $this->signature->parameters));
 
             $source .= ' )';
         } else {
-            $source .= $this->is_bang
-                ? '!'
-                : '()';
+            $source .= $this->signature->is_bang ? '!' : '()';
         }
 
         if ($this->is_short) {
@@ -141,12 +110,10 @@ class FnStmt extends Stmt
         }
 
         // Pre-inject parameters
-        foreach (array_map(function ($item) {
-            return (object) $item;
-        }, $this->parameters) as $param) {
+        foreach ($this->signature->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
                 throw new ScopeError([
-                    'message' => "Duplicated parameter `{$param->name}' in function {$this->name}"
+                    'message' => "Duplicated parameter `{$param->name}' in function {$this->signature->name}"
                 ]);
             }
 
@@ -175,14 +142,6 @@ class FnStmt extends Stmt
 
     public function runTypeChecker()
     {
-        if ($this->is_short) {
-            // TODO: Type-check functions
-            $return_type = $this->body->getType();
-            var_dump('Return type: ' . $return_type);
-        } else {
-            foreach ($this->body as $stmt) {
-                $stmt->runTypeChecker();
-            }
-        }
+        // TODO
     }
 }
