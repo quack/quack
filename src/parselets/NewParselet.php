@@ -35,11 +35,7 @@ class NewParselet implements IPrefixParselet
         $initializer = null;
 
         if ($grammar->parser->is('@{')) {
-            // Got object initializer. We need restrict to objects only. Otherwise,
-            // `@Shape @{} + 1' would be valid
-            // And thus, my friends, is how we mock a parselet... Don't do this at home
-            $token = $grammar->parser->consumeAndFetch();
-            $initializer = (new ObjectParselet)->parse($grammar,/* token */ $token);
+            $initializer =  $grammar->evalParselet(ObjectParselet::class);
         }
 
         return new NewExpr($shape_name, $initializer);

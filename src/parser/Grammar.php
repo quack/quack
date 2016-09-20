@@ -63,6 +63,12 @@ class Grammar
         return new ProgramStmt(iterator_to_array($this->_topStmtList()));
     }
 
+    public function evalParselet($parselet)
+    {
+        $token = $this->parser->consumeAndFetch();
+        return (new $parselet)->parse($this, $token);
+    }
+
     public function _topStmtList()
     {
         while (!$this->checker->isEoF()) {
