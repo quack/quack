@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Parselets;
 
+use \QuackCompiler\Parselets\ObjectParselet;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\NewExpr;
@@ -30,26 +31,17 @@ class NewParselet implements IPrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {
-        $class_name = $grammar->qualifiedName();
-        $ctor_args = [];
+        $shape_name = $grammar->qualifiedName();
+        $initializer = null;
 
-        if ($grammar->parser->is('[')) {
-            $grammar->parser->consume();
-
-            if (!$grammar->parser->is(']')) {
-                $ctor_args[] = $grammar->_expr();
-                while ($grammar->parser->is(';')) {
-                    $grammar->parser->consume();
-                    $ctor_args[] = $grammar->_expr();
-                }
-                $grammar->parser->match(']');
-            } else {
-                $grammar->parser->consume();
-            }
-        } else {
-            $grammar->parser->match('!');
+        if ($grammar->parser->is('@{')) {
+            // Got object initializer. We need restrict to objects only. Otherwise,
+            // `@Shape @{} + 1' would be valid
+            // And thus, my friends, is how we mock a parselet... Don't do this at home
+            $token = $grammar->parser->consumeAndFetch();
+            $initializer = (new ObjectParselet)->parse($grammar,/* token */ $token);
         }
 
-        return new NewExpr($class_name, $ctor_args);
+        return new NewExpr($shape_name, $initializer);
     }
 }

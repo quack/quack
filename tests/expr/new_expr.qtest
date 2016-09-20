@@ -1,10 +1,28 @@
 %%describe
 Supports formatting new expression
 %%source
-do #person [ "Marcelo";"Camargo";19]
-do #
-  inner.
-  person ["MY SOUL"]
+const me :- @Person @{
+    name     -> "Marcelo";
+    nickname -> "haskell"
+}
+
+const duck :- @Animal.Duck @{
+    flies -> true;
+    swims -> true;
+    walks -> true;
+    isGoodOnAnything -> false
+}
+
+const dumbDuck :- @Animal.Duck
 %%expect
-do #person[ "Marcelo"; "Camargo"; 19 ]
-do #inner.person[ "MY SOUL" ]
+const me :- @Person @{
+  name -> "Marcelo";
+  nickname -> "haskell"
+}
+const duck :- @Animal.Duck @{
+  flies -> true;
+  swims -> true;
+  walks -> true;
+  isGoodOnAnything -> false
+}
+const dumbDuck :- @Animal.Duck

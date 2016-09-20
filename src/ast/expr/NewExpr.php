@@ -28,34 +28,28 @@ use \QuackCompiler\Scope\ScopeError;
 class NewExpr extends Expr
 {
     public $class_name;
-    public $ctor_args;
+    public $initializer;
 
-    public function __construct($class_name, $ctor_args)
+    public function __construct($class_name, $initializer)
     {
         $this->class_name = $class_name;
-        $this->ctor_args = $ctor_args;
+        $this->initializer = $initializer;
     }
 
     public function format(Parser $parser)
     {
-        $source = '#';
-        $source .= implode('.', $this->class_name);
+        $source = '@' . implode('.', $this->class_name);
 
-        if (sizeof($this->ctor_args) > 0) {
-            $source .= '[ ';
-            $source .= implode('; ', array_map(function ($arg) use ($parser) {
-                return $arg->format($parser);
-            }, $this->ctor_args));
-            $source .= ' ]';
-        } else {
-            $source .= '[]';
-        }
+        $source .= null !== $this->initializer
+            ? (' ' . $this->initializer->format($parser))
+            : PHP_EOL;
 
         return $this->parenthesize($source);
     }
 
     public function injectScope(&$parent_scope)
     {
+        // TODO: Implement member check after traversal
         $name = implode('.', $this->class_name);
         $class = $parent_scope->lookup($name);
 
@@ -73,8 +67,6 @@ class NewExpr extends Expr
             ]);
         }
 
-        foreach ($this->ctor_args as $arg) {
-            $arg->injectScope($parent_scope);
-        }
+        // TODO: Inject scope on initializer (if provided)
     }
 }

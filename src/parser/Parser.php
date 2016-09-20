@@ -112,7 +112,7 @@ abstract class Parser
         $this->register('${', new MapParselet);
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
-        $this->register('#', new NewParselet);
+        $this->register('@', new NewParselet);
         $this->register('.', new MemberAccessParselet);
         $this->register('?.', new MemberAccessParselet);
         $this->register(Tag::T_TRUE, new LiteralParselet);
@@ -126,7 +126,6 @@ abstract class Parser
         $this->prefix('-', Precedence::PREFIX);
         $this->prefix('^^', Precedence::PREFIX);
         $this->prefix('*', Precedence::PREFIX);
-        $this->prefix('@', Precedence::PREFIX);
         $this->prefix('~', Precedence::PREFIX);
         $this->prefix(Tag::T_NOT, Precedence::PREFIX);
 
