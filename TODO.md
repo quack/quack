@@ -117,7 +117,6 @@
 - Write tests for statements:
 
   - [ ] BlockStmt
-  - [ ] BlueprintStmt
   - [ ] BreakStmt
   - [ ] CaseStmt
   - [ ] ConstStmt
@@ -125,7 +124,6 @@
   - [ ] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt
-  - [x] ExtensionStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
