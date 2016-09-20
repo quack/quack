@@ -116,7 +116,7 @@
 
 - Write tests for statements and expressions:
 
-  - [ ] BlockStmt
+  - [x] BlockStmt _// Partially done. 
   - [ ] BreakStmt
   - [ ] CaseStmt
   - [x] ClassStmt
