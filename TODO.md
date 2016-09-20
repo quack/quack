@@ -114,45 +114,50 @@
   - [x] WhileStmt
   - [x] PostConditionalStmt
 
-- Write tests for statements:
+- Write tests for statements and expressions:
 
-  - [ ] BlockStmt
-  - [ ] BlueprintStmt
+  - [x] BlockStmt _// Partially done. 
   - [ ] BreakStmt
   - [ ] CaseStmt
+  - [x] ClassStmt
   - [ ] ConstStmt
   - [ ] ContinueStmt
   - [ ] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt
-  - [x] ExtensionStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
   - [ ] IfStmt
+  - [ ] ImplStmt
   - [ ] LabelStmt
   - [ ] LetStmt
-  - [x] MemberStmt
   - [ ] ModuleStmt
   - [ ] OpenStmt
+  - [ ] PostConditionalStmt
+  - [ ] ProgramStmt
   - [ ] RaiseStmt
   - [ ] ReturnStmt
+  - [x] ShapeStmt
   - [ ] Stmt
+  - [ ] StmtList
   - [ ] SwitchStmt
   - [ ] TryStmt
   - [ ] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
-  - [x] ArrayPairExpr
   - [x] AtomExpr
+  - [x] BlockExpr
   - [x] BoolExpr
   - [x] CallExpr
-  - [x] IncludeExpr
+  - [ ] Expr
   - [x] LambdaExpr
+  - [x] MapExpr
   - [ ] NameExpr
   - [x] NewExpr
   - [x] NilExpr
   - [ ] NumberExpr
+  - [x] ObjectExpr
   - [x] OperatorExpr
   - [x] PartialFuncExpr
   - [ ] PostfixExpr
@@ -162,4 +167,4 @@
   - [ ] StringExpr
   - [ ] TernaryExpr
   - [ ] WhenExpr
-  - [ ] PostConditionalStmt
+  - [ ] WhereExpr
