@@ -21,8 +21,7 @@
  */
 namespace QuackCompiler\Scope;
 
-interface Accessible
+interface Membered
 {
-    // TODO: Represent member access
     public function getMembers();
 }

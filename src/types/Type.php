@@ -57,6 +57,8 @@ class Type
                 return '?';
             case NativeQuackType::T_BLOCK:
                 return 'block';
+            case NativeQuackType::T_ENUM:
+                return 'enum.of(' . $this->subtype . ')';
             case NativeQuackType::T_OBJ:
                 // TODO: Implement indent-level for types
                 $space = sizeof($this->props) > 0 ? " " : "";

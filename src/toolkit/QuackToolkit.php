@@ -41,7 +41,7 @@ import(LEXER, 'Tokenizer');
 import(LEXER, 'Word');
 
 // Scope base interface
-import(SCOPE, 'Accessible');
+import(SCOPE, 'Membered');
 
 /* Parser */
 

@@ -22,11 +22,13 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Accessible;
+use \QuackCompiler\Scope\Membered;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
-class EnumStmt extends Stmt implements Accessible
+class EnumStmt extends Stmt implements Membered
 {
     public $entries;
     public $name;
@@ -73,17 +75,26 @@ class EnumStmt extends Stmt implements Accessible
                 ]);
             }
 
-            $this->scope->insert($entry, K_MEMBER);
+            $this->scope->insert($entry, Kind::K_MEMBER | Kind::K_INITIALIZED);
         }
+
+        var_dump($this->getMembers());
+    }
+
+    public function runTypeChecker()
+    {
+        // Pass :)
     }
 
     public function getMembers()
     {
+        // TODO: Remodel subtyping. See paper https://hal.inria.fr/hal-00695034/document
+        $type = new Type(NativeQuackType::T_ENUM);
+        $type->subtype = $this->name;
         $members = [];
-
         foreach ($this->entries as $entry) {
             $members[$entry] = [
-                'type' => $this->name
+                'type' => (string) $type
             ];
         }
 

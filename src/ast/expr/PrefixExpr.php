@@ -54,7 +54,6 @@ class PrefixExpr extends Expr
 
     public function getType()
     {
-        // TODO: Check how @ operator should work
         $right_type = $this->right->getType();
         $op_name = Tag::getOperatorLexeme($this->operator);
 
