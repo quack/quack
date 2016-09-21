@@ -1,0 +1,27 @@
+%%describe
+Supports formatting blocks
+%%source
+begin
+  if jaca = "a"
+  end
+
+end
+begin let Point :- @{ x->0; y ->2 } end
+do &[*Serial] -> begin
+  do
+  (*Serial).write( "Hello World" )
+end
+%%expect
+begin
+  if jaca = "a"
+  end
+end
+begin
+  let Point :- @{
+    x -> 0;
+    y -> 2
+  }
+end
+do &[ *Serial ] -> begin
+  do (*Serial).write( "Hello World" )
+end
