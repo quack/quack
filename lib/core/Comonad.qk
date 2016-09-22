@@ -1,0 +1,6 @@
+module Core
+
+class Comonad :m <:a>
+    extract<:a>! -> :a
+    extend<:b>( fn: &[ :m<:a> -> :a ] ) :m<:a>
+end

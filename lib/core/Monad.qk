@@ -1,0 +1,7 @@
+module Core
+
+class Monoid :m <:a>
+    return( :a ) -> :m<:a>
+    (>>=)<:b>( fn: &[ :a -> :m<:b> ] ) -> :m<:b>
+    (>>)<:b>( monad: :m<:b> ) -> :m<:b>
+end
