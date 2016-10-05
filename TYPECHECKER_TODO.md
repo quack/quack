@@ -27,6 +27,7 @@ Sprint 2:
 - [ ] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [ ] Run typechecker on ForeachStmt
+- [x] Run typechecker on LabelStmt
 - [x] Run typechecker on ForStmt
 - [ ] Create default class TypeError and replace some of ScopeError that are specific for types
 - [ ] Record, in the AST, the positions of the symbols, in order to give better error messages

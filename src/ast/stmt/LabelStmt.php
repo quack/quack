@@ -58,6 +58,6 @@ class LabelStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // Pass :)
+        $this->stmt->runTypeChecker();
     }
 }
