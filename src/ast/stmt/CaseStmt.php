@@ -60,4 +60,9 @@ class CaseStmt extends Stmt
             $node->injectScope($this->scope);
         }
     }
+
+    public function runTypeChecker()
+    {
+        $this->body->runTypeChecker();
+    }
 }

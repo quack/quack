@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
 
 class SwitchStmt extends Stmt
 {
@@ -62,6 +63,24 @@ class SwitchStmt extends Stmt
         // Just act like a bridge for cases
         foreach ($this->cases as $case) {
             $case->injectScope($parent_scope);
+        }
+    }
+
+    public function runTypeChecker()
+    {
+        $value_type = $this->value->getType();
+        foreach ($this->cases as $case) {
+            if (!$case->is_else) {
+                $case_type = $case->value->getType();
+                if ($case_type->code !== $value_type->code) {
+                    // TODO: how to get the case expression value? 
+                    throw new ScopeError([
+                        'message' => "Expecting type of case `{$case->value->value}' of switch-statement to be `$value_type'. Got `{$case_type}'"
+                    ]);
+                }
+            }
+
+            $case->runTypeChecker();
         }
     }
 }
