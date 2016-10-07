@@ -54,7 +54,9 @@ class CaseStmt extends Stmt
         $this->createScopeWithParent($parent_scope);
         $this->bindDeclarations($this->body->stmt_list);
 
-        $this->value->injectScope($parent_scope);
+        if (!$this->is_else) {
+            $this->value->injectScope($parent_scope);
+        }
 
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);
