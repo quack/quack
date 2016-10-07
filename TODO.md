@@ -118,7 +118,7 @@
 
   - [x] BlockStmt 
   - [x] BreakStmt
-  - [ ] CaseStmt
+  - [x] CaseStmt
   - [x] ClassStmt
   - [ ] ConstStmt
   - [ ] ContinueStmt
