@@ -141,7 +141,7 @@
   - [x] ShapeStmt
   - [ ] Stmt
   - [ ] StmtList
-  - [ ] SwitchStmt
+  - [x] SwitchStmt
   - [ ] TryStmt
   - [ ] WhileStmt
   - [x] AccessExpr
