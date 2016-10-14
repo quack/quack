@@ -55,4 +55,9 @@ class LabelStmt extends Stmt
         $this->bindDeclarations([$this->stmt]);
         $this->stmt->injectScope($this->scope);
     }
+
+    public function runTypeChecker()
+    {
+        $this->stmt->runTypeChecker();
+    }
 }

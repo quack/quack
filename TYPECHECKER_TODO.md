@@ -23,10 +23,11 @@ Sprint 2:
 - [ ] Implement parser for type signatures
 - [ ] Create algorithm for covariance and contravariance
 - [ ] Implement sum-types and type combinators
-- [ ] Run typechecker on SwitchStmt and CaseStmt
+- [x] Run typechecker on SwitchStmt and CaseStmt // partially done: check TODO inside SwitchStmt.php
 - [ ] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [ ] Run typechecker on ForeachStmt
+- [x] Run typechecker on LabelStmt
 - [x] Run typechecker on ForStmt
 - [ ] Create default class TypeError and replace some of ScopeError that are specific for types
 - [ ] Record, in the AST, the positions of the symbols, in order to give better error messages

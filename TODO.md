@@ -116,9 +116,9 @@
 
 - Write tests for statements and expressions:
 
-  - [x] BlockStmt _// Partially done. 
-  - [ ] BreakStmt
-  - [ ] CaseStmt
+  - [x] BlockStmt 
+  - [x] BreakStmt
+  - [x] CaseStmt
   - [x] ClassStmt
   - [ ] ConstStmt
   - [ ] ContinueStmt
@@ -141,7 +141,7 @@
   - [x] ShapeStmt
   - [ ] Stmt
   - [ ] StmtList
-  - [ ] SwitchStmt
+  - [x] SwitchStmt
   - [ ] TryStmt
   - [ ] WhileStmt
   - [x] AccessExpr
