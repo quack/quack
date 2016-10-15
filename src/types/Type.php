@@ -134,6 +134,25 @@ class Type
         return null !== $this->subtype;
     }
 
+    public function isExactlySameAs(Type $other)
+    {
+        if ($this->hasSubType() && $other->hasSubtype()) {
+            if ($this->code !== $other->code) {
+                return false;
+            }
+
+            switch ($this->code) {
+                case NativeQuackType::T_LIST:
+                    return $this->subtype->isExactlySameAs($other->subtype);
+                // TODO: Implement for maps and objects
+                default:
+                    return false;
+            }
+        }
+
+        return $this->code === $other->code;
+    }
+
     public function isCompatibleWith(Type $other)
     {
         if ($this->isNumber() && $other->isNumber()) {

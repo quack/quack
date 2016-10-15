@@ -80,21 +80,9 @@ class ArrayExpr extends Expr
         foreach (array_slice($this->items, 1) as $item) {
             $type = $item->getType();
 
-            if (!$type->isCompatibleWith($newtype->subtype)) {
+            if (!$type->isExactlySameAs($newtype->subtype)) {
                 throw new ScopeError(['message' => "Cannot add element of type `{$type}' to `{$newtype}'"]);
             }
-        }
-
-        // Apply Liskov substitution principle
-        if ($newtype->hasSubtype()) {
-            $deep = $newtype->getDeepestSubtype();
-
-            $subtype_list = array_map(function ($item) {
-                return $item->getType()->getDeepestSubtype();
-            }, $this->items);
-
-            $base_type = Type::getBaseType($subtype_list);
-            $deep->importFrom($base_type);
         }
 
         $this->memoized_type = &$newtype;
