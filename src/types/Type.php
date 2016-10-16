@@ -114,6 +114,11 @@ class Type
         return NativeQuackType::T_LIST === $this->code;
     }
 
+    public function isMap()
+    {
+        return NativeQuackType::T_MAP === $this->code;
+    }
+
     public function isNumber()
     {
         return $this->isInteger() || $this->isDouble();
@@ -145,8 +150,8 @@ class Type
                 case NativeQuackType::T_LIST:
                     return $this->subtype->isExactlySameAs($other->subtype);
                 case NativeQuackType::T_MAP:
-                    return $this->props['key']->isExactlySameAs($other->props['key'])
-                        && $this->props['value']->isExactlySameAs($other->props['value']);
+                    return $this->subtype['key']->isExactlySameAs($other->subtype['key'])
+                        && $this->subtype['value']->isExactlySameAs($other->subtype['value']);
                 default:
                     return false;
             }

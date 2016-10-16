@@ -56,22 +56,33 @@ class AccessExpr extends Expr
         $left_type = $this->left->getType();
         $index_type = $this->index->getType();
 
-        // TODO: Extend for maps
         if (NativeQuackType::T_LIST === $left_type->code) {
             // Expected numeric, integer index
-            if (!$index_type->isNumber()) {
+            if (!$index_type->isInteger()) {
                 throw new ScopeError([
-                    'message' => "Expected index of array to be a number. Got `{$index_type}'"
+                    'message' => "Expected index of array to be an integer. Got `{$index_type}'"
                 ]);
             }
 
             return clone $left_type->subtype;
-        } else if ($left_type->isString()) {
-            return clone $left_type;
-        } else {
-            throw new ScopeError([
-                'message' => "Trying to access by index an element of type `$left_type' that is not accessible"
-            ]);
         }
+
+        if ($left_type->isMap()) {
+            if (!$index_type->isExactlySameAs($left_type->subtype['key'])) {
+                throw new ScopeError([
+                    'message' => "Expect index of map to be a `{$left_type->subtype['key']}'. Got `{$index_type}'"
+                ]);
+            }
+
+            return $left_type->subtype['value'];
+        }
+
+        if ($left_type->isString()) {
+            return clone $left_type;
+        }
+
+        throw new ScopeError([
+            'message' => "Trying to access by index an element of type `$left_type' that is not accessible"
+        ]);
     }
 }
