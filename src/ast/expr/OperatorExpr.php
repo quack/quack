@@ -115,7 +115,8 @@ class OperatorExpr extends Expr
 
         $member_access = ['.', '?.'];
         if (in_array($this->operator, $member_access, true)) {
-            if ('array' === gettype($type->left->props) && array_key_exists($this->right, $type->left->props)) {
+            // When member access and the property exists on the left type
+            if (is_array($type->left->props) && array_key_exists($this->right, $type->left->props)) {
                 return $type->left->props[$this->right];
             }
 
@@ -128,28 +129,18 @@ class OperatorExpr extends Expr
         // scope injection
         if (':-' === $this->operator) {
             // When right side cannot be attributed to left side
-            if (!$type->right->isCompatibleWith($type->left)) {
-                // TODO: Implement array destructuring in `let' expression
-                $target = (string) $type->right;
-
-                if ($this->left instanceof NameExpr) {
-                    $target = "variable `{$this->left->name}' :: {$type->left}";
-                }
+            if (!$type->right->isExactlySameAs($type->left)) {
+                $target = $this->left instanceof NameExpr
+                    ? "variable `{$this->left->name}' :: {$type->left}"
+                    : (string) $type->right;
 
                 throw new ScopeError([
                     'message' => "Trying to set value of type `{$type->right}` to {$target}"
                 ]);
             }
 
-            $contravariant_type = Type::getBaseType([$type->left, $type->right]);
-            // When it is a name, reset to its contravariant type
-            // TODO: This must happen for array access too (?)
-            if ($this->left instanceof NameExpr) {
-                $name_scope = $this->scoperef->getSymbolScope($this->left->name);
-                $name_scope->setMeta('type', $this->left->name, $contravariant_type);
-            }
-
-            return $contravariant_type;
+            // We've just removed covariance and contravariance :)
+            return $type->right;
         }
 
         // Type checking for numeric and string concat operations
@@ -174,9 +165,9 @@ class OperatorExpr extends Expr
         $eq_op = ['=', '<>', '??', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
 
-            if ($type->left->isCompatibleWith($type->right)) {
+            if ($type->left->isExactlySameAs($type->right)) {
                 return '??' === $this->operator
-                    ? Type::getBaseType([$type->left, $type->right])
+                    ? $type->left
                     : new Type(NativeQuackType::T_BOOL);
             }
 
