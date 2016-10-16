@@ -144,7 +144,9 @@ class Type
             switch ($this->code) {
                 case NativeQuackType::T_LIST:
                     return $this->subtype->isExactlySameAs($other->subtype);
-                // TODO: Implement for maps and objects
+                case NativeQuackType::T_MAP:
+                    return $this->props['key']->isExactlySameAs($other->props['key'])
+                        && $this->props['value']->isExactlySameAs($other->props['value']);
                 default:
                     return false;
             }

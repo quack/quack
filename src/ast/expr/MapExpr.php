@@ -102,16 +102,15 @@ class MapExpr extends Expr
             $key_type = $this->keys[$i]->getType();
             $val_type = $this->values[$i]->getType();
 
-            if (!$key_type->isCompatibleWith($newtype->subtype['key'])) {
-                throw new ScopeError(['message' => "Key number {$i} of map expected to be `{$newtype->subtype['key']}'. Got `{$key_type}'"]);
+            if (!$key_type->isExactlySameAs($newtype->subtype['key'])) {
+                throw new ScopeError(['message' => "Key on index {$i} of map expected to be `{$newtype->subtype['key']}'. Got `{$key_type}'"]);
             }
 
-            if (!$val_type->isCompatibleWith($newtype->subtype['value'])) {
-                 throw new ScopeError(['message' => "Value number {$i} of map expected to be `{$newtype->subtype['value']}'. Got `{$val_type}'"]);
+            if (!$val_type->isExactlySameAs($newtype->subtype['value'])) {
+                 throw new ScopeError(['message' => "Value on index {$i} of map expected to be `{$newtype->subtype['value']}'. Got `{$val_type}'"]);
             }
         }
 
-        // TODO: Apply Liskov substitution principle for subtypes. I'm stucked with it for now
         $this->memoized_type = &$newtype;
         return $newtype;
     }
