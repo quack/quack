@@ -69,18 +69,26 @@ class SwitchStmt extends Stmt
     public function runTypeChecker()
     {
         $value_type = $this->value->getType();
+        $else_counter = 0;
         foreach ($this->cases as $case) {
             if (!$case->is_else) {
                 $case_type = $case->value->getType();
-                if ($case_type->code !== $value_type->code) {
-                    // TODO: how to get the case expression value? 
+                if (!$case_type->isExactlySameAs($value_type)) {
                     throw new ScopeError([
-                        'message' => "Expecting type of case `{$case->value->value}' of switch-statement to be `$value_type'. Got `{$case_type}'"
+                        'message' => "Expecting type of case `{$case->value->value}' of `switch' statement to be `$value_type'. Got `{$case_type}'"
                     ]);
                 }
+            } else {
+                $else_counter++;
             }
 
             $case->runTypeChecker();
+        }
+
+        if ($else_counter > 1) {
+            throw new ScopeError([
+                'message' => "More than one `else' clause for `switch' statement"
+            ]);
         }
     }
 }
