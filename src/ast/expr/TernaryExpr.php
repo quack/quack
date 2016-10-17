@@ -69,15 +69,13 @@ class TernaryExpr extends Expr
         $when_true_type = $this->then->getType();
         $when_false_type = $this->else->getType();
 
-        if (!$when_true_type->isCompatibleWith($when_false_type)) {
+        if (!$when_true_type->isExactlySameAs($when_false_type)) {
             throw new ScopeError([
                 'message' => "Both sides of ternary expression must have the same type. Got " .
                              "`$when_true_type' and `$when_false_type'"
             ]);
         }
 
-        // We need to get the base between the two type
-        $newtype = Type::getBaseType([$when_true_type, $when_false_type]);
-        return $newtype;
+        return $when_true_type;
     }
 }

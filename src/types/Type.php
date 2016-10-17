@@ -160,34 +160,6 @@ class Type
         return $this->code === $other->code;
     }
 
-    public function isCompatibleWith(Type $other)
-    {
-        if ($this->isNumber() && $other->isNumber()) {
-            return true;
-        }
-
-        if ($this->hasSubtype() && $other->hasSubtype()) {
-            if ($this->code !== $other->code) {
-                return false;
-            }
-
-            switch ($this->code) {
-                case NativeQuackType::T_LIST:
-                    return $this->subtype->isCompatibleWith($other->subtype);
-                case NativeQuackType::T_MAP:
-                    return $this->props['key']->isCompatibleWith($other->props['key'])
-                        && $this->props['value']->isCompatibleWith($other->props['value']);
-                default:
-                    return false; // NonImplemented
-            }
-
-            return $this->code === $other->code
-                && $this->subtype->isCompatibleWith($other->subtype);
-        }
-
-        return $this->code === $other->code;
-    }
-
     public function getDeepestSubtype()
     {
         if ($this->hasSubtype()) {
