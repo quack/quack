@@ -88,7 +88,7 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 
 #### Vim
 
-Quack syntax support to Vim's built-in editor [quack/editor/vi/quack.vim](https://github.com/quack/quack/tree/master/editor/vim)
+Quack syntax support to Vim's built-in editor [quack/editor/vim/quack.vim](https://github.com/quack/quack/tree/master/editor/vim)
 
 ### Contribute to Quack!
 
