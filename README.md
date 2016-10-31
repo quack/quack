@@ -84,6 +84,12 @@ Assert that everything is **OK**. There is a small set of tests that may be run.
 | `lexer` | `parser` |
 |---------|----------|
 
+### Syntax Support
+
+#### Vim
+
+Quack syntax support to Vim's built-in editor [quack/editor/vi/quack.vim](https://github.com/quack/quack/tree/master/editor/vim)
+
 ### Contribute to Quack!
 
 Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to be done, and you can find them in this repository's issues! Look for the `accepting-pull-requests` label! Newcomers to the open-source contribution process are very welcome! Please, read the `CONTRIBUTING` file in this repository as well!
