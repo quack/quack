@@ -26,6 +26,7 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\Type;
 
 class ForeachStmt extends Stmt
 {
@@ -106,8 +107,49 @@ class ForeachStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // Currently, the rules are:
-        // Only first variable present: List | Map
-        // First and second variable presents: Map
+        // The following type-rules are applicable:
+        // List { key -> value } = ∀ a. List { Int -> a' }
+        // Map { key -> value } = ∀ a b. Map { a' -> b' }
+        $generator_type = $this->generator->getType();
+
+        // When the element has no subtype to be an iterable
+        if (null === $generator_type->subtype)  {
+            throw new ScopeError([
+                'message' => "`{$generator_type}' is not iterable"
+            ]);
+        }
+
+        // When the element has no deducible subtype (list)
+        if (!is_array($generator_type->subtype) && NativeQuackType::T_LAZY === $generator_type->subtype->code) {
+            throw new ScopeError([
+                'message' => "Undeducible subtype `{$generator_type->subtype}' of `{$generator_type}'"
+            ]);
+        }
+
+        // When the element has no deducible subtype (map)
+        if (is_array($generator_type->subtype) && in_array(NativeQuackType::T_LAZY, [
+            $generator_type->subtype['key']->code,
+            $generator_type->subtype['value']->code
+        ], true)) {
+            throw new ScopeError([
+                'message' => "Undeducible `Map' subtype in `{$generator_type}'"
+            ]);
+        }
+
+        if (null !== $this->key) {
+            $this->scope->setMeta('type', $this->key, $generator_type->isList()
+                ? new Type(NativeQuackType::T_INT)
+                : clone $generator_type->subtype['key']
+            );
+        }
+
+        $this->scope->setMeta('type', $this->alias, $generator_type->isList()
+            ? clone $generator_type->subtype
+            : clone $generator_type->subtype['value']
+        );
+
+        foreach ($this->body as $stmt) {
+            $stmt->runTypeChecker();
+        }
     }
 }
