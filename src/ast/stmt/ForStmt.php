@@ -108,6 +108,7 @@ class ForStmt extends Stmt
             }
         }
 
+        // TODO: Remove covariance (at least for now)
         // Bind inferred type for variable
         $this->scope->setMeta('type', $this->variable, new Type(array_reduce($keys, function ($acc, $key) {
             return max($acc, $this->{$key}->getType()->code);

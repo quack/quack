@@ -66,7 +66,7 @@ class Scope
     {
         $scope = &$this->getSymbolScope($symbol);
 
-        if (!array_key_exists($symbol, $scope->meta)) {
+        if (null === $scope || !array_key_exists($symbol, $scope->meta)) {
             return null;
         }
 
