@@ -127,10 +127,10 @@ class ForeachStmt extends Stmt
         }
 
         // When the element has no deducible subtype (map)
-        if (is_array($generator_type->subtype) && (in_array(NativeQuackType::T_LAZY, [
+        if (is_array($generator_type->subtype) && in_array(NativeQuackType::T_LAZY, [
             $generator_type->subtype['key']->code,
             $generator_type->subtype['value']->code
-        ], true))) {
+        ], true)) {
             throw new ScopeError([
                 'message' => "Undeducible `Map' subtype in `{$generator_type}'"
             ]);
