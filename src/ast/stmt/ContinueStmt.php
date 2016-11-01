@@ -72,4 +72,9 @@ class ContinueStmt extends Stmt
             $parent_scope->setMeta('refcount', $this->label, $refcount + 1);
         }
     }
+
+    public function runTypeChecker()
+    {
+        // Pass
+    }
 }

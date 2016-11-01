@@ -12,7 +12,7 @@ Sprint 1:
 - [x] Impl with implicit `fn'
 - [x] Change syntax for comments
 - [x] Isolate declarations from simple statements
-- [ ] New syntax for lambda-expr
+- [x] New syntax for lambda-expr
 
 Sprint 2:
 
@@ -21,7 +21,6 @@ Sprint 2:
 - [ ] Run typechecker on ContinueStmt
 - [ ] Run typechecker on BreakStmt
 - [ ] Implement parser for type signatures
-- [ ] Create algorithm for covariance and contravariance
 - [ ] Implement sum-types and type combinators
 - [x] Run typechecker on SwitchStmt and CaseStmt // partially done: check TODO inside SwitchStmt.php
 - [ ] Run typechecker on ElifStmt
