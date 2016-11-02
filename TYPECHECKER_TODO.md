@@ -16,7 +16,7 @@ Sprint 1:
 
 Sprint 2:
 
-- [ ] Run typechecker on TryStmt
+- [x] Run typechecker on TryStmt
 - [ ] Traverse AST first time to get declarations and bind to scope
 - [x] Run typechecker on ContinueStmt
 - [x] Run typechecker on BreakStmt
