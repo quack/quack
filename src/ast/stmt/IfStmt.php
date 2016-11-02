@@ -58,12 +58,8 @@ class IfStmt extends Stmt
             $source .= $parser->indent();
             $source .= 'else';
             $source .= PHP_EOL;
-
             $parser->openScope();
-
-            $source .= $parser->indent();
             $source .= $this->else->format($parser);
-
             $parser->closeScope();
         }
 

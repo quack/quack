@@ -125,4 +125,17 @@ class TryStmt extends Stmt
             }
         }
     }
+
+    public function runTypeChecker()
+    {
+        $this->try->runTypeChecker();
+
+        foreach (array_map(function ($item) { return (object) $item; }, $this->rescues) as $rescue) {
+            $rescue->body->runTypeChecker();
+        }
+
+        if (null !== $this->finally) {
+            $this->finally->runTypeChecker();
+        }
+    }
 }

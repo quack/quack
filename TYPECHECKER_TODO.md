@@ -16,16 +16,16 @@ Sprint 1:
 
 Sprint 2:
 
-- [ ] Run typechecker on TryStmt
+- [x] Run typechecker on TryStmt
 - [ ] Traverse AST first time to get declarations and bind to scope
-- [ ] Run typechecker on ContinueStmt
-- [ ] Run typechecker on BreakStmt
+- [x] Run typechecker on ContinueStmt
+- [x] Run typechecker on BreakStmt
 - [ ] Implement parser for type signatures
 - [ ] Implement sum-types and type combinators
 - [x] Run typechecker on SwitchStmt and CaseStmt // partially done: check TODO inside SwitchStmt.php
-- [ ] Run typechecker on ElifStmt
+- [x] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
-- [ ] Run typechecker on ForeachStmt
+- [x] Run typechecker on ForeachStmt
 - [x] Run typechecker on LabelStmt
 - [x] Run typechecker on ForStmt
 - [ ] Create default class TypeError and replace some of ScopeError that are specific for types
@@ -38,4 +38,4 @@ Sprint 2:
 - [ ] Assert the context of ReturnStmt and pass the expected return type to it when inside functions
 - [ ] Implement subtyping for arrays and maps (check implementation of sum-types)
 - [x] Inject type for variable in ForStmt
-- [ ] Inject type for variable in ForeachStmt
+- [x] Inject type for variable in ForeachStmt
