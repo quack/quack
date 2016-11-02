@@ -22,6 +22,8 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\NativeQuackType;
 
 class ElifStmt extends Stmt
 {
@@ -64,6 +66,18 @@ class ElifStmt extends Stmt
 
         foreach ($this->body as $node) {
             $node->injectScope($this->scope);
+        }
+    }
+
+    public function runTypeChecker()
+    {
+        $condition_type = $this->condition->getType();
+        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+            throw new ScopeError(['message' => "The type of if-statement should be boolean, not `{$condition_type}'"]);
+        }
+
+        foreach ($this->body as $stmt) {
+            $stmt->runTypeChecker();
         }
     }
 }
