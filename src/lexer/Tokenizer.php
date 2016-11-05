@@ -84,6 +84,42 @@ class Tokenizer extends Lexer
         $buffer = [];
         $is_double = false;
 
+        $number = $this->readChar();
+        $this->column++;
+
+        // Check if it is binary, octal or hexadec
+        if ($number === '0' &&
+            (!((int) $this->preview() >> 1 && $this->peek === 'b' ||
+             !((int) $this->preview() >> 3 && $this->peek === 'o' ||
+             !((int) $this->preview() >> 4 && $this->peek === 'x' ))) {
+            $base = $this->readChar();
+            $this->column++;
+
+            switch ($base) {
+                case 'x':
+                    while (ctype_xdigit($this->peek)) {
+                        $buffer[] = $this->readChar();
+                    }
+                    
+                    break;
+
+                case 'o':
+                    while (ctype_digit($this->peek) && !((int) $this->peek >> 3)) {
+                        $buffer[] = $this->readChar();
+                    }
+                    break;
+                
+                case 'b':
+                    while (ctype_digit($this->peek) && !((int) $this->peek >> 1)) {
+                        $buffer[] = $this->readChar();
+                    }
+                    break;
+            }
+
+        } else if (in_array($this->peek, ['x', 'b', 'o']) {
+            return new Token(Tag::T_INTEGER, $this->symbol_table->add($number));
+        }
+
         // Hexadecimal or binary
         if ($this->peek === '0' && (in_array(strtolower($this->preview()), ['x', 'b']))) {
             $buffer[] = $this->readChar(); // 0
