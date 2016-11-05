@@ -26,9 +26,14 @@ use \ReflectionClass;
 class Tag
 {
     /* Constructions */
-    const T_IDENT = 257;
+
+    const T_IDENT = 253;
+    const T_INT_BIN = 255;
+    const T_INT_OCT = 256;
+    const T_INT_HEX = 257;
     const T_INTEGER = 258;
     const T_DOUBLE = 400;
+    const T_DOUBLE_EXP = 401;
     const T_STRING = 600;
     const T_ATOM = 601;
     const T_REGEX = 1001;

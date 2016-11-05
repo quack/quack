@@ -82,115 +82,83 @@ class Tokenizer extends Lexer
     public function digit()
     {
         $buffer = [];
-        $is_double = false;
-
         $number = $this->readChar();
-        $this->column++;
 
         // Check if it is binary, octal or hexadec
-        if ($number === '0' &&
-            (!((int) $this->preview() >> 1 && $this->peek === 'b' ||
-             !((int) $this->preview() >> 3 && $this->peek === 'o' ||
-             !((int) $this->preview() >> 4 && $this->peek === 'x' ))) {
+        /*if ($number === '0' && !($this->isEnd()) &&
+            (!((int) $this->preview() >> 1  && $this->peek === 'b' ||
+             !((int) $this->preview() >> 3  && $this->peek === 'o' ||
+             ctype_xdigit($this->preview()) && $this->peek === 'x' )))) {
+
             $base = $this->readChar();
-            $this->column++;
+            // we will increment the column for this readChar later
+            $buffer[] = $number;
+            $buffer[] = $base;
 
-            switch ($base) {
-                case 'x':
-                    while (ctype_xdigit($this->peek)) {
-                        $buffer[] = $this->readChar();
-                    }
-                    
-                    break;
+            $tag = Tag::T_INT_HEX;
+            if ($base === 'x') {
+                do {
+                    $buffer[] = $this->readChar();
+                } while (ctype_xdigit($this->peek));
+            } else  {
+                $bits = 0;
+                if ($base === 'b') {
+                    $bits = 1;
+                    $tag = Tag::T_INT_BIN;
+                } else {
+                    $bits = 3;
+                    $tag = Tag::T_INT_OCT;
+                }
 
-                case 'o':
-                    while (ctype_digit($this->peek) && !((int) $this->peek >> 3)) {
-                        $buffer[] = $this->readChar();
-                    }
-                    break;
-                
-                case 'b':
-                    while (ctype_digit($this->peek) && !((int) $this->peek >> 1)) {
-                        $buffer[] = $this->readChar();
-                    }
-                    break;
-            }
-
-        } else if (in_array($this->peek, ['x', 'b', 'o']) {
-            return new Token(Tag::T_INTEGER, $this->symbol_table->add($number));
-        }
-
-        // Hexadecimal or binary
-        if ($this->peek === '0' && (in_array(strtolower($this->preview()), ['x', 'b']))) {
-            $buffer[] = $this->readChar(); // 0
-
-            // b and x are identifiers if there is no valid value after then
-            if (($this->peek === 'b' && (int) $this->preview() >> 1)         // Fake bin
-                || ($this->peek === 'x' && !ctype_xdigit($this->preview()))) { // Fake hex
-
-                $value = '0';
-                $this->column += 1;
-                return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
-            }
-
-            $buffer[] = $b_or_x = strtolower($this->readChar()); // b or x
-
-            switch ($b_or_x) {
-                case 'b':
-                    do {
-                        $buffer[] = $this->readChar();
-                    } while (ctype_digit($this->peek) && !((int) $this->peek >> 1));
-
-                    break;
-
-                case 'x':
-                    do {
-                        $buffer[] = $this->readChar();
-                    } while (ctype_xdigit($this->peek));
-
-                    break;
+                do {
+                    $buffer[] = $this->readChar();
+                } while (ctype_digit($this->peek) && !((int) $this->peek >> $bits));
             }
 
             $value = implode($buffer);
-            $this->column += sizeof($value);
+            $this->column += sizeof($value) + 1; // +1 = base increment
+            return new Token($tag, $this->symbol_table->add($number));
+        } else if (!(ctype_digit($this->peek)) && // not a number and not exp
+            !$this->isEnd() &&
+            !($this->peek === 'e' &&
+            ($this->preview() === '+' || $this->preview() === '-') &&
+            ctype_digit($this->preview(2)))) {
+            return new Token(Tag::T_INTEGER, $this->symbol_table->add($number));
+        }*/
 
-            return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
+        $tag = Tag::T_INTEGER;
+        $buffer[] = $number;
+        // state 1: looking for a number
+        $buffer = array_merge($buffer, $this->integer());
+        // check optional state 2: looking for a '.' and numbers
+        if (!$this->isEnd() && $this->peek === '.'
+            && ctype_digit($this->preview())) {
+            $tag = Tag::T_DOUBLE;
+            $buffer[] = $this->readChar(); // append '.'
+            $buffer = array_merge($buffer, $this->integer());
+        }
+        // check optional state 4: looking for a 'e+' or 'e-' and numbers
+        if (!$this->isEnd() && ($this->matches('e+') || $this->matches('e-'))
+            && ctype_digit($this->preview(2))) {
+            $tag = Tag::T_DOUBLE;
+            $buffer[] = $this->readChar(); // append 'e'
+            $buffer[] = $this->readChar(); // append '+' or '-'
+            $buffer = array_merge($buffer, $this->integer());
         }
 
-        // Is it decimal or octal?
-        parse_int:
-        do {
-            $buffer[] = $this->readChar();
-        } while (ctype_digit((string) $this->peek));
-
-        if ($this->peek === '.' && ctype_digit((string) $this->preview()) && !$is_double) {
-            $buffer[] = $this->readChar();
-            $is_double = true;
-            goto parse_int;
-        }
-
-        // Try to check for octal compatibility
-        if (!$is_double && $buffer[0] === '0' && sizeof($buffer) > 1) {
-            $oct_buffer = [];
-            $current_buffer_size = sizeof($buffer);
-
-            $index = 0;
-            while ($index < $current_buffer_size && in_array($buffer[$index], range(0, 7))) {
-                $oct_buffer[] = $buffer[$index];
-                $index++;
-            }
-
-            $value = implode($oct_buffer);
-            $this->column += $current_buffer_size;
-            return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
-        }
-
-        // Decimal
-        $size = sizeof($buffer);
         $value = implode($buffer);
+        $this->column += sizeof($buffer);
+        return new Token($tag, $this->symbol_table->add($value));
+    }
 
-        $this->column += $size;
-        return new Token($is_double ? Tag::T_DOUBLE : Tag::T_INTEGER, $this->symbol_table->add($value));
+    private function integer()
+    {
+        $arr = [];
+        while (!$this->isEnd() && ctype_digit($this->peek)) {
+            $arr[] = $this->readChar();
+        }
+
+        return $arr;
     }
 
     private function identifier()
