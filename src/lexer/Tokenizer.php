@@ -115,6 +115,12 @@ class Tokenizer extends Lexer
                             $buffer[] = $this->readChar();
                         } while (ctype_digit($this->peek) &&
                             !((int) $this->peek >> $bits));
+
+                        if (ctype_alpha(end($buffer))) {
+                            $found = false; // false positive:0b[2-9] or 0o[8-9]
+                            $buffer = []; // reset buffer
+                            $this->stepback(); // retract
+                        }
                     }
                 }
             }
