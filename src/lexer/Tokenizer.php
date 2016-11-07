@@ -84,63 +84,63 @@ class Tokenizer extends Lexer
         $buffer = [];
         $number = $this->readChar();
 
-        // Check if it is binary, octal or hexadec
-        /*if ($number === '0' && !($this->isEnd()) &&
-            (!((int) $this->preview() >> 1  && $this->peek === 'b' ||
-             !((int) $this->preview() >> 3  && $this->peek === 'o' ||
-             ctype_xdigit($this->preview()) && $this->peek === 'x' )))) {
-
-            $base = $this->readChar();
-            // we will increment the column for this readChar later
-            $buffer[] = $number;
-            $buffer[] = $base;
+        // check if the number is /0.{1}[0-9a-fA-F]/
+        if (!$this->isEnd() && $number === '0' &&
+            ctype_xdigit($this->preview())) {
 
             $tag = Tag::T_INT_HEX;
-            if ($base === 'x') {
+            $found = false;
+            if ($this->peek === 'x') { // we know that preview is hexadec
+                $found = true;
+                $buffer[] = $number;
                 do {
                     $buffer[] = $this->readChar();
                 } while (ctype_xdigit($this->peek));
-            } else  {
+            } else {
                 $bits = 0;
-                if ($base === 'b') {
-                    $bits = 1;
-                    $tag = Tag::T_INT_BIN;
-                } else {
-                    $bits = 3;
-                    $tag = Tag::T_INT_OCT;
-                }
+                if (ctype_digit($this->preview())) { // check if is dec
+                    if ($this->peek === 'b') {
+                        $bits = 1;
+                        $tag = Tag::T_INT_BIN;
+                        $found = true;
+                    } else if ($this->peek === 'o') {
+                        $bits = 3;
+                        $tag = Tag::T_INT_OCT;
+                        $found = true;
+                    }
 
-                do {
-                    $buffer[] = $this->readChar();
-                } while (ctype_digit($this->peek) && !((int) $this->peek >> $bits));
+                    if ($found) {
+                        $buffer[] = $number;
+                        do {
+                            $buffer[] = $this->readChar();
+                        } while (ctype_digit($this->peek) &&
+                            !((int) $this->peek >> $bits));
+                    }
+                }
             }
 
-            $value = implode($buffer);
-            $this->column += sizeof($value) + 1; // +1 = base increment
-            return new Token($tag, $this->symbol_table->add($number));
-        } else if (!(ctype_digit($this->peek)) && // not a number and not exp
-            !$this->isEnd() &&
-            !($this->peek === 'e' &&
-            ($this->preview() === '+' || $this->preview() === '-') &&
-            ctype_digit($this->preview(2)))) {
-            return new Token(Tag::T_INTEGER, $this->symbol_table->add($number));
-        }*/
+            if ($found) {
+                $value = implode($buffer);
+                $this->column += sizeof($buffer);
+                return new Token($tag, $this->symbol_table->add($value));
+            }
+        }
 
         $tag = Tag::T_INTEGER;
         $buffer[] = $number;
         // state 1: looking for a number
         $buffer = array_merge($buffer, $this->integer());
-        // check optional state 2: looking for a '.' and numbers
+        // check optional floating state: looking for a '.' and integers
         if (!$this->isEnd() && $this->peek === '.'
             && ctype_digit($this->preview())) {
             $tag = Tag::T_DOUBLE;
             $buffer[] = $this->readChar(); // append '.'
             $buffer = array_merge($buffer, $this->integer());
         }
-        // check optional state 4: looking for a 'e+' or 'e-' and numbers
+        // check optional exp state: looking for a 'e+' or 'e-' and integers
         if (!$this->isEnd() && ($this->matches('e+') || $this->matches('e-'))
             && ctype_digit($this->preview(2))) {
-            $tag = Tag::T_DOUBLE;
+            $tag = Tag::T_DOUBLE_EXP;
             $buffer[] = $this->readChar(); // append 'e'
             $buffer[] = $this->readChar(); // append '+' or '-'
             $buffer = array_merge($buffer, $this->integer());

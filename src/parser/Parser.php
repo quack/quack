@@ -97,7 +97,11 @@ abstract class Parser
     {
         $this->register('&(', new PartialFuncParselet);
         $this->register(Tag::T_INTEGER, new LiteralParselet);
+        $this->register(Tag::T_INT_HEX, new LiteralParselet);
+        $this->register(Tag::T_INT_OCT, new LiteralParselet);
+        $this->register(Tag::T_INT_BIN, new LiteralParselet);
         $this->register(Tag::T_DOUBLE, new LiteralParselet);
+        $this->register(Tag::T_DOUBLE_EXP, new LiteralParselet);
         $this->register(Tag::T_STRING, new LiteralParselet);
         $this->register(Tag::T_REGEX, new LiteralParselet);
         $this->register(Tag::T_IDENT, new NameParselet);

@@ -28,22 +28,28 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function testNumber()
     {
         $decimal_integer = "1083";
-        $octal_integer = "0314";
-        $octal_partial_integer = "0314891";
+        $octal_integer = "0o314";
+        $octal_partial_integer = "0o314891";
         $hexa_integer = "0xFFAB01";
         $decimal_double = "124.1323";
+        $decimal_double_exp = "124.1323e+100";
+        $decimal_double_exp_neg = "024e-25";
+        $decimal_double_exp_pos = "024e+25";
         $decimal_non_octal_double = "0314.0";
         $binary_integer = "0b11111111";
         $binary_invalid = "0b1019";
 
         $this->assertEquals("[T_INTEGER, 1083]", $this->tokenize($decimal_integer, SHOW_SYMBOL_TABLE));
-        $this->assertEquals("[T_INTEGER, 0314]", $this->tokenize($octal_integer, SHOW_SYMBOL_TABLE));
-        $this->assertEquals("[T_INTEGER, 0314]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
-        $this->assertEquals("[T_INTEGER, 0xFFAB01]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INT_OCT, 0o314]", $this->tokenize($octal_integer, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INT_OCT, 0o314][T_INTEGER, 891]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INT_HEX, 0xFFAB01]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE, 124.1323]", $this->tokenize($decimal_double, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_DOUBLE_EXP, 124.1323e+100]", $this->tokenize($decimal_double_exp, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_DOUBLE_EXP, 024e-25]", $this->tokenize($decimal_double_exp_neg, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_DOUBLE_EXP, 024e+25]", $this->tokenize($decimal_double_exp_pos, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE, 0314.0]", $this->tokenize($decimal_non_octal_double, SHOW_SYMBOL_TABLE));
-        $this->assertEquals("[T_INTEGER, 0b11111111]", $this->tokenize($binary_integer, SHOW_SYMBOL_TABLE));
-        $this->assertEquals("[T_INTEGER, 0b101][T_INTEGER, 9]", $this->tokenize($binary_invalid, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INT_BIN, 0b11111111]", $this->tokenize($binary_integer, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INT_BIN, 0b101][T_INTEGER, 9]", $this->tokenize($binary_invalid, SHOW_SYMBOL_TABLE));
     }
 
     public function testString()
