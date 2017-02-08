@@ -28,7 +28,7 @@
         [fnmatch]
         [shutil [rmtree]]
         [ntpath [basename]]
-        [termcolor [colored]]
+        [termcolor [colored cprint]]
         [difflib])
 
 (def **version** "Quack test toolkit v0.0.1-alpha")
@@ -166,18 +166,12 @@
     (if (= output stripped-to-compare)
       (do
         (setv passed (inc passed))
-        (print (colored (-> "Pass: "
-          (+ file)
-          (+ " - ")
-          (+ (:describe section))) "green")))
+        (cprint "PASS" "white" "on_green" :attrs ["bold"] :end " ")
+        (print (-> file (+ " - ") (+ (:describe section)))))
       (do
         (setv failed (inc failed))
-        (print
-          (colored
-            (-> "Fail: "
-              (+ file)
-              (+ " - ")
-              (+ (:describe section))) "red"))
+        (cprint "FAIL" "white" "on_red" :attrs ["bold"] :end " ")
+        (print (-> file (+ " - ") (+ (:describe section))))
         (print "Difference:")
         (setv output-list
           (-> output (.split linesep)))
