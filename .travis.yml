@@ -4,10 +4,9 @@ php:
   - '5.6'
   - '7.0'
   - hhvm
-  - nightly
 
 install:
-  - pip install --user hy
+  - pip install --user hy==0.11.1
   - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
