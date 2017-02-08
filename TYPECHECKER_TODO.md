@@ -33,7 +33,7 @@ Sprint 2:
 - [ ] Run typechecker and see type rules for bluerprints, traits, structs and impls
 - [ ] Run typechecker for MemberStmt
 - [ ] Implement supertype and subtype structural (and nominal) comparators [Duck typing]
-- [ ] Skip typechecker over ModuleStmt and OpenStmt
+- [x] Skip typechecker over ModuleStmt and OpenStmt
 - [ ] Run typechecker for RaiseStmt, ensure derivation from \Exception
 - [ ] Assert the context of ReturnStmt and pass the expected return type to it when inside functions
 - [ ] Implement subtyping for arrays and maps (check implementation of sum-types)

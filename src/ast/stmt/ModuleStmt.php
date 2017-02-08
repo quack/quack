@@ -44,4 +44,9 @@ class ModuleStmt extends Stmt
     {
         // Pass
     }
+
+    public function runTypeChecker()
+    {
+        // Pass
+    }
 }
