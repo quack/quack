@@ -116,7 +116,7 @@ class Tokenizer extends Lexer
             }
 
             $value = implode($buffer);
-            $this->column += sizeof($value);
+            $this->column += sizeof($buffer);
 
             return new Token(Tag::T_INTEGER, $this->symbol_table->add($value));
         }
