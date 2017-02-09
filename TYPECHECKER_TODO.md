@@ -22,7 +22,7 @@ Sprint 2:
 - [x] Run typechecker on BreakStmt
 - [ ] Implement parser for type signatures
 - [ ] Implement sum-types and type combinators
-- [x] Run typechecker on SwitchStmt and CaseStmt // partially done: check TODO inside SwitchStmt.php
+- [x] Run typechecker on SwitchStmt and CaseStmt
 - [x] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [x] Run typechecker on ForeachStmt
@@ -33,9 +33,10 @@ Sprint 2:
 - [ ] Run typechecker and see type rules for bluerprints, traits, structs and impls
 - [ ] Run typechecker for MemberStmt
 - [ ] Implement supertype and subtype structural (and nominal) comparators [Duck typing]
-- [ ] Skip typechecker over ModuleStmt and OpenStmt
+- [x] Skip typechecker over ModuleStmt and OpenStmt
 - [ ] Run typechecker for RaiseStmt, ensure derivation from \Exception
 - [ ] Assert the context of ReturnStmt and pass the expected return type to it when inside functions
 - [ ] Implement subtyping for arrays and maps (check implementation of sum-types)
 - [x] Inject type for variable in ForStmt
 - [x] Inject type for variable in ForeachStmt
+- [x] Remove difference between number types for type checking

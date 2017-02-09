@@ -24,8 +24,7 @@ namespace QuackCompiler\Types;
 class NativeQuackType
 {
     const T_STR      = 0;
-    const T_INT      = 1;
-    const T_DOUBLE   = 2;
+    const T_NUMBER   = 2;
     const T_BOOL     = 3;
     const T_OBJ      = 4;
     const T_MAP      = 5;

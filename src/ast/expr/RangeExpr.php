@@ -91,10 +91,7 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        $newtype->subtype = Type::getBaseType(array_filter(array_values((array) $type), function ($t) {
-            return null !== $t;
-        }));
-
+        return new Type(NativeQuackType::T_NUMBER);
         return $newtype;
     }
 }

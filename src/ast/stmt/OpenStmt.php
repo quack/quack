@@ -82,4 +82,9 @@ class OpenStmt extends Stmt
     {
         // Pass
     }
+
+    public function runTypeChecker()
+    {
+        // Pass
+    }
 }

@@ -51,11 +51,6 @@ class NumberExpr extends Expr
 
     public function getType()
     {
-        switch ($this->type) {
-            case 'int':
-                return new Type(NativeQuackType::T_INT);
-            case 'double':
-                return new Type(NativeQuackType::T_DOUBLE);
-        }
+        return new Type(NativeQuackType::T_NUMBER);
     }
 }
