@@ -104,13 +104,11 @@ class WhenExpr extends Expr
 
             if (null === $type) {
                 $type = $action_type;
-            } else {
+            } else if (!$type->isExactlySameAs($action_type)) {
                 // After initializing the first type, let's compare the others
-                if (!$type->isExactlySameAs($action_type)) {
-                    throw new ScopeError([
-                        'message' => "All conditions of cond must have same type `{$type}'. Cond {$conds} is `{$action_type}'"
-                    ]);
-                }
+                throw new ScopeError([
+                    'message' => "All conditions of cond must have same type `{$type}'. Cond {$conds} is `{$action_type}'"
+                ]);
             }
 
             $conds++;
