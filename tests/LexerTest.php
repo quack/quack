@@ -33,6 +33,8 @@ class LexerTest extends \PHPUnit_Framework_TestCase
         $hexa_integer = "0xFFAB01";
         $decimal_double = "124.1323";
         $decimal_double_exp = "124.1323e+100";
+        $double_exp_no_signal = "122e1";
+        $double_exp_no_signal_fake = "122eb";
         $decimal_double_exp_neg = "024e-25";
         $decimal_double_exp_pos = "024e+25";
         $decimal_non_octal_double = "0314.0";
@@ -44,6 +46,8 @@ class LexerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("[T_INT_OCT, 0o314][T_INTEGER, 891]", $this->tokenize($octal_partial_integer, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_INT_HEX, 0xFFAB01]", $this->tokenize($hexa_integer, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE, 124.1323]", $this->tokenize($decimal_double, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_DOUBLE_EXP, 122e1]", $this->tokenize($double_exp_no_signal, SHOW_SYMBOL_TABLE));
+        $this->assertEquals("[T_INTEGER, 122][T_IDENT, eb]", $this->tokenize($double_exp_no_signal_fake, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE_EXP, 124.1323e+100]", $this->tokenize($decimal_double_exp, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE_EXP, 024e-25]", $this->tokenize($decimal_double_exp_neg, SHOW_SYMBOL_TABLE));
         $this->assertEquals("[T_DOUBLE_EXP, 024e+25]", $this->tokenize($decimal_double_exp_pos, SHOW_SYMBOL_TABLE));

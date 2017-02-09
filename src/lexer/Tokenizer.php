@@ -143,12 +143,15 @@ class Tokenizer extends Lexer
             $buffer[] = $this->readChar(); // append '.'
             $buffer = array_merge($buffer, $this->integer());
         }
-        // check optional exp state: looking for a 'e+' or 'e-' and integers
-        if (!$this->isEnd() && ($this->matches('e+') || $this->matches('e-'))
-            && ctype_digit($this->preview(2))) {
+        // check optional exp state: looking for a 'e', 'e+' or 'e-' and integers
+        if (!$this->isEnd() && $this->is('e') && (
+            $this->preview() === '+' || $this->preview() === '-' ||
+            ctype_digit($this->preview()))) {
             $tag = Tag::T_DOUBLE_EXP;
             $buffer[] = $this->readChar(); // append 'e'
-            $buffer[] = $this->readChar(); // append '+' or '-'
+            if ($this->is('+') || $this->is('-')) {
+                $buffer[] = $this->readChar(); // append '+' or '-'
+            }
             $buffer = array_merge($buffer, $this->integer());
         }
 
