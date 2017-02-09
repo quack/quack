@@ -152,7 +152,7 @@ class OperatorExpr extends Expr
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return Type::getBaseType([$type->left, $type->right]);
+                return new Type(NativeQuackType::T_NUMBER);
             }
 
             throw new ScopeError([

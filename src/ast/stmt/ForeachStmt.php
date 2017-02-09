@@ -138,7 +138,7 @@ class ForeachStmt extends Stmt
 
         if (null !== $this->key) {
             $this->scope->setMeta('type', $this->key, $generator_type->isList()
-                ? new Type(NativeQuackType::T_INT)
+                ? new Type(NativeQuackType::T_NUMBER)
                 : clone $generator_type->subtype['key']
             );
         }

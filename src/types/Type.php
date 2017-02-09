@@ -41,10 +41,8 @@ class Type
         switch ($this->code) {
             case NativeQuackType::T_STR:
                 return 'string';
-            case NativeQuackType::T_INT:
-                return 'integer';
-            case NativeQuackType::T_DOUBLE:
-                return 'double';
+            case NativeQuackType::T_NUMBER:
+                return 'number';
             case NativeQuackType::T_BOOL:
                 return 'boolean';
             case NativeQuackType::T_ATOM:
@@ -84,16 +82,6 @@ class Type
         return NativeQuackType::T_STR === $this->code;
     }
 
-    public function isInteger()
-    {
-        return NativeQuackType::T_INT === $this->code;
-    }
-
-    public function isDouble()
-    {
-        return NativeQuackType::T_DOUBLE === $this->code;
-    }
-
     public function isBoolean()
     {
         return NativeQuackType::T_BOOL === $this->code;
@@ -121,7 +109,7 @@ class Type
 
     public function isNumber()
     {
-        return $this->isInteger() || $this->isDouble();
+        return NativeQuackType::T_NUMBER === $this->code;
     }
 
     public function isLazy()
@@ -179,23 +167,5 @@ class Type
         $this->code = $type->code;
         $this->subtype = $type->subtype;
         $this->props = $type->props;
-    }
-
-    public static function getBaseType($types)
-    {
-        if (0 === sizeof($types)) {
-            return null;
-        }
-
-        // Currently, implemented only for numbers
-        if ($types[0]->isNumber()) {
-            return new Type(max(array_map(
-                function ($type) { return $type->code; },
-                $types
-            )));
-        }
-
-        // No base type. Let's clone the initial type
-        return clone $types[0];
     }
 }

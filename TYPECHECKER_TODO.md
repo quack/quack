@@ -39,3 +39,4 @@ Sprint 2:
 - [ ] Implement subtyping for arrays and maps (check implementation of sum-types)
 - [x] Inject type for variable in ForStmt
 - [x] Inject type for variable in ForeachStmt
+- [x] Remove difference between number types for type checking

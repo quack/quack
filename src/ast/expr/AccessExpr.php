@@ -57,10 +57,10 @@ class AccessExpr extends Expr
         $index_type = $this->index->getType();
 
         if (NativeQuackType::T_LIST === $left_type->code) {
-            // Expected numeric, integer index
-            if (!$index_type->isInteger()) {
+            // Expected numeric index
+            if (!$index_type->isNumber()) {
                 throw new ScopeError([
-                    'message' => "Expected index of array to be an integer. Got `{$index_type}'"
+                    'message' => "Expected index of array to be a number. Got `{$index_type}'"
                 ]);
             }
 

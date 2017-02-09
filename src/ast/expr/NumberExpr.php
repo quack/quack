@@ -28,12 +28,10 @@ use \QuackCompiler\Types\Type;
 class NumberExpr extends Expr
 {
     public $value;
-    public $type;
 
-    public function __construct($value, $type)
+    public function __construct($value)
     {
         $this->value = $value;
-        $this->type = $type;
     }
 
     public function format(Parser $parser)
@@ -49,11 +47,6 @@ class NumberExpr extends Expr
 
     public function getType()
     {
-        switch ($this->type) {
-            case 'int':
-                return new Type(NativeQuackType::T_INT);
-            case 'double':
-                return new Type(NativeQuackType::T_DOUBLE);
-        }
+        return new Type(NativeQuackType::T_NUMBER);
     }
 }
