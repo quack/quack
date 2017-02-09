@@ -47,7 +47,29 @@ class LiteralParselet implements IPrefixParselet
 
             case Tag::T_DOUBLE:
             case Tag::T_INTEGER:
-                return new NumberExpr($grammar->parser->resolveScope($token->getPointer()));
+                return new NumberExpr($grammar->parser->resolveScope($token->getPointer()),
+                    $tag === Tag::T_DOUBLE ? 'double' : 'int'
+                );
+
+            case Tag::T_INT_HEX:
+                return new NumberExpr(
+                    $grammar->parser->resolveScope($token->getPointer()),
+                    'int', 'hexadec');
+
+            case Tag::T_INT_OCT:
+                return new NumberExpr(
+                    $grammar->parser->resolveScope($token->getPointer()),
+                    'int', 'octal');
+
+            case Tag::T_INT_BIN:
+                return new NumberExpr(
+                    $grammar->parser->resolveScope($token->getPointer()),
+                    'int', 'binary');
+
+            case Tag::T_DOUBLE_EXP:
+                return new NumberExpr(
+                    $grammar->parser->resolveScope($token->getPointer()),
+                    'double', 'scientific');
 
             case Tag::T_NIL:
                 return new NilExpr;

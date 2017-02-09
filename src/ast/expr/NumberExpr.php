@@ -28,10 +28,14 @@ use \QuackCompiler\Types\Type;
 class NumberExpr extends Expr
 {
     public $value;
+    public $type;
+    public $notation;
 
-    public function __construct($value)
+    public function __construct($value, $type, $notation = 'decimal')
     {
         $this->value = $value;
+        $this->type = $type;
+        $this->notation = $notation;
     }
 
     public function format(Parser $parser)
