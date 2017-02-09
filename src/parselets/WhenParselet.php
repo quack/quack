@@ -34,7 +34,7 @@ class WhenParselet implements IPrefixParselet
         $cases = [];
 
         do {
-            $grammar->parser->consume();
+            $grammar->parser->match('|');
 
             // Default operation
             if ($grammar->parser->is(Tag::T_ELSE)) {
