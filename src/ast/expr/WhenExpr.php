@@ -88,9 +88,7 @@ class WhenExpr extends Expr
     {
         $conds = 1;
         $type = null;
-        foreach (array_map(function ($case) {
-            return (object) $case;
-        }, $this->cases) as $case) {
+        foreach (array_map(function ($case) { return (object) $case; }, $this->cases) as $case) {
 
             // Assert all conditions are booleans
             if (null !== $case->condition) {
@@ -103,9 +101,18 @@ class WhenExpr extends Expr
             }
 
             $action_type = $case->action->getType();
-            $type = null === $type
-                ? $action_type
-                : Type::getBaseType([$type, $action_type]);
+
+            if (null === $type) {
+                $type = $action_type;
+            } else {
+                // After initializing the first type, let's compare the others
+                if (!$type->isExactlySameAs($action_type)) {
+                    throw new ScopeError([
+                        'message' => "All conditions of cond must have same type `{$type}'. Cond {$conds} is `{$action_type}'"
+                    ]);
+                }
+            }
+
             $conds++;
         }
 
