@@ -22,7 +22,7 @@ Sprint 2:
 - [x] Run typechecker on BreakStmt
 - [ ] Implement parser for type signatures
 - [ ] Implement sum-types and type combinators
-- [x] Run typechecker on SwitchStmt and CaseStmt // partially done: check TODO inside SwitchStmt.php
+- [x] Run typechecker on SwitchStmt and CaseStmt
 - [x] Run typechecker on ElifStmt
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [x] Run typechecker on ForeachStmt

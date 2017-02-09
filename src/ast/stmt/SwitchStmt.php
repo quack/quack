@@ -74,8 +74,12 @@ class SwitchStmt extends Stmt
             if (!$case->is_else) {
                 $case_type = $case->value->getType();
                 if (!$case_type->isExactlySameAs($value_type)) {
+                    $case_value = property_exists($case->value, 'value')
+                        ? "`{$case->value->value}' "
+                        : "";
+
                     throw new ScopeError([
-                        'message' => "Expecting type of case `{$case->value->value}' of `switch' statement to be `$value_type'. Got `{$case_type}'"
+                        'message' => "Expecting type of case {$case_value}of `switch' statement to be `$value_type'. Got `{$case_type}'"
                     ]);
                 }
             } else {
