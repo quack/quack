@@ -1,0 +1,23 @@
+%%describe
+Supports formatting const expressions
+%%source
+const a :- 1
+
+const pi :- 3.1415,
+      e :- 2.718281828459,
+      phi :- 1.618
+
+const luiz :- @Person @{
+    name     -> "Luiz";
+    nickname -> "bigodespy"
+}
+
+%%expect
+const a :- 1
+const pi :- 3.1415
+    , e :- 2.718281828459
+    , phi :- 1.618
+const luiz :- @Person @{
+  name -> "Luiz";
+  nickname -> "bigodespy"
+}

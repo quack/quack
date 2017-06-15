@@ -57,7 +57,7 @@ class ConstStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = &$parent_scope;
+        $this->scoperef = $parent_scope;
         foreach ($this->definitions as $def) {
             $def[1]->injectScope($parent_scope);
         }

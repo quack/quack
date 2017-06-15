@@ -116,11 +116,11 @@
 
 - Write tests for statements and expressions:
 
-  - [x] BlockStmt 
+  - [x] BlockStmt
   - [x] BreakStmt
   - [x] CaseStmt
   - [x] ClassStmt
-  - [ ] ConstStmt
+  - [x] ConstStmt
   - [ ] ContinueStmt
   - [ ] ElifStmt
   - [ ] EnumStmt
