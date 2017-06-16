@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\NativeQuackType;
@@ -110,7 +111,7 @@ class ForStmt extends Stmt
 
         // TODO: Remove covariance (at least for now)
         // Bind inferred type for variable
-        $this->scope->setMeta('type', $this->variable, new Type(array_reduce($keys, function ($acc, $key) {
+        $this->scope->setMeta(Meta::M_TYPE, $this->variable, new Type(array_reduce($keys, function ($acc, $key) {
             return max($acc, $this->{$key}->getType()->code);
         })));
 

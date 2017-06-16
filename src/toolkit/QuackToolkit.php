@@ -139,6 +139,7 @@ import(AST, 'stmt/StmtList');
 import(SCOPE, 'Scope');
 import(SCOPE, 'ScopeError');
 import(SCOPE, 'Kind');
+import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 

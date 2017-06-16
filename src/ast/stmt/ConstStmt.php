@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 
 class ConstStmt extends Stmt
 {
@@ -68,7 +69,7 @@ class ConstStmt extends Stmt
         foreach ($this->definitions as $def) {
             $vartype = $def[1]->getType();
             // Store type in the meta-scope
-            $this->scoperef->setMeta('type', $def[0], $vartype);
+            $this->scoperef->setMeta(Meta::M_TYPE, $def[0], $vartype);
         }
     }
 }

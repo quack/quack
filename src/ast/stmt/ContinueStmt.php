@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
 class ContinueStmt extends Stmt
@@ -65,11 +66,11 @@ class ContinueStmt extends Stmt
         }
 
         // Usages of the label
-        $refcount = &$parent_scope->getMeta('refcount', $this->label);
+        $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->label);
         if (null === $refcount) {
-            $parent_scope->setMeta('refcount', $this->label, 1);
+            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->label, 1);
         } else {
-            $parent_scope->setMeta('refcount', $this->label, $refcount + 1);
+            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->label, $refcount + 1);
         }
     }
 

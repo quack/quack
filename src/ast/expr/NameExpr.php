@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\Type;
 
@@ -58,18 +59,18 @@ class NameExpr extends Expr
         // later with Quack compile-time reflection function qk_get_meta(prop, symbol)
         // TODO: Assert a variable is initialized in order to use it. We need
         //       a better fork algorithm in order to check for conditional nodes
-        $refcount = &$parent_scope->getMeta('refcount', $this->name);
+        $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->name);
         if (null === $refcount) {
-            $parent_scope->setMeta('refcount', $this->name, 1);
+            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->name, 1);
         } else {
-            $parent_scope->setMeta('refcount', $this->name, $refcount + 1);
+            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->name, $refcount + 1);
         }
     }
 
     public function getType()
     {
         $variable_scope = $this->scoperef->getSymbolScope($this->name);
-        $vartype = $variable_scope->getMeta('type', $this->name);
+        $vartype = $variable_scope->getMeta(Meta::M_TYPE, $this->name);
         return $vartype;
     }
 }
