@@ -67,7 +67,8 @@ class ContinueStmt extends Stmt
             // Assert that we are receiving a declared label
             $label = $parent_scope->lookup($this->label);
 
-            if (($label & Kind::K_LABEL) !== Kind::K_LABEL) {
+            // When the symbol exist, but it's not a label
+            if ($label ^ Kind::K_LABEL) {
                 // When the symbol exist, but it's not a label
                 throw new ScopeError([
                     'message' => "Called `continue' with invalid label `{$this->label}'"
