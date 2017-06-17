@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 
 class WhileStmt extends Stmt
@@ -60,6 +61,7 @@ class WhileStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
+        $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
         $this->bindDeclarations($this->body);
 
         $this->condition->injectScope($parent_scope);
@@ -76,6 +78,8 @@ class WhileStmt extends Stmt
             throw new ScopeError(['message' => "The type of if-statement should be boolean, not `{$condition_type}'"]);
         }
 
-        $this->body->runTypeChecker();
+        foreach ($this->body as $node) {
+            $node->runTypeChecker();
+        }
     }
 }

@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Scope;
 
+use QuackCompiler\Scope\Meta;
+
 class Scope
 {
     public $table = [];
@@ -62,6 +64,12 @@ class Scope
         $scope->meta[$symbol][$property] = $value;
     }
 
+    public function setMetaInContext($property, $value)
+    {
+        // We set the metadata into the scope with no symbols
+        $this->meta[$property] = $value;
+    }
+
     public function getMeta($property, $symbol)
     {
         $scope = &$this->getSymbolScope($symbol);
@@ -72,6 +80,17 @@ class Scope
 
         return array_key_exists($property, $scope->meta[$symbol])
             ? $scope->meta[$symbol][$property]
+            : null;
+    }
+
+    public function getMetaInContext($property)
+    {
+        if (array_key_exists($property, $this->meta)) {
+            return $this->meta[$property];
+        }
+
+        return null !== $this->parent
+            ? $this->parent->getMetaInContext($property)
             : null;
     }
 

@@ -84,6 +84,7 @@ class ForeachStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
+        $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
 
         // Pre-inject key and value in block scope
         if (null !== $this->key) {
