@@ -58,17 +58,11 @@ class FnStmt extends Stmt
         $source .= ($this->signature->is_recursive ? 'rec ' : '')
                  . ($this->signature->is_reference ? '*' : '')
                  . $this->signature->name;
-
-        if (sizeof($this->signature->parameters) > 0) {
-            $source .= '( ';
-            $source .= implode(', ', array_map(function ($param) {
-                return ($param->is_reference ? '*' : '') . $param->name;
-            }, $this->signature->parameters));
-
-            $source .= ' )';
-        } else {
-            $source .= $this->signature->is_bang ? '!' : '()';
-        }
+        $source .= '(';
+        $source .= implode(', ', array_map(function ($param) {
+            return ($param->is_reference ? '*' : '') . $param->name;
+        }, $this->signature->parameters));
+        $source .= ')';
 
         if ($this->is_short) {
             $source .= ' :- ';

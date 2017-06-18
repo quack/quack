@@ -5,6 +5,6 @@ let action :- &{do console.writeline("I've been clicked!")}
 do &{ }
 %%expect
 let action :- &{
-  do console.writeline( "I've been clicked!" )
+  do console.writeline("I've been clicked!")
 }
 do &{}

@@ -4,15 +4,13 @@ Supports formatting classes
 class Walkable
 walk(steps)
 join( *other)
-    bang!
     not_bang()
 multiple_args(a,b,*c)
 end
 %%expect
 class Walkable
-  walk( steps )
-  join( *other )
-  bang!
+  walk(steps)
+  join(*other)
   not_bang()
-  multiple_args( a, b, *c )
+  multiple_args(a, b, *c)
 end

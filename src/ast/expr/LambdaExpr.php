@@ -51,20 +51,20 @@ class LambdaExpr extends Expr
                 break;
             case 1:
                 if ($this->has_brackets) {
-                    $source .= '[ '
+                    $source .= '['
                              . ($this->parameters[0]->is_reference ? '*' : '')
                              . $this->parameters[0]->name
-                             . ' ]';
+                             . ']';
                 } else {
                     $source .= $this->parameters[0]->name;
                 }
                 break;
             default:
-                $source .= '[ ';
+                $source .= '[';
                 $source .= implode(', ', array_map(function ($param) {
                     return ($param->is_reference ? '*' : '') . $param->name;
                 }, $this->parameters));
-                $source .= ' ]';
+                $source .= ']';
         }
 
         $source .= ' -> ';
