@@ -11,6 +11,4 @@ install:
   - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
-script:
-  - make test module=lexer
-  - hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
+script: hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
