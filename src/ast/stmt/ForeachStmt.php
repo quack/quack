@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Util;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -83,6 +84,7 @@ class ForeachStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
+        $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
 
         // Pre-inject key and value in block scope
         if (null !== $this->key) {
@@ -137,13 +139,13 @@ class ForeachStmt extends Stmt
         }
 
         if (null !== $this->key) {
-            $this->scope->setMeta('type', $this->key, $generator_type->isList()
+            $this->scope->setMeta(Meta::M_TYPE, $this->key, $generator_type->isList()
                 ? new Type(NativeQuackType::T_NUMBER)
                 : clone $generator_type->subtype['key']
             );
         }
 
-        $this->scope->setMeta('type', $this->alias, $generator_type->isList()
+        $this->scope->setMeta(Meta::M_TYPE, $this->alias, $generator_type->isList()
             ? clone $generator_type->subtype
             : clone $generator_type->subtype['value']
         );

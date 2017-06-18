@@ -22,8 +22,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
 class WhereExpr extends Expr
@@ -106,7 +106,7 @@ class WhereExpr extends Expr
     {
         // Infer type for each declaration in this scope
         foreach ($this->clauses as $clause) {
-            $this->scoperef->setMeta('type', $clause[0], $clause[1]->getType());
+            $this->scoperef->setMeta(Meta::M_TYPE, $clause[0], $clause[1]->getType());
         }
         // Retain type based on previous inference.
         return $this->expr->getType();

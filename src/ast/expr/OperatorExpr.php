@@ -74,7 +74,8 @@ class OperatorExpr extends Expr
                 // When it is an attribution by name, ensure the variable is mutable
                 $symbol = $parent_scope->lookup($this->left->name);
 
-                if (!($symbol & Kind::K_MUTABLE)) {
+                // when symbol is not mutable
+                if ($symbol ^ Kind::K_MUTABLE) {
                     throw new ScopeError([
                         'message' => "Symbol `{$this->left->name}' is immutable"
                     ]);

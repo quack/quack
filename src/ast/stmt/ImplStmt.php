@@ -85,14 +85,15 @@ class ImplStmt extends Stmt
 
         // Check type for the symbols
         if ('shape' === $type) {
-            if (!($first & Kind::K_SHAPE)) {
+            // When it is not a shape
+            if ($first ^ Kind::K_SHAPE) {
                 throw new ScopeError([
                     'message' => "`{$unqualified_first}' is not a shape"
                 ]);
             }
         } else {
             // Continue, assert this is a class and locate the shape
-            if (!($first & Kind::K_CLASS)) {
+            if ($first ^ Kind::K_CLASS) {
                 throw new ScopeError([
                     'message' => "`{$unqualified_first}' is not a class"
                 ]);
@@ -109,7 +110,7 @@ class ImplStmt extends Stmt
             }
 
             // Not a shape
-            if (!($shape & Kind::K_SHAPE)) {
+            if ($shape ^ Kind::K_SHAPE) {
                 throw new ScopeError([
                     'message' => "`{$shape_name}' is not a shape"
                 ]);

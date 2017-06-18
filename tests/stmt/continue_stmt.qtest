@@ -1,0 +1,19 @@
+%%describe
+Supports formatting continue
+%%source
+:- id for i from 1 to 10 while true continue id end end --scape infinite loop
+
+for j from 0 to 100
+
+continue
+end
+%%expect
+:- id
+for i from 1 to 10
+  while true
+    continue id
+  end
+end
+for j from 0 to 100
+  continue
+end

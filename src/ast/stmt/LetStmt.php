@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Scope\Meta;
 
 class LetStmt extends Stmt
 {
@@ -72,7 +73,7 @@ class LetStmt extends Stmt
 
         // After all, process type inference rules
         foreach ($this->definitions as $def) {
-            $parent_scope->setMeta('type', $def[0], null === $def[1]
+            $parent_scope->setMeta(Meta::M_TYPE, $def[0], null === $def[1]
                 ? null
                 : $def[1]->getType());
         }
@@ -85,7 +86,7 @@ class LetStmt extends Stmt
                 ? $def[1]->getType()
                 : new Type(NativeQuackType::T_LAZY);
             // Store type in the meta-scope
-            $this->scoperef->setMeta('type', $def[0], $vartype);
+            $this->scoperef->setMeta(Meta::M_TYPE, $def[0], $vartype);
         }
     }
 }

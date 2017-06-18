@@ -23,22 +23,25 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
 class ContinueStmt extends Stmt
 {
     public $label;
+    public $is_explicit;
 
     public function __construct($label = null)
     {
         $this->label = $label;
+        $this->is_explicit = null !== $label;
     }
 
     public function format(Parser $parser)
     {
         $source = 'continue';
 
-        if (null !== $this->label) {
+        if ($this->is_explicit) {
             $source .= ' ';
             $source .= $this->label;
         }
@@ -49,27 +52,35 @@ class ContinueStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // Assert that we are receiving a declared label
-        $label = $parent_scope->lookup($this->label);
+        if (!$this->is_explicit) {
+            // Check if there is an implicit label
+            $label = $parent_scope->getMetaInContext(Meta::M_LABEL);
 
-        if (null === $label) {
-            // When the label doesn't exist
-            throw new ScopeError([
-                'message' => "Called `continue' with undeclared label `{$this->label}'"
-            ]);
-        } elseif (!($label & Kind::K_LABEL)) {
-            // When the symbol exist, but it's not a label
-            throw new ScopeError([
-                'message' => "Called `continue' with invalid label `{$this->label}'"
-            ]);
-        }
-
-        // Usages of the label
-        $refcount = &$parent_scope->getMeta('refcount', $this->label);
-        if (null === $refcount) {
-            $parent_scope->setMeta('refcount', $this->label, 1);
+            // If there is no implicit labels in the context, then the user is
+            // calling 'continue' outsite a loop.
+            if (null === $label) {
+                throw new ScopeError([
+                    'message' => "Called `continue' outsite a loop"
+                ]);
+            }
         } else {
-            $parent_scope->setMeta('refcount', $this->label, $refcount + 1);
+            // Assert that we are receiving a declared label
+            $label = $parent_scope->lookup($this->label);
+
+            // When the symbol exist, but it's not a label
+            if ($label ^ Kind::K_LABEL) {
+                // When the symbol exist, but it's not a label
+                throw new ScopeError([
+                    'message' => "Called `continue' with invalid label `{$this->label}'"
+                ]);
+            }
+
+            $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->label);
+            if (null === $refcount) {
+                $parent_scope->setMeta(Meta::M_REF_COUNT, $this->label, 1);
+            } else {
+                $parent_scope->setMeta(Meta::M_REF_COUNT, $this->label, $refcount + 1);
+            }
         }
     }
 
