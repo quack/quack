@@ -8,6 +8,12 @@ use \QuackCompiler\Lexer\Tokenizer;
 
 define('SHOW_SYMBOL_TABLE', true);
 
+// backward compatibility
+if (class_exists('\PHPUnit\Framework\TestCase') &&
+    !class_exists('\PHPUnit_Framework_TestCase')) {
+    class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
+}
+
 class LexerTest extends \PHPUnit_Framework_TestCase
 {
     private function tokenize($source, $show_symbol_table = false)
