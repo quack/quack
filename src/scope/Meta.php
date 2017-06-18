@@ -31,6 +31,6 @@ class Meta
 
     public static function nextMetaLabel()
     {
-        return 'LB'.self::$label_num++;
+        return  'LB' . self::$label_num++;
     }
 }
