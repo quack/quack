@@ -121,14 +121,14 @@
   - [x] CaseStmt
   - [x] ClassStmt
   - [x] ConstStmt
-  - [ ] ContinueStmt
-  - [ ] ElifStmt
+  - [x] ContinueStmt
+  - [x] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
-  - [ ] IfStmt
+  - [x] IfStmt
   - [ ] ImplStmt
   - [ ] LabelStmt
   - [ ] LetStmt

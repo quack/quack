@@ -45,8 +45,6 @@ class ElifStmt extends Stmt
 
         $parser->openScope();
 
-        var_dump($this->body);
-
         foreach ($this->body as $stmt) {
             $source .= $parser->indent();
             $source .= $stmt->format($parser);

@@ -1,0 +1,16 @@
+%%describe
+Supports formatting if statements
+%%source
+if 1 > 0 do console.writeline("I am the only one here") end
+let x:- 10 if x =~ 2 do console.write("X is not equal to two")
+           else do console.write("X is equal to two") end
+%%expect
+if 1 > 0
+  do console.writeline( "I am the only one here" )
+end
+let x :- 10
+if x =~ 2
+  do console.write( "X is not equal to two" )
+else
+  do console.write( "X is equal to two" )
+end
