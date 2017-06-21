@@ -271,6 +271,6 @@ abstract class Parser
 
     public function dedent()
     {
-        return str_repeat('  ', $this->scope_level > 0 ? $this->scope_level - 1 : 0);
+        return str_repeat('  ', max(0, $this->scope_level - 1));
     }
 }

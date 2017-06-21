@@ -12,11 +12,11 @@ do &[name] -> begin
 end
 %%expect
 do &x -> x
-do &[ x ] -> x
-do &[ a, b ] -> a
+do &[x] -> x
+do &[a, b] -> a
 do &[] -> 1
-do &[ *x ] -> x
-do &[ *p ] -> *p
-do &[ name ] -> begin
-  do debug.trace( name )
+do &[*x] -> x
+do &[*p] -> *p
+do &[name] -> begin
+  do debug.trace(name)
 end

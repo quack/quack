@@ -4,4 +4,4 @@ Supports partial function expressions formatting
 do &( + ) do (&(*3))(1)
 %%expect
 do &(+)
-do (&(* 3))( 1 )
+do (&(* 3))(1)

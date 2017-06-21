@@ -30,6 +30,6 @@ end
 switch "a"
   else
     begin
-      do console.writeline( "I am the only one here" )
+      do console.writeline("I am the only one here")
     end
 end

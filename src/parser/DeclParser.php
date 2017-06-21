@@ -65,7 +65,6 @@ trait DeclParser
         $state = (object)[
             'is_recursive' => false,
             'is_reference' => false,
-            'is_bang'      => false,
             'name'         => '<anonymous function>',
             'parameters'   => []
         ];
@@ -74,18 +73,16 @@ trait DeclParser
         $state->is_reference = $this->parser->consumeIf('*');
         $state->name = $this->identifier();
 
-        if (!($state->is_bang = $this->parser->consumeIf('!'))) {
-            $this->parser->match('(');
+        $this->parser->match('(');
 
-            if (!$this->parser->consumeIf(')')) {
+        if (!$this->parser->consumeIf(')')) {
+            $state->parameters[] = $this->_parameter();
+
+            while ($this->parser->consumeIf(',')) {
                 $state->parameters[] = $this->_parameter();
-
-                while ($this->parser->consumeIf(',')) {
-                    $state->parameters[] = $this->_parameter();
-                }
-
-                $this->parser->match(')');
             }
+
+            $this->parser->match(')');
         }
 
         return $state;
