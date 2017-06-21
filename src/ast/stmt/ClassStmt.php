@@ -48,17 +48,12 @@ class ClassStmt extends Stmt
                 . ($sign->is_reference ? '*' : '')
                 . $sign->name;
 
-            if (sizeof($sign->parameters) > 0) {
-                $source .= '( ';
-                $source .= implode(', ', array_map(function ($param) {
-                    return ($param->is_reference ? '*' : '') . $param->name;
-                }, $sign->parameters));
+            $source .= '(';
+            $source .= implode(', ', array_map(function ($param) {
+                return ($param->is_reference ? '*' : '') . $param->name;
+            }, $sign->parameters));
 
-                $source .= ' )';
-            } else {
-                $source .= $sign->is_bang ? '!' : '()';
-            }
-
+            $source .= ')';
             $source .= PHP_EOL;
         }
 

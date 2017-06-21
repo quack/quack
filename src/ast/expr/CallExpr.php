@@ -27,30 +27,21 @@ class CallExpr extends Expr
 {
     public $func;
     public $arguments;
-    public $is_bang;
 
-    public function __construct($func, $arguments, $is_bang)
+    public function __construct($func, $arguments)
     {
         $this->func = $func;
         $this->arguments = $arguments;
-        $this->is_bang = $is_bang;
     }
 
     public function format(Parser $parser)
     {
         $source = $this->func->format($parser);
-
-        if (sizeof($this->arguments) > 0) {
-            $source .= '( ';
-            $source .= implode('; ', array_map(function (Expr $arg) use ($parser) {
-                return $arg->format($parser);
-            }, $this->arguments));
-            $source .= ' )';
-        } else {
-            $source .= $this->is_bang
-                ? '!'
-                : '()';
-        }
+        $source .= '(';
+        $source .= implode(', ', array_map(function (Expr $arg) use ($parser) {
+            return $arg->format($parser);
+        }, $this->arguments));
+        $source .= ')';
 
         return $this->parenthesize($source);
     }

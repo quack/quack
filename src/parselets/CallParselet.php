@@ -32,22 +32,19 @@ class CallParselet implements IInfixParselet
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {
         $args = [];
-        $is_bang = '!' === $token->getTag();
 
-        if (!$is_bang) {
-            if (!$grammar->parser->is(')')) {
+        if (!$grammar->parser->is(')')) {
+            $args[] = $grammar->_expr();
+
+            while ($grammar->parser->is(',')) {
+                $grammar->parser->consume();
                 $args[] = $grammar->_expr();
-
-                while ($grammar->parser->is(';')) {
-                    $grammar->parser->consume();
-                    $args[] = $grammar->_expr();
-                }
             }
-
-            $grammar->parser->match(')');
         }
 
-        return new CallExpr($left, $args, $is_bang);
+        $grammar->parser->match(')');
+
+        return new CallExpr($left, $args);
     }
 
     public function getPrecedence()
