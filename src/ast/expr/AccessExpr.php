@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\TypeError;
 
 class AccessExpr extends Expr
 {
@@ -56,33 +57,32 @@ class AccessExpr extends Expr
         $left_type = $this->left->getType();
         $index_type = $this->index->getType();
 
+        // Access is valid for lists
         if (NativeQuackType::T_LIST === $left_type->code) {
             // Expected numeric index
             if (!$index_type->isNumber()) {
-                throw new ScopeError([
-                    'message' => "Expected index of array to be a number. Got `{$index_type}'"
-                ]);
+                throw new TypeError("Expected index of array to be a number. Got `{$index_type}'");
             }
 
             return clone $left_type->subtype;
         }
 
+        // Access is valid for maps
         if ($left_type->isMap()) {
             if (!$index_type->isExactlySameAs($left_type->subtype['key'])) {
-                throw new ScopeError([
-                    'message' => "Expect index of map to be a `{$left_type->subtype['key']}'. Got `{$index_type}'"
-                ]);
+                throw new TypeError(
+                    "Expect index of map to be a `{$left_type->subtype['key']}'. Got `{$index_type}'"
+                );
             }
 
-            return $left_type->subtype['value'];
+            return clone $left_type->subtype['value'];
         }
 
+        // Access on strings returns also a string
         if ($left_type->isString()) {
             return clone $left_type;
         }
 
-        throw new ScopeError([
-            'message' => "Trying to access by index an element of type `$left_type' that is not accessible"
-        ]);
+        throw new TypeError("Trying to access by index an element of type `$left_type' that is not accessible");
     }
 }
