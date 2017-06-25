@@ -72,10 +72,18 @@ class OperatorExpr extends Expr
 
         if (':-' === $this->operator) {
             if ($this->left instanceof NameExpr) {
-                // When it is an attribution by name, ensure the variable is mutable
                 $symbol = $parent_scope->lookup($this->left->name);
 
-                // when symbol is not mutable
+                var_dump($symbol, $this->left->name);
+
+                // When symbol is not a variable
+                if (~$symbol & Kind::K_VARIABLE) {
+                    throw new ScopeError([
+                        'message' => "Symbol `{$this->left->name}' is not a variable"
+                    ]);
+                }
+
+                // When symbol is not mutable
                 if (~$symbol & Kind::K_MUTABLE) {
                     throw new ScopeError([
                         'message' => "Symbol `{$this->left->name}' is immutable"
