@@ -27,6 +27,7 @@ use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class OperatorExpr extends Expr
 {
@@ -109,7 +110,7 @@ class OperatorExpr extends Expr
     {
         $type = (object)[
             'left'  => $this->left->getType(),
-            'right' => 'string' === gettype($this->right) ? null : $this->right->getType()
+            'right' => $this->right->getType()
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
@@ -118,12 +119,10 @@ class OperatorExpr extends Expr
         if (in_array($this->operator, $member_access, true)) {
             // When member access and the property exists on the left type
             if (is_array($type->left->props) && array_key_exists($this->right, $type->left->props)) {
-                return $type->left->props[$this->right];
+                return clone $type->left->props[$this->right];
             }
 
-            throw new ScopeError([
-                'message' => "Expression of type `{$type->left}' has no property `{$this->right}'"
-            ]);
+            throw new TypeError("Expression of type `{$type->left}' has no property `{$this->right}'");
         }
 
         // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
@@ -135,13 +134,10 @@ class OperatorExpr extends Expr
                     ? "variable `{$this->left->name}' :: {$type->left}"
                     : (string) $type->right;
 
-                throw new ScopeError([
-                    'message' => "Trying to set value of type `{$type->right}` to {$target}"
-                ]);
+                throw new TypeError("Trying to set value of type `{$type->right}` to {$target}");
             }
 
-            // We've just removed covariance and contravariance :)
-            return $type->right;
+            return clone $type->right;
         }
 
         // Type checking for numeric and string concat operations
@@ -156,10 +152,9 @@ class OperatorExpr extends Expr
                 return new Type(NativeQuackType::T_NUMBER);
             }
 
-            throw new ScopeError([
-                'message' => "No type overload found for operator `{$op_name}' at " .
-                             "{{$type->left} {$op_name} {$type->right}}"
-            ]);
+            throw new TypeError(
+                "No type overload found for operator `{$op_name}' at {{$type->left} {$op_name} {$type->right}}"
+            );
         }
 
         // Type checking for equality operators and coalescence
@@ -172,19 +167,18 @@ class OperatorExpr extends Expr
                     : new Type(NativeQuackType::T_BOOL);
             }
 
-            throw new ScopeError([
-                'message' => "Why in the world are you trying to compare two expressions of different types? at " .
-                             "{{$type->left} {$op_name} {$type->right}}"
-            ]);
+            throw new TypeError(
+                "Why in the world are you trying to compare two expressions of different types? at " .
+                "{{$type->left} {$op_name} {$type->right}}"
+            );
         }
 
         // Type checking for string matched by regex
         if ('=~' === $this->operator) {
             if (!$type->left->isString() || !$type->right->isRegex()) {
-                throw new ScopeError([
-                    'message' => "No type overload found for operator `=~' at " .
-                                 "{{$type->left} =~ {$type->right}}"
-                ]);
+                throw new TypeError(
+                    "No type overload found for operator `=~' at {{$type->left} =~ {$type->right}}"
+                );
             }
 
             return new Type(NativeQuackType::T_BOOL);
@@ -194,10 +188,9 @@ class OperatorExpr extends Expr
         $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
         if (in_array($this->operator, $bool_op, true)) {
             if (!$type->left->isBoolean() || !$type->right->isBoolean()) {
-                throw new ScopeError([
-                    'message' => "No type overload found for operator `{$op_name}' " .
-                                 "{{$type->left} {$op_name} {$type->right}}"
-                ]);
+                throw new TypeError(
+                    "No type overload found for operator `{$op_name}' {{$type->left} {$op_name} {$type->right}}"
+                );
             }
 
             return new Type(NativeQuackType::T_BOOL);
