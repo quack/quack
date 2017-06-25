@@ -22,9 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class TernaryExpr extends Expr
 {
@@ -61,21 +61,21 @@ class TernaryExpr extends Expr
     {
         $condition_type = $this->condition->getType();
         if (NativeQuackType::T_BOOL !== $condition_type->code) {
-            throw new ScopeError([
-                'message' => "Condition of ternary operator should de `boolean'. Got `{$condition_type}'"
-            ]);
+            throw new TypeError(
+                "Condition of ternary operator should de `boolean'. Got `{$condition_type}'"
+            );
         }
 
         $when_true_type = $this->then->getType();
         $when_false_type = $this->else->getType();
 
         if (!$when_true_type->isExactlySameAs($when_false_type)) {
-            throw new ScopeError([
-                'message' => "Both sides of ternary expression must have the same type. Got " .
-                             "`$when_true_type' and `$when_false_type'"
-            ]);
+            throw new TypeError(
+                "Both sides of ternary expression must have the same type. Got " .
+                "`$when_true_type' and `$when_false_type'"
+            );
         }
 
-        return $when_true_type;
+        return clone $when_true_type;
     }
 }
