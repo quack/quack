@@ -22,7 +22,6 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
