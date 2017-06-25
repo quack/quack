@@ -68,7 +68,7 @@ class BreakStmt extends Stmt
             $label = $parent_scope->lookup($this->label);
 
             // When the symbol exist, but it's not a label
-            if ($label ^ Kind::K_LABEL) {
+            if (~$label & Kind::K_LABEL) {
                 throw new ScopeError([
                     'message' => "Called `break' with invalid label `{$this->label}'"
                 ]);

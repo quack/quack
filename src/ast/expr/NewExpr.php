@@ -61,7 +61,7 @@ class NewExpr extends Expr
         }
 
         // When symbol is not a shape
-        if ($class ^ Kind::K_SHAPE) {
+        if (~$class & Kind::K_SHAPE) {
             throw new ScopeError([
                 'message' => "Cannot instantiate `{$name}'. Not a shape"
             ]);
