@@ -64,8 +64,14 @@ class BreakStmt extends Stmt
                 ]);
             }
         } else {
-            // Assert that we are receiving a declared label
             $label = $parent_scope->lookup($this->label);
+
+            // When the symbol doesn't exist
+            if (null === $label) {
+                throw new ScopeError([
+                    'message' => "Called `break' with undefined label `{$this->label}'"
+                ]);
+            }
 
             // When the symbol exist, but it's not a label
             if (~$label & Kind::K_LABEL) {
