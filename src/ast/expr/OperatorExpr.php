@@ -76,7 +76,7 @@ class OperatorExpr extends Expr
                 $symbol = $parent_scope->lookup($this->left->name);
 
                 // when symbol is not mutable
-                if ($symbol ^ Kind::K_MUTABLE) {
+                if (~$symbol & Kind::K_MUTABLE) {
                     throw new ScopeError([
                         'message' => "Symbol `{$this->left->name}' is immutable"
                     ]);
