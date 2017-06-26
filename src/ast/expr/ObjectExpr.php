@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 
@@ -72,8 +73,21 @@ class ObjectExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        foreach ($this->values as $value) {
+        $defined = [];
+        $index = 0;
+        while ($index < sizeof($this->keys)) {
+            $key = $this->keys[$index];
+            $value = $this->values[$index];
+
+            if (array_key_exists($key, $defined)) {
+                throw new ScopeError([
+                    'message' => "Duplicated object property `${key}'"
+                ]);
+            }
+
             $value->injectScope($parent_scope);
+            $defined[$key] = true;
+            $index++;
         }
     }
 
