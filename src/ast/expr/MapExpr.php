@@ -39,17 +39,17 @@ class MapExpr extends Expr
 
     public function format(Parser $parser)
     {
-        $source = '${';
+        $source = '#{';
         $keys = &$this->keys;
         $values = &$this->values;
 
         if (sizeof($this->keys) > 0) {
             $source .= ' ';
             // Iterate based on index
-            $source .= implode('; ',
+            $source .= implode(', ',
                 array_map(function ($index) use (&$keys, &$values, $parser) {
                     $subsource = $keys[$index]->format($parser);
-                    $subsource .= ' -> ';
+                    $subsource .= ': ';
                     $subsource .= $values[$index]->format($parser);
 
                     return $subsource;

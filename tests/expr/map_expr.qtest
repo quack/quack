@@ -1,7 +1,7 @@
 %%describe
 Supports formatting maps (with pairs)
 %%source
-let map :- ${}, sub_map :- ${"key"->value}
+let map :- #{}, sub_map :- #{"key": value}
 %%expect
-let map :- ${}
-  , sub_map :- ${ "key" -> value }
+let map :- #{}
+  , sub_map :- #{ "key": value }

@@ -112,7 +112,7 @@ abstract class Parser
         $this->register('{', new ArrayParselet);
         $this->register('{', new AccessParselet);
         $this->register('%{', new ObjectParselet);
-        $this->register('${', new MapParselet);
+        $this->register('#{', new MapParselet);
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('%', new NewParselet);
