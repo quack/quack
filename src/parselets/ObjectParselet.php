@@ -34,12 +34,12 @@ class ObjectParselet implements IPrefixParselet
 
         if (!$grammar->parser->consumeIf('}')) {
             $keys[] = $grammar->identifier();
-            $grammar->parser->match('->');
+            $grammar->parser->match(':');
             $values[] = $grammar->_expr();
 
-            while ($grammar->parser->consumeIf(';')) {
+            while ($grammar->parser->consumeIf(',')) {
                 $keys[] = $grammar->identifier();
-                $grammar->parser->match('->');
+                $grammar->parser->match(':');
                 $values[] = $grammar->_expr();
             }
 

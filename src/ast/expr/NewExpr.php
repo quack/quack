@@ -38,7 +38,7 @@ class NewExpr extends Expr
 
     public function format(Parser $parser)
     {
-        $source = '@' . implode('.', $this->class_name);
+        $source = '%' . implode('.', $this->class_name);
 
         $source .= null !== $this->initializer
             ? (' ' . $this->initializer->format($parser))

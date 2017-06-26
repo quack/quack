@@ -38,7 +38,7 @@ class ObjectExpr extends Expr
 
     public function format(Parser $parser)
     {
-        $source = '@{';
+        $source = '%{';
         $keys = &$this->keys;
         $values = &$this->values;
 
@@ -48,11 +48,11 @@ class ObjectExpr extends Expr
             $parser->openScope();
 
             // Iterate based on index
-            $source .= implode(';' . PHP_EOL,
+            $source .= implode(',' . PHP_EOL,
                 array_map(function ($index) use (&$keys, &$values, $parser) {
                     $subsource = $parser->indent();
                     $subsource .= $keys[$index];
-                    $subsource .= ' -> ';
+                    $subsource .= ': ';
                     $subsource .= $values[$index]->format($parser);
 
                     return $subsource;

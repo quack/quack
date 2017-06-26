@@ -34,8 +34,8 @@ class NewParselet implements IPrefixParselet
         $shape_name = $grammar->qualifiedName();
         $initializer = null;
 
-        if ($grammar->parser->is('@{')) {
-            $initializer =  $grammar->evalParselet(ObjectParselet::class);
+        if ($grammar->parser->is('%{')) {
+            $initializer = $grammar->evalParselet(ObjectParselet::class);
         }
 
         return new NewExpr($shape_name, $initializer);
