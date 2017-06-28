@@ -1,0 +1,4 @@
+{
+    "TYP010": "Value passed to while loop should be a `boolean', not a `%s'",
+    "TYP020": "Cannot add element of type `%s' to array of type `%s'"
+}
