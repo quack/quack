@@ -11,5 +11,8 @@
     "TYP100": "Trying to set value of type `%s` to %s",
     "TYP110": "No type overload found for operator `%s' at {%s %s %s}",
     "TYP120": "The null coalesce operator `??' needs both sides to be the same type. Got `%s' and `%s'",
-    "TYP130": "Why in the world are you trying to compare two expressions of different types? at {%s %s %s}"
+    "TYP130": "Why in the world are you trying to compare two expressions of different types? at {%s %s %s}",
+    "TYP140": "Value passed to if statement should a `boolean', not a `%s'",
+    "TYP150": "Expecting type of case of switch statement to be `%s'. Got `%s'",
+    "TYP160": "More than one else clause for switch statement"
 }
