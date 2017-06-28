@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
@@ -81,7 +82,7 @@ class ArrayExpr extends Expr
             $type = $item->getType();
 
             if (!$type->isExactlySameAs($newtype->subtype)) {
-                throw new TypeError("Cannot add element of type `{$type}' to `{$newtype}'");
+                throw new TypeError(Localization::message('TYP020', [$type, $newtype]));
             }
         }
 
