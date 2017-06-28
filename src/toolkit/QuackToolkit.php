@@ -145,3 +145,4 @@ import(SCOPE, 'Meta');
 
 import(TYPES, 'NativeQuackType');
 import(TYPES, 'Type');
+import(TYPES, 'TypeError');

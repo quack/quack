@@ -36,7 +36,7 @@ class ArrayParselet implements IPrefixParselet
         } else {
             $items[] = $grammar->_expr();
 
-            while ($grammar->parser->is(';')) {
+            while ($grammar->parser->is(',')) {
                 $grammar->parser->consume();
                 $items[] = $grammar->_expr();
             }

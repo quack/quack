@@ -64,11 +64,17 @@ class ContinueStmt extends Stmt
                 ]);
             }
         } else {
-            // Assert that we are receiving a declared label
             $label = $parent_scope->lookup($this->label);
 
+            // When the symbol doesn't exist
+            if (null === $label) {
+                throw new ScopeError([
+                    'message' => "Called `continue' with undefined label `{$this->label}'"
+                ]);
+            }
+
             // When the symbol exist, but it's not a label
-            if ($label ^ Kind::K_LABEL) {
+            if (~$label & Kind::K_LABEL) {
                 // When the symbol exist, but it's not a label
                 throw new ScopeError([
                     'message' => "Called `continue' with invalid label `{$this->label}'"

@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 
@@ -38,7 +39,7 @@ class ObjectExpr extends Expr
 
     public function format(Parser $parser)
     {
-        $source = '@{';
+        $source = '%{';
         $keys = &$this->keys;
         $values = &$this->values;
 
@@ -48,11 +49,11 @@ class ObjectExpr extends Expr
             $parser->openScope();
 
             // Iterate based on index
-            $source .= implode(';' . PHP_EOL,
+            $source .= implode(',' . PHP_EOL,
                 array_map(function ($index) use (&$keys, &$values, $parser) {
                     $subsource = $parser->indent();
                     $subsource .= $keys[$index];
-                    $subsource .= ' -> ';
+                    $subsource .= ': ';
                     $subsource .= $values[$index]->format($parser);
 
                     return $subsource;
@@ -72,8 +73,21 @@ class ObjectExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        foreach ($this->values as $value) {
+        $defined = [];
+        $index = 0;
+        while ($index < sizeof($this->keys)) {
+            $key = $this->keys[$index];
+            $value = $this->values[$index];
+
+            if (array_key_exists($key, $defined)) {
+                throw new ScopeError([
+                    'message' => "Duplicated object property `${key}'"
+                ]);
+            }
+
             $value->injectScope($parent_scope);
+            $defined[$key] = true;
+            $index++;
         }
     }
 

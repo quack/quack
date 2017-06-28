@@ -38,7 +38,7 @@ class NewExpr extends Expr
 
     public function format(Parser $parser)
     {
-        $source = '@' . implode('.', $this->class_name);
+        $source = '%' . implode('.', $this->class_name);
 
         $source .= null !== $this->initializer
             ? (' ' . $this->initializer->format($parser))
@@ -61,7 +61,7 @@ class NewExpr extends Expr
         }
 
         // When symbol is not a shape
-        if ($class ^ Kind::K_SHAPE) {
+        if (~$class & Kind::K_SHAPE) {
             throw new ScopeError([
                 'message' => "Cannot instantiate `{$name}'. Not a shape"
             ]);

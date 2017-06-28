@@ -22,36 +22,34 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class MapExpr extends Expr
 {
     public $keys;
     public $values;
-    private $memoized_type;
 
     public function __construct($keys, $values)
     {
         $this->keys = $keys;
         $this->values = $values;
-        $this->memoized_type = null;
     }
 
     public function format(Parser $parser)
     {
-        $source = '${';
+        $source = '#{';
         $keys = &$this->keys;
         $values = &$this->values;
 
         if (sizeof($this->keys) > 0) {
             $source .= ' ';
             // Iterate based on index
-            $source .= implode('; ',
+            $source .= implode(', ',
                 array_map(function ($index) use (&$keys, &$values, $parser) {
                     $subsource = $keys[$index]->format($parser);
-                    $subsource .= ' -> ';
+                    $subsource .= ': ';
                     $subsource .= $values[$index]->format($parser);
 
                     return $subsource;
@@ -78,10 +76,6 @@ class MapExpr extends Expr
 
     public function getType()
     {
-        if (null !== $this->memoized_type) {
-            return $this->memoized_type;
-        }
-
         $size = sizeof($this->keys);
         $newtype = new Type(NativeQuackType::T_MAP);
 
@@ -103,15 +97,14 @@ class MapExpr extends Expr
             $val_type = $this->values[$i]->getType();
 
             if (!$key_type->isExactlySameAs($newtype->subtype['key'])) {
-                throw new ScopeError(['message' => "Key on index {$i} of map expected to be `{$newtype->subtype['key']}'. Got `{$key_type}'"]);
+                throw new TypeError("Key on index {$i} of map expected to be `{$newtype->subtype['key']}'. Got `{$key_type}'");
             }
 
             if (!$val_type->isExactlySameAs($newtype->subtype['value'])) {
-                 throw new ScopeError(['message' => "Value on index {$i} of map expected to be `{$newtype->subtype['value']}'. Got `{$val_type}'"]);
+                 throw new TypeError("Value on index {$i} of map expected to be `{$newtype->subtype['value']}'. Got `{$val_type}'");
             }
         }
 
-        $this->memoized_type = &$newtype;
         return $newtype;
     }
 }

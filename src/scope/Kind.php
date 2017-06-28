@@ -34,7 +34,7 @@ class Kind
     // Additional flags
     const K_MUTABLE     = 0x40;
     const K_PARAMETER   = 0x80;
-    const K_LABEL       = 0xFF;
+    const K_LABEL       = 0x100;
     const K_VIRTUAL     = 0x200;
     const K_EXPORTED    = 0x400;
     const K_SPECIAL     = 0x800;
