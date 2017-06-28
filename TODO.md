@@ -121,7 +121,7 @@
   - [x] CaseStmt
   - [x] ClassStmt
   - [x] ConstStmt
-  - [ ] ContinueStmt
+  - [x] ContinueStmt
   - [ ] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt

@@ -36,13 +36,13 @@ class MapParselet implements IPrefixParselet
             $grammar->parser->consume();
         } else {
             $keys[] = $grammar->_expr();
-            $grammar->parser->match('->');
+            $grammar->parser->match(':');
             $values[] = $grammar->_expr();
 
-            while ($grammar->parser->is(';')) {
+            while ($grammar->parser->is(',')) {
                 $grammar->parser->consume();
                 $keys[] = $grammar->_expr();
-                $grammar->parser->match('->');
+                $grammar->parser->match(':');
                 $values[] = $grammar->_expr();
             }
 

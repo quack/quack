@@ -22,9 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class RangeExpr extends Expr
 {
@@ -74,9 +74,9 @@ class RangeExpr extends Expr
         ];
 
         $throw_error_on = function ($operand, $got) {
-            throw new ScopeError([
-                'message' => "Expected number on operand `{$operand}' of range expression. Got {$got}"
-            ]);
+            throw new TypeError(
+                "Expected number on operand `{$operand}' of range expression. Got {$got}"
+            );
         };
 
         if (!$type->from->isNumber()) {
@@ -91,7 +91,7 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        return new Type(NativeQuackType::T_NUMBER);
+        $newtype->subtype = new Type(NativeQuackType::T_NUMBER);
         return $newtype;
     }
 }

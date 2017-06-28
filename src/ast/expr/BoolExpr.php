@@ -31,12 +31,12 @@ class BoolExpr extends Expr
 
     public function __construct($value)
     {
-        $this->value = (bool) $value;
+        $this->value = $value;
     }
 
     public function format(Parser $_)
     {
-        $source = $this->value ? 'true' : 'false';
+        $source = var_export($this->value, true);
         return $this->parenthesize($source);
     }
 

@@ -19,33 +19,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ObjectExpr;
-use \QuackCompiler\Lexer\Token;
+use \Exception;
 
-class ObjectParselet implements IPrefixParselet
+class TypeError extends Exception
 {
-    public function parse(Grammar $grammar, Token $token)
+    protected $message;
+
+    public function __construct($message)
     {
-        $keys = [];
-        $values = [];
+        $this->message = $message;
+    }
 
-        if (!$grammar->parser->consumeIf('}')) {
-            $keys[] = $grammar->identifier();
-            $grammar->parser->match(':');
-            $values[] = $grammar->_expr();
-
-            while ($grammar->parser->consumeIf(',')) {
-                $keys[] = $grammar->identifier();
-                $grammar->parser->match(':');
-                $values[] = $grammar->_expr();
-            }
-
-            $grammar->parser->match('}');
-        }
-
-        return new ObjectExpr($keys, $values);
+    public function __toString()
+    {
+        return join([
+            BEGIN_RED,
+            '**** Quack, i\'ve found a ',
+            BEGIN_GREEN, 'type error', END_GREEN,
+            BEGIN_RED, ', my dear!', PHP_EOL,
+            '     ', $this->message, PHP_EOL, END_RED
+        ]);
     }
 }

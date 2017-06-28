@@ -1,28 +1,28 @@
 %%describe
 Supports formatting new expression
 %%source
-const me :- @Person @{
-    name     -> "Marcelo";
-    nickname -> "haskell"
+const me :- %Person %{
+    name     : "Marcelo",
+    nickname : "haskell"
 }
 
-const duck :- @Animal.Duck @{
-    flies -> true;
-    swims -> true;
-    walks -> true;
-    isGoodOnAnything -> false
+const duck :- %Animal.Duck %{
+    flies : true,
+    swims : true,
+    walks : true,
+    isGoodOnAnything : false
 }
 
-const dumbDuck :- @Animal.Duck
+const dumbDuck :- %Animal.Duck
 %%expect
-const me :- @Person @{
-  name -> "Marcelo";
-  nickname -> "haskell"
+const me :- %Person %{
+  name: "Marcelo",
+  nickname: "haskell"
 }
-const duck :- @Animal.Duck @{
-  flies -> true;
-  swims -> true;
-  walks -> true;
-  isGoodOnAnything -> false
+const duck :- %Animal.Duck %{
+  flies: true,
+  swims: true,
+  walks: true,
+  isGoodOnAnything: false
 }
-const dumbDuck :- @Animal.Duck
+const dumbDuck :- %Animal.Duck

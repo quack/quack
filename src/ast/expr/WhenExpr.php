@@ -22,9 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class WhenExpr extends Expr
 {
@@ -74,9 +74,7 @@ class WhenExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        foreach (array_map(function ($case) {
-            return (object) $case;
-        }, $this->cases) as $case) {
+        foreach ($this->cases as $case) {
             if (null !== $case->condition) {
                 $case->condition->injectScope($parent_scope);
             }
@@ -86,17 +84,20 @@ class WhenExpr extends Expr
 
     public function getType()
     {
-        $conds = 1;
+        $conds = 0;
         $type = null;
-        foreach (array_map(function ($case) { return (object) $case; }, $this->cases) as $case) {
+
+        foreach ($this->cases as $case) {
+            $conds++;
 
             // Assert all conditions are booleans
             if (null !== $case->condition) {
                 $condition_type = $case->condition->getType();
-                if (NativeQuackType::T_BOOL !== $condition_type->code) {
-                    throw new ScopeError([
-                        'message' => "Expected condition {$conds} of `when' to be boolean. Got `$condition_type'"
-                    ]);
+
+                if (!$condition_type->isBoolean()) {
+                    throw new TypeError(
+                        "Expected condition {$conds} of `when' to be boolean. Got `$condition_type'"
+                    );
                 }
             }
 
@@ -106,12 +107,10 @@ class WhenExpr extends Expr
                 $type = $action_type;
             } else if (!$type->isExactlySameAs($action_type)) {
                 // After initializing the first type, let's compare the others
-                throw new ScopeError([
-                    'message' => "All conditions of cond must have same type `{$type}'. Cond {$conds} is `{$action_type}'"
-                ]);
+                throw new TypeError(
+                    "All conditions of cond must have same type `{$type}'. Cond {$conds} is `{$action_type}'"
+                );
             }
-
-            $conds++;
         }
 
         return $type;

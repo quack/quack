@@ -38,7 +38,7 @@ abstract class Node
     public function createScopeWithParent(Scope &$parent)
     {
         $this->scope = new Scope;
-        $this->scope->parent = &$parent;
+        $this->scope->parent = $parent;
     }
 
     private function bindVariableDecl($var)

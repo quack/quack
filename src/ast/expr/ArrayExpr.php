@@ -22,9 +22,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class ArrayExpr extends Expr
 {
@@ -42,7 +42,7 @@ class ArrayExpr extends Expr
         $source = '{';
         if (sizeof($this->items) > 0) {
             $source .= ' ';
-            $source .= implode('; ',
+            $source .= implode(', ',
                 array_map(function ($item) use ($parser) {
                     return $item->format($parser);
                 }, $this->items)
@@ -81,7 +81,7 @@ class ArrayExpr extends Expr
             $type = $item->getType();
 
             if (!$type->isExactlySameAs($newtype->subtype)) {
-                throw new ScopeError(['message' => "Cannot add element of type `{$type}' to `{$newtype}'"]);
+                throw new TypeError("Cannot add element of type `{$type}' to `{$newtype}'");
             }
         }
 
