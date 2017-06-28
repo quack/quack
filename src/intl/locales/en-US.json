@@ -1,7 +1,7 @@
 {
     "TYP010": "Value passed to while loop should be a `boolean', not a `%s'",
     "TYP020": "Cannot add element of type `%s' to array of type `%s'",
-    "TYP030": "The type of post conditional statement should be a `boolean', not `%s'",
+    "TYP030": "The type of post conditional statement should be a `boolean', not a `%s'",
     "TYP040": "Expected index of array to be a number. Got `%s'",
     "TYP050": "Expected index of map to be a `%s'. Got `%s'",
     "TYP060": "Trying to access by index an element of type `%s' that is not accessible",
@@ -14,5 +14,7 @@
     "TYP130": "Why in the world are you trying to compare two expressions of different types? at {%s %s %s}",
     "TYP140": "Value passed to if statement should a `boolean', not a `%s'",
     "TYP150": "Expecting type of case of switch statement to be `%s'. Got `%s'",
-    "TYP160": "More than one else clause for switch statement"
+    "TYP160": "More than one else clause for switch statement",
+    "TYP170": "Expecting type of field `%s' of foreach statement to be a `number'. Got `%s'",
+    "TYP180": "Condition passed to elif statement should be a `boolean', not a `%s'"
 }
