@@ -122,13 +122,13 @@
   - [x] ClassStmt
   - [x] ConstStmt
   - [x] ContinueStmt
-  - [ ] ElifStmt
+  - [x] ElifStmt
   - [ ] EnumStmt
   - [ ] ExprStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
-  - [ ] IfStmt
+  - [x] IfStmt
   - [ ] ImplStmt
   - [ ] LabelStmt
   - [ ] LetStmt
