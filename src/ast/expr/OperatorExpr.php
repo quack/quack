@@ -74,8 +74,6 @@ class OperatorExpr extends Expr
             if ($this->left instanceof NameExpr) {
                 $symbol = $parent_scope->lookup($this->left->name);
 
-                var_dump($symbol, $this->left->name);
-
                 // When symbol is not a variable
                 if (~$symbol & Kind::K_VARIABLE) {
                     throw new ScopeError([
