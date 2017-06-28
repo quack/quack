@@ -25,11 +25,17 @@ define('PARSELETS', 'parselets');
 define('PARSER', 'parser');
 define('SCOPE', 'scope');
 define('TYPES', 'types');
+define('INTL', 'intl');
 
 function import($module, $file)
 {
     require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
 }
+
+/* Internationalization */
+
+import(INTL, 'Localization');
+
 /* Lexer */
 
 import(LEXER, 'Lexer');
