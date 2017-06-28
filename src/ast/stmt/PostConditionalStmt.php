@@ -22,10 +22,11 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\TypeError;
 
 class PostConditionalStmt extends Stmt
 {
@@ -66,7 +67,7 @@ class PostConditionalStmt extends Stmt
     {
         $condition_type = $this->predicate->getType();
         if (NativeQuackType::T_BOOL !== $condition_type->code) {
-            throw new ScopeError(['message' => "The type of post-conditional-statement should be boolean, not `{$condition_type}'"]);
+            throw new TypeError(Localization::message('TYP030', [$condition_type]));
         }
     }
 }

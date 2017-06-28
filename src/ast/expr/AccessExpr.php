@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
@@ -60,7 +61,7 @@ class AccessExpr extends Expr
         if (NativeQuackType::T_LIST === $left_type->code) {
             // Expected numeric index
             if (!$index_type->isNumber()) {
-                throw new TypeError("Expected index of array to be a number. Got `{$index_type}'");
+                throw new TypeError(Localization::message('TYP040', [$index_type]));
             }
 
             return clone $left_type->subtype;
@@ -69,9 +70,7 @@ class AccessExpr extends Expr
         // Access is valid for maps
         if ($left_type->isMap()) {
             if (!$index_type->isExactlySameAs($left_type->subtype['key'])) {
-                throw new TypeError(
-                    "Expect index of map to be a `{$left_type->subtype['key']}'. Got `{$index_type}'"
-                );
+                throw new TypeError(Localization::message('TYP050', [$left_type->subtype['key'], $index_type]));
             }
 
             return clone $left_type->subtype['value'];
@@ -82,6 +81,6 @@ class AccessExpr extends Expr
             return clone $left_type;
         }
 
-        throw new TypeError("Trying to access by index an element of type `$left_type' that is not accessible");
+        throw new TypeError(Localization::message('TYP060', [$left_type]));
     }
 }

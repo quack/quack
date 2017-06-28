@@ -54,7 +54,7 @@ class Scope
     {
         // The first thing we need is to locate the scope to inject
         // the metadata
-        $scope = &$this->getSymbolScope($symbol);
+        $scope = $this->getSymbolScope($symbol);
 
         // Initialize meta table when it doesn't exist
         if (!array_key_exists($symbol, $scope->meta)) {
@@ -72,7 +72,7 @@ class Scope
 
     public function getMeta($property, $symbol)
     {
-        $scope = &$this->getSymbolScope($symbol);
+        $scope = $this->getSymbolScope($symbol);
 
         if (null === $scope || !array_key_exists($symbol, $scope->meta)) {
             return null;

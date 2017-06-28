@@ -1,4 +1,15 @@
 {
     "TYP010": "Value passed to while loop should be a `boolean', not a `%s'",
-    "TYP020": "Cannot add element of type `%s' to array of type `%s'"
+    "TYP020": "Cannot add element of type `%s' to array of type `%s'",
+    "TYP030": "The type of post conditional statement should be a `boolean', not `%s'",
+    "TYP040": "Expected index of array to be a number. Got `%s'",
+    "TYP050": "Expected index of map to be a `%s'. Got `%s'",
+    "TYP060": "Trying to access by index an element of type `%s' that is not accessible",
+    "TYP070": "Key on index %d of map expected to be `%s'. Got `%s'",
+    "TYP080": "Value on index %s of map expected to be `%s'. Got `%s'",
+    "TYP090": "Expression of type `%s' has no property `%s'",
+    "TYP100": "Trying to set value of type `%s` to %s",
+    "TYP110": "No type overload found for operator `%s' at {%s %s %s}",
+    "TYP120": "The null coalesce operator `??' needs both sides to be the same type. Got `%s' and `%s'",
+    "TYP130": "Why in the world are you trying to compare two expressions of different types? at {%s %s %s}"
 }

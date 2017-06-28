@@ -25,11 +25,11 @@ use \Exception;
 
 class ScopeError extends Exception
 {
-    private $qk_message;
+    protected $message;
 
     public function __construct($parameters)
     {
-        $this->qk_message = $parameters['message'];
+        $this->message = $parameters['message'];
     }
 
     public function __toString()
@@ -38,7 +38,7 @@ class ScopeError extends Exception
             BEGIN_RED,
             "*** Quack, there is a ", BEGIN_GREEN, "semantic", END_GREEN,
             BEGIN_RED, " issue, friend!", PHP_EOL,
-            "    ", $this->qk_message, PHP_EOL,
+            "    ", $this->message, PHP_EOL,
             END_RED
         ]);
     }

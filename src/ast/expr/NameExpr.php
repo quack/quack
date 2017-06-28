@@ -59,7 +59,7 @@ class NameExpr extends Expr
         // later with Quack compile-time reflection function qk_get_meta(prop, symbol)
         // TODO: Assert a variable is initialized in order to use it. We need
         //       a better fork algorithm in order to check for conditional nodes
-        $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->name);
+        $refcount = $parent_scope->getMeta(Meta::M_REF_COUNT, $this->name);
         if (null === $refcount) {
             $parent_scope->setMeta(Meta::M_REF_COUNT, $this->name, 1);
         } else {

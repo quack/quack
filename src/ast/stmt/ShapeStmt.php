@@ -70,6 +70,7 @@ class ShapeStmt extends Stmt
                 ]);
             }
 
+            // TODO: use bitmask for this, not a pure zend_object
             $this->scope->insert($member, [
                 'initialized' => true,
                 'type'        => 'member_property',
