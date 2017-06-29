@@ -113,7 +113,7 @@ class Grammar
             Tag::T_RAISE    => '_raiseStmt',
             Tag::T_BEGIN    => '_blockStmt',
             '^'             => '_returnStmt',
-            ':-'            => '_labelStmt'
+            '['             => '_labelStmt'
         ];
 
         foreach ($branch_table as $token => $action) {
@@ -314,8 +314,9 @@ class Grammar
 
     public function _labelStmt()
     {
-        $this->parser->match(':-');
+        $this->parser->match('[');
         $label_name = $this->identifier();
+        $this->parser->match(']');
         $stmt = $this->_innerStmt();
 
         return new LabelStmt($label_name, $stmt);
