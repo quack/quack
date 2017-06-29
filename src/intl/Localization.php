@@ -19,27 +19,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Scope;
+namespace QuackCompiler\Intl;
 
-use \Exception;
-
-class ScopeError extends Exception
+class Localization
 {
-    protected $message;
+    const LOCALE = 'en-US';
+    static $messages = null;
 
-    public function __construct($parameters)
+    public static function message($key, $arguments)
     {
-        $this->message = $parameters['message'];
+        if (null === static::$messages) {
+            static::$messages = static::readJSON();
+        }
+
+        return call_user_func_array('sprintf',
+            array_merge([static::$messages[$key]], $arguments));
     }
 
-    public function __toString()
+    private static function readJSON()
     {
-        return join([
-            BEGIN_RED,
-            "*** Quack, there is a ", BEGIN_GREEN, "semantic", END_GREEN,
-            BEGIN_RED, " issue, friend!", PHP_EOL,
-            "    ", $this->message, PHP_EOL,
-            END_RED
-        ]);
+        $file = realpath(dirname(__FILE__) . '/locales/' . static::LOCALE . '.json');
+        return json_decode(file_get_contents($file), true);
     }
 }

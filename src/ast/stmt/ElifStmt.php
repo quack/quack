@@ -21,9 +21,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Types\TypeError;
 
 class ElifStmt extends Stmt
 {
@@ -71,7 +72,7 @@ class ElifStmt extends Stmt
     {
         $condition_type = $this->condition->getType();
         if (NativeQuackType::T_BOOL !== $condition_type->code) {
-            throw new ScopeError(['message' => "The type of if-statement should be boolean, not `{$condition_type}'"]);
+            throw new TypeError(Localization::message('TYP180', [$condition_type]));
         }
 
         foreach ($this->body as $stmt) {

@@ -21,8 +21,9 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\TypeError;
 
 class SwitchStmt extends Stmt
 {
@@ -74,25 +75,19 @@ class SwitchStmt extends Stmt
             if (!$case->is_else) {
                 $case_type = $case->value->getType();
                 if (!$case_type->isExactlySameAs($value_type)) {
-                    $case_value = property_exists($case->value, 'value')
-                        ? "`{$case->value->value}' "
-                        : "";
-
-                    throw new ScopeError([
-                        'message' => "Expecting type of case {$case_value}of `switch' statement to be `$value_type'. Got `{$case_type}'"
-                    ]);
+                    throw new TypeError(Localization::message('TYP150', [$value_type, $case_type]));
                 }
             } else {
                 $else_counter++;
             }
-
-            $case->runTypeChecker();
         }
 
         if ($else_counter > 1) {
-            throw new ScopeError([
-                'message' => "More than one `else' clause for `switch' statement"
-            ]);
+            throw new TypeError(Localization::message('TYP160', []));
+        }
+
+        foreach ($this->cases as $case) {
+            $case->runTypeChecker();
         }
     }
 }

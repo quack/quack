@@ -22,13 +22,14 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class ForStmt extends Stmt
 {
@@ -104,9 +105,7 @@ class ForStmt extends Stmt
         foreach ($keys as $key) {
             $type = $this->{$key}->getType();
             if (!$type->isNumber()) {
-                throw new ScopeError([
-                    'message' => "Expecting type of field `{$key}' of foreach-statement to be number. Got `{$type}'"
-                ]);
+                throw new TypeError(Localization::message('TYP170', [$key, $type]));
             }
         }
 

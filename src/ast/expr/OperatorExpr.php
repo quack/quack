@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
@@ -116,7 +117,7 @@ class OperatorExpr extends Expr
     {
         $type = (object)[
             'left'  => $this->left->getType(),
-            'right' => $this->right->getType()
+            'right' => 'string' === gettype($this->right) ? $this->right : $this->right->getType()
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
@@ -128,7 +129,7 @@ class OperatorExpr extends Expr
                 return clone $type->left->props[$this->right];
             }
 
-            throw new TypeError("Expression of type `{$type->left}' has no property `{$this->right}'");
+            throw new TypeError(Localization::message('TYP090', [$type->left, $type->right]));
         }
 
         // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
@@ -137,10 +138,10 @@ class OperatorExpr extends Expr
             // When right side cannot be attributed to left side
             if (!$type->right->isExactlySameAs($type->left)) {
                 $target = $this->left instanceof NameExpr
-                    ? "variable `{$this->left->name}' :: {$type->left}"
+                    ? "`{$this->left->name}' :: {$type->left}"
                     : (string) $type->right;
 
-                throw new TypeError("Trying to set value of type `{$type->right}` to {$target}");
+                throw new TypeError(Localization::message('TYP100', [$type->right, $target]));
             }
 
             return clone $type->right;
@@ -158,33 +159,28 @@ class OperatorExpr extends Expr
                 return new Type(NativeQuackType::T_NUMBER);
             }
 
-            throw new TypeError(
-                "No type overload found for operator `{$op_name}' at {{$type->left} {$op_name} {$type->right}}"
-            );
+            throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
+        }
+
+        // Null coalesce operator
+        if ('??' === $this->operator) {
+            if (!$type->left->isExactlySameAs($type->right)) {
+                throw new TypeError(Localization::message('TYP120', [$type->left, $type->right]));
+            }
+
+            return clone $type->left;
         }
 
         // Type checking for equality operators and coalescence
-        $eq_op = ['=', '<>', '??', '>', '>=', '<', '<='];
+        $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
-
-            if ($type->left->isExactlySameAs($type->right)) {
-                return '??' === $this->operator
-                    ? $type->left
-                    : new Type(NativeQuackType::T_BOOL);
-            }
-
-            throw new TypeError(
-                "Why in the world are you trying to compare two expressions of different types? at " .
-                "{{$type->left} {$op_name} {$type->right}}"
-            );
+            throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
         }
 
         // Type checking for string matched by regex
         if ('=~' === $this->operator) {
             if (!$type->left->isString() || !$type->right->isRegex()) {
-                throw new TypeError(
-                    "No type overload found for operator `=~' at {{$type->left} =~ {$type->right}}"
-                );
+                throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
             return new Type(NativeQuackType::T_BOOL);
@@ -194,9 +190,7 @@ class OperatorExpr extends Expr
         $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
         if (in_array($this->operator, $bool_op, true)) {
             if (!$type->left->isBoolean() || !$type->right->isBoolean()) {
-                throw new TypeError(
-                    "No type overload found for operator `{$op_name}' {{$type->left} {$op_name} {$type->right}}"
-                );
+                throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
             return new Type(NativeQuackType::T_BOOL);

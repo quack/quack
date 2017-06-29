@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -97,11 +98,11 @@ class MapExpr extends Expr
             $val_type = $this->values[$i]->getType();
 
             if (!$key_type->isExactlySameAs($newtype->subtype['key'])) {
-                throw new TypeError("Key on index {$i} of map expected to be `{$newtype->subtype['key']}'. Got `{$key_type}'");
+                throw new TypeError(Localization::message('TYP070', [$i, $newtype->subtype['key'], $key_type]));
             }
 
             if (!$val_type->isExactlySameAs($newtype->subtype['value'])) {
-                 throw new TypeError("Value on index {$i} of map expected to be `{$newtype->subtype['value']}'. Got `{$val_type}'");
+                throw new TypeError(Localization::message('TYP080', [$i, $newtype->subtype['value'], $val_type]));
             }
         }
 
