@@ -16,5 +16,6 @@
     "TYP150": "Expecting type of case of switch statement to be `%s'. Got `%s'",
     "TYP160": "More than one else clause for switch statement",
     "TYP170": "Expecting type of field `%s' of foreach statement to be a `number'. Got `%s'",
-    "TYP180": "Condition passed to elif statement should be a `boolean', not a `%s'"
+    "TYP180": "Condition passed to elif statement should be a `boolean', not a `%s'",
+    "TYP190": "Cannot infer type of non-variable `%s'"
 }

@@ -21,10 +21,13 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class NameExpr extends Expr
 {
@@ -69,8 +72,13 @@ class NameExpr extends Expr
 
     public function getType()
     {
-        $variable_scope = $this->scoperef->getSymbolScope($this->name);
-        $vartype = $variable_scope->getMeta(Meta::M_TYPE, $this->name);
-        return $vartype;
+        $symbol = $this->scoperef->lookup($this->name);
+
+        if ($symbol & Kind::K_VARIABLE) {
+            $variable_scope = $this->scoperef->getSymbolScope($this->name);
+            return $variable_scope->getMeta(Meta::M_TYPE, $this->name);
+        }
+
+        throw new TypeError(Localization::message('TYP190', [$this->name]));
     }
 }
