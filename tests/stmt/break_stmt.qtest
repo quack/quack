@@ -1,13 +1,13 @@
 %%describe
 Supports formatting break
 %%source
-:- id for i from 0 to 10 if i = 2 break id end end
+[id] for i from 0 to 10 if i = 2 break id end end
 
 for j from -1 to 0
 break
 end
 %%expect
-:- id
+[id]
 for i from 0 to 10
   if i = 2
     break id

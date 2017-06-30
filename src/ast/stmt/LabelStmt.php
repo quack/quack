@@ -38,8 +38,7 @@ class LabelStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = ':- ';
-        $source .= $this->name;
+        $source = '[' . $this->name . ']';
         $source .= PHP_EOL;
         $source .= $this->stmt->format($parser);
         return $source;

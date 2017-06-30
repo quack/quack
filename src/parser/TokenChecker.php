@@ -63,7 +63,7 @@ class TokenChecker
             Tag::T_RAISE,
             Tag::T_BEGIN,
             '^',
-            ':-'
+            '['
         ];
 
         $next_tag = $this->parser->lookahead->getTag();
