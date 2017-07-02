@@ -119,20 +119,14 @@ class ForeachStmt extends Stmt
         }
 
         // When the element has no deducible subtype (list)
-        if (!is_array($generator_type->subtype) && NativeQuackType::T_LAZY === $generator_type->subtype->code) {
-            throw new ScopeError([
-                'message' => "Undeducible subtype `{$generator_type->subtype}' of `{$generator_type}'"
-            ]);
+        if ($generator_type->isList() && $generator_type->subtype->isLazy()) {
+            throw new TypeError(Localization::message('TYP270', [$generator_type->subtype, $generator_type]));
         }
 
         // When the element has no deducible subtype (map)
-        if (is_array($generator_type->subtype) && in_array(NativeQuackType::T_LAZY, [
-            $generator_type->subtype['key']->code,
-            $generator_type->subtype['value']->code
-        ], true)) {
-            throw new ScopeError([
-                'message' => "Undeducible `Map' subtype in `{$generator_type}'"
-            ]);
+        if (is_array($generator_type->subtype)
+            && ($generator_type->subtype['key']->isLazy() || $generator_type->subtype['value']->isLazy())) {
+            throw new ScopeError(Localization::message('TYP280', [$generator_type]));
         }
 
         if (null !== $this->key) {
