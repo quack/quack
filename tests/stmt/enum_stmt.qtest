@@ -1,0 +1,21 @@
+%%describe
+Supports formatting enum statements
+%%source
+enum WeekDays WK_MONDAY WK_TUESDAY WK_WEDNESDAY WK_THURSDAY
+WK_FRIDAY WK_SATURDAY WK_SUNDAY end
+enum HTTPMethod HM_POST HM_GET HM_HEAD end
+%%expect
+enum WeekDays
+  WK_MONDAY
+  WK_TUESDAY
+  WK_WEDNESDAY
+  WK_THURSDAY
+  WK_FRIDAY
+  WK_SATURDAY
+  WK_SUNDAY
+end
+enum HTTPMethod
+  HM_POST
+  HM_GET
+  HM_HEAD
+end
