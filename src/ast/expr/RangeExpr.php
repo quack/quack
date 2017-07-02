@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -74,9 +75,7 @@ class RangeExpr extends Expr
         ];
 
         $throw_error_on = function ($operand, $got) {
-            throw new TypeError(
-                "Expected number on operand `{$operand}' of range expression. Got {$got}"
-            );
+            throw new TypeError(Localization::message('TYP220', [$operand, $got]));
         };
 
         if (!$type->from->isNumber()) {

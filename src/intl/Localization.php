@@ -32,8 +32,7 @@ class Localization
             static::$messages = static::readJSON();
         }
 
-        return call_user_func_array('sprintf',
-            array_merge([static::$messages[$key]], $arguments));
+        return sprintf(...array_merge([static::$messages[$key]], $arguments));
     }
 
     private static function readJSON()
