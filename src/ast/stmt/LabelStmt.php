@@ -40,6 +40,7 @@ class LabelStmt extends Stmt
     {
         $source = '[' . $this->name . ']';
         $source .= PHP_EOL;
+        $source .= $parser->indent();
         $source .= $this->stmt->format($parser);
         return $source;
     }
