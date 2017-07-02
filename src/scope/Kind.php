@@ -24,21 +24,19 @@ namespace QuackCompiler\Scope;
 class Kind
 {
     // Base flags
-    const K_FUNCTION    = 0x1;
-    const K_VARIABLE    = 0x2;
-    const K_BLUEPRINT   = 0x4;
-    const K_SHAPE       = 0x8;
-    const K_CLASS       = 0x10;
-    const K_ENUM        = 0x20;
+    const K_FUNCTION    = 1 << 0;
+    const K_VARIABLE    = 1 << 1;
+    const K_BLUEPRINT   = 1 << 2;
+    const K_SHAPE       = 1 << 3;
+    const K_CLASS       = 1 << 4;
+    const K_ENUM        = 1 << 5;
 
     // Additional flags
-    const K_MUTABLE     = 0x40;
-    const K_PARAMETER   = 0x80;
-    const K_LABEL       = 0x100;
-    const K_VIRTUAL     = 0x200;
-    const K_EXPORTED    = 0x400;
-    const K_SPECIAL     = 0x800;
-    const K_MEMBER      = 0x1000;
-    const K_INITIALIZED = 0x2000;
-    const K_PUB         = 0x4000;
+    const K_MUTABLE     = 1 << 6;
+    const K_PARAMETER   = 1 << 7;
+    const K_LABEL       = 1 << 8;
+    const K_SPECIAL     = 1 << 9;
+    const K_MEMBER      = 1 << 10;
+    const K_INITIALIZED = 1 << 11;
+    const K_PUB         = 1 << 12;
 }

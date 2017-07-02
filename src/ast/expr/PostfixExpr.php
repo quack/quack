@@ -52,8 +52,6 @@ class PostfixExpr extends Expr
 
     public function getType()
     {
-        // TODO: Check implementations of postfix expressions.
-        // Currently, there is none
         return new Type(NativeQuackType::T_LAZY);
     }
 }

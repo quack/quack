@@ -109,12 +109,7 @@ class ForStmt extends Stmt
             }
         }
 
-        // TODO: Remove covariance (at least for now)
-        // Bind inferred type for variable
-        $this->scope->setMeta(Meta::M_TYPE, $this->variable, new Type(array_reduce($keys, function ($acc, $key) {
-            return max($acc, $this->{$key}->getType()->code);
-        })));
-
+        $this->scope->setMeta(Meta::M_TYPE, $this->variable, new Type(NativeQuackType::T_NUMBER));
         $this->body->runTypeChecker();
     }
 }
