@@ -24,10 +24,12 @@ namespace QuackCompiler;
 define('BASE_PATH', './src/');
 require_once './src/toolkit/QuackToolkit.php';
 
+use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Parser\SyntaxError;
+use \QuackCompiler\Scope\Scope;
 
 class Quack
 {
@@ -45,22 +47,25 @@ class Quack
         $this->inArguments('-v', '--version') && print $this->getVersionContent();
         $this->inArguments('-h', '--help') && print $this->getHelpContent();
 
-        array_walk($files, function ($file) {
-            if (!file_exists($file)) {
-                echo "File [$file] not found";
-                exit(1);
-            }
+        try {
+            array_walk($files, function ($file) {
+                if (!file_exists($file)) {
+                    echo "File [$file] not found";
+                    exit(1);
+                }
 
-            try {
+                $global_scope = new Scope();
                 $lexer = new Tokenizer(file_get_contents($file));
                 $parser = new TokenReader($lexer);
                 $parser->parse();
+                $parser->ast->injectScope($global_scope);
+                $parser->ast->runTypeChecker();
                 echo $parser->format();
-            } catch (SyntaxError $e) {
-                echo $e;
-                exit(1);
-            }
-        });
+            });
+        } catch (Exception $e) {
+            echo $e;
+            exit(1);
+        }
     }
 
     private function getFileNames()
