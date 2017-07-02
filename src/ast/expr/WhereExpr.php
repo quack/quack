@@ -95,7 +95,7 @@ class WhereExpr extends Expr
             }
 
             $value->injectScope($this->scope);
-            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_VIRTUAL | Kind::K_INITIALIZED);
+            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_INITIALIZED);
         }
 
         $this->expr->injectScope($this->scope);
