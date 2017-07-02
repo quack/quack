@@ -21,8 +21,7 @@
  */
 namespace QuackCompiler;
 
-define('BASE_PATH', './src/');
-require_once './src/toolkit/QuackToolkit.php';
+require_once dirname(__FILE__) . '/toolkit/QuackToolkit.php';
 
 use \Exception;
 use \QuackCompiler\Lexer\Tag;

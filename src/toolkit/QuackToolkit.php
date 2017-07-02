@@ -29,7 +29,7 @@ define('INTL', 'intl');
 
 function import($module, $file)
 {
-    require_once BASE_PATH . '/' . $module . '/' . $file . '.php';
+    require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
 
 /* Internationalization */
