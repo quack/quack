@@ -54,7 +54,7 @@ class Tokenizer extends Lexer
                 return $this->atom();
             }
 
-            if ($this->matches('--')) {
+            if ($this->matches('--') || $this->matches('#!')) {
                 $this->singlelineComment();
                 continue;
             }
