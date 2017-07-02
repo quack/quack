@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -61,19 +62,14 @@ class TernaryExpr extends Expr
     {
         $condition_type = $this->condition->getType();
         if (NativeQuackType::T_BOOL !== $condition_type->code) {
-            throw new TypeError(
-                "Condition of ternary operator should de `boolean'. Got `{$condition_type}'"
-            );
+            throw new TypeError(Localization::message('TYP240', [$condition_type]));
         }
 
         $when_true_type = $this->then->getType();
         $when_false_type = $this->else->getType();
 
         if (!$when_true_type->isExactlySameAs($when_false_type)) {
-            throw new TypeError(
-                "Both sides of ternary expression must have the same type. Got " .
-                "`$when_true_type' and `$when_false_type'"
-            );
+            throw new TypeError(Localization::message('TYP250', [$when_true_type, $when_false_type]));
         }
 
         return clone $when_true_type;

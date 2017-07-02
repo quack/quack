@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
@@ -57,9 +58,7 @@ class PrefixExpr extends Expr
         $right_type = $this->right->getType();
         $op_name = Tag::getOperatorLexeme($this->operator);
 
-        $type_error = new TypeError(
-            "No type overload for operator `{$op_name}' for `{$right_type}'"
-        );
+        $type_error = new TypeError(Localization::message('TYP230', [$op_name, $right_type]));
 
         switch ($this->operator) {
             case '+':
