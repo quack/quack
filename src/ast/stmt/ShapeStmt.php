@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 
 use \QuackCompiler\Scope\ScopeError;
@@ -65,9 +66,7 @@ class ShapeStmt extends Stmt
 
         foreach ($this->members as $member) {
             if ($this->scope->hasLocal($member)) {
-                throw new ScopeError([
-                    'message' => "Duplicated entry `{$member}' for shape {$this->name}"
-                ]);
+                throw new ScopeError(Localization::message('SCO110', [$member, $this->name]));
             }
 
             // TODO: use bitmask for this, not a pure zend_object
@@ -77,5 +76,9 @@ class ShapeStmt extends Stmt
                 'mutable'     => false
             ]);
         }
+    }
+
+    public function runTypeChecker() {
+        // TODO: Implement type checking for shape
     }
 }

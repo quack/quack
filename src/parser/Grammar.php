@@ -242,7 +242,7 @@ class Grammar
         if ($this->parser->is(Tag::T_IDENT)) {
             $alias = $this->identifier();
 
-            if ($this->parser->consumeIf('->')) {
+            if ($this->parser->consumeIf(':')) {
                 $key = $alias;
 
                 $by_reference = $this->parser->consumeIf('*');

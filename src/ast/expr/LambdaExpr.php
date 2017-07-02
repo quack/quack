@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
@@ -96,9 +97,7 @@ class LambdaExpr extends Expr
 
         foreach ($this->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
-                throw new ScopeError([
-                    'message' => "Duplicated parameter `{$param->name}' in anonymous function"
-                ]);
+                throw new ScopeError(Localization::message('SCO010', [$param->name]));
             }
 
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);

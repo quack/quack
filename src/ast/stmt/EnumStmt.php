@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Membered;
 use \QuackCompiler\Scope\Kind;
@@ -69,10 +70,7 @@ class EnumStmt extends Stmt implements Membered
         // Inject its own members
         foreach ($this->entries as $entry) {
             if ($this->scope->hasLocal($entry)) {
-                throw new ScopeError([
-                    'message' => "Duplicated declaration of `{$entry}' for enum " .
-                                 $this->name
-                ]);
+                throw new ScopeError(Localization::message('SCO170', [$entry, $this->name]));
             }
 
             $this->scope->insert($entry, Kind::K_MEMBER | Kind::K_INITIALIZED);

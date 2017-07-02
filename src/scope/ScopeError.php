@@ -27,9 +27,9 @@ class ScopeError extends Exception
 {
     protected $message;
 
-    public function __construct($parameters)
+    public function __construct($message)
     {
-        $this->message = $parameters['message'];
+        $this->message = $message;
     }
 
     public function __toString()

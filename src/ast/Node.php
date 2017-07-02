@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast;
 
 use \QuackCompiler\Ast\Stmt\ConstStmt;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Scope;
@@ -48,9 +49,7 @@ abstract class Node
             $value = &$def[1];
 
             if ($this->scope->hasLocal($name)) {
-                throw new ScopeError([
-                    'message' => "Symbol `{$name}' declared twice"
-                ]);
+                throw new ScopeError(Localization::message('SCO130', [$name, 'variable']));
             }
 
             $bitfield = Kind::K_VARIABLE;
@@ -68,9 +67,7 @@ abstract class Node
     private function bindDecl($named_node, $type, $kind)
     {
         if ($this->scope->hasLocal($named_node->name)) {
-            throw new ScopeError([
-                'message' => "Symbol for {$type} `{$named_node->name}' declared twice"
-            ]);
+            throw new ScopeError(Localization::message('SCO130', [$named_node->name, $type]));
         }
 
         // When it is a function and it is marked as public

@@ -77,16 +77,12 @@ class OperatorExpr extends Expr
 
                 // When symbol is not a variable
                 if (~$symbol & Kind::K_VARIABLE) {
-                    throw new ScopeError([
-                        'message' => "Symbol `{$this->left->name}' is not a variable"
-                    ]);
+                    throw new ScopeError(Localization::message('SCO070', [$this->left->name]));
                 }
 
                 // When symbol is not mutable
                 if (~$symbol & Kind::K_MUTABLE) {
-                    throw new ScopeError([
-                        'message' => "Symbol `{$this->left->name}' is immutable"
-                    ]);
+                    throw new ScopeError(Localization::message('SCO080', [$this->left->name]));
                 }
             } else {
                 // We have a range of specific nodes that are allowed
@@ -94,18 +90,15 @@ class OperatorExpr extends Expr
                     $this->left instanceof ArrayExpr; // Array destructuring
 
                 if (!$valid_assignment) {
-                    throw new ScopeError([
-                        'message' => "Invalid left-hand side in assignment"
-                    ]);
+                    throw new ScopeError(Localization::message('SCO090', []));
                 }
 
                 // When it is array destructuring, ensure all the subnodes are names
+                // TODO: Implement destructuring on let, because this is currently useless
                 if ($this->left instanceof ArrayExpr) {
                     foreach ($this->left->items as $item) {
                         if (!($item instanceof NameExpr)) {
-                            throw new ScopeError([
-                                'message' => "Array destructuring expects all children to be names"
-                            ]);
+                            throw new ScopeError(Localization::message('SCO100', []));
                         }
                     }
                 }

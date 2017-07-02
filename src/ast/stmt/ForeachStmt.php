@@ -22,12 +22,14 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Util;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
 {
@@ -52,7 +54,7 @@ class ForeachStmt extends Stmt
 
         if (null !== $this->key) {
             $source .= $this->key;
-            $source .= ' -> ';
+            $source .= ': ';
         }
 
         if ($this->by_reference) {
@@ -92,10 +94,7 @@ class ForeachStmt extends Stmt
         }
 
         if ($this->key === $this->alias) {
-            throw new ScopeError([
-                'message' => "Same key and value variable name " .
-                             "(`{$this->alias}') supplied for foreach"
-            ]);
+            throw new ScopeError(Localization::message('SCO180', [$this->alias]));
         }
 
         $this->scope->insert($this->alias, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
@@ -116,9 +115,7 @@ class ForeachStmt extends Stmt
 
         // When the element has no subtype to be an iterable
         if (null === $generator_type->subtype)  {
-            throw new ScopeError([
-                'message' => "`{$generator_type}' is not iterable"
-            ]);
+            throw new TypeError(Localization::message('TYP260', [$generator_type]));
         }
 
         // When the element has no deducible subtype (list)

@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
@@ -59,26 +60,20 @@ class ContinueStmt extends Stmt
             // If there is no implicit labels in the context, then the user is
             // calling 'continue' outsite a loop.
             if (null === $label) {
-                throw new ScopeError([
-                    'message' => "Called `continue' outsite a loop"
-                ]);
+                throw new ScopeError(Localization::message('SCO140', ['continue']));
             }
         } else {
             $label = $parent_scope->lookup($this->label);
 
             // When the symbol doesn't exist
             if (null === $label) {
-                throw new ScopeError([
-                    'message' => "Called `continue' with undefined label `{$this->label}'"
-                ]);
+                throw new ScopeError(Localization::message('SCO150', ['continue', $this->label]));
             }
 
             // When the symbol exist, but it's not a label
             if (~$label & Kind::K_LABEL) {
                 // When the symbol exist, but it's not a label
-                throw new ScopeError([
-                    'message' => "Called `continue' with invalid label `{$this->label}'"
-                ]);
+                throw new ScopeError(Localization::message('SCO160', ['continue', $this->label]));
             }
 
             $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->label);
