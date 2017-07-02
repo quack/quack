@@ -1,5 +1,5 @@
 %%describe
-Supports formatting if statements
+Supports formatting elif statements
 %%source
 if 1 > 0 do console.writeline("One is greater than zero") elif true {-do nothing-}end
 

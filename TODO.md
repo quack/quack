@@ -123,7 +123,7 @@
   - [x] ConstStmt
   - [x] ContinueStmt
   - [x] ElifStmt
-  - [ ] EnumStmt
+  - [x] EnumStmt
   - [ ] ExprStmt
   - [ ] FnStmt
   - [ ] ForeachStmt
