@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
@@ -80,9 +81,7 @@ class ObjectExpr extends Expr
             $value = $this->values[$index];
 
             if (array_key_exists($key, $defined)) {
-                throw new ScopeError([
-                    'message' => "Duplicated object property `${key}'"
-                ]);
+                throw new ScopeError(Localization::message('SCO050', [$key]));
             }
 
             $value->injectScope($parent_scope);

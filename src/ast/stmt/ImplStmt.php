@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
@@ -73,30 +74,22 @@ class ImplStmt extends Stmt
         // Try to locate the class/shape
         $unqualified_first = $this->formatQualifiedName($this->class_or_shape);
         $first = $parent_scope->lookup($unqualified_first);
-        $type = Tag::T_CLASS === $this->type
-            ? 'class'
-            : 'shape';
 
         if (null === $first) {
-            throw new ScopeError([
-                'message' => ucfirst($type) . " `{$unqualified_first}' not found"
-            ]);
+            $kind = Tag::T_CLASS === $this->type ? 'Class' : 'Shape';
+            throw new ScopeError(Localization::message('SCO190', [$kind, $unqualified_first]));
         }
 
         // Check type for the symbols
-        if ('shape' === $type) {
+        if (Tag::T_SHAPE === $this->type) {
             // When it is not a shape
             if (~$first & Kind::K_SHAPE) {
-                throw new ScopeError([
-                    'message' => "`{$unqualified_first}' is not a shape"
-                ]);
+                throw new ScopeError(Localization::message('SCO220', [$unqualified_first]));
             }
         } else {
             // Continue, assert this is a class and locate the shape
             if (~$first & Kind::K_CLASS) {
-                throw new ScopeError([
-                    'message' => "`{$unqualified_first}' is not a class"
-                ]);
+                throw new ScopeError(Localization::message('SCO200', [$unqualified_first]));
             }
 
             $shape_name = $this->formatQualifiedName($this->class_for);
@@ -104,16 +97,12 @@ class ImplStmt extends Stmt
 
             // Shape not declared
             if (null === $shape) {
-                throw new ScopeError([
-                    'message' => "Shape `{$shape_name}' not found"
-                ]);
+                throw new ScopeError(Localization::message('SCO210', [$shape_name]));
             }
 
             // Not a shape
             if (~$shape & Kind::K_SHAPE) {
-                throw new ScopeError([
-                    'message' => "`{$shape_name}' is not a shape"
-                ]);
+                throw new ScopeError(Localization::message('SCO220', [$shape_name]));
             }
         }
 

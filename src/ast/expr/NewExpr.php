@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
@@ -55,16 +56,12 @@ class NewExpr extends Expr
 
         // When symbol doesn't exist
         if (null === $class) {
-            throw new ScopeError([
-                'message' => "Undefined shape `{$name}'"
-            ]);
+            throw new ScopeError(Localization::message('SCO030', [$name]));
         }
 
         // When symbol is not a shape
         if (~$class & Kind::K_SHAPE) {
-            throw new ScopeError([
-                'message' => "Cannot instantiate `{$name}'. Not a shape"
-            ]);
+            throw new ScopeError(Localization::message('SCO040', [$name]));
         }
 
         // TODO: Inject scope on initializer (if provided)

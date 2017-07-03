@@ -21,9 +21,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Kind;
 
 class ShapeStmt extends Stmt
 {
@@ -65,17 +66,14 @@ class ShapeStmt extends Stmt
 
         foreach ($this->members as $member) {
             if ($this->scope->hasLocal($member)) {
-                throw new ScopeError([
-                    'message' => "Duplicated entry `{$member}' for shape {$this->name}"
-                ]);
+                throw new ScopeError(Localization::message('SCO110', [$member, $this->name]));
             }
 
-            // TODO: use bitmask for this, not a pure zend_object
-            $this->scope->insert($member, [
-                'initialized' => true,
-                'type'        => 'member_property',
-                'mutable'     => false
-            ]);
+            $this->scope->insert($member, Kind::K_INITIALIZED | Kind::K_MEMBER);
         }
+    }
+
+    public function runTypeChecker() {
+        // TODO: Implement type checking for shape
     }
 }

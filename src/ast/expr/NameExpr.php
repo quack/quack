@@ -48,13 +48,10 @@ class NameExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         $this->scoperef = &$parent_scope;
-        // TODO: Check symbol kind in order to provide better messages
         $symbol = $parent_scope->lookup($this->name);
 
         if (null === $symbol) {
-            throw new ScopeError([
-                'message' => "Use of undefined variable `{$this->name}'"
-            ]);
+            throw new ScopeError(Localization::message('SCO020', [$this->name]));
         }
 
         // When we reach here, we can compute that this symbol is being used

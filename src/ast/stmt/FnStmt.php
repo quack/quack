@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
@@ -106,9 +107,7 @@ class FnStmt extends Stmt
         // Pre-inject parameters
         foreach ($this->signature->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
-                throw new ScopeError([
-                    'message' => "Duplicated parameter `{$param->name}' in function {$this->signature->name}"
-                ]);
+                throw new ScopeError(Localization::message('SCO060', [$param->name, $this->signature->name]));
             }
 
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);

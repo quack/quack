@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
@@ -90,13 +91,11 @@ class WhereExpr extends Expr
             $value = &$clause[1];
 
             if ($this->scope->hasLocal($key)) {
-                throw new ScopeError([
-                    'message' => "Duplicated declaration of `{$key}' on where-clause"
-                ]);
+                throw new ScopeError(Localization::message('SCO120', [$key]));
             }
 
             $value->injectScope($this->scope);
-            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_VIRTUAL | Kind::K_INITIALIZED);
+            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_INITIALIZED);
         }
 
         $this->expr->injectScope($this->scope);
