@@ -1,0 +1,22 @@
+%%describe
+Supports formatting while statements
+%%source
+[myLabel]
+while true break myLabel end
+while true break end
+let x :- 0
+while ++x < 10
+  do console.write("X is: " + x)
+end
+%%expect
+[myLabel]
+while true
+  break myLabel
+end
+while true
+  break
+end
+let x :- 0
+while ++x < 10
+  do console.write("X is: " + x)
+end

@@ -126,8 +126,8 @@
   - [x] EnumStmt
   - [x] ExprStmt
   - [x] FnStmt
-  - [ ] ForeachStmt
-  - [ ] ForStmt
+  - [x] ForeachStmt
+  - [x] ForStmt
   - [x] IfStmt
   - [ ] ImplStmt
   - [ ] LabelStmt
@@ -143,7 +143,7 @@
   - [ ] StmtList
   - [x] SwitchStmt
   - [ ] TryStmt
-  - [ ] WhileStmt
+  - [x] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
   - [x] AtomExpr
