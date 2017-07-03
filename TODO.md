@@ -124,33 +124,29 @@
   - [x] ContinueStmt
   - [x] ElifStmt
   - [x] EnumStmt
-  - [ ] ExprStmt
-  - [ ] FnStmt
-  - [ ] ForeachStmt
-  - [ ] ForStmt
+  - [x] ExprStmt
+  - [x] FnStmt
+  - [x] ForeachStmt
+  - [x] ForStmt
   - [x] IfStmt
-  - [ ] ImplStmt
-  - [ ] LabelStmt
-  - [ ] LetStmt
+  - [x] ImplStmt
+  - [x] LabelStmt
+  - [x] LetStmt
   - [ ] ModuleStmt
   - [ ] OpenStmt
   - [ ] PostConditionalStmt
-  - [ ] ProgramStmt
   - [ ] RaiseStmt
   - [ ] ReturnStmt
   - [x] ShapeStmt
-  - [ ] Stmt
-  - [ ] StmtList
   - [x] SwitchStmt
   - [ ] TryStmt
-  - [ ] WhileStmt
+  - [x] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
   - [x] AtomExpr
   - [x] BlockExpr
   - [x] BoolExpr
   - [x] CallExpr
-  - [ ] Expr
   - [x] LambdaExpr
   - [x] MapExpr
   - [ ] NameExpr
