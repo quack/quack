@@ -1,0 +1,30 @@
+%%describe
+Supports formatting label statements
+%%source
+[first]
+let allowed :- true
+[second]
+if allowed
+  let x :- 10
+  [third]
+  for i from 1 to x
+    do allowed :- false
+    continue second {- would be inf loop if allowed = true -}
+  end
+else
+  continue third {- send it back to the for loop -}
+end
+%%expect
+[first]
+let allowed :- true
+[second]
+if allowed
+  let x :- 10
+  [third]
+  for i from 1 to x
+    do allowed :- false
+    continue second
+  end
+else
+  continue third
+end

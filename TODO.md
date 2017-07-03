@@ -130,8 +130,8 @@
   - [x] ForStmt
   - [x] IfStmt
   - [ ] ImplStmt
-  - [ ] LabelStmt
-  - [ ] LetStmt
+  - [x] LabelStmt
+  - [x] LetStmt
   - [ ] ModuleStmt
   - [ ] OpenStmt
   - [ ] PostConditionalStmt
