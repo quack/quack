@@ -125,7 +125,7 @@
   - [x] ElifStmt
   - [x] EnumStmt
   - [x] ExprStmt
-  - [ ] FnStmt
+  - [x] FnStmt
   - [ ] ForeachStmt
   - [ ] ForStmt
   - [x] IfStmt

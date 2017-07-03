@@ -1,0 +1,40 @@
+%%describe
+Supports formatting fn statements
+%%source
+fn quack() :- console.write ("Quack Quack!")
+
+pub fn fib(n)
+  if n = 0 or n = 1
+    ^ n
+  else
+    ^ fib(n-1) + fib(n-2)
+  end
+end
+
+fn fact (n)
+  let fact :- 1
+  for i from 1 to n do fact :- fact * i end
+  ^ fact
+end
+
+fn fact (n)
+  ^ n = 0 then 1 else n * fact( n - 1 )
+end
+%%expect
+fn quack() :- console.write("Quack Quack!")
+pub fn fib(n)
+  if n = 0 or n = 1 ^ n
+  else
+    ^ fib(n - 1) + fib(n - 2)
+  end
+end
+fn fact(n)
+  let fact :- 1
+  for i from 1 to n
+    do fact :- fact * i
+  end
+  ^ fact
+end
+fn fact(n)
+  ^ n = 0 then 1 else n * fact(n - 1)
+end
