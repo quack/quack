@@ -129,18 +129,15 @@
   - [x] ForeachStmt
   - [x] ForStmt
   - [x] IfStmt
-  - [ ] ImplStmt
+  - [x] ImplStmt
   - [x] LabelStmt
   - [x] LetStmt
   - [ ] ModuleStmt
   - [ ] OpenStmt
   - [ ] PostConditionalStmt
-  - [ ] ProgramStmt
   - [ ] RaiseStmt
   - [ ] ReturnStmt
   - [x] ShapeStmt
-  - [ ] Stmt
-  - [ ] StmtList
   - [x] SwitchStmt
   - [ ] TryStmt
   - [x] WhileStmt
@@ -150,7 +147,6 @@
   - [x] BlockExpr
   - [x] BoolExpr
   - [x] CallExpr
-  - [ ] Expr
   - [x] LambdaExpr
   - [x] MapExpr
   - [ ] NameExpr
