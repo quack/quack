@@ -118,7 +118,7 @@
      :expect (joiner expect)
      :command
       (if (empty? command)
-        "php ./src/Quack.php %s"
+        "php ./src/Quack.php %s --disable-typechecker --disable-scope"
         (joiner command)) }))
 
 (defn create-tmp-folder []
