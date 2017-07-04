@@ -52,6 +52,7 @@ import(SCOPE, 'Membered');
 /* Parser */
 
 import(PARSER, 'DeclParser');
+import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
 import(PARSER, 'Grammar');
 import(PARSER, 'TokenChecker');

@@ -48,6 +48,7 @@ use \QuackCompiler\Ast\Stmt\StmtList;
 class Grammar
 {
     use DeclParser;
+    use TypeParser;
 
     public $parser;
     public $checker;
@@ -182,8 +183,14 @@ class Grammar
         // I could just use a goto, but, Satan would want my soul...
         $name = $this->identifier();
 
+        if ($this->parser->consumeIf('::')) {
+            $type = $this->_type();
+            var_dump($type);
+        }
+
         if ($this->parser->consumeIf(':-')) {
             $value = $this->_expr();
+
             $definitions[] = [$name, $value];
         } else {
             $definitions[] = [$name, null];
