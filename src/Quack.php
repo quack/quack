@@ -57,8 +57,15 @@ class Quack
                 $lexer = new Tokenizer(file_get_contents($file));
                 $parser = new TokenReader($lexer);
                 $parser->parse();
-                $parser->ast->injectScope($global_scope);
-                $parser->ast->runTypeChecker();
+
+                if (!$this->inArguments('--disable-scope')) {
+                    $parser->ast->injectScope($global_scope);
+                }
+
+                if (!$this->inArguments('--disable-typechecker')) {
+                    $parser->ast->runTypeChecker();
+                }
+
                 echo $parser->format();
             });
         } catch (Exception $e) {
