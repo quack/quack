@@ -1,0 +1,13 @@
+%%describe
+Supports formatting expr statements
+%%source
+do true, false, console.write("Something"), 1 + 1
+do "Hello " + "World"
+do "Quack"
+%%expect
+do true
+ , false
+ , console.write("Something")
+ , 1 + 1
+do "Hello " + "World"
+do "Quack"

@@ -50,7 +50,7 @@ class Tokenizer extends Lexer
                 continue;
             }
 
-            if ($this->matches(':') && (ctype_alpha($this->preview()) || '_' === $this->preview())) {
+            if ($this->matches('@') && (ctype_alpha($this->preview()) || '_' === $this->preview())) {
                 return $this->atom();
             }
 

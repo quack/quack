@@ -1,14 +1,15 @@
 %%describe
-Supports formatting if statements
+Supports formatting elif statements
 %%source
 if 1 > 0 do console.writeline("One is greater than zero") elif true {-do nothing-}end
 
 [ firstLabel ]
 for i from 1 to 10 by 2
+[ secondLabel]
   for j from 1 to 10
-    if (i = 3) and (j =~ 0)
+    if (i = 3) and (j <> 0)
       break firstLabel
-    elif (i =~ 2)
+    elif (i <> 2)
       continue firstLabel
     end
   end
@@ -20,10 +21,11 @@ elif true
 end
 [firstLabel]
 for i from 1 to 10 by 2
+  [secondLabel]
   for j from 1 to 10
-    if (i = 3) and (j =~ 0)
+    if (i = 3) and (j <> 0)
       break firstLabel
-    elif (i =~ 2)
+    elif (i <> 2)
       continue firstLabel
     end
   end

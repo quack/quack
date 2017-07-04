@@ -75,7 +75,7 @@ class BreakStmt extends Stmt
                 throw new ScopeError(Localization::message('SCO160', ['break', $this->label]));
             }
 
-            $refcount = &$parent_scope->getMeta(Meta::M_REF_COUNT, $this->label);
+            $refcount = $parent_scope->getMeta(Meta::M_REF_COUNT, $this->label);
             if (null === $refcount) {
                 $parent_scope->setMeta(Meta::M_REF_COUNT, $this->label, 1);
             } else {
