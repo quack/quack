@@ -19,14 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Ast\Expr\PostfixExpr;
+use \QuackCompiler\Ast\Expr\PrefixExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Grammar;
 
-class PostfixOperatorParselet implements IInfixParselet
+class PrefixOperatorParselet implements IPrefixParselet
 {
     public $precedence;
 
@@ -35,9 +34,10 @@ class PostfixOperatorParselet implements IInfixParselet
         $this->precedence = $precedence;
     }
 
-    public function parse(Grammar $parser, Expr $left, Token $token)
+    public function parse(Grammar $parser, Token $token)
     {
-        return new PostfixExpr($left, $token->getTag());
+        $operand = $parser->_expr($this->precedence);
+        return new PrefixExpr($token, $operand);
     }
 
     public function getPrecedence()

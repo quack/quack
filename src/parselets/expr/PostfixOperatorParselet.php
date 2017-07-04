@@ -19,16 +19,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\NameExpr;
-use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\PostfixExpr;
+use \QuackCompiler\Lexer\Token;
 
-class NameParselet implements IPrefixParselet
+class PostfixOperatorParselet implements IInfixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public $precedence;
+
+    public function __construct($precedence)
     {
-        return new NameExpr($grammar->parser->resolveScope($token->getPointer()));
+        $this->precedence = $precedence;
+    }
+
+    public function parse(Grammar $parser, Expr $left, Token $token)
+    {
+        return new PostfixExpr($left, $token->getTag());
+    }
+
+    public function getPrecedence()
+    {
+        return $this->precedence;
     }
 }

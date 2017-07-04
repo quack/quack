@@ -27,18 +27,33 @@ trait TypeParser
 {
     function _type()
     {
+        $left = null;
         switch ($this->parser->lookahead->getTag())
         {
             case Tag::T_IDENT:
-                return $this->_literal();
+                $left = $this->_literal();
+                break;
             case Tag::T_ATOM:
-                return $this->_atom();
-            case '%':
-                return $this->_instance();
+                $left = $this->_atom();
+                break;
             case '{':
-                return $this->_list();
+                $left = $this->_list();
+                break;
+            case '%':
+                $left = $this->_instance();
+                break;
+            case '%{':
+                $left = $this->_object();
+                break;
             case '#{':
-                return $this->_map();
+                $left = $this->_map();
+                break;
+            case '#(':
+                $left = $this->_tuple();
+                break;
+            case '&':
+                $left = $this->_function();
+                break;
             default:
                 throw new SyntaxError([
                     'expected' => 'type signature',
@@ -46,6 +61,17 @@ trait TypeParser
                     'parser'   => $this->parser
                 ]);
         }
+
+        // TODO: Implement parselets in order to types behave like expressions
+        // TODO: Make parselets generic and pluggable, in order to allow
+        // plugging new parsers
+        if ($this->parser->is('|') || $this->parser->is('&')) {
+            $symbol = $this->parser->consumeAndFetch()->getTag();
+            $right = $this->_type();
+            return [$left, $symbol, $right];
+        }
+
+        return $left;
     }
 
     private function _atom()
@@ -57,16 +83,13 @@ trait TypeParser
     private function _literal()
     {
         $name = $this->identifier();
-        $types = ['string', 'number', 'boolean', 'regex'];
-
-        if (!in_array($name, $types, true)) {
-            // TODO: Throw TypeSignatureError with specific message
-            // TODO: Create TypeSignatureError
-            throw new \Exception('Unknown type ' . $name);
-        }
+        $types = ['string', 'number', 'boolean', 'regex', 'unit'];
 
         // TODO: Give an object representation of the types in the AST
-        return $name;
+        // When it is not a native type, it is a free variable
+        return in_array($name, $types, true)
+            ? $name
+            : "'" . $name;
     }
 
     private function _instance()
@@ -95,13 +118,61 @@ trait TypeParser
         return [$key => $value];
     }
 
+    private function _tuple()
+    {
+        $types = [];
+        $this->parser->match('#(');
+        if (!$this->parser->consumeIf(')')) {
+            do {
+                $types[] = $this->_type();
+            } while ($this->parser->consumeIf(','));
+
+            $this->parser->match(')');
+        }
+
+        return $types;
+    }
+
     private function _object()
     {
-        // TODO
+        $this->parser->match('%{');
+        $type = [];
+
+        if (!$this->parser->is('}')) {
+            do {
+                $key = $this->identifier();
+                $this->parser->match(':');
+                $type[$key] = $this->_type();
+            } while ($this->parser->consumeIf(','));
+        }
+        $this->parser->match('}');
+
+        return $type;
     }
 
     private function _function()
     {
-        // TODO
+        $parameters = [];
+        $return = 'unit';
+        $this->parser->match('&');
+
+        if ($this->parser->is(Tag::T_IDENT)) {
+            $parameters[] = $this->_type();
+        } else {
+            $this->parser->match('[');
+            if (!$this->parser->consumeIf(']')) {
+                do {
+                    $parameters[] = $this->_type();
+                } while ($this->parser->consumeIf(','));
+
+                $this->parser->match(']');
+            }
+        }
+
+        if ($this->parser->consumeIf('->')) {
+            $return = $this->_type();
+        }
+
+        return [$parameters, $return];
     }
 }

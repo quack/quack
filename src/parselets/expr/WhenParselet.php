@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Precedence;
 use \QuackCompiler\Parser\Grammar;

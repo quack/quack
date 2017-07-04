@@ -19,38 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\WhereExpr;
+use \QuackCompiler\Ast\Expr\CallExpr;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Parser\Precedence;
 
-class WhereParselet implements IInfixParselet
+class CallParselet implements IInfixParselet
 {
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {
-        $clauses = [];
+        $args = [];
 
-        $name = $grammar->identifier();
-        $grammar->parser->match(':-');
-        $value = $grammar->_expr();
-        $clauses[] = [$name, $value];
+        if (!$grammar->parser->is(')')) {
+            $args[] = $grammar->_expr();
 
-        while ($grammar->parser->is(';')) {
-            $grammar->parser->consume();
-            $name = $grammar->identifier();
-            $grammar->parser->match(':-');
-            $value = $grammar->_expr();
-            $clauses[] = [$name, $value];
+            while ($grammar->parser->is(',')) {
+                $grammar->parser->consume();
+                $args[] = $grammar->_expr();
+            }
         }
 
-        return new WhereExpr($left, $clauses);
+        $grammar->parser->match(')');
+
+        return new CallExpr($left, $args);
     }
 
     public function getPrecedence()
     {
-        return Precedence::WHERE;
+        return Precedence::CALL;
     }
 }

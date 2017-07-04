@@ -19,14 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Precedence;
 use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\SyntaxError;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\TernaryExpr;
+use \QuackCompiler\Ast\Expr\NameExpr;
+use \QuackCompiler\Ast\Expr\OperatorExpr;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Tag;
 
-interface IInfixParselet
+class MemberAccessParselet implements IInfixParselet
 {
-    public function parse(Grammar $parser, Expr $left, Token $token);
-    public function getPrecedence();
+    public function parse(Grammar $grammar, Expr $left, Token $token)
+    {
+        $right = $grammar->_name();
+        return new OperatorExpr(
+            $left,
+            $token->getTag(),
+            $grammar->parser->resolveScope($right->getPointer())
+        );
+    }
+
+    public function getPrecedence()
+    {
+        return Precedence::MEMBER_ACCESS;
+    }
 }

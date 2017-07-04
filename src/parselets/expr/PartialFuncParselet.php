@@ -19,26 +19,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\AccessExpr;
-use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\PartialFuncExpr;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Parser\Precedence;
 
-class AccessParselet implements IInfixParselet
+class PartialFuncParselet implements IPrefixParselet
 {
-    public function parse(Grammar $grammar, Expr $left, Token $token)
+    public function parse(Grammar $grammar, Token $token)
     {
-        $index = $grammar->_expr();
-        $grammar->parser->match('}');
+        $op_table = &Tag::getPartialOperators();
+        $next_op = $grammar->parser->lookahead->getTag();
+        $right = null;
 
-        return new AccessExpr($left, $index);
-    }
+        if (in_array($next_op, $op_table, true)) {
+            $grammar->parser->match($next_op);
 
-    public function getPrecedence()
-    {
-        return Precedence::ACCESS;
+            // Faster than _optExpr
+            if (!$grammar->parser->is(')')) {
+                $right = $grammar->_expr();
+            }
+
+            $grammar->parser->match(')');
+        } else {
+            $grammar->parser->match('operator');
+        }
+
+        return new PartialFuncExpr($next_op, $right);
     }
 }

@@ -19,32 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Precedence;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Ast\Expr\RangeExpr;
+use \QuackCompiler\Ast\Expr\OperatorExpr;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Lexer\Tag;
 
-class RangeParselet implements IInfixParselet
+class BinaryOperatorParselet implements IInfixParselet
 {
-    public function parse(Grammar $grammar, Expr $from, Token $token)
+    public $precedence;
+    public $is_right;
+
+    public function __construct($precedence, $is_right)
     {
-        $to = $grammar->_expr();
-        $by = null;
+        $this->precedence = $precedence;
+        $this->is_right = $is_right;
+    }
 
-        if ($grammar->parser->is(Tag::T_BY)) {
-            $grammar->parser->consume();
-            $by = $grammar->_expr();
-        }
-
-        return new RangeExpr($from, $to, $by);
+    public function parse(Grammar $parser, Expr $left, Token $token)
+    {
+        $right = $parser->_expr($this->precedence - ($this->is_right ? 1 : 0));
+        return new OperatorExpr($left, $token->getTag(), $right);
     }
 
     public function getPrecedence()
     {
-        return Precedence::RANGE;
+        return $this->precedence;
     }
 }

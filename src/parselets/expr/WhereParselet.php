@@ -19,36 +19,38 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\MapExpr;
+use \QuackCompiler\Ast\Expr\WhereExpr;
+use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\Precedence;
 
-class MapParselet implements IPrefixParselet
+class WhereParselet implements IInfixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse(Grammar $grammar, Expr $left, Token $token)
     {
-        $keys = [];
-        $values = [];
+        $clauses = [];
 
-        if ($grammar->parser->is('}')) {
+        $name = $grammar->identifier();
+        $grammar->parser->match(':-');
+        $value = $grammar->_expr();
+        $clauses[] = [$name, $value];
+
+        while ($grammar->parser->is(';')) {
             $grammar->parser->consume();
-        } else {
-            $keys[] = $grammar->_expr();
-            $grammar->parser->match(':');
-            $values[] = $grammar->_expr();
-
-            while ($grammar->parser->is(',')) {
-                $grammar->parser->consume();
-                $keys[] = $grammar->_expr();
-                $grammar->parser->match(':');
-                $values[] = $grammar->_expr();
-            }
-
-            $grammar->parser->match('}');
+            $name = $grammar->identifier();
+            $grammar->parser->match(':-');
+            $value = $grammar->_expr();
+            $clauses[] = [$name, $value];
         }
 
-        return new MapExpr($keys, $values);
+        return new WhereExpr($left, $clauses);
+    }
+
+    public function getPrecedence()
+    {
+        return Precedence::WHERE;
     }
 }

@@ -19,31 +19,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
+use \QuackCompiler\Parser\Precedence;
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ArrayExpr;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\TernaryExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Tag;
 
-class ArrayParselet implements IPrefixParselet
+class TernaryParselet implements IInfixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse(Grammar $grammar, Expr $left, Token $token)
     {
-        $items = [];
+        $then = $grammar->_expr();
+        $grammar->parser->match(Tag::T_ELSE);
+        $else = $grammar->_expr(Precedence::TERNARY - 1);
+        return new TernaryExpr($left, $then, $else);
+    }
 
-        if ($grammar->parser->is('}')) {
-            $grammar->parser->consume();
-        } else {
-            $items[] = $grammar->_expr();
-
-            while ($grammar->parser->is(',')) {
-                $grammar->parser->consume();
-                $items[] = $grammar->_expr();
-            }
-
-            $grammar->parser->match('}');
-        }
-
-        return new ArrayExpr($items);
+    public function getPrecedence()
+    {
+        return Precedence::TERNARY;
     }
 }

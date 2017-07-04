@@ -19,12 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\TernaryExpr;
+use \QuackCompiler\Lexer\Token;
 
-interface IPrefixParselet
+class GroupParselet implements IPrefixParselet
 {
-    public function parse(Grammar $parser, Token $token);
+    public function parse(Grammar $grammar, Token $token)
+    {
+        $expr = $grammar->_expr();
+        $expr->addParentheses();
+        $grammar->parser->match(')');
+        return $expr;
+    }
 }

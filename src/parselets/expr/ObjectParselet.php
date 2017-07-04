@@ -19,19 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\BlockExpr;
-use \QuackCompiler\Ast\Stmt\StmtList;
+use \QuackCompiler\Ast\Expr\ObjectExpr;
 use \QuackCompiler\Lexer\Token;
 
-class BlockParselet implements IPrefixParselet
+class ObjectParselet implements IPrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {
-        $body = new StmtList(iterator_to_array($grammar->_innerStmtList()));
-        $grammar->parser->match('}');
-        return new BlockExpr($body);
+        $keys = [];
+        $values = [];
+
+        if (!$grammar->parser->consumeIf('}')) {
+            $keys[] = $grammar->identifier();
+            $grammar->parser->match(':');
+            $values[] = $grammar->_expr();
+
+            while ($grammar->parser->consumeIf(',')) {
+                $keys[] = $grammar->identifier();
+                $grammar->parser->match(':');
+                $values[] = $grammar->_expr();
+            }
+
+            $grammar->parser->match('}');
+        }
+
+        return new ObjectExpr($keys, $values);
     }
 }

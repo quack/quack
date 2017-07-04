@@ -19,34 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\PartialFuncExpr;
-use \QuackCompiler\Lexer\Tag;
-use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\NewExpr;
+use \QuackCompiler\Lexer\Token;
 
-class PartialFuncParselet implements IPrefixParselet
+class NewParselet implements IPrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {
-        $op_table = &Tag::getPartialOperators();
-        $next_op = $grammar->parser->lookahead->getTag();
-        $right = null;
+        $shape_name = $grammar->qualifiedName();
+        $initializer = null;
 
-        if (in_array($next_op, $op_table, true)) {
-            $grammar->parser->match($next_op);
-
-            // Faster than _optExpr
-            if (!$grammar->parser->is(')')) {
-                $right = $grammar->_expr();
-            }
-
-            $grammar->parser->match(')');
-        } else {
-            $grammar->parser->match('operator');
+        if ($grammar->parser->is('%{')) {
+            $initializer = $grammar->evalParselet(ObjectParselet::class);
         }
 
-        return new PartialFuncExpr($next_op, $right);
+        return new NewExpr($shape_name, $initializer);
     }
 }
