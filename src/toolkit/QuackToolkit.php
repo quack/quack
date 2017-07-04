@@ -49,17 +49,7 @@ import(LEXER, 'Word');
 // Scope base interface
 import(SCOPE, 'Membered');
 
-/* Parser */
-
-import(PARSER, 'DeclParser');
-import(PARSER, 'TypeParser');
-import(PARSER, 'Parser');
-import(PARSER, 'Grammar');
-import(PARSER, 'TokenChecker');
-import(PARSER, 'SyntaxError');
-import(PARSER, 'TokenReader');
-import(PARSER, 'Precedence');
-
+import(PARSELETS, 'Parselet');
 import(PARSELETS, 'InfixParselet');
 import(PARSELETS, 'PrefixParselet');
 import(PARSELETS, 'expr/PrefixOperatorParselet');
@@ -82,6 +72,17 @@ import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
+
+/* Parser */
+
+import(PARSER, 'DeclParser');
+import(PARSER, 'TypeParser');
+import(PARSER, 'Parser');
+import(PARSER, 'Grammar');
+import(PARSER, 'TokenChecker');
+import(PARSER, 'SyntaxError');
+import(PARSER, 'TokenReader');
+import(PARSER, 'Precedence');
 
 /* Ast */
 

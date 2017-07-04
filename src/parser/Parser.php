@@ -45,32 +45,21 @@ use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
-use \QuackCompiler\Parselets\InfixParselet;
-use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Parselets\Parselet;
 
 abstract class Parser
 {
+    use Parselet;
+
     public $input;
     public $lookahead;
     public $scope_level = 0;
-
-    public $prefix_parselets = [];
-    public $infix_parselets = [];
 
     public function __construct(Tokenizer $input)
     {
         $this->registerParselets();
         $this->input = $input;
         $this->consume();
-    }
-
-    private function register($tag, $parselet)
-    {
-        if ($parselet instanceof PrefixParselet) {
-            $this->prefix_parselets[$tag] = $parselet;
-        } elseif ($parselet instanceof InfixParselet) {
-            $this->infix_parselets[$tag] = $parselet;
-        }
     }
 
     private function postfix($tag, $precedence)
@@ -235,22 +224,6 @@ abstract class Parser
     public function position()
     {
         return ["line" => $this->input->line, "column" => $this->input->column];
-    }
-
-    public function infixParseletForToken(Token $token)
-    {
-        $key = $token->getTag();
-        return array_key_exists($key, $this->infix_parselets)
-            ? $this->infix_parselets[$key]
-            : null;
-    }
-
-    public function prefixParseletForToken(Token $token)
-    {
-        $key = $token->getTag();
-        return array_key_exists($key, $this->prefix_parselets)
-            ? $this->prefix_parselets[$key]
-            : null;
     }
 
     public function openScope()
