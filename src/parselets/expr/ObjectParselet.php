@@ -24,8 +24,9 @@ namespace QuackCompiler\Parselets\Expr;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\ObjectExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
 
-class ObjectParselet implements IPrefixParselet
+class ObjectParselet implements PrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {

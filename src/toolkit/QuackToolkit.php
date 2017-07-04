@@ -60,8 +60,8 @@ import(PARSER, 'SyntaxError');
 import(PARSER, 'TokenReader');
 import(PARSER, 'Precedence');
 
-import(PARSELETS, 'expr/IInfixParselet');
-import(PARSELETS, 'expr/IPrefixParselet');
+import(PARSELETS, 'InfixParselet');
+import(PARSELETS, 'PrefixParselet');
 import(PARSELETS, 'expr/PrefixOperatorParselet');
 import(PARSELETS, 'expr/BinaryOperatorParselet');
 import(PARSELETS, 'expr/PostfixOperatorParselet');

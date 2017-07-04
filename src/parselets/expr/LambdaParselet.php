@@ -26,8 +26,9 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\LambdaExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
 
-class LambdaParselet implements IPrefixParselet
+class LambdaParselet implements PrefixParselet
 {
     const TYPE_EXPRESSION = 0x1;
     const TYPE_STATEMENT  = 0x2;

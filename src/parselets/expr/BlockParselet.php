@@ -25,8 +25,9 @@ use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\BlockExpr;
 use \QuackCompiler\Ast\Stmt\StmtList;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
 
-class BlockParselet implements IPrefixParselet
+class BlockParselet implements PrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {

@@ -23,9 +23,10 @@ namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Ast\Expr\PrefixExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
 use \QuackCompiler\Parser\Grammar;
 
-class PrefixOperatorParselet implements IPrefixParselet
+class PrefixOperatorParselet implements PrefixParselet
 {
     public $precedence;
 

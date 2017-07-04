@@ -25,8 +25,9 @@ use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\OperatorExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class BinaryOperatorParselet implements IInfixParselet
+class BinaryOperatorParselet implements InfixParselet
 {
     public $precedence;
     public $is_right;

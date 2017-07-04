@@ -29,9 +29,10 @@ use \QuackCompiler\Ast\Expr\BoolExpr;
 use \QuackCompiler\Ast\Expr\RegexExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
 use \QuackCompiler\Parser\Grammar;
 
-class LiteralParselet implements IPrefixParselet
+class LiteralParselet implements PrefixParselet
 {
     public function parse(Grammar $grammar, Token $token)
     {

@@ -24,10 +24,11 @@ namespace QuackCompiler\Parselets\Expr;
 use \QuackCompiler\Ast\Expr\AccessExpr;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\InfixParselet;
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Parser\Precedence;
 
-class AccessParselet implements IInfixParselet
+class AccessParselet implements InfixParselet
 {
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {

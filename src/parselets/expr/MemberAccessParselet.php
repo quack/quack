@@ -30,8 +30,9 @@ use \QuackCompiler\Ast\Expr\NameExpr;
 use \QuackCompiler\Ast\Expr\OperatorExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class MemberAccessParselet implements IInfixParselet
+class MemberAccessParselet implements InfixParselet
 {
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {

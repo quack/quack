@@ -25,8 +25,9 @@ use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\PostfixExpr;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class PostfixOperatorParselet implements IInfixParselet
+class PostfixOperatorParselet implements InfixParselet
 {
     public $precedence;
 

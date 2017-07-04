@@ -27,8 +27,9 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\TernaryExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class TernaryParselet implements IInfixParselet
+class TernaryParselet implements InfixParselet
 {
     public function parse(Grammar $grammar, Expr $left, Token $token)
     {

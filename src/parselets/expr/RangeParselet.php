@@ -27,8 +27,9 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\RangeExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class RangeParselet implements IInfixParselet
+class RangeParselet implements InfixParselet
 {
     public function parse(Grammar $grammar, Expr $from, Token $token)
     {

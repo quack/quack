@@ -25,8 +25,6 @@ use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tokenizer;
-use \QuackCompiler\Parselets\Expr\IPrefixParselet;
-use \QuackCompiler\Parselets\Expr\IInfixParselet;
 use \QuackCompiler\Parselets\Expr\BinaryOperatorParselet;
 use \QuackCompiler\Parselets\Expr\LiteralParselet;
 use \QuackCompiler\Parselets\Expr\NameParselet;
@@ -47,6 +45,8 @@ use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
+use \QuackCompiler\Parselets\InfixParselet;
+use \QuackCompiler\Parselets\PrefixParselet;
 
 abstract class Parser
 {
@@ -66,9 +66,9 @@ abstract class Parser
 
     private function register($tag, $parselet)
     {
-        if ($parselet instanceof IPrefixParselet) {
+        if ($parselet instanceof PrefixParselet) {
             $this->prefix_parselets[$tag] = $parselet;
-        } elseif ($parselet instanceof IInfixParselet) {
+        } elseif ($parselet instanceof InfixParselet) {
             $this->infix_parselets[$tag] = $parselet;
         }
     }
