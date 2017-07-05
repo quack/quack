@@ -1,0 +1,17 @@
+%%describe
+Supports formatting name expressions
+%%source
+do 0b00000001
+do 1 + 1
+do 1/2*3
+do 12e+10 do 13e-2
+do 0o777
+do 0xFFFFBC
+%%expect
+do 0b00000001
+do 1 + 1
+do 1 / 2 * 3
+do 12e+10
+do 13e-2
+do 0o777
+do 0xFFFFBC

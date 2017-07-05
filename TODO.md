@@ -149,10 +149,10 @@
   - [x] CallExpr
   - [x] LambdaExpr
   - [x] MapExpr
-  - [ ] NameExpr
+  - [x] NameExpr
   - [x] NewExpr
   - [x] NilExpr
-  - [ ] NumberExpr
+  - [x] NumberExpr
   - [x] ObjectExpr
   - [x] OperatorExpr
   - [x] PartialFuncExpr
