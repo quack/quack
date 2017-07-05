@@ -139,7 +139,7 @@
   - [x] ReturnStmt
   - [x] ShapeStmt
   - [x] SwitchStmt
-  - [ ] TryStmt
+  - [x] TryStmt
   - [x] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
