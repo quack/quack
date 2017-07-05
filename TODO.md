@@ -135,7 +135,7 @@
   - [x] ModuleStmt
   - [ ] OpenStmt
   - [x] PostConditionalStmt
-  - [ ] RaiseStmt
+  - [x] RaiseStmt
   - [ ] ReturnStmt
   - [x] ShapeStmt
   - [x] SwitchStmt

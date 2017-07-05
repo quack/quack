@@ -5,7 +5,9 @@ Supports formatting while statements
 while true break myLabel end
 while true break end
 let x :- 0
-while ++x < 10
+let succ :- &[m] -> m+1
+while x < 10
+  do x :- succ(x)
   do console.write("X is: " + x)
 end
 %%expect
@@ -17,6 +19,8 @@ while true
   break
 end
 let x :- 0
-while ++x < 10
+let succ :- &[m] -> m + 1
+while x < 10
+  do x :- succ(x)
   do console.write("X is: " + x)
 end
