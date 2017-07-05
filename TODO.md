@@ -132,7 +132,7 @@
   - [x] ImplStmt
   - [x] LabelStmt
   - [x] LetStmt
-  - [ ] ModuleStmt
+  - [x] ModuleStmt
   - [ ] OpenStmt
   - [ ] PostConditionalStmt
   - [ ] RaiseStmt
