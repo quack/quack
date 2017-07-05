@@ -21,17 +21,17 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-class GenericType extends TypeNode
+class ListType extends TypeNode
 {
-    public $name;
+    public $type;
 
-    public function __construct($name)
+    public function __construct(TypeNode $type)
     {
-        $this->name = $name;
+        $this->type = $type;
     }
 
     public function __toString()
     {
-        return $this->name;
+        return '{' . $this->type . '}';
     }
 }

@@ -142,7 +142,13 @@ import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/StmtList');
 
+import(AST, 'types/TypeNode');
+import(AST, 'types/AtomType');
+import(AST, 'types/GenericType');
+import(AST, 'types/ListType');
 import(AST, 'types/LiteralType');
+import(AST, 'types/MapType');
+import(AST, 'types/TupleType');
 
 /* Scope */
 

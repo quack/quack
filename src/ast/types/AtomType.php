@@ -21,7 +21,7 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-class GenericType extends TypeNode
+class AtomType extends TypeNode
 {
     public $name;
 

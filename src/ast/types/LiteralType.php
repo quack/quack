@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Types\NativeQuackType;
 
-class LiteralType
+class LiteralType extends TypeNode
 {
     public $code;
 

@@ -21,7 +21,12 @@
  */
 namespace QuackCompiler\Parser;
 
+use \QuackCompiler\Ast\Types\AtomType;
+use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\MapType;
+use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Types\NativeQuackType;
 
@@ -79,7 +84,7 @@ trait TypeParser
     private function _atom()
     {
         $lexeme = $this->parser->resolveScope($this->parser->consumeAndFetch(Tag::T_ATOM)->getPointer());
-        return $lexeme;
+        return new AtomType($lexeme);
     }
 
     private function _literal()
@@ -96,7 +101,7 @@ trait TypeParser
 
         return array_key_exists($name, $types)
             ? new LiteralType($types[$name])
-            : "'" . $name;
+            : new GenericType($name);
     }
 
     private function _instance()
@@ -111,7 +116,8 @@ trait TypeParser
         $this->parser->match('{');
         $type = $this->_type();
         $this->parser->match('}');
-        return [$type];
+
+        return new ListType($type);
     }
 
     private function _map()
@@ -122,7 +128,7 @@ trait TypeParser
         $value = $this->_type();
         $this->parser->match('}');
 
-        return [$key => $value];
+        return new MapType($key, $value);
     }
 
     private function _tuple()
@@ -137,7 +143,7 @@ trait TypeParser
             $this->parser->match(')');
         }
 
-        return $types;
+        return new TupleType(...$types);
     }
 
     private function _object()

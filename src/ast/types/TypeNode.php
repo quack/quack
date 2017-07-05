@@ -21,17 +21,6 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-class GenericType extends TypeNode
+abstract class TypeNode
 {
-    public $name;
-
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
 }

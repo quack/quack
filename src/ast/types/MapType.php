@@ -21,17 +21,19 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-class GenericType extends TypeNode
+class MapType extends TypeNode
 {
-    public $name;
+    public $key;
+    public $value;
 
-    public function __construct($name)
+    public function __construct(TypeNode $key, TypeNode $value)
     {
-        $this->name = $name;
+        $this->key = $key;
+        $this->value = $value;
     }
 
     public function __toString()
     {
-        return $this->name;
+        return '#{' . $this->key . ': ' . $this->value . '}';
     }
 }

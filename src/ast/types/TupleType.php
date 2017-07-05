@@ -21,17 +21,19 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-class GenericType extends TypeNode
+class TupleType extends TypeNode
 {
-    public $name;
+    public $types;
+    public $size;
 
-    public function __construct($name)
+    public function __construct(TypeNode ...$types)
     {
-        $this->name = $name;
+        $this->types = $types;
+        $this->size = sizeof($types);
     }
 
     public function __toString()
     {
-        return $this->name;
+        return '#(' . implode(', ', $this->types) . ')';
     }
 }
