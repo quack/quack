@@ -1,0 +1,18 @@
+%%describe
+Supports formatting when expressions
+%%source
+fn mySwitch(what)
+  ^ when
+         | what = "Luiz"      -> "Turing Tape!";
+       | what = "Marcelo" -> "Lambda Calculus!";
+     | else ""
+    end
+end
+%%expect
+fn mySwitch(what)
+  ^ when
+    | what = "Luiz" -> "Turing Tape!";
+    | what = "Marcelo" -> "Lambda Calculus!";
+    | else ""
+  end
+end

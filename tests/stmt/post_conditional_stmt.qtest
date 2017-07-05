@@ -1,0 +1,15 @@
+%%describe
+Supports formatting post conditional statements
+%%source
+fn test(n)
+ ^ n unless n = 0
+end
+
+let jaca :- true
+do console.write("Jaca is true") when jaca
+%%expect
+fn test(n)
+  ^ n unless n = 0
+end
+let jaca :- true
+do console.write("Jaca is true") when jaca

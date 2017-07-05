@@ -1,0 +1,27 @@
+%%describe
+Supports formatting raise statements
+%%source
+shape Exception
+  desc
+end
+
+impl Exception
+  show() :- self.desc
+end
+
+let me :- %{ name: "Luiz", age: 27 }
+raise %Exception %{ desc: "Name is empty"} unless me.name = ""
+%%expect
+shape Exception
+  desc
+end
+impl Exception
+  show() :- self.desc
+end
+let me :- %{
+  name: "Luiz",
+  age: 27
+}
+raise %Exception %{
+  desc: "Name is empty"
+} unless me.name = ""

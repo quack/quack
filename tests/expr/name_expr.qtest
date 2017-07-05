@@ -1,0 +1,11 @@
+%%describe
+Supports formatting name expressions
+%%source
+let x :- 1 do x let _ :- 'a' do _ let _X_1 :- nil do _X_1
+%%expect
+let x :- 1
+do x
+let _ :- 'a'
+do _
+let _X_1 :- nil
+do _X_1

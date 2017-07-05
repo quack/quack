@@ -63,6 +63,13 @@ class ContinueStmt extends Stmt
                 throw new ScopeError(Localization::message('SCO140', ['continue']));
             }
         } else {
+            $meta_label = $parent_scope->getMetaInContext(Meta::M_LABEL);
+
+            // If meta_label is null, the user is calling 'continue' outside a loop
+            if (null === $meta_label) {
+                throw new ScopeError(Localization::message('SCO140', ['continue']));
+            }
+
             $label = $parent_scope->lookup($this->label);
 
             // When the symbol doesn't exist

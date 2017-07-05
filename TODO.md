@@ -132,14 +132,14 @@
   - [x] ImplStmt
   - [x] LabelStmt
   - [x] LetStmt
-  - [ ] ModuleStmt
+  - [x] ModuleStmt
   - [ ] OpenStmt
-  - [ ] PostConditionalStmt
-  - [ ] RaiseStmt
-  - [ ] ReturnStmt
+  - [x] PostConditionalStmt
+  - [x] RaiseStmt
+  - [x] ReturnStmt
   - [x] ShapeStmt
   - [x] SwitchStmt
-  - [ ] TryStmt
+  - [x] TryStmt
   - [x] WhileStmt
   - [x] AccessExpr
   - [x] ArrayExpr
@@ -149,18 +149,18 @@
   - [x] CallExpr
   - [x] LambdaExpr
   - [x] MapExpr
-  - [ ] NameExpr
+  - [x] NameExpr
   - [x] NewExpr
   - [x] NilExpr
-  - [ ] NumberExpr
+  - [x] NumberExpr
   - [x] ObjectExpr
   - [x] OperatorExpr
   - [x] PartialFuncExpr
-  - [ ] PostfixExpr
-  - [ ] PrefixExpr
+  - [x] PostfixExpr
+  - [x] PrefixExpr
   - [x] RangeExpr
-  - [ ] RegexExpr
-  - [ ] StringExpr
-  - [ ] TernaryExpr
-  - [ ] WhenExpr
-  - [ ] WhereExpr
+  - [x] RegexExpr
+  - [x] StringExpr
+  - [x] TernaryExpr
+  - [x] WhenExpr
+  - [x] WhereExpr

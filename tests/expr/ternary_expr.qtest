@@ -1,0 +1,6 @@
+%%describe
+Supports formatting ternary expressions
+%%source
+do true then console.write("Passed") else console.error("Unexpected error happened")
+%%expect
+do true then console.write("Passed") else console.error("Unexpected error happened")
