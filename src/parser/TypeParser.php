@@ -21,7 +21,9 @@
  */
 namespace QuackCompiler\Parser;
 
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Types\NativeQuackType;
 
 trait TypeParser
 {
@@ -83,12 +85,17 @@ trait TypeParser
     private function _literal()
     {
         $name = $this->identifier();
-        $types = ['string', 'number', 'boolean', 'regex', 'unit'];
+        $types = [
+            'string'  => NativeQuackType::T_STR,
+            'number'  => NativeQuackType::T_NUMBER,
+            'boolean' => NativeQuackType::T_BOOL,
+            'regex'   => NativeQuackType::T_REGEX,
+            'block'   => NativeQuackType::T_BLOCK,
+            'unit'    => NativeQuackType::T_UNIT
+        ];
 
-        // TODO: Give an object representation of the types in the AST
-        // When it is not a native type, it is a free variable
-        return in_array($name, $types, true)
-            ? $name
+        return array_key_exists($name, $types)
+            ? new LiteralType($types[$name])
             : "'" . $name;
     }
 

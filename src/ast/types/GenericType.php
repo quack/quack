@@ -19,31 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Types;
+namespace QuackCompiler\Ast\Types;
 
-class NativeQuackType
+use \QuackCompiler\Types\NativeQuackType;
+
+class GenericType
 {
-    const T_STR      = 0;
-    const T_NUMBER   = 2;
-    const T_BOOL     = 3;
-    const T_OBJ      = 4;
-    const T_MAP      = 5;
-    const T_LIST     = 6;
-    const T_DYN      = 7;
-    const T_RESOURCE = 8;
-    const T_ATOM     = 9;
-    const T_REGEX    = 10;
-    const T_LAZY     = 11;
-    const T_BLOCK    = 12;
-    const T_ENUM     = 13;
-    const T_UNIT     = 14;
+    public $name;
 
-    // Please note that T_LAZY represents lazy type inference. It should be used
-    // to represent unknown subtypes (such as empty arrays), and it must allow
-    // be casted to any Type<any>. Example:
-    // let arr :- {}
-    // arr.push[ 1 ] (* type error *)
-    // let arr :- <list.of(int)>{}
-    // arr.push[ 1 ] (* pass *)
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
-

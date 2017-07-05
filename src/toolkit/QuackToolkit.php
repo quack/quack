@@ -142,6 +142,8 @@ import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/StmtList');
 
+import(AST, 'types/LiteralType');
+
 /* Scope */
 
 import(SCOPE, 'Scope');

@@ -186,6 +186,7 @@ class Grammar
         if ($this->parser->consumeIf('::')) {
             $type = $this->_type();
             var_dump($type);
+            echo '-----------', PHP_EOL, $type, PHP_EOL;
         }
 
         if ($this->parser->consumeIf(':-')) {
