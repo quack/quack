@@ -134,7 +134,7 @@
   - [x] LetStmt
   - [x] ModuleStmt
   - [ ] OpenStmt
-  - [ ] PostConditionalStmt
+  - [x] PostConditionalStmt
   - [ ] RaiseStmt
   - [ ] ReturnStmt
   - [x] ShapeStmt
