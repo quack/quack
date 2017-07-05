@@ -1,5 +1,5 @@
 %%describe
-Supports formatting name expressions
+Supports formatting number expressions
 %%source
 do 0b00000001
 do 1 + 1

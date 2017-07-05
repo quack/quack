@@ -1,0 +1,24 @@
+%%describe
+Supports formatting prefix expressions
+%%source
+do not true do +1 do -2 do -(-4)
+do ~0
+let y :- %{ name: "Luiz" }
+let x :- ^^y
+
+fn write(*var)
+  do console.write(*var)
+end
+%%expect
+do not true
+do +1
+do -2
+do -(-4)
+do ~0
+let y :- %{
+  name: "Luiz"
+}
+let x :- ^^y
+fn write(*var)
+  do console.write(*var)
+end

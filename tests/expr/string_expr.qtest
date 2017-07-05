@@ -1,0 +1,8 @@
+%%describe
+Supports formatting string expressions
+%%source
+do "My Cool String"
+do 'other one'
+%%expect
+do "My Cool String"
+do 'other one'

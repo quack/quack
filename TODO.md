@@ -156,11 +156,11 @@
   - [x] ObjectExpr
   - [x] OperatorExpr
   - [x] PartialFuncExpr
-  - [ ] PostfixExpr
-  - [ ] PrefixExpr
+  - [x] PostfixExpr
+  - [x] PrefixExpr
   - [x] RangeExpr
-  - [ ] RegexExpr
-  - [ ] StringExpr
-  - [ ] TernaryExpr
-  - [ ] WhenExpr
+  - [x] RegexExpr
+  - [x] StringExpr
+  - [x] TernaryExpr
+  - [x] WhenExpr
   - [ ] WhereExpr
