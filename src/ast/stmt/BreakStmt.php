@@ -63,10 +63,10 @@ class BreakStmt extends Stmt
                 throw new ScopeError(Localization::message('SCO140', ['break']));
             }
         } else {
-            $metaLabel = $parent_scope->getMetaInContext(Meta::M_LABEL);
+            $meta_label = $parent_scope->getMetaInContext(Meta::M_LABEL);
 
-            // If metaLabel is null, the user is calling 'break' outside a loop
-            if (null === $metaLabel) {
+            // If meta_label is null, the user is calling 'break' outside a loop
+            if (null === $meta_label) {
                 throw new ScopeError(Localization::message('SCO140', ['break']));
             }
 
