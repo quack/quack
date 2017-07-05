@@ -163,4 +163,4 @@
   - [x] StringExpr
   - [x] TernaryExpr
   - [x] WhenExpr
-  - [ ] WhereExpr
+  - [x] WhereExpr
