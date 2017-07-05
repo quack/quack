@@ -1,0 +1,31 @@
+%%describe
+Supports formatting return statements
+%%source
+fn doubleN(x)
+  ^ &(* 2)(x)
+end
+let null :- &[a, b] -> b
+fn retSmth(smth)
+  ^ smth <> null then smth else null
+end
+fn recursive(n)
+  if n < 1
+    ^ 0
+  else
+    ^ n + recursive(n - 1)
+  end
+end
+%%expect
+fn doubleN(x)
+  ^ &(* 2)(x)
+end
+let null :- &[a, b] -> b
+fn retSmth(smth)
+  ^ smth <> null then smth else null
+end
+fn recursive(n)
+  if n < 1 ^ 0
+  else
+    ^ n + recursive(n - 1)
+  end
+end

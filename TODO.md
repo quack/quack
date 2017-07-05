@@ -136,7 +136,7 @@
   - [ ] OpenStmt
   - [x] PostConditionalStmt
   - [x] RaiseStmt
-  - [ ] ReturnStmt
+  - [x] ReturnStmt
   - [x] ShapeStmt
   - [x] SwitchStmt
   - [ ] TryStmt

@@ -5,7 +5,7 @@ Supports formatting while statements
 while true break myLabel end
 while true break end
 let x :- 0
-let succ :- &[m] -> m+1
+let succ :- &[m] -> &(+ 1)(m)
 while x < 10
   do x :- succ(x)
   do console.write("X is: " + x)
@@ -19,7 +19,7 @@ while true
   break
 end
 let x :- 0
-let succ :- &[m] -> m + 1
+let succ :- &[m] -> &(+ 1)(m)
 while x < 10
   do x :- succ(x)
   do console.write("X is: " + x)
