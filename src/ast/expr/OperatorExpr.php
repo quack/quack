@@ -167,7 +167,11 @@ class OperatorExpr extends Expr
         // Type checking for equality operators and coalescence
         $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
-            throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
+            if (!$type->left->isExactlySameAs($type->right)) {
+                throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
+            }
+
+            return new Type(NativeQuackType::T_BOOL);
         }
 
         // Type checking for string matched by regex
