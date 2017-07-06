@@ -36,6 +36,29 @@ function isPOSIX()
     return $value;
 }
 
+function session()
+{
+    static $session;
+    if (null === $session) {
+        $session = (object) [
+            // TODO: Include other properties here later, such as scope and AST
+            'command' => "",
+            'complete_stmt' => true
+        ];
+    }
+
+    return $session;
+}
+
+function is_complete($str = "")
+{
+    // TODO: Think in a beter way to do it
+    // If end of the source is found, then user did not finish writing
+    $match = "end of the source";
+    $complete = strpos($str, $match) === false;
+    return $complete;
+}
+
 function start_repl()
 {
     $dot = isPOSIX() ? '·' : '-';
@@ -58,12 +81,13 @@ LICENSE
 
 function install_stream_handler()
 {
+    $prompt = session()->complete_stmt ? "Quack> " : "\__(\"> ";
     if (isPOSIX()) {
         begin_yellow();
-        readline_callback_handler_install("Quack> ", 'readline_callback');
+        readline_callback_handler_install($prompt, 'readline_callback');
         end_yellow();
     } else {
-        echo "Quack> ";
+        echo "$prompt";
     }
 }
 
@@ -101,6 +125,10 @@ function readline_callback($command)
             goto next;
     }
 
+    if (!session()->complete_stmt) {
+      $command = session()->command . " " . $command;
+    }
+
     $lexer = new Tokenizer($command);
     $parser = new TokenReader($lexer);
 
@@ -109,9 +137,20 @@ function readline_callback($command)
         $parser->parse();
         $parser->ast->injectScope($global_scope);
         $parser->ast->runTypeChecker();
-
+        session()->complete_stmt = true;
         /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
         /* when */ args_have('-f', '--format') && $parser->format();
+    } catch (SyntaxError $e) {
+        $session = session();
+        if (is_complete($e)) {
+            $session->command = "";
+            $session->complete_stmt = true;
+
+            echo $e;
+        } else {
+            $session->command = $command;
+            $session->complete_stmt = false;
+        }
     } catch (\Exception $e) {
         echo $e;
     }
