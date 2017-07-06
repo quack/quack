@@ -22,6 +22,7 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Types\AtomType;
+use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Ast\Types\InstanceType;
 use \QuackCompiler\Ast\Types\ListType;
@@ -169,7 +170,7 @@ trait TypeParser
     private function _function()
     {
         $parameters = [];
-        $return = 'unit';
+        $return = new LiteralType(NativeQuackType::T_UNIT);
         $this->parser->match('&');
 
         if ($this->parser->is(Tag::T_IDENT)) {
@@ -189,6 +190,6 @@ trait TypeParser
             $return = $this->_type();
         }
 
-        return [$parameters, $return];
+        return new FunctionType($parameters, $return);
     }
 }

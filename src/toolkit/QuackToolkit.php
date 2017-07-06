@@ -144,6 +144,7 @@ import(AST, 'stmt/StmtList');
 
 import(AST, 'types/TypeNode');
 import(AST, 'types/AtomType');
+import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
 import(AST, 'types/InstanceType');
 import(AST, 'types/ListType');
