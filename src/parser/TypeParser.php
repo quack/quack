@@ -31,10 +31,20 @@ use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parselets\Parselet;
 use \QuackCompiler\Types\NativeQuackType;
 
-trait TypeParser
+class TypeParser
 {
+    use Parselet;
+
+    private $parser;
+
+    public function __construct(Parser $parser)
+    {
+        $this->parser = $parser;
+    }
+
     function _type()
     {
         $left = null;
@@ -92,7 +102,7 @@ trait TypeParser
 
     private function _literal()
     {
-        $name = $this->identifier();
+        $name = $this->_identifier();
         $types = [
             'string'  => NativeQuackType::T_STR,
             'number'  => NativeQuackType::T_NUMBER,
@@ -157,7 +167,7 @@ trait TypeParser
 
         if (!$this->parser->is('}')) {
             do {
-                $key = $this->identifier();
+                $key = $this->_identifier();
                 $this->parser->match(':');
                 $properties[$key] = $this->_type();
             } while ($this->parser->consumeIf(','));
@@ -191,5 +201,10 @@ trait TypeParser
         }
 
         return new FunctionType($parameters, $return);
+    }
+
+    private function _identifier()
+    {
+        return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
     }
 }

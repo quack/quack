@@ -48,14 +48,15 @@ use \QuackCompiler\Ast\Stmt\StmtList;
 class Grammar
 {
     use DeclParser;
-    use TypeParser;
 
     public $parser;
+    public $type_parser;
     public $checker;
 
     public function __construct(TokenReader $parser)
     {
         $this->parser = $parser;
+        $this->type_parser = new TypeParser($parser);
         $this->checker = new TokenChecker($parser);
     }
 
@@ -184,8 +185,7 @@ class Grammar
         $name = $this->identifier();
 
         if ($this->parser->consumeIf('::')) {
-            $type = $this->_type();
-            var_dump($type);
+            $type = $this->type_parser->_type();
             echo '-----------', PHP_EOL, $type, PHP_EOL;
         }
 
