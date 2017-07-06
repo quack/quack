@@ -58,8 +58,6 @@ class TokenChecker
             Tag::T_TRY,
             Tag::T_BREAK,
             Tag::T_CONTINUE,
-            Tag::T_GOTO,
-            Tag::T_GLOBAL,
             Tag::T_RAISE,
             Tag::T_BEGIN,
             '^',

@@ -63,7 +63,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_CONST, "const"));
         $this->reserve(new Word(Tag::T_NIL, "nil"));
         $this->reserve(new Word(Tag::T_OPEN, "open"));
-        $this->reserve(new Word(Tag::T_GLOBAL, "global"));
         $this->reserve(new Word(Tag::T_AS, "as"));
         $this->reserve(new Word(Tag::T_ENUM, "enum"));
         $this->reserve(new Word(Tag::T_CONTINUE, "continue"));

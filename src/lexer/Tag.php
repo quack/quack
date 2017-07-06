@@ -50,12 +50,10 @@ class Tag
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
-    const T_GOTO = 275;
     const T_WHERE = 280;
     const T_FOREACH = 281;
     const T_IN = 284;
     const T_OPEN = 502;
-    const T_GLOBAL = 503;
     const T_AS = 504;
     const T_ENUM = 506;
     const T_CONTINUE = 508;
