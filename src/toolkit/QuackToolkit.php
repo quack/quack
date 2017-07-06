@@ -145,9 +145,11 @@ import(AST, 'stmt/StmtList');
 import(AST, 'types/TypeNode');
 import(AST, 'types/AtomType');
 import(AST, 'types/GenericType');
+import(AST, 'types/InstanceType');
 import(AST, 'types/ListType');
 import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
+import(AST, 'types/ObjectType');
 import(AST, 'types/TupleType');
 
 /* Scope */

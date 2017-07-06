@@ -23,9 +23,11 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Types\AtomType;
 use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\InstanceType;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
+use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Types\NativeQuackType;
@@ -108,7 +110,8 @@ trait TypeParser
     {
         $this->parser->match('%');
         $instance = $this->qualifiedName();
-        return '%' . join('.', $instance);
+
+        return new InstanceType($instance);
     }
 
     private function _list()
@@ -149,18 +152,18 @@ trait TypeParser
     private function _object()
     {
         $this->parser->match('%{');
-        $type = [];
+        $properties = [];
 
         if (!$this->parser->is('}')) {
             do {
                 $key = $this->identifier();
                 $this->parser->match(':');
-                $type[$key] = $this->_type();
+                $properties[$key] = $this->_type();
             } while ($this->parser->consumeIf(','));
         }
         $this->parser->match('}');
 
-        return $type;
+        return new ObjectType($properties);
     }
 
     private function _function()
