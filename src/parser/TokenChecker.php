@@ -70,6 +70,6 @@ class TokenChecker
 
     public function isEoF()
     {
-        return $this->parser->lookahead->getTag() === 0;
+        return 0 === $this->parser->lookahead->getTag();
     }
 }
