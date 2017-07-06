@@ -32,6 +32,7 @@ use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
+use \QuackCompiler\Parselets\Types\BinaryTypeOperatorParselet;
 use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
@@ -43,9 +44,11 @@ class TypeParser
     public function __construct(Parser $parser)
     {
         $this->parser = $parser;
+        $this->register('|', new BinaryTypeOperatorParselet(Precedence::UNION_TYPE, false));
+        $this->register('&', new BinaryTypeOperatorParselet(Precedence::INTERSECTION_TYPE, false));
     }
 
-    function _type()
+    public function _type($precedence = 0)
     {
         $left = null;
         switch ($this->parser->lookahead->getTag())
@@ -82,16 +85,21 @@ class TypeParser
                 ]);
         }
 
-        // TODO: Implement parselets in order to types behave like expressions
-        // TODO: Make parselets generic and pluggable, in order to allow
-        // plugging new parsers
-        if ($this->parser->is('|') || $this->parser->is('&')) {
-            $symbol = $this->parser->consumeAndFetch()->getTag();
-            $right = $this->_type();
-            return [$left, $symbol, $right];
+        while ($precedence < $this->getPrecedence()) {
+            $token = $this->parser->consumeAndFetch();
+            $infix = $this->infixParseletForToken($token);
+            $left = $infix->parse($this, $left, $token);
         }
 
         return $left;
+    }
+
+    private function getPrecedence()
+    {
+        $parselet = $this->infixParseletForToken($this->parser->lookahead);
+        return !is_null($parselet)
+            ? $parselet->getPrecedence()
+            : 0;
     }
 
     private function _atom()

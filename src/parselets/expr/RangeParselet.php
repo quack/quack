@@ -31,7 +31,7 @@ use \QuackCompiler\Parselets\InfixParselet;
 
 class RangeParselet implements InfixParselet
 {
-    public function parse(Grammar $grammar, Expr $from, Token $token)
+    public function parse($grammar, $from, Token $token)
     {
         $to = $grammar->_expr();
         $by = null;

@@ -29,7 +29,7 @@ use \QuackCompiler\Parselets\PrefixParselet;
 
 class BlockParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $body = new StmtList(iterator_to_array($grammar->_innerStmtList()));
         $grammar->parser->match('}');

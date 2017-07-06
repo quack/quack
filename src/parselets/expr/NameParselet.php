@@ -28,7 +28,7 @@ use \QuackCompiler\Parser\Grammar;
 
 class NameParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         return new NameExpr($grammar->parser->resolveScope($token->getPointer()));
     }

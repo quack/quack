@@ -36,7 +36,7 @@ class PostfixOperatorParselet implements InfixParselet
         $this->precedence = $precedence;
     }
 
-    public function parse(Grammar $parser, Expr $left, Token $token)
+    public function parse($grammar, $left, Token $token)
     {
         return new PostfixExpr($left, $token->getTag());
     }

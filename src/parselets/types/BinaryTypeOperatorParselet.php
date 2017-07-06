@@ -19,34 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Expr;
+namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ObjectExpr;
+use \QuackCompiler\Ast\Types\OperatorType;
+use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Parselets\InfixParselet;
 
-class ObjectParselet implements PrefixParselet
+class BinaryTypeOperatorParselet implements InfixParselet
 {
-    public function parse($grammar, Token $token)
+    public $precedence;
+    public $is_right;
+
+    public function __construct($precedence, $is_right)
     {
-        $keys = [];
-        $values = [];
+        $this->precedence = $precedence;
+        $this->is_right = $is_right;
+    }
 
-        if (!$grammar->parser->consumeIf('}')) {
-            $keys[] = $grammar->identifier();
-            $grammar->parser->match(':');
-            $values[] = $grammar->_expr();
+    public function parse($parser, $left, Token $token)
+    {
+        $right = $parser->_type($this->precedence - (int) $this->is_right);
+        return new OperatorType($left, $token->getTag(), $right);
+    }
 
-            while ($grammar->parser->consumeIf(',')) {
-                $keys[] = $grammar->identifier();
-                $grammar->parser->match(':');
-                $values[] = $grammar->_expr();
-            }
-
-            $grammar->parser->match('}');
-        }
-
-        return new ObjectExpr($keys, $values);
+    public function getPrecedence()
+    {
+        return $this->precedence;
     }
 }

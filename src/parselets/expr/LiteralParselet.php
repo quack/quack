@@ -34,7 +34,7 @@ use \QuackCompiler\Parser\Grammar;
 
 class LiteralParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $tag = $token->getTag();
 

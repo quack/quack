@@ -73,6 +73,8 @@ import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 
+import(PARSELETS, 'types/BinaryTypeOperatorParselet');
+
 /* Parser */
 
 import(PARSER, 'DeclParser');
@@ -151,6 +153,7 @@ import(AST, 'types/ListType');
 import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
 import(AST, 'types/ObjectType');
+import(AST, 'types/OperatorType');
 import(AST, 'types/TupleType');
 
 /* Scope */

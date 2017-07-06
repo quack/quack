@@ -48,4 +48,7 @@ class Precedence
     const CALL               = 23;
     const ACCESS             = 24;
     // TODO: Review operators precedence when finish the parser
+
+    const UNION_TYPE         = 1;
+    const INTERSECTION_TYPE  = 2;
 }

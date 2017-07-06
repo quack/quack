@@ -35,7 +35,7 @@ class PrefixOperatorParselet implements PrefixParselet
         $this->precedence = $precedence;
     }
 
-    public function parse(Grammar $parser, Token $token)
+    public function parse($parser, Token $token)
     {
         $operand = $parser->_expr($this->precedence);
         return new PrefixExpr($token, $operand);

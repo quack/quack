@@ -30,7 +30,7 @@ use \QuackCompiler\Parselets\PrefixParselet;
 
 class NewParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $shape_name = $grammar->qualifiedName();
         $initializer = null;

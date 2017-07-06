@@ -29,7 +29,7 @@ use \QuackCompiler\Parser\Grammar;
 
 class PartialFuncParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $op_table = &Tag::getPartialOperators();
         $next_op = $grammar->parser->lookahead->getTag();

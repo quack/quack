@@ -33,7 +33,7 @@ class LambdaParselet implements PrefixParselet
     const TYPE_EXPRESSION = 0x1;
     const TYPE_STATEMENT  = 0x2;
 
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $parameters = [];
         $kind = null;

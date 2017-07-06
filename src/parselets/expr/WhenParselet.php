@@ -30,7 +30,7 @@ use \QuackCompiler\Parselets\PrefixParselet;
 
 class WhenParselet implements PrefixParselet
 {
-    public function parse(Grammar $grammar, Token $token)
+    public function parse($grammar, Token $token)
     {
         $cases = [];
 

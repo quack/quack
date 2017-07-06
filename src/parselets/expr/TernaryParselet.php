@@ -31,7 +31,7 @@ use \QuackCompiler\Parselets\InfixParselet;
 
 class TernaryParselet implements InfixParselet
 {
-    public function parse(Grammar $grammar, Expr $left, Token $token)
+    public function parse($grammar, $left, Token $token)
     {
         $then = $grammar->_expr();
         $grammar->parser->match(Tag::T_ELSE);

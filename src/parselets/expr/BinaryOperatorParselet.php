@@ -38,9 +38,9 @@ class BinaryOperatorParselet implements InfixParselet
         $this->is_right = $is_right;
     }
 
-    public function parse(Grammar $parser, Expr $left, Token $token)
+    public function parse($grammar, $left, Token $token)
     {
-        $right = $parser->_expr($this->precedence - ($this->is_right ? 1 : 0));
+        $right = $grammar->_expr($this->precedence - (int) $this->is_right);
         return new OperatorExpr($left, $token->getTag(), $right);
     }
 

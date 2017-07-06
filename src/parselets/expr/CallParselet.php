@@ -30,7 +30,7 @@ use \QuackCompiler\Parser\Precedence;
 
 class CallParselet implements InfixParselet
 {
-    public function parse(Grammar $grammar, Expr $left, Token $token)
+    public function parse($grammar, $left, Token $token)
     {
         $args = [];
 

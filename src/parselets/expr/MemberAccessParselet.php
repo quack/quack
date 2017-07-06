@@ -34,7 +34,7 @@ use \QuackCompiler\Parselets\InfixParselet;
 
 class MemberAccessParselet implements InfixParselet
 {
-    public function parse(Grammar $grammar, Expr $left, Token $token)
+    public function parse($grammar, $left, Token $token)
     {
         $right = $grammar->_name();
         return new OperatorExpr(
