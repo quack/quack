@@ -185,8 +185,8 @@ class Grammar
         $name = $this->identifier();
 
         if ($this->parser->consumeIf('::')) {
+            // TODO: bind type for symbol. Currently ignored
             $type = $this->type_parser->_type();
-            echo '-----------', PHP_EOL, $type, PHP_EOL;
         }
 
         if ($this->parser->consumeIf(':-')) {

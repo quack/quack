@@ -30,9 +30,21 @@ Sprint 2:
 - [x] Remove difference between number types for type checking
 - [x] Traverse AST first time to get declarations and bind to scope
 
+- [ ] Run typechecker for RaiseStmt, ensure string
 - [ ] Implement parser for type signatures
 - [ ] Run and implement type checker and reasoning for FnStmt
 - [ ] Record, in the AST, the positions of the symbols, in order to give better error messages
 - [ ] Run typechecker and see type rules for bluerprints, traits, structs and impls
-- [ ] Run typechecker for RaiseStmt, ensure derivation from \Exception
 - [ ] Assert the context of ReturnStmt and pass the expected return type to it when inside functions
+
+# Type System
+
+- [ ] Implement parenthesize on types
+- [ ] Move __toString to format functions, receiving the parser because sometimes it is necessary (in types)
+- [ ] Types must know instances (shapes and classes) for named types, and must ensure they exist
+- [ ] When there is a type declaration, we should output it on format
+- [ ] Isolate statement parsers, with a main class that instantiates and uses them and has a hash of parsers
+- [ ] Bind type to symbol when it is passed (such as in let x :: string)
+- [ ] Create a TypeSyntaxError (TSY), that will be throw on type syntax error
+- [ ] Create comparator function (deep comparison) on types
+- [ ] Replace current type returns and verifications by new ones. Type.php dies
