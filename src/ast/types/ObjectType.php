@@ -38,6 +38,6 @@ class ObjectType extends TypeNode
         }
         $source .= '}';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

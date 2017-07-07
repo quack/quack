@@ -23,4 +23,21 @@ namespace QuackCompiler\Ast\Types;
 
 abstract class TypeNode
 {
+    protected $parentheses_level = 0;
+
+    public function addParentheses()
+    {
+        $this->parentheses_level++;
+    }
+
+    public function removeParentheses()
+    {
+        $this->parentheses_level--;
+    }
+
+    protected function parenthesize($source)
+    {
+        $level = $this->parentheses_level;
+        return str_repeat('(', $level) . $source . str_repeat(')', $level);
+    }
 }

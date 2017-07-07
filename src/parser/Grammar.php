@@ -187,6 +187,7 @@ class Grammar
         if ($this->parser->consumeIf('::')) {
             // TODO: bind type for symbol. Currently ignored
             $type = $this->type_parser->_type();
+            echo $type, PHP_EOL;
         }
 
         if ($this->parser->consumeIf(':-')) {

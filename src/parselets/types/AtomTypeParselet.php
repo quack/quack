@@ -19,21 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Parselets\Types;
 
-class TupleType extends TypeNode
+use \QuackCompiler\Ast\Types\AtomType;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
+
+class AtomTypeParselet implements PrefixParselet
 {
-    public $types;
-    public $size;
-
-    public function __construct(TypeNode ...$types)
+    public function parse($grammar, Token $token)
     {
-        $this->types = $types;
-        $this->size = sizeof($types);
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
+        return new AtomType($grammar->parser->resolveScope($token->getPointer()));
     }
 }

@@ -34,6 +34,8 @@ class MapType extends TypeNode
 
     public function __toString()
     {
-        return '#{' . $this->key . ': ' . $this->value . '}';
+        return $this->parenthesize(
+            '#{' . $this->key . ': ' . $this->value . '}'
+        );
     }
 }

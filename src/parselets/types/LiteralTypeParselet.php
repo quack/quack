@@ -19,18 +19,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Expr;
+namespace QuackCompiler\Parselets\Types;
 
+use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Types\NativeQuackType;
 
-class GroupParselet implements PrefixParselet
+class LiteralTypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        $expr = $grammar->_expr();
-        $expr->addParentheses();
-        $grammar->parser->match(')');
-        return $expr;
+        $names = [
+            'string'  => NativeQuackType::T_STR,
+            'number'  => NativeQuackType::T_NUMBER,
+            'boolean' => NativeQuackType::T_BOOL,
+            'regex'   => NativeQuackType::T_REGEX,
+            'block'   => NativeQuackType::T_BLOCK,
+            'unit'    => NativeQuackType::T_UNIT
+        ];
+        $name = $grammar->parser->resolveScope($token->getPointer());
+
+        return array_key_exists($name, $names)
+            ? new LiteralType($names[$name])
+            : new GenericType($name);
     }
 }

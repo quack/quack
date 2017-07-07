@@ -36,6 +36,8 @@ class OperatorType extends TypeNode
 
     public function __toString()
     {
-        return $this->left . " {$this->operator} " . $this->right;
+        return $this->parenthesize(
+            $this->left . " {$this->operator} " . $this->right
+        );
     }
 }

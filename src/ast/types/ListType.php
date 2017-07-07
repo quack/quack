@@ -32,6 +32,6 @@ class ListType extends TypeNode
 
     public function __toString()
     {
-        return '{' . $this->type . '}';
+        return $this->parenthesize('{' . $this->type . '}');
     }
 }

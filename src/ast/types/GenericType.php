@@ -32,6 +32,6 @@ class GenericType extends TypeNode
 
     public function __toString()
     {
-        return $this->name;
+        return $this->parenthesize($this->name);
     }
 }

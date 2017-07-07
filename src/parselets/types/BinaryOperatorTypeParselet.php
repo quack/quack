@@ -26,7 +26,7 @@ use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
 
-class BinaryTypeOperatorParselet implements InfixParselet
+class BinaryOperatorTypeParselet implements InfixParselet
 {
     public $precedence;
     public $is_right;

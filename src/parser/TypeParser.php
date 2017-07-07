@@ -21,7 +21,6 @@
  */
 namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Ast\Types\AtomType;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Ast\Types\InstanceType;
@@ -32,33 +31,54 @@ use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
-use \QuackCompiler\Parselets\Types\BinaryTypeOperatorParselet;
+use \QuackCompiler\Parselets\Types\AtomTypeParselet;
+use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
+use \QuackCompiler\Parselets\Types\GroupTypeParselet;
+use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
 {
     use Parselet;
 
-    private $parser;
+    public $parser;
 
     public function __construct(Parser $parser)
     {
         $this->parser = $parser;
-        $this->register('|', new BinaryTypeOperatorParselet(Precedence::UNION_TYPE, false));
-        $this->register('&', new BinaryTypeOperatorParselet(Precedence::INTERSECTION_TYPE, false));
+        $this->register('(', new GroupTypeParselet);
+        $this->register(Tag::T_ATOM, new AtomTypeParselet);
+        $this->register(Tag::T_IDENT, new LiteralTypeParselet);
+        $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));
+        $this->register('&', new BinaryOperatorTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
 
     public function _type($precedence = 0)
     {
-        $left = null;
+        $token = $this->parser->lookahead;
+        $prefix = $this->prefixParseletForToken($token);
+
+        if (is_null($prefix)) {
+            throw new SyntaxError([
+                'expected' => 'type signature',
+                'found'    => $token,
+                'parser'   => $this->parser
+            ]);
+        }
+
+        $this->parser->consume();
+        $left = $prefix->parse($this, $token);
+
+        while ($precedence < $this->getPrecedence()) {
+            $token = $this->parser->consumeAndFetch();
+            $infix = $this->infixParseletForToken($token);
+            $left = $infix->parse($this, $left, $token);
+        }
+
+        return $left;
+        /*
         switch ($this->parser->lookahead->getTag())
         {
-            case Tag::T_IDENT:
-                $left = $this->_literal();
-                break;
-            case Tag::T_ATOM:
-                $left = $this->_atom();
-                break;
             case '{':
                 $left = $this->_list();
                 break;
@@ -83,15 +103,7 @@ class TypeParser
                     'found'    => $this->parser->lookahead,
                     'parser'   => $this->parser
                 ]);
-        }
-
-        while ($precedence < $this->getPrecedence()) {
-            $token = $this->parser->consumeAndFetch();
-            $infix = $this->infixParseletForToken($token);
-            $left = $infix->parse($this, $left, $token);
-        }
-
-        return $left;
+        }*/
     }
 
     private function getPrecedence()
@@ -100,29 +112,6 @@ class TypeParser
         return !is_null($parselet)
             ? $parselet->getPrecedence()
             : 0;
-    }
-
-    private function _atom()
-    {
-        $lexeme = $this->parser->resolveScope($this->parser->consumeAndFetch(Tag::T_ATOM)->getPointer());
-        return new AtomType($lexeme);
-    }
-
-    private function _literal()
-    {
-        $name = $this->_identifier();
-        $types = [
-            'string'  => NativeQuackType::T_STR,
-            'number'  => NativeQuackType::T_NUMBER,
-            'boolean' => NativeQuackType::T_BOOL,
-            'regex'   => NativeQuackType::T_REGEX,
-            'block'   => NativeQuackType::T_BLOCK,
-            'unit'    => NativeQuackType::T_UNIT
-        ];
-
-        return array_key_exists($name, $types)
-            ? new LiteralType($types[$name])
-            : new GenericType($name);
     }
 
     private function _instance()

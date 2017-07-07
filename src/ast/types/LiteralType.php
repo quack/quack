@@ -34,22 +34,19 @@ class LiteralType extends TypeNode
 
     public function __toString()
     {
-        switch ($this->code)
-        {
-            case NativeQuackType::T_STR:
-                return 'string';
-            case NativeQuackType::T_NUMBER:
-                return 'number';
-            case NativeQuackType::T_BOOL:
-                return 'boolean';
-            case NativeQuackType::T_REGEX:
-                return 'regex';
-            case NativeQuackType::T_BLOCK:
-                return 'block';
-            case NativeQuackType::T_UNIT:
-                return 'unit';
-            default:
-                return 'unknown';
-        }
+        $map = [
+            NativeQuackType::T_STR    => 'string',
+            NativeQuackType::T_NUMBER => 'number',
+            NativeQuackType::T_BOOL   => 'boolean',
+            NativeQuackType::T_REGEX  => 'regex',
+            NativeQuackType::T_BLOCK  => 'block',
+            NativeQuackType::T_UNIT   => 'unit'
+        ];
+
+        return $this->parenthesize(
+            array_key_exists($this->code, $map)
+                ? $map[$this->code]
+                : 'unknown'
+        );
     }
 }

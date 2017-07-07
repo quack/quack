@@ -32,6 +32,6 @@ class InstanceType extends TypeNode
 
     public function __toString()
     {
-        return '%' . join('.', $this->qualified_name);
+        return $this->parenthesize('%' . join('.', $this->qualified_name));
     }
 }
