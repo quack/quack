@@ -41,7 +41,6 @@ function session()
     static $session;
     if (null === $session) {
         $session = (object) [
-            // TODO: Include other properties here later, such as scope and AST
             'command' => "",
             'complete_stmt' => true,
             'program_ast' => null
@@ -55,6 +54,7 @@ function is_complete($str = "")
 {
     // TODO: Think in a beter way to do it
     // If end of the source is found, then user did not finish writing
+    // We should maybe use error codes?
     $match = "end of the source";
     $complete = strpos($str, $match) === false;
     return $complete;
