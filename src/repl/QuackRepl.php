@@ -166,7 +166,11 @@ function readline_callback($command)
 
     next:
     if (isPOSIX()) {
-        readline_add_history($command);
+        if ("" === $command) {
+            readline_on_new_line();
+        } else {
+            readline_add_history($command);
+        }
     }
 
     install_stream_handler();
