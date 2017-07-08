@@ -125,11 +125,11 @@ function readline_callback($command)
             goto next;
     }
 
-    if (!session()->complete_stmt) {
-      $command = session()->command . " " . $command;
-    }
+    $run_command = !session()->complete_stmt
+        ? session()->command . " " . $command
+        : $command;
 
-    $lexer = new Tokenizer($command);
+    $lexer = new Tokenizer($run_command);
     $parser = new TokenReader($lexer);
 
     try {
@@ -148,7 +148,7 @@ function readline_callback($command)
 
             echo $e;
         } else {
-            $session->command = $command;
+            $session->command = $run_command;
             $session->complete_stmt = false;
         }
     } catch (\Exception $e) {
