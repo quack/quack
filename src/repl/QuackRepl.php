@@ -144,7 +144,7 @@ function readline_callback($command)
             $session->program_ast = $parser->ast;
         } else {
             // attachValidAST will injectScope and run type checker automatically
-            $session->program_ast->attachValidAST($parser->ast->stmt_list);
+            $session->program_ast->attachValidAST($parser->ast);
         }
 
         $session->complete_stmt = true;
