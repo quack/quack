@@ -43,7 +43,8 @@ function session()
         $session = (object) [
             // TODO: Include other properties here later, such as scope and AST
             'command' => "",
-            'complete_stmt' => true
+            'complete_stmt' => true,
+            'program_ast' => null
         ];
     }
 
@@ -108,6 +109,7 @@ function print_entire_license()
 
 function readline_callback($command)
 {
+    $session = session();
     $command = trim($command);
 
     switch (trim($command)) {
@@ -125,23 +127,30 @@ function readline_callback($command)
             goto next;
     }
 
-    $run_command = !session()->complete_stmt
-        ? session()->command . " " . $command
+    $run_command = !$session->complete_stmt
+        ? $session->command . " " . $command
         : $command;
 
     $lexer = new Tokenizer($run_command);
     $parser = new TokenReader($lexer);
 
     try {
-        $global_scope = new Scope;
         $parser->parse();
-        $parser->ast->injectScope($global_scope);
-        $parser->ast->runTypeChecker();
-        session()->complete_stmt = true;
+        if (null === $session->program_ast) {
+            $global_scope = new Scope;
+            $parser->ast->injectScope($global_scope);
+            $parser->ast->runTypeChecker();
+            // It will only save if success
+            $session->program_ast = $parser->ast;
+        } else {
+            // attachValidAST will injectScope and run type checker automatically
+            $session->program_ast->attachValidAST($parser->ast->stmt_list);
+        }
+
+        $session->complete_stmt = true;
         /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
         /* when */ args_have('-f', '--format') && $parser->format();
     } catch (SyntaxError $e) {
-        $session = session();
         if (is_complete($e)) {
             $session->command = "";
             $session->complete_stmt = true;

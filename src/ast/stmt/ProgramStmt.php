@@ -59,4 +59,18 @@ class ProgramStmt extends Stmt
             $node->runTypeChecker();
         }
     }
+
+    public function attachValidAST($stmt_list)
+    {
+        $safe_stmt_list = $this->stmt_list; // copy array
+        try {
+            $this->stmt_list = array_merge($this->stmt_list, $stmt_list);
+            $this->injectScope($this->scope->parent);
+            $this->runTypeChecker();
+        } catch (\Exception $e) {
+            // rollback in case of error
+            $this->stmt_list = $safe_stmt_list;
+            echo $e;
+        }
+    }
 }
