@@ -34,7 +34,10 @@ use \QuackCompiler\Parselets\Parselet;
 use \QuackCompiler\Parselets\Types\AtomTypeParselet;
 use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
+use \QuackCompiler\Parselets\Types\InstanceTypeParselet;
+use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
+use \QuackCompiler\Parselets\Types\MapTypeParselet;
 use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
@@ -49,6 +52,9 @@ class TypeParser
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
+        $this->register('{', new ListTypeParselet);
+        $this->register('#{', new MapTypeParselet);
+        $this->register('%', new InstanceTypeParselet);
         $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));
         $this->register('&', new BinaryOperatorTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
@@ -79,30 +85,12 @@ class TypeParser
         /*
         switch ($this->parser->lookahead->getTag())
         {
-            case '{':
-                $left = $this->_list();
-                break;
-            case '%':
-                $left = $this->_instance();
-                break;
             case '%{':
                 $left = $this->_object();
-                break;
-            case '#{':
-                $left = $this->_map();
-                break;
             case '#(':
                 $left = $this->_tuple();
-                break;
             case '&':
                 $left = $this->_function();
-                break;
-            default:
-                throw new SyntaxError([
-                    'expected' => 'type signature',
-                    'found'    => $this->parser->lookahead,
-                    'parser'   => $this->parser
-                ]);
         }*/
     }
 
@@ -112,34 +100,6 @@ class TypeParser
         return !is_null($parselet)
             ? $parselet->getPrecedence()
             : 0;
-    }
-
-    private function _instance()
-    {
-        $this->parser->match('%');
-        $instance = $this->qualifiedName();
-
-        return new InstanceType($instance);
-    }
-
-    private function _list()
-    {
-        $this->parser->match('{');
-        $type = $this->_type();
-        $this->parser->match('}');
-
-        return new ListType($type);
-    }
-
-    private function _map()
-    {
-        $this->parser->match('#{');
-        $key = $this->_type();
-        $this->parser->match(':');
-        $value = $this->_type();
-        $this->parser->match('}');
-
-        return new MapType($key, $value);
     }
 
     private function _tuple()
@@ -200,8 +160,18 @@ class TypeParser
         return new FunctionType($parameters, $return);
     }
 
-    private function _identifier()
+    public function _identifier()
     {
         return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
+    }
+
+    public function _qualifiedName()
+    {
+        $names = [];
+        do {
+            $names[] = $this->_identifier();
+        } while ($this->parser->consumeIf('.'));
+
+        return $names;
     }
 }

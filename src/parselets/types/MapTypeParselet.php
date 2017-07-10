@@ -19,21 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Parselets\Types;
 
-class TupleType extends TypeNode
+use \QuackCompiler\Ast\Types\MapType;
+use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Parselets\PrefixParselet;
+
+class MapTypeParselet implements PrefixParselet
 {
-    public $types;
-    public $size;
-
-    public function __construct(...$types)
+    public function parse($grammar, Token $token)
     {
-        $this->types = $types;
-        $this->size = sizeof($types);
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
+        $key = $grammar->_type();
+        $grammar->parser->match(':');
+        $value = $grammar->_type();
+        $grammar->parser->match('}');
+        return new MapType($key, $value);
     }
 }

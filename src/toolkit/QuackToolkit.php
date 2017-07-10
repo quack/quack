@@ -75,8 +75,11 @@ import(PARSELETS, 'expr/BlockParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
-import(PARSELETS, 'types/LiteralTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
+import(PARSELETS, 'types/InstanceTypeParselet');
+import(PARSELETS, 'types/ListTypeParselet');
+import(PARSELETS, 'types/LiteralTypeParselet');
+import(PARSELETS, 'types/MapTypeParselet');
 
 /* Parser */
 
