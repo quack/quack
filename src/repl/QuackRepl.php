@@ -127,9 +127,9 @@ function readline_callback($command)
             goto next;
     }
 
-    $run_command = !$session->complete_stmt
-        ? $session->command . " " . $command
-        : $command;
+    $run_command = $session->complete_stmt
+        ? $command
+        : $session->command . " " . $command;
 
     $lexer = new Tokenizer($run_command);
     $parser = new TokenReader($lexer);

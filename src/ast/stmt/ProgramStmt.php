@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \Exception;
 use \QuackCompiler\Parser\Parser;
 
 class ProgramStmt extends Stmt
@@ -70,7 +71,7 @@ class ProgramStmt extends Stmt
         } catch (\Exception $e) {
             // rollback in case of error
             $this->stmt_list = $safe_stmt_list;
-            echo $e;
+            throw $e;
         }
     }
 }
