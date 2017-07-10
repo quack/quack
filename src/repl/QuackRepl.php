@@ -23,7 +23,7 @@ define('BASE_PATH', __DIR__ . '/..');
 require_once(BASE_PATH . '/toolkit/QuackToolkit.php');
 
 use \QuackCompiler\Lexer\Tokenizer;
-use \QuackCompiler\Parser\SyntaxError;
+use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
 
@@ -34,6 +34,20 @@ function isPOSIX()
         $value = strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN';
     }
     return $value;
+}
+
+function session()
+{
+    static $session;
+    if (null === $session) {
+        $session = (object) [
+            'command' => '',
+            'complete_stmt' => true,
+            'program_ast' => null
+        ];
+    }
+
+    return $session;
 }
 
 function start_repl()
@@ -58,12 +72,13 @@ LICENSE
 
 function install_stream_handler()
 {
+    $prompt = session()->complete_stmt ? "Quack> " : "\__(\"> ";
     if (isPOSIX()) {
         begin_yellow();
-        readline_callback_handler_install("Quack> ", 'readline_callback');
+        readline_callback_handler_install($prompt, 'readline_callback');
         end_yellow();
     } else {
-        echo "Quack> ";
+        echo "$prompt";
     }
 }
 
@@ -84,6 +99,7 @@ function print_entire_license()
 
 function readline_callback($command)
 {
+    $session = session();
     $command = trim($command);
 
     switch (trim($command)) {
@@ -101,24 +117,46 @@ function readline_callback($command)
             goto next;
     }
 
-    $lexer = new Tokenizer($command);
+    $run_command = $session->complete_stmt
+        ? $command
+        : $session->command . ' ' . $command;
+
+    $lexer = new Tokenizer($run_command);
     $parser = new TokenReader($lexer);
 
     try {
-        $global_scope = new Scope;
         $parser->parse();
-        $parser->ast->injectScope($global_scope);
-        $parser->ast->runTypeChecker();
+        if (null === $session->program_ast) {
+            $global_scope = new Scope();
+            $parser->ast->injectScope($global_scope);
+            $parser->ast->runTypeChecker();
+            // It will only save if success
+            $session->program_ast = $parser->ast;
+        } else {
+            // attachValidAST will injectScope and run type checker automatically
+            $session->program_ast->attachValidAST($parser->ast);
+        }
 
+        $session->complete_stmt = true;
         /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
         /* when */ args_have('-f', '--format') && $parser->format();
-    } catch (\Exception $e) {
+    } catch (EOFError $e) {
+        // if EOF is found, then the user has not finish a statement
+        $session->command = $run_command;
+        $session->complete_stmt = false;
+    } catch (Exception $e) {
+        $session->command = '';
+        $session->complete_stmt = true;
         echo $e;
     }
 
     next:
     if (isPOSIX()) {
-        readline_add_history($command);
+        if ('' === $command) {
+            readline_on_new_line();
+        } else {
+            readline_add_history($command);
+        }
     }
 
     install_stream_handler();
