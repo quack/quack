@@ -56,6 +56,7 @@ import(PARSER, 'Parser');
 import(PARSER, 'Grammar');
 import(PARSER, 'TokenChecker');
 import(PARSER, 'SyntaxError');
+import(PARSER, 'EOFError');
 import(PARSER, 'TokenReader');
 import(PARSER, 'Precedence');
 

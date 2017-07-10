@@ -23,7 +23,7 @@ define('BASE_PATH', __DIR__ . '/..');
 require_once(BASE_PATH . '/toolkit/QuackToolkit.php');
 
 use \QuackCompiler\Lexer\Tokenizer;
-use \QuackCompiler\Parser\SyntaxError;
+use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
 
@@ -41,23 +41,13 @@ function session()
     static $session;
     if (null === $session) {
         $session = (object) [
-            'command' => "",
+            'command' => '',
             'complete_stmt' => true,
             'program_ast' => null
         ];
     }
 
     return $session;
-}
-
-function is_complete($str = "")
-{
-    // TODO: Think in a beter way to do it
-    // If end of the source is found, then user did not finish writing
-    // We should maybe use error codes?
-    $match = "end of the source";
-    $complete = strpos($str, $match) === false;
-    return $complete;
 }
 
 function start_repl()
@@ -129,7 +119,7 @@ function readline_callback($command)
 
     $run_command = $session->complete_stmt
         ? $command
-        : $session->command . " " . $command;
+        : $session->command . ' ' . $command;
 
     $lexer = new Tokenizer($run_command);
     $parser = new TokenReader($lexer);
@@ -137,7 +127,7 @@ function readline_callback($command)
     try {
         $parser->parse();
         if (null === $session->program_ast) {
-            $global_scope = new Scope;
+            $global_scope = new Scope();
             $parser->ast->injectScope($global_scope);
             $parser->ast->runTypeChecker();
             // It will only save if success
@@ -150,23 +140,19 @@ function readline_callback($command)
         $session->complete_stmt = true;
         /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
         /* when */ args_have('-f', '--format') && $parser->format();
-    } catch (SyntaxError $e) {
-        if (is_complete($e)) {
-            $session->command = "";
-            $session->complete_stmt = true;
-
-            echo $e;
-        } else {
-            $session->command = $run_command;
-            $session->complete_stmt = false;
-        }
-    } catch (\Exception $e) {
+    } catch (EOFError $e) {
+        // if EOF is found, then the user has not finish a statement
+        $session->command = $run_command;
+        $session->complete_stmt = false;
+    } catch (Exception $e) {
+        $session->command = '';
+        $session->complete_stmt = true;
         echo $e;
     }
 
     next:
     if (isPOSIX()) {
-        if ("" === $command) {
+        if ('' === $command) {
             readline_on_new_line();
         } else {
             readline_add_history($command);
