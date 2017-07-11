@@ -68,7 +68,7 @@ class TryStmt extends Stmt
 
         if (null !== $this->finally) {
             $source .= $parser->indent();
-            $source .= 'finally ';
+            $source .= 'finally';
             $source .= PHP_EOL;
 
             $parser->openScope();

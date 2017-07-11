@@ -1,0 +1,54 @@
+%%describe
+Supports formatting try statements
+%%source
+shape HTTPRequest
+  url
+  method
+  status
+  responseText
+end
+impl HttpRequest
+  openConn()
+    -- simulate an error
+    do self.status :- 404
+    raise 'Page not found!'
+  end
+
+  closeConn()
+  end
+
+  load()
+    try
+      do self.openConn(), console.write(self.responseText)
+    rescue (Exception e)
+      do console.error(e)
+    finally
+      do self.closeConn()
+    end
+  end
+end
+%%expect
+shape HTTPRequest
+  url
+  method
+  status
+  responseText
+end
+impl HttpRequest
+  openConn()
+    do self.status :- 404
+    raise 'Page not found!'
+  end
+  closeConn()
+  end
+  load()
+    try
+      do self.openConn()
+       , console.write(self.responseText)
+    rescue (Exception e)
+      do console.error(e)
+    finally
+      do self.closeConn()
+    end
+  end
+end

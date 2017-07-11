@@ -170,12 +170,18 @@ abstract class Parser
             }
         }
 
-        throw new SyntaxError([
+        $params = [
             'expected' => $tag,
             'found'    => $this->lookahead,
             'parser'   => $this,
             'hint'     => $hint
-        ]);
+        ];
+
+        if (0 === $this->lookahead->getTag()) {
+            throw new EOFError($params);
+        };
+
+        throw new SyntaxError($params);
     }
 
     public function opt($tag)

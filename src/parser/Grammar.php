@@ -134,11 +134,17 @@ class Grammar
             }
         }
 
-        throw new SyntaxError([
+        $params = [
             'expected' => 'statement',
             'found'    => $this->parser->lookahead,
             'parser'   => $this->parser
-        ]);
+        ];
+
+        if (0 === $this->parser->lookahead->getTag()) {
+            throw new EOFError($params);
+        };
+
+        throw new SyntaxError($params);
     }
 
     public function _exprStmt()

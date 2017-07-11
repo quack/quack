@@ -122,13 +122,10 @@ class SyntaxError extends Exception
             : $this->expected;
     }
 
-    private function getFoundTokenName()
+    protected function getFoundTokenName()
     {
         $found_tag = $this->found->getTag();
-
-        return 0 === $found_tag
-            ? "end of the source"
-            : Tag::getName($found_tag) ?: $found_tag;
+        return Tag::getName($found_tag) ?: $found_tag;
     }
 
     private function getFoundTokenSize()

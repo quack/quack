@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \Exception;
 use \QuackCompiler\Parser\Parser;
 
 class ProgramStmt extends Stmt
@@ -57,6 +58,20 @@ class ProgramStmt extends Stmt
     {
         foreach ($this->stmt_list as $node) {
             $node->runTypeChecker();
+        }
+    }
+
+    public function attachValidAST($ast)
+    {
+        $safe_stmt_list = $this->stmt_list; // copy array
+        try {
+            $this->stmt_list = array_merge($this->stmt_list, $ast->stmt_list);
+            $this->injectScope($this->scope->parent);
+            $this->runTypeChecker();
+        } catch (\Exception $e) {
+            // rollback in case of error
+            $this->stmt_list = $safe_stmt_list;
+            throw $e;
         }
     }
 }

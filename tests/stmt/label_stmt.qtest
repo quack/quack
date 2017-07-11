@@ -2,29 +2,15 @@
 Supports formatting label statements
 %%source
 [first]
-let allowed :- true
+let x :- 10
 [second]
-if allowed
-  let x :- 10
-  [third]
-  for i from 1 to x
-    do allowed :- false
-    continue second {- would be inf loop if allowed = true -}
-  end
-else
-  continue third {- send it back to the for loop -}
+for i from 1 to x
+  continue second
 end
 %%expect
 [first]
-let allowed :- true
+let x :- 10
 [second]
-if allowed
-  let x :- 10
-  [third]
-  for i from 1 to x
-    do allowed :- false
-    continue second
-  end
-else
-  continue third
+for i from 1 to x
+  continue second
 end
