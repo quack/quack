@@ -25,26 +25,6 @@ use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tokenizer;
-use \QuackCompiler\Parselets\Expr\BinaryOperatorParselet;
-use \QuackCompiler\Parselets\Expr\LiteralParselet;
-use \QuackCompiler\Parselets\Expr\NameParselet;
-use \QuackCompiler\Parselets\Expr\PostfixOperatorParselet;
-use \QuackCompiler\Parselets\Expr\PrefixOperatorParselet;
-use \QuackCompiler\Parselets\Expr\TernaryParselet;
-use \QuackCompiler\Parselets\Expr\GroupParselet;
-use \QuackCompiler\Parselets\Expr\LambdaParselet;
-use \QuackCompiler\Parselets\Expr\ArrayParselet;
-use \QuackCompiler\Parselets\Expr\NewParselet;
-use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
-use \QuackCompiler\Parselets\Expr\WhenParselet;
-use \QuackCompiler\Parselets\Expr\CallParselet;
-use \QuackCompiler\Parselets\Expr\AccessParselet;
-use \QuackCompiler\Parselets\Expr\RangeParselet;
-use \QuackCompiler\Parselets\Expr\PartialFuncParselet;
-use \QuackCompiler\Parselets\Expr\WhereParselet;
-use \QuackCompiler\Parselets\Expr\MapParselet;
-use \QuackCompiler\Parselets\Expr\ObjectParselet;
-use \QuackCompiler\Parselets\Expr\BlockParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 abstract class Parser

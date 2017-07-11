@@ -45,15 +45,14 @@ use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
 {
+    use Attachable;
     use Parselet;
 
     public $parser;
-    public $name_parser;
 
-    public function __construct(Parser $parser, $name_parser)
+    public function __construct(Parser $parser)
     {
         $this->parser = $parser;
-        $this->name_parser = $name_parser;
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);

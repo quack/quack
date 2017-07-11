@@ -38,7 +38,7 @@ trait DeclParser
     public function _classDeclStmt()
     {
         $this->parser->match(Tag::T_CLASS);
-        $name = $this->identifier();
+        $name = $this->name_parser->_identifier();
         $body = iterator_to_array($this->_fnSignatureList());
         $this->parser->match(Tag::T_END);
 
@@ -49,10 +49,10 @@ trait DeclParser
     {
         $this->parser->match(Tag::T_ENUM);
         $entries = [];
-        $name = $this->identifier();
+        $name = $this->name_parser->_identifier();
 
         while ($this->parser->is(Tag::T_IDENT)) {
-            $entries[] = $this->identifier();
+            $entries[] = $this->name_parser->_identifier();
         }
 
         $this->parser->match(Tag::T_END);
@@ -71,7 +71,7 @@ trait DeclParser
 
         $state->is_recursive = $this->parser->consumeIf(Tag::T_REC);
         $state->is_reference = $this->parser->consumeIf('*');
-        $state->name = $this->identifier();
+        $state->name = $this->name_parser->_identifier();
 
         $this->parser->match('(');
 
@@ -128,13 +128,13 @@ trait DeclParser
         // Classes are for methods
         $type = Tag::T_SHAPE;
         $this->parser->match(Tag::T_IMPL);
-        $class_or_shape = $this->qualifiedName();
+        $class_or_shape = $this->name_parser->_qualifiedName();
         $class_for = null;
         // When it contains "for", it is being applied for a class
         if ($this->parser->is(Tag::T_FOR)) {
             $type = Tag::T_CLASS;
             $this->parser->consume();
-            $class_for = $this->qualifiedName();
+            $class_for = $this->name_parser->_qualifiedName();
         }
 
         $body = new StmtList(iterator_to_array($this->_implStmtList()));
@@ -153,7 +153,7 @@ trait DeclParser
     public function _moduleStmt()
     {
         $this->parser->match(Tag::T_MODULE);
-        return new ModuleStmt($this->qualifiedName());
+        return new ModuleStmt($this->name_parser->_qualifiedName());
     }
 
     public function _openStmt()
@@ -165,21 +165,21 @@ trait DeclParser
         }
 
         $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
-        $name[] = $this->qualifiedName();
+        $name[] = $this->name_parser->_qualifiedName();
         $alias = null;
         $subprops = null;
 
         if ($this->parser->is(Tag::T_AS)) {
             $this->parser->consume();
-            $alias = $this->identifier();
+            $alias = $this->name_parser->_identifier();
         } elseif ($this->parser->is('{')) {
             $this->parser->consume();
-            $subprops[] = $this->identifier();
+            $subprops[] = $this->name_parser->_identifier();
 
             if ($this->parser->is(';')) {
                 do {
                     $this->parser->match(';');
-                    $subprops[] = $this->identifier();
+                    $subprops[] = $this->name_parser->_identifier();
                 } while ($this->parser->is(';'));
             }
 
@@ -192,11 +192,11 @@ trait DeclParser
     public function _shapeDeclStmt()
     {
         $this->parser->match(Tag::T_SHAPE);
-        $name = $this->identifier();
+        $name = $this->name_parser->_identifier();
         $members = [];
 
         while ($this->parser->is(Tag::T_IDENT)) {
-            $members[] = $this->identifier();
+            $members[] = $this->name_parser->_identifier();
         }
 
         $this->parser->match(Tag::T_END);

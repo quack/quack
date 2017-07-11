@@ -25,6 +25,8 @@ use \QuackCompiler\Lexer\Tag;
 
 class NameParser
 {
+    use Attachable;
+
     public $parser;
 
     public function __construct($parser)

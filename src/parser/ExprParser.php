@@ -46,17 +46,14 @@ use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
 {
+    use Attachable;
     use Parselet;
 
     public $parser;
-    public $stmt_parser;
-    public $name_parser;
 
-    public function __construct($parser, $stmt_parser, $name_parser)
+    public function __construct($parser)
     {
         $this->parser = $parser;
-        $this->stmt_parser = $stmt_parser;
-        $this->name_parser = $name_parser;
         $this->register('&(', new PartialFuncParselet);
         $this->register(Tag::T_INTEGER, new LiteralParselet);
         $this->register(Tag::T_INT_HEX, new LiteralParselet);
