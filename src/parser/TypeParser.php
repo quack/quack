@@ -33,11 +33,14 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
 use \QuackCompiler\Parselets\Types\AtomTypeParselet;
 use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
+use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
 use \QuackCompiler\Parselets\Types\InstanceTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
+use \QuackCompiler\Parselets\Types\ObjectTypeParselet;
+use \QuackCompiler\Parselets\Types\TupleTypeParselet;
 use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
@@ -54,7 +57,10 @@ class TypeParser
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);
+        $this->register('#(', new TupleTypeParselet);
         $this->register('%', new InstanceTypeParselet);
+        $this->register('%{', new ObjectTypeParselet);
+        $this->register('&', new FunctionTypeParselet);
         $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));
         $this->register('&', new BinaryOperatorTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
@@ -82,16 +88,6 @@ class TypeParser
         }
 
         return $left;
-        /*
-        switch ($this->parser->lookahead->getTag())
-        {
-            case '%{':
-                $left = $this->_object();
-            case '#(':
-                $left = $this->_tuple();
-            case '&':
-                $left = $this->_function();
-        }*/
     }
 
     private function getPrecedence()
@@ -100,64 +96,6 @@ class TypeParser
         return !is_null($parselet)
             ? $parselet->getPrecedence()
             : 0;
-    }
-
-    private function _tuple()
-    {
-        $types = [];
-        $this->parser->match('#(');
-        if (!$this->parser->consumeIf(')')) {
-            do {
-                $types[] = $this->_type();
-            } while ($this->parser->consumeIf(','));
-
-            $this->parser->match(')');
-        }
-
-        return new TupleType(...$types);
-    }
-
-    private function _object()
-    {
-        $this->parser->match('%{');
-        $properties = [];
-
-        if (!$this->parser->is('}')) {
-            do {
-                $key = $this->_identifier();
-                $this->parser->match(':');
-                $properties[$key] = $this->_type();
-            } while ($this->parser->consumeIf(','));
-        }
-        $this->parser->match('}');
-
-        return new ObjectType($properties);
-    }
-
-    private function _function()
-    {
-        $parameters = [];
-        $return = new LiteralType(NativeQuackType::T_UNIT);
-        $this->parser->match('&');
-
-        if ($this->parser->is(Tag::T_IDENT)) {
-            $parameters[] = $this->_type();
-        } else {
-            $this->parser->match('[');
-            if (!$this->parser->consumeIf(']')) {
-                do {
-                    $parameters[] = $this->_type();
-                } while ($this->parser->consumeIf(','));
-
-                $this->parser->match(']');
-            }
-        }
-
-        if ($this->parser->consumeIf('->')) {
-            $return = $this->_type();
-        }
-
-        return new FunctionType($parameters, $return);
     }
 
     public function _identifier()
