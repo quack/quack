@@ -30,7 +30,7 @@ class ListTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $type = $grammar->_type();
-        $grammar->parser->match('}');
+        $grammar->reader->match('}');
         return new ListType($type);
     }
 }

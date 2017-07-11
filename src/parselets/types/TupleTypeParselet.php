@@ -30,12 +30,12 @@ class TupleTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $types = [];
-        if (!$grammar->parser->consumeIf(')')) {
+        if (!$grammar->reader->consumeIf(')')) {
             do {
                 $types[] = $grammar->_type();
-            } while ($grammar->parser->consumeIf(','));
+            } while ($grammar->reader->consumeIf(','));
 
-            $grammar->parser->match(')');
+            $grammar->reader->match(')');
         }
 
         return new TupleType(...$types);

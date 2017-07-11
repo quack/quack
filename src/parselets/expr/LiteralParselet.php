@@ -40,36 +40,36 @@ class LiteralParselet implements PrefixParselet
 
         switch ($tag) {
             case Tag::T_ATOM:
-                return new AtomExpr($grammar->parser->resolveScope($token->getPointer()));
+                return new AtomExpr($grammar->reader->resolveScope($token->getPointer()));
 
             case Tag::T_STRING:
-                return new StringExpr($grammar->parser->resolveScope($token->getPointer()),
+                return new StringExpr($grammar->reader->resolveScope($token->getPointer()),
                     $token->metadata['delimiter']);
 
             case Tag::T_DOUBLE:
             case Tag::T_INTEGER:
-                return new NumberExpr($grammar->parser->resolveScope($token->getPointer()),
+                return new NumberExpr($grammar->reader->resolveScope($token->getPointer()),
                     $tag === Tag::T_DOUBLE ? 'double' : 'int'
                 );
 
             case Tag::T_INT_HEX:
                 return new NumberExpr(
-                    $grammar->parser->resolveScope($token->getPointer()),
+                    $grammar->reader->resolveScope($token->getPointer()),
                     'int', 'hexadec');
 
             case Tag::T_INT_OCT:
                 return new NumberExpr(
-                    $grammar->parser->resolveScope($token->getPointer()),
+                    $grammar->reader->resolveScope($token->getPointer()),
                     'int', 'octal');
 
             case Tag::T_INT_BIN:
                 return new NumberExpr(
-                    $grammar->parser->resolveScope($token->getPointer()),
+                    $grammar->reader->resolveScope($token->getPointer()),
                     'int', 'binary');
 
             case Tag::T_DOUBLE_EXP:
                 return new NumberExpr(
-                    $grammar->parser->resolveScope($token->getPointer()),
+                    $grammar->reader->resolveScope($token->getPointer()),
                     'double', 'scientific');
 
             case Tag::T_NIL:
@@ -80,7 +80,7 @@ class LiteralParselet implements PrefixParselet
                 return new BoolExpr($tag === Tag::T_TRUE);
 
             case Tag::T_REGEX:
-                return new RegexExpr($grammar->parser->resolveScope($token->getPointer()));
+                return new RegexExpr($grammar->reader->resolveScope($token->getPointer()));
         }
     }
 }

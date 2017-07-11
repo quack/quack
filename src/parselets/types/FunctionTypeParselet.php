@@ -35,20 +35,20 @@ class FunctionTypeParselet implements PrefixParselet
         $parameters = [];
         $return = new LiteralType(NativeQuackType::T_UNIT);
 
-        if ($grammar->parser->is(Tag::T_IDENT)) {
+        if ($grammar->reader->is(Tag::T_IDENT)) {
             $parameters[] = $grammar->_type();
         } else {
-            $grammar->parser->match('[');
-            if (!$grammar->parser->consumeIf(']')) {
+            $grammar->reader->match('[');
+            if (!$grammar->reader->consumeIf(']')) {
                 do {
                     $parameters[] = $grammar->_type();
-                } while ($grammar->parser->consumeIf(','));
+                } while ($grammar->reader->consumeIf(','));
 
-                $grammar->parser->match(']');
+                $grammar->reader->match(']');
             }
         }
 
-        if ($grammar->parser->consumeIf('->')) {
+        if ($grammar->reader->consumeIf('->')) {
             $return = $grammar->_type();
         }
 

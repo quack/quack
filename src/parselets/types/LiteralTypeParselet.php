@@ -40,7 +40,7 @@ class LiteralTypeParselet implements PrefixParselet
             'block'   => NativeQuackType::T_BLOCK,
             'unit'    => NativeQuackType::T_UNIT
         ];
-        $name = $grammar->parser->resolveScope($token->getPointer());
+        $name = $grammar->reader->resolveScope($token->getPointer());
 
         return array_key_exists($name, $names)
             ? new LiteralType($names[$name])

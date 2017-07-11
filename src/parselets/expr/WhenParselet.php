@@ -35,11 +35,11 @@ class WhenParselet implements PrefixParselet
         $cases = [];
 
         do {
-            $grammar->parser->match('|');
+            $grammar->reader->match('|');
 
             // Default operation
-            if ($grammar->parser->is(Tag::T_ELSE)) {
-                $grammar->parser->consume();
+            if ($grammar->reader->is(Tag::T_ELSE)) {
+                $grammar->reader->consume();
                 $default = new \stdClass;
                 $default->condition = null;
                 $default->action = $grammar->_expr();
@@ -49,17 +49,17 @@ class WhenParselet implements PrefixParselet
 
             $case = new \stdClass;
             $case->condition = $grammar->_expr();
-            $grammar->parser->match('->');
+            $grammar->reader->match('->');
             $case->action = $grammar->_expr();
             $cases[] = $case;
 
             fetch_next:
-            if (!$grammar->parser->is(Tag::T_END)) {
-                $grammar->parser->match(';');
+            if (!$grammar->reader->is(Tag::T_END)) {
+                $grammar->reader->match(';');
             }
-        } while ($grammar->parser->is('|'));
+        } while ($grammar->reader->is('|'));
 
-        $grammar->parser->match(Tag::T_END);
+        $grammar->reader->match(Tag::T_END);
 
         return new WhenExpr($cases);
     }

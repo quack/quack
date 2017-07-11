@@ -49,11 +49,11 @@ class ExprParser
     use Attachable;
     use Parselet;
 
-    public $parser;
+    public $reader;
 
-    public function __construct($parser)
+    public function __construct($reader)
     {
-        $this->parser = $parser;
+        $this->reader = $reader;
         $this->register('&(', new PartialFuncParselet);
         $this->register(Tag::T_INTEGER, new LiteralParselet);
         $this->register(Tag::T_INT_HEX, new LiteralParselet);
@@ -120,7 +120,7 @@ class ExprParser
 
     public function _expr($precedence = 0, $opt = false)
     {
-        $token = $this->parser->lookahead;
+        $token = $this->reader->lookahead;
         $prefix = $this->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
@@ -128,7 +128,7 @@ class ExprParser
                 throw new SyntaxError([
                     'expected' => 'expression',
                     'found'    => $token,
-                    'parser'   => $this->parser
+                    'parser'   => $this->reader
                 ]);
             }
 
@@ -137,11 +137,11 @@ class ExprParser
 
         // We consume the token only when ensure it has a parselet, thus,
         // avoiding to rollback in the tape
-        $this->parser->consume();
+        $this->reader->consume();
         $left = $prefix->parse($this, $token);
 
         while ($precedence < $this->getPrecedence()) {
-            $token = $this->parser->consumeAndFetch();
+            $token = $this->reader->consumeAndFetch();
             $infix = $this->infixParseletForToken($token);
             $left = $infix->parse($this, $left, $token);
         }

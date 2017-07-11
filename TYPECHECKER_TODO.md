@@ -49,4 +49,4 @@ Sprint 2:
 - [ ] Create comparator function (deep comparison) on types
 - [ ] Replace current type returns and verifications by new ones. Type.php dies
 - [ ] Isolate DeclParser as an attachable parsers
-- [ ] Rename $parser to $reader on contexts
+- [x] Rename $parser to $reader on contexts

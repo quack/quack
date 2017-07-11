@@ -41,7 +41,7 @@ class LambdaParselet implements PrefixParselet
         $has_brackets = false;
 
         // When identifier, we have an unary function
-        if ($grammar->parser->is(Tag::T_IDENT)) {
+        if ($grammar->reader->is(Tag::T_IDENT)) {
             $name = $grammar->name_parser->_identifier();
             $parameters[] = (object)[
                 'name'         => $name,
@@ -49,25 +49,25 @@ class LambdaParselet implements PrefixParselet
             ];
         } else {
             $has_brackets = true;
-            $grammar->parser->match('[');
-            if (!$grammar->parser->consumeIf(']')) {
+            $grammar->reader->match('[');
+            if (!$grammar->reader->consumeIf(']')) {
                 $parameters[] = $grammar->stmt_parser->_parameter();
 
-                while ($grammar->parser->consumeIf(',')) {
+                while ($grammar->reader->consumeIf(',')) {
                     $parameters[] = $grammar->stmt_parser->_parameter();
                 }
 
-                $grammar->parser->match(']');
+                $grammar->reader->match(']');
             }
         }
 
-        $grammar->parser->match('->');
+        $grammar->reader->match('->');
 
-        if ($grammar->parser->is(Tag::T_BEGIN)) {
+        if ($grammar->reader->is(Tag::T_BEGIN)) {
             $kind = static::TYPE_STATEMENT;
-            $grammar->parser->consume();
+            $grammar->reader->consume();
             $body = iterator_to_array($grammar->stmt_parser->_innerStmtList());
-            $grammar->parser->match(Tag::T_END);
+            $grammar->reader->match(Tag::T_END);
         } else {
             $kind = static::TYPE_EXPRESSION;
             $body = $grammar->_expr();

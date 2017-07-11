@@ -35,8 +35,8 @@ class NewParselet implements PrefixParselet
         $shape_name = $grammar->name_parser->_qualifiedName();
         $initializer = null;
 
-        if ($grammar->parser->is('%{')) {
-            $initializer = $grammar->parser->evalParselet($grammar, ObjectParselet::class);
+        if ($grammar->reader->is('%{')) {
+            $initializer = $grammar->reader->evalParselet($grammar, ObjectParselet::class);
         }
 
         return new NewExpr($shape_name, $initializer);

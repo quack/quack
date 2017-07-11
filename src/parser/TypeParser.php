@@ -52,7 +52,7 @@ class TypeParser
 
     public function __construct(Parser $parser)
     {
-        $this->parser = $parser;
+        $this->reader = $parser;
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
@@ -68,22 +68,22 @@ class TypeParser
 
     public function _type($precedence = 0)
     {
-        $token = $this->parser->lookahead;
+        $token = $this->reader->lookahead;
         $prefix = $this->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
             throw new SyntaxError([
                 'expected' => 'type signature',
                 'found'    => $token,
-                'parser'   => $this->parser
+                'parser'   => $this->reader
             ]);
         }
 
-        $this->parser->consume();
+        $this->reader->consume();
         $left = $prefix->parse($this, $token);
 
         while ($precedence < $this->getPrecedence()) {
-            $token = $this->parser->consumeAndFetch();
+            $token = $this->reader->consumeAndFetch();
             $infix = $this->infixParseletForToken($token);
             $left = $infix->parse($this, $left, $token);
         }

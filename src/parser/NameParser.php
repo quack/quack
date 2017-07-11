@@ -27,16 +27,16 @@ class NameParser
 {
     use Attachable;
 
-    public $parser;
+    public $reader;
 
-    public function __construct($parser)
+    public function __construct($reader)
     {
-        $this->parser = $parser;
+        $this->reader = $reader;
     }
 
     public function _identifier()
     {
-        return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
+        return $this->reader->resolveScope($this->reader->match(Tag::T_IDENT));
     }
 
     public function _qualifiedName()
@@ -44,7 +44,7 @@ class NameParser
         $names = [];
         do {
             $names[] = $this->_identifier();
-        } while ($this->parser->consumeIf('.'));
+        } while ($this->reader->consumeIf('.'));
 
         return $names;
     }

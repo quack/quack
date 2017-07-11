@@ -34,16 +34,16 @@ class CallParselet implements InfixParselet
     {
         $args = [];
 
-        if (!$grammar->parser->is(')')) {
+        if (!$grammar->reader->is(')')) {
             $args[] = $grammar->_expr();
 
-            while ($grammar->parser->is(',')) {
-                $grammar->parser->consume();
+            while ($grammar->reader->is(',')) {
+                $grammar->reader->consume();
                 $args[] = $grammar->_expr();
             }
         }
 
-        $grammar->parser->match(')');
+        $grammar->reader->match(')');
 
         return new CallExpr($left, $args);
     }

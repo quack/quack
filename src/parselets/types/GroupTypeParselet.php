@@ -30,7 +30,7 @@ class GroupTypeParselet implements PrefixParselet
     {
         $type = $grammar->_type();
         $type->addParentheses();
-        $grammar->parser->match(')');
+        $grammar->reader->match(')');
         return $type;
     }
 }

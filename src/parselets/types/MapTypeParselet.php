@@ -30,9 +30,9 @@ class MapTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $key = $grammar->_type();
-        $grammar->parser->match(':');
+        $grammar->reader->match(':');
         $value = $grammar->_type();
-        $grammar->parser->match('}');
+        $grammar->reader->match('}');
         return new MapType($key, $value);
     }
 }

@@ -36,8 +36,8 @@ class RangeParselet implements InfixParselet
         $to = $grammar->_expr();
         $by = null;
 
-        if ($grammar->parser->is(Tag::T_BY)) {
-            $grammar->parser->consume();
+        if ($grammar->reader->is(Tag::T_BY)) {
+            $grammar->reader->consume();
             $by = $grammar->_expr();
         }
 

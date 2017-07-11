@@ -34,7 +34,7 @@ class TernaryParselet implements InfixParselet
     public function parse($grammar, $left, Token $token)
     {
         $then = $grammar->_expr();
-        $grammar->parser->match(Tag::T_ELSE);
+        $grammar->reader->match(Tag::T_ELSE);
         $else = $grammar->_expr(Precedence::TERNARY - 1);
         return new TernaryExpr($left, $then, $else);
     }

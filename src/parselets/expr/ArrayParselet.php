@@ -32,17 +32,17 @@ class ArrayParselet implements PrefixParselet
     {
         $items = [];
 
-        if ($grammar->parser->is('}')) {
-            $grammar->parser->consume();
+        if ($grammar->reader->is('}')) {
+            $grammar->reader->consume();
         } else {
             $items[] = $grammar->_expr();
 
-            while ($grammar->parser->is(',')) {
-                $grammar->parser->consume();
+            while ($grammar->reader->is(',')) {
+                $grammar->reader->consume();
                 $items[] = $grammar->_expr();
             }
 
-            $grammar->parser->match('}');
+            $grammar->reader->match('}');
         }
 
         return new ArrayExpr($items);

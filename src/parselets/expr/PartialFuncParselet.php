@@ -32,20 +32,20 @@ class PartialFuncParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $op_table = &Tag::getPartialOperators();
-        $next_op = $grammar->parser->lookahead->getTag();
+        $next_op = $grammar->reader->lookahead->getTag();
         $right = null;
 
         if (in_array($next_op, $op_table, true)) {
-            $grammar->parser->match($next_op);
+            $grammar->reader->match($next_op);
 
             // Faster than _optExpr
-            if (!$grammar->parser->is(')')) {
+            if (!$grammar->reader->is(')')) {
                 $right = $grammar->_expr();
             }
 
-            $grammar->parser->match(')');
+            $grammar->reader->match(')');
         } else {
-            $grammar->parser->match('operator');
+            $grammar->reader->match('operator');
         }
 
         return new PartialFuncExpr($next_op, $right);

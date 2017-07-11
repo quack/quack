@@ -30,14 +30,14 @@ class ObjectTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $properties = [];
-        if (!$grammar->parser->is('}')) {
+        if (!$grammar->reader->is('}')) {
             do {
                 $key = $grammar->name_parser->_identifier();
-                $grammar->parser->match(':');
+                $grammar->reader->match(':');
                 $properties[$key] = $grammar->_type();
-            } while ($grammar->parser->consumeIf(','));
+            } while ($grammar->reader->consumeIf(','));
         }
-        $grammar->parser->match('}');
+        $grammar->reader->match('}');
 
         return new ObjectType($properties);
     }

@@ -30,6 +30,6 @@ class AtomTypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        return new AtomType($grammar->parser->resolveScope($token->getPointer()));
+        return new AtomType($grammar->reader->resolveScope($token->getPointer()));
     }
 }

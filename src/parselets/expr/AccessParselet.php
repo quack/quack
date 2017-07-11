@@ -33,7 +33,7 @@ class AccessParselet implements InfixParselet
     public function parse($grammar, $left, Token $token)
     {
         $index = $grammar->_expr();
-        $grammar->parser->match('}');
+        $grammar->reader->match('}');
 
         return new AccessExpr($left, $index);
     }

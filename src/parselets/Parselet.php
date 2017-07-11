@@ -55,7 +55,7 @@ trait Parselet
 
     private function getPrecedence()
     {
-        $parselet = $this->infixParseletForToken($this->parser->lookahead);
+        $parselet = $this->infixParseletForToken($this->reader->lookahead);
         return !is_null($parselet)
             ? $parselet->getPrecedence()
             : 0;

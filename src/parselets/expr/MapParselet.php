@@ -33,21 +33,21 @@ class MapParselet implements PrefixParselet
         $keys = [];
         $values = [];
 
-        if ($grammar->parser->is('}')) {
-            $grammar->parser->consume();
+        if ($grammar->reader->is('}')) {
+            $grammar->reader->consume();
         } else {
             $keys[] = $grammar->_expr();
-            $grammar->parser->match(':');
+            $grammar->reader->match(':');
             $values[] = $grammar->_expr();
 
-            while ($grammar->parser->is(',')) {
-                $grammar->parser->consume();
+            while ($grammar->reader->is(',')) {
+                $grammar->reader->consume();
                 $keys[] = $grammar->_expr();
-                $grammar->parser->match(':');
+                $grammar->reader->match(':');
                 $values[] = $grammar->_expr();
             }
 
-            $grammar->parser->match('}');
+            $grammar->reader->match('}');
         }
 
         return new MapExpr($keys, $values);

@@ -32,7 +32,7 @@ class BlockParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $body = new StmtList(iterator_to_array($grammar->stmt_parser->_innerStmtList()));
-        $grammar->parser->match('}');
+        $grammar->reader->match('}');
         return new BlockExpr($body);
     }
 }

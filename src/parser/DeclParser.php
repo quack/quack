@@ -37,25 +37,25 @@ trait DeclParser
 {
     public function _classDeclStmt()
     {
-        $this->parser->match(Tag::T_CLASS);
+        $this->reader->match(Tag::T_CLASS);
         $name = $this->name_parser->_identifier();
         $body = iterator_to_array($this->_fnSignatureList());
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new ClassStmt($name, $body);
     }
 
     public function _enumStmt()
     {
-        $this->parser->match(Tag::T_ENUM);
+        $this->reader->match(Tag::T_ENUM);
         $entries = [];
         $name = $this->name_parser->_identifier();
 
-        while ($this->parser->is(Tag::T_IDENT)) {
+        while ($this->reader->is(Tag::T_IDENT)) {
             $entries[] = $this->name_parser->_identifier();
         }
 
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new EnumStmt($name, $entries);
     }
@@ -69,20 +69,20 @@ trait DeclParser
             'parameters'   => []
         ];
 
-        $state->is_recursive = $this->parser->consumeIf(Tag::T_REC);
-        $state->is_reference = $this->parser->consumeIf('*');
+        $state->is_recursive = $this->reader->consumeIf(Tag::T_REC);
+        $state->is_reference = $this->reader->consumeIf('*');
         $state->name = $this->name_parser->_identifier();
 
-        $this->parser->match('(');
+        $this->reader->match('(');
 
-        if (!$this->parser->consumeIf(')')) {
+        if (!$this->reader->consumeIf(')')) {
             $state->parameters[] = $this->_parameter();
 
-            while ($this->parser->consumeIf(',')) {
+            while ($this->reader->consumeIf(',')) {
                 $state->parameters[] = $this->_parameter();
             }
 
-            $this->parser->match(')');
+            $this->reader->match(')');
         }
 
         return $state;
@@ -90,7 +90,7 @@ trait DeclParser
 
     public function _fnSignatureList()
     {
-        while ($this->parser->is(Tag::T_IDENT)) {
+        while ($this->reader->is(Tag::T_IDENT)) {
             yield $this->_fnSignature();
         }
     }
@@ -102,19 +102,19 @@ trait DeclParser
         $body = null;
 
         if (!$is_method) {
-            $is_pub = $this->parser->consumeIf(Tag::T_PUB);
-            $this->parser->match(Tag::T_FN);
+            $is_pub = $this->reader->consumeIf(Tag::T_PUB);
+            $this->reader->match(Tag::T_FN);
         }
 
         $signature = $this->_fnSignature();
 
         // Is short method?
-        if ($is_short = $this->parser->is(':-')) {
-            $this->parser->consume(); // :-
+        if ($is_short = $this->reader->is(':-')) {
+            $this->reader->consume(); // :-
             $body = $this->expr_parser->_expr();
         } else {
             $body = iterator_to_array($this->_innerStmtList());
-            $this->parser->match(Tag::T_END);
+            $this->reader->match(Tag::T_END);
         }
 
         return new FnStmt($signature, $body, $is_pub, $is_method, $is_short);
@@ -127,63 +127,63 @@ trait DeclParser
         // Structs are for properties
         // Classes are for methods
         $type = Tag::T_SHAPE;
-        $this->parser->match(Tag::T_IMPL);
+        $this->reader->match(Tag::T_IMPL);
         $class_or_shape = $this->name_parser->_qualifiedName();
         $class_for = null;
         // When it contains "for", it is being applied for a class
-        if ($this->parser->is(Tag::T_FOR)) {
+        if ($this->reader->is(Tag::T_FOR)) {
             $type = Tag::T_CLASS;
-            $this->parser->consume();
+            $this->reader->consume();
             $class_for = $this->name_parser->_qualifiedName();
         }
 
         $body = new StmtList(iterator_to_array($this->_implStmtList()));
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new ImplStmt($type, $class_or_shape, $class_for, $body);
     }
 
     public function _implStmtList()
     {
-        while ($this->parser->is(Tag::T_IDENT)) {
+        while ($this->reader->is(Tag::T_IDENT)) {
             yield $this->_fnStmt(/* implicit */ true);
         }
     }
 
     public function _moduleStmt()
     {
-        $this->parser->match(Tag::T_MODULE);
+        $this->reader->match(Tag::T_MODULE);
         return new ModuleStmt($this->name_parser->_qualifiedName());
     }
 
     public function _openStmt()
     {
-        $this->parser->match(Tag::T_OPEN);
+        $this->reader->match(Tag::T_OPEN);
         $type = null;
-        if ($this->parser->is(Tag::T_CONST) || $this->parser->is(Tag::T_FN)) {
-            $type = $this->parser->consumeAndFetch();
+        if ($this->reader->is(Tag::T_CONST) || $this->reader->is(Tag::T_FN)) {
+            $type = $this->reader->consumeAndFetch();
         }
 
-        $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
+        $name = $this->reader->is('.') ? [$this->reader->consumeAndFetch()->getTag()] : [];
         $name[] = $this->name_parser->_qualifiedName();
         $alias = null;
         $subprops = null;
 
-        if ($this->parser->is(Tag::T_AS)) {
-            $this->parser->consume();
+        if ($this->reader->is(Tag::T_AS)) {
+            $this->reader->consume();
             $alias = $this->name_parser->_identifier();
-        } elseif ($this->parser->is('{')) {
-            $this->parser->consume();
+        } elseif ($this->reader->is('{')) {
+            $this->reader->consume();
             $subprops[] = $this->name_parser->_identifier();
 
-            if ($this->parser->is(';')) {
+            if ($this->reader->is(';')) {
                 do {
-                    $this->parser->match(';');
+                    $this->reader->match(';');
                     $subprops[] = $this->name_parser->_identifier();
-                } while ($this->parser->is(';'));
+                } while ($this->reader->is(';'));
             }
 
-            $this->parser->match('}');
+            $this->reader->match('}');
         }
 
         return new OpenStmt($name, $alias, $type, $subprops);
@@ -191,15 +191,15 @@ trait DeclParser
 
     public function _shapeDeclStmt()
     {
-        $this->parser->match(Tag::T_SHAPE);
+        $this->reader->match(Tag::T_SHAPE);
         $name = $this->name_parser->_identifier();
         $members = [];
 
-        while ($this->parser->is(Tag::T_IDENT)) {
+        while ($this->reader->is(Tag::T_IDENT)) {
             $members[] = $this->name_parser->_identifier();
         }
 
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new ShapeStmt($name, $members);
     }
