@@ -34,14 +34,14 @@ class WhereParselet implements InfixParselet
     {
         $clauses = [];
 
-        $name = $grammar->identifier();
+        $name = $grammar->name_parser->_identifier();
         $grammar->parser->match(':-');
         $value = $grammar->_expr();
         $clauses[] = [$name, $value];
 
         while ($grammar->parser->is(';')) {
             $grammar->parser->consume();
-            $name = $grammar->identifier();
+            $name = $grammar->name_parser->_identifier();
             $grammar->parser->match(':-');
             $value = $grammar->_expr();
             $clauses[] = [$name, $value];

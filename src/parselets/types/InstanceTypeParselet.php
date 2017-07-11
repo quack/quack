@@ -29,7 +29,7 @@ class InstanceTypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        $instance = $grammar->_qualifiedName();
+        $instance = $grammar->name_parser->_qualifiedName();
         return new InstanceType($instance);
     }
 }

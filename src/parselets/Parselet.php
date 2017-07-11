@@ -52,4 +52,12 @@ trait Parselet
             ? $this->prefix[$key]
             : null;
     }
+
+    private function getPrecedence()
+    {
+        $parselet = $this->infixParseletForToken($this->parser->lookahead);
+        return !is_null($parselet)
+            ? $parselet->getPrecedence()
+            : 0;
+    }
 }

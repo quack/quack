@@ -42,7 +42,7 @@ class LambdaParselet implements PrefixParselet
 
         // When identifier, we have an unary function
         if ($grammar->parser->is(Tag::T_IDENT)) {
-            $name = $grammar->identifier();
+            $name = $grammar->name_parser->_identifier();
             $parameters[] = (object)[
                 'name'         => $name,
                 'is_reference' => false
@@ -51,10 +51,10 @@ class LambdaParselet implements PrefixParselet
             $has_brackets = true;
             $grammar->parser->match('[');
             if (!$grammar->parser->consumeIf(']')) {
-                $parameters[] = $grammar->_parameter();
+                $parameters[] = $grammar->stmt_parser->_parameter();
 
                 while ($grammar->parser->consumeIf(',')) {
-                    $parameters[] = $grammar->_parameter();
+                    $parameters[] = $grammar->stmt_parser->_parameter();
                 }
 
                 $grammar->parser->match(']');
@@ -66,7 +66,7 @@ class LambdaParselet implements PrefixParselet
         if ($grammar->parser->is(Tag::T_BEGIN)) {
             $kind = static::TYPE_STATEMENT;
             $grammar->parser->consume();
-            $body = iterator_to_array($grammar->_innerStmtList());
+            $body = iterator_to_array($grammar->stmt_parser->_innerStmtList());
             $grammar->parser->match(Tag::T_END);
         } else {
             $kind = static::TYPE_EXPRESSION;

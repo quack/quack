@@ -48,10 +48,12 @@ class TypeParser
     use Parselet;
 
     public $parser;
+    public $name_parser;
 
-    public function __construct(Parser $parser)
+    public function __construct(Parser $parser, $name_parser)
     {
         $this->parser = $parser;
+        $this->name_parser = $name_parser;
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
@@ -88,28 +90,5 @@ class TypeParser
         }
 
         return $left;
-    }
-
-    private function getPrecedence()
-    {
-        $parselet = $this->infixParseletForToken($this->parser->lookahead);
-        return !is_null($parselet)
-            ? $parselet->getPrecedence()
-            : 0;
-    }
-
-    public function _identifier()
-    {
-        return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
-    }
-
-    public function _qualifiedName()
-    {
-        $names = [];
-        do {
-            $names[] = $this->_identifier();
-        } while ($this->parser->consumeIf('.'));
-
-        return $names;
     }
 }

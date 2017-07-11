@@ -87,6 +87,8 @@ import(PARSELETS, 'types/TupleTypeParselet');
 /* Parser */
 
 import(PARSER, 'DeclParser');
+import(PARSER, 'ExprParser');
+import(PARSER, 'NameParser');
 import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
 import(PARSER, 'Grammar');

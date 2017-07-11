@@ -36,12 +36,8 @@ class MemberAccessParselet implements InfixParselet
 {
     public function parse($grammar, $left, Token $token)
     {
-        $right = $grammar->_name();
-        return new OperatorExpr(
-            $left,
-            $token->getTag(),
-            $grammar->parser->resolveScope($right->getPointer())
-        );
+        $right = $grammar->name_parser->_identifier();
+        return new OperatorExpr($left, $token->getTag(), $right);
     }
 
     public function getPrecedence()

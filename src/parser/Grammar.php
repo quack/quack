@@ -50,25 +50,24 @@ class Grammar
     use DeclParser;
 
     public $parser;
+    public $name_parser;
     public $type_parser;
+    public $expr_parser;
     public $checker;
 
     public function __construct(TokenReader $parser)
     {
+        // todo stmt parser and find a better way to reference them
         $this->parser = $parser;
-        $this->type_parser = new TypeParser($parser);
+        $this->name_parser = new NameParser($parser);
+        $this->type_parser = new TypeParser($parser, $this->name_parser);
+        $this->expr_parser = new ExprParser($parser, $this, $this->name_parser);
         $this->checker = new TokenChecker($parser);
     }
 
     public function start()
     {
         return new ProgramStmt(iterator_to_array($this->_topStmtList()));
-    }
-
-    public function evalParselet($parselet)
-    {
-        $token = $this->parser->consumeAndFetch();
-        return (new $parselet)->parse($this, $token);
     }
 
     public function _topStmtList()
@@ -125,7 +124,7 @@ class Grammar
                 // Optional postfix notation for statements
                 if ($this->parser->is(Tag::T_WHEN) || $this->parser->is(Tag::T_UNLESS)) {
                     $tag = $this->parser->consumeAndFetch()->getTag();
-                    $predicate = $this->_expr();
+                    $predicate = $this->expr_parser->_expr();
 
                     return new PostConditionalStmt($first_class_stmt, $predicate, $tag);
                 }
@@ -151,10 +150,10 @@ class Grammar
     {
         $this->parser->match(Tag::T_DO);
 
-        $expr_list = [$this->_expr()];
+        $expr_list = [$this->expr_parser->_expr()];
 
         while ($this->parser->consumeIf(',')) {
-            $expr_list[] = $this->_expr();
+            $expr_list[] = $this->expr_parser->_expr();
         }
 
         return new ExprStmt($expr_list);
@@ -172,7 +171,7 @@ class Grammar
     public function _ifStmt()
     {
         $this->parser->match(Tag::T_IF);
-        $condition = $this->_expr();
+        $condition = $this->expr_parser->_expr();
         $body = new StmtList(iterator_to_array($this->_innerStmtList()));
         $elif = iterator_to_array($this->_elifList());
         $else = $this->_optElse();
@@ -197,7 +196,7 @@ class Grammar
         }
 
         if ($this->parser->consumeIf(':-')) {
-            $value = $this->_expr();
+            $value = $this->expr_parser->_expr();
 
             $definitions[] = [$name, $value];
         } else {
@@ -208,7 +207,7 @@ class Grammar
             $name = $this->identifier();
 
             if ($this->parser->consumeIf(':-')) {
-                $value = $this->_expr();
+                $value = $this->expr_parser->_expr();
                 $definitions[] = [$name, $value];
             } else {
                 $definitions[] = [$name, null];
@@ -221,7 +220,7 @@ class Grammar
     public function _whileStmt()
     {
         $this->parser->match(Tag::T_WHILE);
-        $condition = $this->_expr();
+        $condition = $this->expr_parser->_expr();
         $body = iterator_to_array($this->_innerStmtList());
         $this->parser->match(Tag::T_END);
 
@@ -233,13 +232,13 @@ class Grammar
         $this->parser->match(Tag::T_FOR);
         $variable = $this->identifier();
         $this->parser->match(Tag::T_FROM);
-        $from = $this->_expr();
+        $from = $this->expr_parser->_expr();
         $this->parser->match(Tag::T_TO);
-        $to = $this->_expr();
+        $to = $this->expr_parser->_expr();
         $by = null;
 
         if ($this->parser->consumeIf(Tag::T_BY)) {
-            $by = $this->_expr();
+            $by = $this->expr_parser->_expr();
         }
 
         $body = new StmtList(iterator_to_array($this->_innerStmtList()));
@@ -269,7 +268,7 @@ class Grammar
         }
 
         $this->parser->match(Tag::T_IN);
-        $iterable = $this->_expr();
+        $iterable = $this->expr_parser->_expr();
         $body = iterator_to_array($this->_innerStmtList());
         $this->parser->match(Tag::T_END);
 
@@ -279,7 +278,7 @@ class Grammar
     public function _switchStmt()
     {
         $this->parser->match(Tag::T_SWITCH);
-        $value = $this->_expr();
+        $value = $this->expr_parser->_expr();
         $cases = iterator_to_array($this->_caseStmtList());
         $this->parser->match(Tag::T_END);
 
@@ -314,7 +313,7 @@ class Grammar
     public function _raiseStmt()
     {
         $this->parser->match(Tag::T_RAISE);
-        $expression = $this->_expr();
+        $expression = $this->expr_parser->_expr();
 
         return new RaiseStmt($expression);
     }
@@ -322,7 +321,7 @@ class Grammar
     public function _returnStmt()
     {
         $this->parser->match('^');
-        $expression = $this->_optExpr();
+        $expression = $this->expr_parser->_optExpr();
 
         return new ReturnStmt($expression);
     }
@@ -340,7 +339,7 @@ class Grammar
     public function _elifList()
     {
         while ($this->parser->consumeIf(Tag::T_ELIF)) {
-            $condition = $this->_expr();
+            $condition = $this->expr_parser->_expr();
             $body = iterator_to_array($this->_innerStmtList());
             yield new ElifStmt($condition, $body);
         }
@@ -409,13 +408,13 @@ class Grammar
 
         $name = $this->identifier();
         $this->parser->match(':-');
-        $value = $this->_expr();
+        $value = $this->expr_parser->_expr();
         $definitions[] = [$name, $value];
 
         while ($this->parser->consumeIf(',')) {
             $name = $this->identifier();
             $this->parser->match(':-');
-            $value = $this->_expr();
+            $value = $this->expr_parser->_expr();
             $definitions[] = [$name, $value];
         }
 
@@ -440,7 +439,7 @@ class Grammar
         while (in_array($this->parser->lookahead->getTag(), $cases, true)) {
             $is_else = $this->parser->is(Tag::T_ELSE);
             $this->parser->consume();
-            $value = $is_else ? null : $this->_expr();
+            $value = $is_else ? null : $this->expr_parser->_expr();
             $body = new StmtList(iterator_to_array($this->_innerStmtList()));
 
             yield new CaseStmt($value, $body, $is_else);
@@ -474,18 +473,6 @@ class Grammar
         return null;
     }
 
-    public function _name()
-    {
-        $name = $this->parser->lookahead;
-        $this->parser->match(Tag::T_IDENT);
-        return $name;
-    }
-
-    public function _optExpr()
-    {
-        return $this->_expr(0, true);
-    }
-
     public function _optLabel()
     {
         return $this->parser->is(Tag::T_IDENT)
@@ -493,45 +480,7 @@ class Grammar
             : null;
     }
 
-    public function _expr($precedence = 0, $opt = false)
-    {
-        $token = $this->parser->lookahead;
-        $prefix = $this->parser->prefixParseletForToken($token);
-
-        if (is_null($prefix)) {
-            if (!$opt) {
-                throw new SyntaxError([
-                    'expected' => 'expression',
-                    'found'    => $token,
-                    'parser'   => $this->parser
-                ]);
-            }
-
-            return null;
-        }
-
-        // We consume the token only when ensure it has a parselet, thus,
-        // avoiding to rollback in the tape
-        $this->parser->consume();
-        $left = $prefix->parse($this, $token);
-
-        while ($precedence < $this->getPrecedence()) {
-            $token = $this->parser->consumeAndFetch();
-            $infix = $this->parser->infixParseletForToken($token);
-            $left = $infix->parse($this, $left, $token);
-        }
-
-        return $left;
-    }
-
-    private function getPrecedence()
-    {
-        $parser = $this->parser->infixParseletForToken($this->parser->lookahead);
-        return !is_null($parser)
-            ? $parser->getPrecedence()
-            : 0;
-    }
-
+    // TODO: Rename to _qualifiedName
     public function qualifiedName()
     {
         $symbols = [$this->parser->match(Tag::T_IDENT)];
@@ -544,6 +493,7 @@ class Grammar
         }, $symbols);
     }
 
+    // TODO: Rename to _identifier or put on base
     public function identifier()
     {
         return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));

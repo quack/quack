@@ -32,11 +32,11 @@ class NewParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        $shape_name = $grammar->qualifiedName();
+        $shape_name = $grammar->name_parser->_qualifiedName();
         $initializer = null;
 
         if ($grammar->parser->is('%{')) {
-            $initializer = $grammar->evalParselet(ObjectParselet::class);
+            $initializer = $grammar->parser->evalParselet($grammar, ObjectParselet::class);
         }
 
         return new NewExpr($shape_name, $initializer);

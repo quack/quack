@@ -21,45 +21,29 @@
  */
 namespace QuackCompiler\Parser;
 
-use \Exception;
+use \QuackCompiler\Lexer\Tag;
 
-use \QuackCompiler\Lexer\Tokenizer;
-
-class TokenReader extends Parser
+class NameParser
 {
-    public $ast = [];
-    public $grammar;
+    public $parser;
 
-    public function __construct(Tokenizer $input)
+    public function __construct($parser)
     {
-        parent::__construct($input);
-        $this->grammar = new Grammar($this);
+        $this->parser = $parser;
     }
 
-    /* Handlers */
-    public function dumpAst()
+    public function _identifier()
     {
-        var_dump($this->ast);
+        return $this->parser->resolveScope($this->parser->match(Tag::T_IDENT));
     }
 
-    public function format()
+    public function _qualifiedName()
     {
-        echo $this->beautify();
-    }
+        $names = [];
+        do {
+            $names[] = $this->_identifier();
+        } while ($this->parser->consumeIf('.'));
 
-    public function beautify()
-    {
-        return $this->ast->format($this);
-    }
-
-    public function parse()
-    {
-        $this->ast = $this->grammar->start();
-    }
-
-    public function evalParselet($grammar, $parselet)
-    {
-        $token = $this->consumeAndFetch();
-        return (new $parselet)->parse($grammar, $token);
+        return $names;
     }
 }

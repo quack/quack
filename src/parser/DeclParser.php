@@ -111,7 +111,7 @@ trait DeclParser
         // Is short method?
         if ($is_short = $this->parser->is(':-')) {
             $this->parser->consume(); // :-
-            $body = $this->_expr();
+            $body = $this->expr_parser->_expr();
         } else {
             $body = iterator_to_array($this->_innerStmtList());
             $this->parser->match(Tag::T_END);

@@ -39,12 +39,11 @@ Sprint 2:
 
 # Type System
 
-- [ ] Implement parenthesize on types
+- [x] Implement parenthesize on types
 - [ ] Move __toString to format functions, receiving the parser because sometimes it is necessary (in types)
 - [ ] Types must know instances (shapes and classes) for named types, and must ensure they exist
 - [ ] When there is a type declaration, we should output it on format
 - [ ] Isolate statement parsers, with a main class that instantiates and uses them and has a hash of parsers
 - [ ] Bind type to symbol when it is passed (such as in let x :: string)
-- [ ] Create a TypeSyntaxError (TSY), that will be throw on type syntax error
 - [ ] Create comparator function (deep comparison) on types
 - [ ] Replace current type returns and verifications by new ones. Type.php dies
