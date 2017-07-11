@@ -43,7 +43,10 @@ Sprint 2:
 - [ ] Move __toString to format functions, receiving the parser because sometimes it is necessary (in types)
 - [ ] Types must know instances (shapes and classes) for named types, and must ensure they exist
 - [ ] When there is a type declaration, we should output it on format
-- [ ] Isolate statement parsers, with a main class that instantiates and uses them and has a hash of parsers
+- [x] Isolate statement parsers, with a main class that instantiates and uses them and has a hash of parsers
+- [x] Kill Grammar.php
 - [ ] Bind type to symbol when it is passed (such as in let x :: string)
 - [ ] Create comparator function (deep comparison) on types
 - [ ] Replace current type returns and verifications by new ones. Type.php dies
+- [ ] Isolate DeclParser as an attachable parsers
+- [ ] Rename $parser to $reader on contexts
