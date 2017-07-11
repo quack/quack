@@ -93,7 +93,6 @@ import(PARSER, 'NameParser');
 import(PARSER, 'StmtParser');
 import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
-import(PARSER, 'Grammar');
 import(PARSER, 'TokenChecker');
 import(PARSER, 'SyntaxError');
 import(PARSER, 'EOFError');
