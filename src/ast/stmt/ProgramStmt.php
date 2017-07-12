@@ -63,14 +63,21 @@ class ProgramStmt extends Stmt
 
     public function attachValidAST($ast)
     {
-        $safe_stmt_list = $this->stmt_list; // copy array
+        $safe_scope = clone $this->scope;
         try {
+            $this->bindDeclarations($ast->stmt_list);
+
+            foreach ($ast->stmt_list as $node) {
+                $node->injectScope($this->scope);
+            }
+
+            foreach ($ast->stmt_list as $node) {
+                $node->runTypeChecker();
+            }
+
             $this->stmt_list = array_merge($this->stmt_list, $ast->stmt_list);
-            $this->injectScope($this->scope->parent);
-            $this->runTypeChecker();
         } catch (\Exception $e) {
-            // rollback in case of error
-            $this->stmt_list = $safe_stmt_list;
+            $this->scope = $safe_scope;
             throw $e;
         }
     }
