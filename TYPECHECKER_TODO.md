@@ -48,5 +48,5 @@ Sprint 2:
 - [ ] Bind type to symbol when it is passed (such as in let x :: string)
 - [ ] Create comparator function (deep comparison) on types
 - [ ] Replace current type returns and verifications by new ones. Type.php dies
-- [ ] Isolate DeclParser as an attachable parsers
+- [x] Isolate DeclParser as an attachable parsers
 - [x] Rename $parser to $reader on contexts
