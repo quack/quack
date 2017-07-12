@@ -420,6 +420,10 @@ class StmtParser
     {
         $by_reference = $this->reader->consumeIf('*');
         $name = $this->name_parser->_identifier();
+        // TODO: Bind type to parameter
+        if ($this->reader->consumeIf('::')) {
+            $type = $this->type_parser->_type();
+        }
 
         return (object)[
             'name'         => $name,
