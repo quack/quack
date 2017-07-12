@@ -37,6 +37,7 @@ class TokenReader extends Parser
         $name_parser = new NameParser($this);
         $type_parser = new TypeParser($this);
         $expr_parser = new ExprParser($this);
+        $decl_parser = new DeclParser($this);
         $stmt_parser = new StmtParser($this);
 
         $type_parser->attachParsers([
@@ -46,10 +47,16 @@ class TokenReader extends Parser
             'name_parser' => $name_parser,
             'stmt_parser' => $stmt_parser
         ]);
+        $decl_parser->attachParsers([
+            'name_parser' => $name_parser,
+            'expr_parser' => $expr_parser,
+            'stmt_parser' => $stmt_parser
+        ]);
         $stmt_parser->attachParsers([
             'name_parser' => $name_parser,
             'type_parser' => $type_parser,
-            'expr_parser' => $expr_parser
+            'expr_parser' => $expr_parser,
+            'decl_parser' => $decl_parser
         ]);
 
         $this->main = $stmt_parser;

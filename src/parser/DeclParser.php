@@ -33,13 +33,27 @@ use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
 
-trait DeclParser
+class DeclParser
 {
-    public function _classDeclStmt()
+    use Attachable;
+
+    public $reader;
+
+    public function __construct($reader)
+    {
+        $this->reader = $reader;
+    }
+
+    public function _classStmt()
     {
         $this->reader->match(Tag::T_CLASS);
         $name = $this->name_parser->_identifier();
-        $body = iterator_to_array($this->_fnSignatureList());
+        $body = [];
+
+        while ($this->reader->is(Tag::T_IDENT)) {
+            $body[] = $this->_fnSignature();
+        }
+
         $this->reader->match(Tag::T_END);
 
         return new ClassStmt($name, $body);
@@ -62,37 +76,27 @@ trait DeclParser
 
     public function _fnSignature()
     {
-        $state = (object)[
+        $signature = (object)[
             'is_recursive' => false,
             'is_reference' => false,
             'name'         => '<anonymous function>',
             'parameters'   => []
         ];
 
-        $state->is_recursive = $this->reader->consumeIf(Tag::T_REC);
-        $state->is_reference = $this->reader->consumeIf('*');
-        $state->name = $this->name_parser->_identifier();
+        $signature->is_recursive = $this->reader->consumeIf(Tag::T_REC);
+        $signature->is_reference = $this->reader->consumeIf('*');
+        $signature->name = $this->name_parser->_identifier();
 
         $this->reader->match('(');
 
         if (!$this->reader->consumeIf(')')) {
-            $state->parameters[] = $this->_parameter();
-
-            while ($this->reader->consumeIf(',')) {
-                $state->parameters[] = $this->_parameter();
-            }
-
+            do {
+                $signature->parameters[] = $this->stmt_parser->_parameter();
+            } while ($this->reader->consumeIf(','));
             $this->reader->match(')');
         }
 
-        return $state;
-    }
-
-    public function _fnSignatureList()
-    {
-        while ($this->reader->is(Tag::T_IDENT)) {
-            yield $this->_fnSignature();
-        }
+        return $signature;
     }
 
     public function _fnStmt($is_method = false)
@@ -113,18 +117,16 @@ trait DeclParser
             $this->reader->consume(); // :-
             $body = $this->expr_parser->_expr();
         } else {
-            $body = iterator_to_array($this->_innerStmtList());
+            $body = iterator_to_array($this->stmt_parser->_innerStmtList());
             $this->reader->match(Tag::T_END);
         }
 
         return new FnStmt($signature, $body, $is_pub, $is_method, $is_short);
     }
 
-
-
-    public function _implDeclStmt()
+    public function _implStmt()
     {
-        // Structs are for properties
+        // Shapes are for properties
         // Classes are for methods
         $type = Tag::T_SHAPE;
         $this->reader->match(Tag::T_IMPL);
@@ -156,40 +158,7 @@ trait DeclParser
         return new ModuleStmt($this->name_parser->_qualifiedName());
     }
 
-    public function _openStmt()
-    {
-        $this->reader->match(Tag::T_OPEN);
-        $type = null;
-        if ($this->reader->is(Tag::T_CONST) || $this->reader->is(Tag::T_FN)) {
-            $type = $this->reader->consumeAndFetch();
-        }
-
-        $name = $this->reader->is('.') ? [$this->reader->consumeAndFetch()->getTag()] : [];
-        $name[] = $this->name_parser->_qualifiedName();
-        $alias = null;
-        $subprops = null;
-
-        if ($this->reader->is(Tag::T_AS)) {
-            $this->reader->consume();
-            $alias = $this->name_parser->_identifier();
-        } elseif ($this->reader->is('{')) {
-            $this->reader->consume();
-            $subprops[] = $this->name_parser->_identifier();
-
-            if ($this->reader->is(';')) {
-                do {
-                    $this->reader->match(';');
-                    $subprops[] = $this->name_parser->_identifier();
-                } while ($this->reader->is(';'));
-            }
-
-            $this->reader->match('}');
-        }
-
-        return new OpenStmt($name, $alias, $type, $subprops);
-    }
-
-    public function _shapeDeclStmt()
+    public function _shapeStmt()
     {
         $this->reader->match(Tag::T_SHAPE);
         $name = $this->name_parser->_identifier();

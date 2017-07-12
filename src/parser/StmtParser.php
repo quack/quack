@@ -46,7 +46,6 @@ use \QuackCompiler\Ast\Stmt\StmtList;
 class StmtParser
 {
     use Attachable;
-    use DeclParser;
 
     public $reader;
     public $checker;
@@ -353,17 +352,16 @@ class StmtParser
             Tag::T_FN        => '_fnStmt',
             Tag::T_PUB       => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
-            Tag::T_OPEN      => '_openStmt',
             Tag::T_ENUM      => '_enumStmt',
-            Tag::T_IMPL      => '_implDeclStmt',
-            Tag::T_CLASS     => '_classDeclStmt',
-            Tag::T_SHAPE     => '_shapeDeclStmt'
+            Tag::T_IMPL      => '_implStmt',
+            Tag::T_CLASS     => '_classStmt',
+            Tag::T_SHAPE     => '_shapeStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();
 
         return array_key_exists($next_tag, $branch_table)
-            ? call_user_func([$this, $branch_table[$next_tag]])
+            ? call_user_func([$this->decl_parser, $branch_table[$next_tag]])
             : $this->_stmt();
     }
 

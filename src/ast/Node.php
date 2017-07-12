@@ -96,9 +96,6 @@ abstract class Node
                 case 'FnStmt':
                     $this->bindDecl($node, 'function', Kind::K_FUNCTION);
                     break;
-                case 'BlueprintStmt':
-                    $this->bindDecl($node, 'blueprint', Kind::K_BLUEPRINT);
-                    break;
                 case 'EnumStmt':
                     $this->bindDecl($node, 'enum', Kind::K_ENUM);
                     break;
