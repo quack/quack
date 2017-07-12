@@ -2,7 +2,7 @@
 Supports formatting raise statements
 %%source
 shape Exception
-  desc
+  desc :: string
 end
 
 impl Exception

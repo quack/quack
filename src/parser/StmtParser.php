@@ -183,7 +183,6 @@ class StmtParser
         if ($this->reader->consumeIf('::')) {
             // TODO: bind type for symbol. Currently ignored
             $type = $this->type_parser->_type();
-            echo $type, PHP_EOL;
         }
 
         if ($this->reader->consumeIf(':-')) {
@@ -397,6 +396,12 @@ class StmtParser
         $definitions = [];
 
         $name = $this->name_parser->_identifier();
+
+        if ($this->reader->consumeIf('::')) {
+            // TODO: Bind type to value
+            $type = $this->type_parser->_type();
+        }
+
         $this->reader->match(':-');
         $value = $this->expr_parser->_expr();
         $definitions[] = [$name, $value];

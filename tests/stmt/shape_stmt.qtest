@@ -1,7 +1,7 @@
 %%describe
 Supports formatting structs
 %%source
-shape Point x y end
+shape Point x :: number y :: number end
 shape Empty end
 %%expect
 shape Point

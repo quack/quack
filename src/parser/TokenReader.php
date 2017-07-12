@@ -50,7 +50,8 @@ class TokenReader extends Parser
         $decl_parser->attachParsers([
             'name_parser' => $name_parser,
             'expr_parser' => $expr_parser,
-            'stmt_parser' => $stmt_parser
+            'stmt_parser' => $stmt_parser,
+            'type_parser' => $type_parser
         ]);
         $stmt_parser->attachParsers([
             'name_parser' => $name_parser,

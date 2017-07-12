@@ -166,6 +166,9 @@ class DeclParser
 
         while ($this->reader->is(Tag::T_IDENT)) {
             $members[] = $this->name_parser->_identifier();
+            // TODO: Bind type for member
+            $this->reader->match('::');
+            $type = $this->type_parser->_type();
         }
 
         $this->reader->match(Tag::T_END);
