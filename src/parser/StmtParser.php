@@ -75,19 +75,6 @@ class StmtParser
         }
     }
 
-    public function _blueprintStmtList()
-    {
-        while (!$this->checker->isEoF()) {
-            switch ($this->reader->lookahead->getTag()) {
-                case Tag::T_FN:
-                    yield $this->_blueprintStmt();
-                    continue 2;
-                default:
-                    break 2;
-            }
-        }
-    }
-
     public function _stmt()
     {
         $branch_table = [
@@ -376,18 +363,6 @@ class StmtParser
         return array_key_exists($next_tag, $branch_table)
             ? call_user_func([$this, $branch_table[$next_tag]])
             : $this->_stmt();
-    }
-
-    public function _blueprintStmt()
-    {
-        $branch_table = [
-            Tag::T_FN => '_fnStmt',
-        ];
-
-        return call_user_func([
-            $this,
-            $branch_table[$this->reader->lookahead->getTag()]
-        ]);
     }
 
     public function _constStmt()
