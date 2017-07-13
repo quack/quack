@@ -33,66 +33,70 @@ use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
 
-trait DeclParser
+class DeclParser
 {
-    public function _classDeclStmt()
+    use Attachable;
+
+    public $reader;
+
+    public function __construct($reader)
     {
-        $this->parser->match(Tag::T_CLASS);
-        $name = $this->identifier();
-        $body = iterator_to_array($this->_fnSignatureList());
-        $this->parser->match(Tag::T_END);
+        $this->reader = $reader;
+    }
+
+    public function _classStmt()
+    {
+        $this->reader->match(Tag::T_CLASS);
+        $name = $this->name_parser->_identifier();
+        $body = [];
+
+        while ($this->reader->is(Tag::T_IDENT)) {
+            $body[] = $this->_fnSignature();
+        }
+
+        $this->reader->match(Tag::T_END);
 
         return new ClassStmt($name, $body);
     }
 
     public function _enumStmt()
     {
-        $this->parser->match(Tag::T_ENUM);
+        $this->reader->match(Tag::T_ENUM);
         $entries = [];
-        $name = $this->identifier();
+        $name = $this->name_parser->_identifier();
 
-        while ($this->parser->is(Tag::T_IDENT)) {
-            $entries[] = $this->identifier();
+        while ($this->reader->is(Tag::T_IDENT)) {
+            $entries[] = $this->name_parser->_identifier();
         }
 
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new EnumStmt($name, $entries);
     }
 
     public function _fnSignature()
     {
-        $state = (object)[
+        $signature = (object)[
             'is_recursive' => false,
             'is_reference' => false,
             'name'         => '<anonymous function>',
             'parameters'   => []
         ];
 
-        $state->is_recursive = $this->parser->consumeIf(Tag::T_REC);
-        $state->is_reference = $this->parser->consumeIf('*');
-        $state->name = $this->identifier();
+        $signature->is_recursive = $this->reader->consumeIf(Tag::T_REC);
+        $signature->is_reference = $this->reader->consumeIf('*');
+        $signature->name = $this->name_parser->_identifier();
 
-        $this->parser->match('(');
+        $this->reader->match('(');
 
-        if (!$this->parser->consumeIf(')')) {
-            $state->parameters[] = $this->_parameter();
-
-            while ($this->parser->consumeIf(',')) {
-                $state->parameters[] = $this->_parameter();
-            }
-
-            $this->parser->match(')');
+        if (!$this->reader->consumeIf(')')) {
+            do {
+                $signature->parameters[] = $this->stmt_parser->_parameter();
+            } while ($this->reader->consumeIf(','));
+            $this->reader->match(')');
         }
 
-        return $state;
-    }
-
-    public function _fnSignatureList()
-    {
-        while ($this->parser->is(Tag::T_IDENT)) {
-            yield $this->_fnSignature();
-        }
+        return $signature;
     }
 
     public function _fnStmt($is_method = false)
@@ -102,104 +106,72 @@ trait DeclParser
         $body = null;
 
         if (!$is_method) {
-            $is_pub = $this->parser->consumeIf(Tag::T_PUB);
-            $this->parser->match(Tag::T_FN);
+            $is_pub = $this->reader->consumeIf(Tag::T_PUB);
+            $this->reader->match(Tag::T_FN);
         }
 
         $signature = $this->_fnSignature();
 
         // Is short method?
-        if ($is_short = $this->parser->is(':-')) {
-            $this->parser->consume(); // :-
-            $body = $this->_expr();
+        if ($is_short = $this->reader->is(':-')) {
+            $this->reader->consume(); // :-
+            $body = $this->expr_parser->_expr();
         } else {
-            $body = iterator_to_array($this->_innerStmtList());
-            $this->parser->match(Tag::T_END);
+            $body = iterator_to_array($this->stmt_parser->_innerStmtList());
+            $this->reader->match(Tag::T_END);
         }
 
         return new FnStmt($signature, $body, $is_pub, $is_method, $is_short);
     }
 
-
-
-    public function _implDeclStmt()
+    public function _implStmt()
     {
-        // Structs are for properties
+        // Shapes are for properties
         // Classes are for methods
         $type = Tag::T_SHAPE;
-        $this->parser->match(Tag::T_IMPL);
-        $class_or_shape = $this->qualifiedName();
+        $this->reader->match(Tag::T_IMPL);
+        $class_or_shape = $this->name_parser->_qualifiedName();
         $class_for = null;
         // When it contains "for", it is being applied for a class
-        if ($this->parser->is(Tag::T_FOR)) {
+        if ($this->reader->is(Tag::T_FOR)) {
             $type = Tag::T_CLASS;
-            $this->parser->consume();
-            $class_for = $this->qualifiedName();
+            $this->reader->consume();
+            $class_for = $this->name_parser->_qualifiedName();
         }
 
         $body = new StmtList(iterator_to_array($this->_implStmtList()));
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new ImplStmt($type, $class_or_shape, $class_for, $body);
     }
 
     public function _implStmtList()
     {
-        while ($this->parser->is(Tag::T_IDENT)) {
+        while ($this->reader->is(Tag::T_IDENT)) {
             yield $this->_fnStmt(/* implicit */ true);
         }
     }
 
     public function _moduleStmt()
     {
-        $this->parser->match(Tag::T_MODULE);
-        return new ModuleStmt($this->qualifiedName());
+        $this->reader->match(Tag::T_MODULE);
+        return new ModuleStmt($this->name_parser->_qualifiedName());
     }
 
-    public function _openStmt()
+    public function _shapeStmt()
     {
-        $this->parser->match(Tag::T_OPEN);
-        $type = null;
-        if ($this->parser->is(Tag::T_CONST) || $this->parser->is(Tag::T_FN)) {
-            $type = $this->parser->consumeAndFetch();
-        }
-
-        $name = $this->parser->is('.') ? [$this->parser->consumeAndFetch()->getTag()] : [];
-        $name[] = $this->qualifiedName();
-        $alias = null;
-        $subprops = null;
-
-        if ($this->parser->is(Tag::T_AS)) {
-            $this->parser->consume();
-            $alias = $this->identifier();
-        } elseif ($this->parser->is('{')) {
-            $this->parser->consume();
-            $subprops[] = $this->identifier();
-
-            if ($this->parser->is(';')) {
-                do {
-                    $this->parser->match(';');
-                    $subprops[] = $this->identifier();
-                } while ($this->parser->is(';'));
-            }
-
-            $this->parser->match('}');
-        }
-
-        return new OpenStmt($name, $alias, $type, $subprops);
-    }
-
-    public function _shapeDeclStmt()
-    {
-        $this->parser->match(Tag::T_SHAPE);
-        $name = $this->identifier();
+        $this->reader->match(Tag::T_SHAPE);
+        $name = $this->name_parser->_identifier();
         $members = [];
 
-        while ($this->parser->is(Tag::T_IDENT)) {
-            $members[] = $this->identifier();
+        while ($this->reader->is(Tag::T_IDENT)) {
+            $members[] = $this->name_parser->_identifier();
+            // TODO: Bind type for member
+            $this->reader->match('::');
+            $type = $this->type_parser->_type();
         }
 
-        $this->parser->match(Tag::T_END);
+        $this->reader->match(Tag::T_END);
 
         return new ShapeStmt($name, $members);
     }

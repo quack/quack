@@ -1,7 +1,7 @@
 %%describe
 Supports formatting when expressions
 %%source
-fn mySwitch(what)
+fn mySwitch(what :: string)
   ^ when
          | what = "Luiz"      -> "Turing Tape!";
        | what = "Marcelo" -> "Lambda Calculus!";

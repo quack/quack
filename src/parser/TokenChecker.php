@@ -25,11 +25,11 @@ use \QuackCompiler\Lexer\Tag;
 
 class TokenChecker
 {
-    private $parser;
+    private $reader;
 
-    public function __construct(TokenReader $parser)
+    public function __construct(TokenReader $reader)
     {
-        $this->parser = $parser;
+        $this->reader = $reader;
     }
 
     public function startsInnerStmt()
@@ -40,7 +40,7 @@ class TokenChecker
             Tag::T_ENUM
         ];
 
-        return in_array($this->parser->lookahead->getTag(), $possible_inner_stmts, true)
+        return in_array($this->reader->lookahead->getTag(), $possible_inner_stmts, true)
             || $this->startsStmt();
     }
 
@@ -58,20 +58,18 @@ class TokenChecker
             Tag::T_TRY,
             Tag::T_BREAK,
             Tag::T_CONTINUE,
-            Tag::T_GOTO,
-            Tag::T_GLOBAL,
             Tag::T_RAISE,
             Tag::T_BEGIN,
             '^',
             '['
         ];
 
-        $next_tag = $this->parser->lookahead->getTag();
+        $next_tag = $this->reader->lookahead->getTag();
         return in_array($next_tag, $possible_stmts, true);
     }
 
     public function isEoF()
     {
-        return $this->parser->lookahead->getTag() === 0;
+        return 0 === $this->reader->lookahead->getTag();
     }
 }

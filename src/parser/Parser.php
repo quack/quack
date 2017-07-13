@@ -25,138 +25,20 @@ use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tokenizer;
-use \QuackCompiler\Parselets\IPrefixParselet;
-use \QuackCompiler\Parselets\IInfixParselet;
-use \QuackCompiler\Parselets\BinaryOperatorParselet;
-use \QuackCompiler\Parselets\LiteralParselet;
-use \QuackCompiler\Parselets\NameParselet;
-use \QuackCompiler\Parselets\PostfixOperatorParselet;
-use \QuackCompiler\Parselets\PrefixOperatorParselet;
-use \QuackCompiler\Parselets\TernaryParselet;
-use \QuackCompiler\Parselets\GroupParselet;
-use \QuackCompiler\Parselets\LambdaParselet;
-use \QuackCompiler\Parselets\ArrayParselet;
-use \QuackCompiler\Parselets\NewParselet;
-use \QuackCompiler\Parselets\MemberAccessParselet;
-use \QuackCompiler\Parselets\WhenParselet;
-use \QuackCompiler\Parselets\CallParselet;
-use \QuackCompiler\Parselets\AccessParselet;
-use \QuackCompiler\Parselets\RangeParselet;
-use \QuackCompiler\Parselets\PartialFuncParselet;
-use \QuackCompiler\Parselets\WhereParselet;
-use \QuackCompiler\Parselets\MapParselet;
-use \QuackCompiler\Parselets\ObjectParselet;
-use \QuackCompiler\Parselets\BlockParselet;
+use \QuackCompiler\Parselets\Parselet;
 
 abstract class Parser
 {
+    use Parselet;
+
     public $input;
     public $lookahead;
     public $scope_level = 0;
 
-    public $prefix_parselets = [];
-    public $infix_parselets = [];
-
     public function __construct(Tokenizer $input)
     {
-        $this->registerParselets();
         $this->input = $input;
         $this->consume();
-    }
-
-    private function register($tag, $parselet)
-    {
-        if ($parselet instanceof IPrefixParselet) {
-            $this->prefix_parselets[$tag] = $parselet;
-        } elseif ($parselet instanceof IInfixParselet) {
-            $this->infix_parselets[$tag] = $parselet;
-        }
-    }
-
-    private function postfix($tag, $precedence)
-    {
-        $this->register($tag, new PostfixOperatorParselet($precedence));
-    }
-
-    private function prefix($tag, $precedence)
-    {
-        $this->register($tag, new PrefixOperatorParselet($precedence));
-    }
-
-    private function infixLeft($tag, $precedence)
-    {
-        $this->register($tag, new BinaryOperatorParselet($precedence, false));
-    }
-
-    private function infixRight($tag, $precedence)
-    {
-        $this->register($tag, new BinaryOperatorParselet($precedence, true));
-    }
-
-    private function registerParselets()
-    {
-        $this->register('&(', new PartialFuncParselet);
-        $this->register(Tag::T_INTEGER, new LiteralParselet);
-        $this->register(Tag::T_INT_HEX, new LiteralParselet);
-        $this->register(Tag::T_INT_OCT, new LiteralParselet);
-        $this->register(Tag::T_INT_BIN, new LiteralParselet);
-        $this->register(Tag::T_DOUBLE, new LiteralParselet);
-        $this->register(Tag::T_DOUBLE_EXP, new LiteralParselet);
-        $this->register(Tag::T_STRING, new LiteralParselet);
-        $this->register(Tag::T_REGEX, new LiteralParselet);
-        $this->register(Tag::T_IDENT, new NameParselet);
-        $this->register(Tag::T_THEN, new TernaryParselet);
-        $this->register('..', new RangeParselet);
-        $this->register('(', new GroupParselet);
-        $this->register('(', new CallParselet);
-        $this->register('{', new ArrayParselet);
-        $this->register('{', new AccessParselet);
-        $this->register('%{', new ObjectParselet);
-        $this->register('#{', new MapParselet);
-        $this->register('&{', new BlockParselet);
-        $this->register('&', new LambdaParselet);
-        $this->register('%', new NewParselet);
-        $this->register('.', new MemberAccessParselet);
-        $this->register('?.', new MemberAccessParselet);
-        $this->register(Tag::T_TRUE, new LiteralParselet);
-        $this->register(Tag::T_FALSE, new LiteralParselet);
-        $this->register(Tag::T_NIL, new LiteralParselet);
-        $this->register(Tag::T_ATOM, new LiteralParselet);
-        $this->register(Tag::T_WHEN, new WhenParselet);
-        $this->register(Tag::T_WHERE, new WhereParselet);
-
-        $this->prefix('+', Precedence::PREFIX);
-        $this->prefix('-', Precedence::PREFIX);
-        $this->prefix('^^', Precedence::PREFIX);
-        $this->prefix('*', Precedence::PREFIX);
-        $this->prefix('~', Precedence::PREFIX);
-        $this->prefix(Tag::T_NOT, Precedence::PREFIX);
-
-        $this->infixLeft('+', Precedence::ADDITIVE);
-        $this->infixLeft('-', Precedence::ADDITIVE);
-        $this->infixLeft('*', Precedence::MULTIPLICATIVE);
-        $this->infixLeft('/', Precedence::MULTIPLICATIVE);
-        $this->infixLeft(Tag::T_MOD, Precedence::MULTIPLICATIVE);
-        $this->infixLeft(Tag::T_AND, Precedence::LOGICAL_AND);
-        $this->infixLeft(Tag::T_OR, Precedence::LOGICAL_OR);
-        $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
-        $this->infixLeft('|', Precedence::BITWISE_OR);
-        $this->infixLeft('&', Precedence::BITWISE_AND_OR_REF);
-        $this->infixLeft('^', Precedence::BITWISE_XOR);
-        $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
-        $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
-        $this->infixLeft('=', Precedence::VALUE_COMPARATOR);
-        $this->infixLeft('=~', Precedence::VALUE_COMPARATOR);
-        $this->infixLeft('<>', Precedence::VALUE_COMPARATOR);
-        $this->infixLeft('<=', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('|>', Precedence::PIPELINE);
-        $this->infixLeft('??', Precedence::COALESCENCE);
-
-        $this->infixRight('**', Precedence::EXPONENT);
-        $this->infixRight(':-', Precedence::ASSIGNMENT);
     }
 
     public function match($tag)
@@ -241,22 +123,6 @@ abstract class Parser
     public function position()
     {
         return ["line" => $this->input->line, "column" => $this->input->column];
-    }
-
-    public function infixParseletForToken(Token $token)
-    {
-        $key = $token->getTag();
-        return array_key_exists($key, $this->infix_parselets)
-            ? $this->infix_parselets[$key]
-            : null;
-    }
-
-    public function prefixParseletForToken(Token $token)
-    {
-        $key = $token->getTag();
-        return array_key_exists($key, $this->prefix_parselets)
-            ? $this->prefix_parselets[$key]
-            : null;
     }
 
     public function openScope()

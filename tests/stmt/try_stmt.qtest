@@ -2,10 +2,10 @@
 Supports formatting try statements
 %%source
 shape HTTPRequest
-  url
-  method
-  status
-  responseText
+  url :: string
+  method :: @GET | @POST | @PUT | @DELETE | @PATCH
+  status :: number
+  responseText :: string
 end
 impl HttpRequest
   openConn()

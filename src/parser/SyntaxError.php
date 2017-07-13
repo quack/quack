@@ -50,7 +50,7 @@ class SyntaxError extends Exception
     {
         $this->expected = $parameters['expected'];
         $this->found    = $parameters['found'];
-        $this->parser   = $parameters['parser'];
+        $this->reader   = $parameters['parser'];
         $this->hint     = array_key_exists('hint', $parameters)
             ? $parameters['hint']
             : null;
@@ -144,7 +144,7 @@ class SyntaxError extends Exception
             $offset += 2;
         }
 
-        $token_val = $this->parser->input->getSymbolTable()->get(
+        $token_val = $this->reader->input->getSymbolTable()->get(
             $this->found->getPointer()
         );
 
@@ -158,11 +158,11 @@ class SyntaxError extends Exception
 
     private function getOriginalSource()
     {
-        return $this->parser->input;
+        return $this->reader->input;
     }
 
     private function getPosition()
     {
-        return $this->parser->position();
+        return $this->reader->position();
     }
 }

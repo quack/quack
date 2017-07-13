@@ -22,7 +22,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Intl\Localization;
-use \QuackCompiler\Parselets\LambdaParselet;
+use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;

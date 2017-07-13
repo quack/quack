@@ -49,39 +49,55 @@ import(LEXER, 'Word');
 // Scope base interface
 import(SCOPE, 'Membered');
 
+import(PARSELETS, 'Parselet');
+import(PARSELETS, 'InfixParselet');
+import(PARSELETS, 'PrefixParselet');
+import(PARSELETS, 'expr/PrefixOperatorParselet');
+import(PARSELETS, 'expr/BinaryOperatorParselet');
+import(PARSELETS, 'expr/PostfixOperatorParselet');
+import(PARSELETS, 'expr/TernaryParselet');
+import(PARSELETS, 'expr/GroupParselet');
+import(PARSELETS, 'expr/LambdaParselet');
+import(PARSELETS, 'expr/ArrayParselet');
+import(PARSELETS, 'expr/NameParselet');
+import(PARSELETS, 'expr/NewParselet');
+import(PARSELETS, 'expr/MemberAccessParselet');
+import(PARSELETS, 'expr/WhenParselet');
+import(PARSELETS, 'expr/CallParselet');
+import(PARSELETS, 'expr/AccessParselet');
+import(PARSELETS, 'expr/RangeParselet');
+import(PARSELETS, 'expr/LiteralParselet');
+import(PARSELETS, 'expr/PartialFuncParselet');
+import(PARSELETS, 'expr/WhereParselet');
+import(PARSELETS, 'expr/MapParselet');
+import(PARSELETS, 'expr/ObjectParselet');
+import(PARSELETS, 'expr/BlockParselet');
+
+import(PARSELETS, 'types/AtomTypeParselet');
+import(PARSELETS, 'types/BinaryOperatorTypeParselet');
+import(PARSELETS, 'types/FunctionTypeParselet');
+import(PARSELETS, 'types/GroupTypeParselet');
+import(PARSELETS, 'types/InstanceTypeParselet');
+import(PARSELETS, 'types/ListTypeParselet');
+import(PARSELETS, 'types/LiteralTypeParselet');
+import(PARSELETS, 'types/MapTypeParselet');
+import(PARSELETS, 'types/ObjectTypeParselet');
+import(PARSELETS, 'types/TupleTypeParselet');
+
 /* Parser */
 
+import(PARSER, 'Attachable');
 import(PARSER, 'DeclParser');
+import(PARSER, 'ExprParser');
+import(PARSER, 'NameParser');
+import(PARSER, 'StmtParser');
+import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
-import(PARSER, 'Grammar');
 import(PARSER, 'TokenChecker');
 import(PARSER, 'SyntaxError');
 import(PARSER, 'EOFError');
 import(PARSER, 'TokenReader');
 import(PARSER, 'Precedence');
-
-import(PARSELETS, 'IInfixParselet');
-import(PARSELETS, 'IPrefixParselet');
-import(PARSELETS, 'PrefixOperatorParselet');
-import(PARSELETS, 'BinaryOperatorParselet');
-import(PARSELETS, 'PostfixOperatorParselet');
-import(PARSELETS, 'TernaryParselet');
-import(PARSELETS, 'GroupParselet');
-import(PARSELETS, 'LambdaParselet');
-import(PARSELETS, 'ArrayParselet');
-import(PARSELETS, 'NameParselet');
-import(PARSELETS, 'NewParselet');
-import(PARSELETS, 'MemberAccessParselet');
-import(PARSELETS, 'WhenParselet');
-import(PARSELETS, 'CallParselet');
-import(PARSELETS, 'AccessParselet');
-import(PARSELETS, 'RangeParselet');
-import(PARSELETS, 'LiteralParselet');
-import(PARSELETS, 'PartialFuncParselet');
-import(PARSELETS, 'WhereParselet');
-import(PARSELETS, 'MapParselet');
-import(PARSELETS, 'ObjectParselet');
-import(PARSELETS, 'BlockParselet');
 
 /* Ast */
 
@@ -129,7 +145,6 @@ import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ModuleStmt');
-import(AST, 'stmt/OpenStmt');
 import(AST, 'stmt/PostConditionalStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/RaiseStmt');
@@ -140,6 +155,18 @@ import(AST, 'stmt/ClassStmt');
 import(AST, 'stmt/TryStmt');
 import(AST, 'stmt/WhileStmt');
 import(AST, 'stmt/StmtList');
+
+import(AST, 'types/TypeNode');
+import(AST, 'types/AtomType');
+import(AST, 'types/FunctionType');
+import(AST, 'types/GenericType');
+import(AST, 'types/InstanceType');
+import(AST, 'types/ListType');
+import(AST, 'types/LiteralType');
+import(AST, 'types/MapType');
+import(AST, 'types/ObjectType');
+import(AST, 'types/OperatorType');
+import(AST, 'types/TupleType');
 
 /* Scope */
 

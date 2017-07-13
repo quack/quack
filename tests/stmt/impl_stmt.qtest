@@ -1,7 +1,7 @@
 %%describe
 Supports formatting impl statements
 %%source
-shape Point x y end
+shape Point x :: number y::number end
 impl Point
   add() ^ self.x + self.y end
 end
