@@ -9,7 +9,7 @@ fn mySwitch(what :: string)
     end
 end
 %%expect
-fn mySwitch(what)
+fn mySwitch(what :: string)
   ^ when
     | what = "Luiz" -> "Turing Tape!";
     | what = "Marcelo" -> "Lambda Calculus!";

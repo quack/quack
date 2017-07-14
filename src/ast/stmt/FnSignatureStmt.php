@@ -28,23 +28,62 @@ use \QuackCompiler\Scope\ScopeError;
 
 class FnSignatureStmt extends Stmt
 {
-    public function __construct()
-    {
+    public $name;
+    public $parameters;
+    public $type;
+    public $native;
 
+    public function __construct($name, $parameters, $type)
+    {
+        $this->name = $name;
+        $this->parameters = $parameters;
+        $this->type = $type;
     }
 
     public function format(Parser $parser)
     {
+        $source = '';
+        if ($this->native) {
+            $source .= 'native fn ';
+        }
+        $source .= $this->name;
+        $source .= '(';
+        $source .= implode(', ', array_map(function ($param) {
+            $parameter = $param->name;
 
+            if (!is_null($param->type)) {
+                $parameter .= ' :: ' . $param->type;
+            }
+
+            return $parameter;
+        }, $this->parameters));
+        $source .= ')';
+
+        if (!is_null($this->type)) {
+            $source .= ' -> ' . $this->type;
+        }
+
+        if ($this->native) {
+            $source .= PHP_EOL;
+        }
+
+        return $source;
     }
 
     public function injectScope(&$parent_scope)
     {
-        // TODO
+        foreach ($this->parameters as $param) {
+            if ($parent_scope->hasLocal($param->name)) {
+                throw new ScopeError(Localization::message('SCO060', [$param->name, $this->name]));
+            }
+
+            // TODO: inject type too?
+            $parent_scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
+        }
     }
 
     public function runTypeChecker()
     {
-        // TODO
+        // Pass :)
     }
 }

@@ -32,12 +32,11 @@ class FnStmt extends Stmt
     public $body;
     public $is_method;
     public $is_short;
-    public $native = false;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($signature, $body, $is_method, $is_short)
+    public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short)
     {
         $this->signature = $signature;
         $this->body = $body;
@@ -49,14 +48,8 @@ class FnStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = $this->native ? 'native ' : '';
-        $source .= $this->is_method ? '' : 'fn ';
-        $source .= $this->signature->name;
-        $source .= '(';
-        $source .= implode(', ', array_map(function ($param) {
-            return $param->name;
-        }, $this->signature->parameters));
-        $source .= ')';
+        $source = $this->is_method ? '' : 'fn ';
+        $source .= $this->signature->format($parser);
 
         if ($this->is_short) {
             $source .= ' :- ';
@@ -97,14 +90,9 @@ class FnStmt extends Stmt
             $this->scope->insert('super', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
         }
 
-        // Pre-inject parameters
-        foreach ($this->signature->parameters as $param) {
-            if ($this->scope->hasLocal($param->name)) {
-                throw new ScopeError(Localization::message('SCO060', [$param->name, $this->signature->name]));
-            }
 
-            $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
-        }
+        // Pre-inject parameters
+        $this->signature->injectScope($this->scope);
 
         if ($this->is_short) {
             $this->body->injectScope($this->scope);

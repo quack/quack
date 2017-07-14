@@ -9,8 +9,8 @@ multiple_args(a :: number,b::string,c::boolean)
 end
 %%expect
 class Walkable
-  walk(steps)
-  join(other)
+  walk(steps :: number)
+  join(other :: string)
   not_bang()
-  multiple_args(a, b, c)
+  multiple_args(a :: number, b :: string, c :: boolean)
 end

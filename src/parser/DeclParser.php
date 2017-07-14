@@ -27,6 +27,7 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\ClassStmt;
 use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
+use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
@@ -75,38 +76,38 @@ class DeclParser
 
     public function _fnSignature()
     {
-        $signature = (object)[
-            'name'         => '<anonymous function>',
-            'parameters'   => []
-        ];
+        $name = null;
+        $parameters = [];
+        $type = null;
 
         if ($this->reader->consumeIf('&(')) {
-            $signature->name = '&(' . $this->reader->nextValidOperator() . ')';
+            $name = '&(' . $this->reader->nextValidOperator() . ')';
             $this->reader->match(')');
         } else {
-            $signature->name = $this->name_parser->_identifier();
+            $name = $this->name_parser->_identifier();
         }
 
         $this->reader->match('(');
 
         if (!$this->reader->consumeIf(')')) {
             do {
-                $signature->parameters[] = $this->stmt_parser->_parameter();
+                $parameters[] = $this->stmt_parser->_parameter();
             } while ($this->reader->consumeIf(','));
             $this->reader->match(')');
         }
 
         if ($this->reader->consumeIf('->')) {
             // TODO: See what to do with this type
-            $signature->type = $this->type_parser->_type();
+            $type = $this->type_parser->_type();
         }
 
         // TODO: This should be a node and all the usages too!
-        return $signature;
+        return new FnSignatureStmt($name, $parameters, $type);
     }
 
     public function _fnStmt($is_method = false)
     {
+
         $is_short = false;
         $body = null;
         if (!$is_method) {

@@ -227,7 +227,6 @@ class StmtParser
     public function _foreachStmt()
     {
         $key = null;
-        $by_reference = false;
         $this->reader->match(Tag::T_FOREACH);
 
         if ($this->reader->is(Tag::T_IDENT)) {
@@ -236,11 +235,9 @@ class StmtParser
             if ($this->reader->consumeIf(':')) {
                 $key = $alias;
 
-                $by_reference = $this->reader->consumeIf('*');
                 $alias = $this->name_parser->_identifier();
             }
         } else {
-            $by_reference = $this->reader->consumeIf('*');
             $alias = $this->name_parser->_identifier();
         }
 
@@ -249,7 +246,7 @@ class StmtParser
         $body = iterator_to_array($this->_innerStmtList());
         $this->reader->match(Tag::T_END);
 
-        return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
+        return new ForeachStmt($key, $alias, $iterable, $body);
     }
 
     public function _switchStmt()
@@ -405,16 +402,15 @@ class StmtParser
 
     public function _parameter()
     {
-        $by_reference = $this->reader->consumeIf('*');
         $name = $this->name_parser->_identifier();
-        // TODO: Bind type to parameter
+        $type = null;
         if ($this->reader->consumeIf('::')) {
             $type = $this->type_parser->_type();
         }
 
         return (object)[
-            'name'         => $name,
-            'is_reference' => $by_reference
+            'name' => $name,
+            'type' => $type
         ];
     }
 

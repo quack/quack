@@ -20,50 +20,53 @@
  | along with Quack.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-prefix &(-)
-prefix &(+)
-prefix &(~)
+-- prefix &(-)
+-- prefix &(+)
+-- prefix &(~)
 
--- infixl 3 &(|>)
--- infixl 6 &(??)
-infixl 11 &(|)
-infixl 12 &(^)
-infixl 13 &(&)
-infixl 14 &(=)
--- infixl 14 &(=~)
--- infixl 14 &(<>)
--- infixl 15 &(<=)
--- infixl 15 &(<)
--- infixl 15 &(>=)
--- infixl 15 &(>)
--- infixl 16 &(<<)
--- infixl 16 &(>>)
-infixl 17 &(+)
-infixl 17 &(-)
-infixl 18 &(*)
-infixl 18 &(/)
+-- -- infixl 3 &(|>)
+-- -- infixl 6 &(??)
+-- infixl 11 &(|)
+-- infixl 12 &(^)
+-- infixl 13 &(&)
+-- infixl 14 &(=)
+-- -- infixl 14 &(=~)
+-- -- infixl 14 &(<>)
+-- -- infixl 15 &(<=)
+-- -- infixl 15 &(<)
+-- -- infixl 15 &(>=)
+-- -- infixl 15 &(>)
+-- -- infixl 16 &(<<)
+-- -- infixl 16 &(>>)
+-- infixl 17 &(+)
+-- infixl 17 &(-)
+-- infixl 18 &(*)
+-- infixl 18 &(/)
 
--- infixr 22 &(**)
+-- -- infixr 22 &(**)
 
-native class number
-    &(+)()
-    &(-)()
-    &(~)()
-    &(+)(rhs :: number)
-    &(-)(rhs :: number)
-    &(*)(rhs :: number)
-    &(/)(rhs :: number)
-    &(|)(rhs :: number)
-    &(^)(rhs :: number)
-    &(&)(rhs :: number)
-end
+-- native class number
+--     &(+)()
+--     &(-)()
+--     &(~)()
+--     &(+)(rhs :: number)
+--     &(-)(rhs :: number)
+--     &(*)(rhs :: number)
+--     &(/)(rhs :: number)
+--     &(|)(rhs :: number)
+--     &(^)(rhs :: number)
+--     &(&)(rhs :: number)
+-- end
 
-native fn &(=)(lhs :: a, rhs :: a) -> a
+-- native fn &(=)(lhs :: a, rhs :: a) -> a
 -- native fn &(|>)(lhs :: a, rhs :: &[a] -> b) -> b
 
-class Walkable
-  walk(steps)
-  join(other)
-  not_bang()
-  multiple_args(a, b, c)
+-- class Walkable
+--   walk(steps)
+--   join(other)
+--   not_bang()
+--   multiple_args(a, b, c)
+-- end
+
+fn add(x::number,y::number) -> number
 end

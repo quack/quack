@@ -49,7 +49,13 @@ class ClassStmt extends Stmt
             $source .= $sign->name;
             $source .= '(';
             $source .= implode(', ', array_map(function ($param) {
-                return ($param->is_reference ? '*' : '') . $param->name;
+                $parameter = $param->name;
+
+                if (!is_null($param->type)) {
+                    $parameter .= ' :: ' . $param->type;
+                }
+
+                return $parameter;
             }, $sign->parameters));
 
             $source .= ')';

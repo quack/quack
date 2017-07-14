@@ -70,12 +70,7 @@ abstract class Node
             throw new ScopeError(Localization::message('SCO130', [$named_node->name, $type]));
         }
 
-        // When it is a function and it is marked as public
-        if (Kind::K_FUNCTION === $kind && $named_node->is_pub) {
-            $kind |= Kind::K_PUB;
-        }
-
-        $this->scope->insert($named_node->name, $kind);
+        $this->scope->insert($named_node->name, Kind::K_FUNCTION);
     }
 
     private function getNodeType($node)

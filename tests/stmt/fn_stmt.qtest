@@ -11,7 +11,7 @@ fn fib(n)
   end
 end
 
-fn fact (n)
+fn fact (n) -> number
   let fact :- 1
   for i from 1 to n do fact :- fact * i end
   ^ fact
@@ -28,7 +28,7 @@ fn fib(n)
     ^ fib(n - 1) + fib(n - 2)
   end
 end
-fn fact(n)
+fn fact(n) -> number
   let fact :- 1
   for i from 1 to n
     do fact :- fact * i
