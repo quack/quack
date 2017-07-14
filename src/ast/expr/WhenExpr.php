@@ -47,7 +47,6 @@ class WhenExpr extends Expr
             $obj = $this->cases[$i];
 
             $source .= $parser->indent();
-            $source .= '| ';
 
             if (null !== $obj->condition) {
                 $source .= $obj->condition->format($parser);
@@ -59,7 +58,7 @@ class WhenExpr extends Expr
             $source .= $obj->action->format($parser);
 
             if ($i + 1 !== $l) {
-                $source .= ';';
+                $source .= ',';
                 $source .= PHP_EOL;
             }
         }
