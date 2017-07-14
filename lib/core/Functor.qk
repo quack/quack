@@ -1,5 +1,0 @@
-module Core
-
-class Functor :self <:input, :output>
-    map( fn: &[ :input -> :output ] ) -> :self<:output>
-end

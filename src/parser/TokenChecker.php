@@ -68,16 +68,6 @@ class TokenChecker
         return in_array($next_tag, $possible_stmts, true);
     }
 
-    public function isValidOperatorChar($char)
-    {
-        $operators = [
-            '!', '@', '#', '$', '%', '&', '*', '-', '+', '=', '_', '^', '~',
-            '<', '>', ':', '?', '/', ','
-        ];
-
-        return in_array($char, $operators, true);
-    }
-
     public function isEoF()
     {
         return 0 === $this->reader->lookahead->getTag();

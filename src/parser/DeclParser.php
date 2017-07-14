@@ -85,7 +85,14 @@ class DeclParser
 
         $signature->is_recursive = $this->reader->consumeIf(Tag::T_REC);
         $signature->is_reference = $this->reader->consumeIf('*');
-        $signature->name = $this->name_parser->_identifier();
+
+
+        if ($this->reader->consumeIf('&(')) {
+            $signature->name = '&(' . $this->reader->nextValidOperator() . ')';
+            $this->reader->match(')');
+        } else {
+            $signature->name = $this->name_parser->_identifier();
+        }
 
         $this->reader->match('(');
 

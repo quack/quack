@@ -21,59 +21,50 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 
-class ClassStmt extends Stmt
+class OperatorStmt extends Stmt
 {
-    public $name;
-    public $body;
-    public $native = false;
+    public $type;
+    public $operator;
+    public $precedence;
 
-    public function __construct($name, $body)
+    public function __construct($type, $operator, $precedence)
     {
-        $this->name = $name;
-        $this->body = $body;
+        $this->type = $type;
+        $this->operator = $operator;
+        $this->precedence = $precedence;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->native ? 'native ' : '';
-        $source .= 'class ';
-        $source .= $this->name;
-        $source .= $parser->indent();
-        $source .= PHP_EOL;
-        $parser->openScope();
+        $names = [
+            Tag::T_PREFIX => 'prefix ',
+            Tag::T_INFIXL => 'infixl ',
+            Tag::T_INFIXR => 'infixr '
+        ];
 
-        foreach ($this->body as $sign) {
-            $source .= $parser->indent()
-                . ($sign->is_recursive ? 'rec ' : '')
-                . ($sign->is_reference ? '*' : '')
-                . $sign->name;
+        $source = $names[$this->type];
 
-            $source .= '(';
-            $source .= implode(', ', array_map(function ($param) {
-                return ($param->is_reference ? '*' : '') . $param->name;
-            }, $sign->parameters));
-
-            $source .= ')';
-            $source .= PHP_EOL;
+        if (null !== $this->precedence) {
+            $source .= (string) $this->precedence;
+            $source .= ' ';
         }
 
-        $parser->closeScope();
-        $source .= $parser->indent();
-        $source .= 'end';
+        $source .= '&(' . $this->operator . ')';
         $source .= PHP_EOL;
-
         return $source;
     }
 
     public function injectScope(&$parent_scope)
     {
-        // Pass :)
+        // TODO inject scope for operator stmt, check if operator is not
+        // previously defined in context
     }
 
     public function runTypeChecker()
     {
-        // Pass :)
+        // Pass
     }
 }

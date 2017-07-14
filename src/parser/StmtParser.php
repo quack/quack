@@ -334,21 +334,34 @@ class StmtParser
 
     public function _topStmt()
     {
-        $branch_table = [
-            Tag::T_FN        => '_fnStmt',
-            Tag::T_PUB       => '_fnStmt',
-            Tag::T_MODULE    => '_moduleStmt',
-            Tag::T_ENUM      => '_enumStmt',
-            Tag::T_IMPL      => '_implStmt',
-            Tag::T_CLASS     => '_classStmt',
-            Tag::T_SHAPE     => '_shapeStmt'
+        $decl_table = [
+            Tag::T_FN     => '_fnStmt',
+            Tag::T_PUB    => '_fnStmt',
+            Tag::T_MODULE => '_moduleStmt',
+            Tag::T_ENUM   => '_enumStmt',
+            Tag::T_IMPL   => '_implStmt',
+            Tag::T_CLASS  => '_classStmt',
+            Tag::T_SHAPE  => '_shapeStmt'
+        ];
+
+        $meta_table = [
+            Tag::T_NATIVE => '_nativeStmt',
+            Tag::T_INFIXL => '_operatorStmt',
+            Tag::T_INFIXR => '_operatorStmt',
+            Tag::T_PREFIX => '_operatorStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();
 
-        return array_key_exists($next_tag, $branch_table)
-            ? call_user_func([$this->decl_parser, $branch_table[$next_tag]])
-            : $this->_stmt();
+        if (array_key_exists($next_tag, $decl_table)) {
+            return call_user_func([$this->decl_parser, $decl_table[$next_tag]]);
+        }
+
+        if (array_key_exists($next_tag, $meta_table)) {
+            return call_user_func([$this->meta_parser, $meta_table[$next_tag]]);
+        }
+
+        return $this->_stmt();
     }
 
     public function _innerStmt()
