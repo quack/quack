@@ -137,6 +137,7 @@ import(AST, 'stmt/ImplStmt');
 import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/FnStmt');
+import(AST, 'stmt/FnSignatureStmt');
 import(AST, 'stmt/ForStmt');
 import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/EnumStmt');

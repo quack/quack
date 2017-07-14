@@ -37,10 +37,25 @@ class MetaParser
 
     public function _nativeStmt()
     {
+        $node = null;
         $this->reader->match(Tag::T_NATIVE);
-        $class = $this->decl_parser->_classStmt();
-        $class->native = true;
-        return $class;
+
+        if ($this->reader->is(Tag::T_CLASS)) {
+            $node = $this->decl_parser->_classStmt();
+        } elseif ($this->reader->consumeIf(Tag::T_FN)) {
+            $node = $this->decl_parser->_fnSignature();
+        }
+
+        if ($node !== null) {
+            $node->native = true;
+            return $node;
+        } else {
+            throw new SyntaxError([
+                'expected' => 'class or function declaration',
+                'found'    => $this->reader->lookahead,
+                'parser'   => $this->reader
+            ]);
+        }
     }
 
     public function _operatorStmt()

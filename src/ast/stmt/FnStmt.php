@@ -30,18 +30,17 @@ class FnStmt extends Stmt
 {
     public $signature;
     public $body;
-    public $is_pub;
     public $is_method;
     public $is_short;
+    public $native = false;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($signature, $body, $is_pub, $is_method, $is_short)
+    public function __construct($signature, $body, $is_method, $is_short)
     {
         $this->signature = $signature;
         $this->body = $body;
-        $this->is_pub = $is_pub;
         $this->is_method = $is_method;
         $this->is_short = $is_short;
         // Standard compatibilization for `Named'
@@ -50,18 +49,12 @@ class FnStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = '';
-
-        if (!$this->is_method) {
-            $source = $this->is_pub ? 'pub fn ' : 'fn ';
-        }
-
-        $source .= ($this->signature->is_recursive ? 'rec ' : '')
-                 . ($this->signature->is_reference ? '*' : '')
-                 . $this->signature->name;
+        $source = $this->native ? 'native ' : '';
+        $source .= $this->is_method ? '' : 'fn ';
+        $source .= $this->signature->name;
         $source .= '(';
         $source .= implode(', ', array_map(function ($param) {
-            return ($param->is_reference ? '*' : '') . $param->name;
+            return $param->name;
         }, $this->signature->parameters));
         $source .= ')';
 

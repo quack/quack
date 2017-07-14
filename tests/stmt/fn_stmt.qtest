@@ -3,7 +3,7 @@ Supports formatting fn statements
 %%source
 fn quack() :- console.write ("Quack Quack!")
 
-pub fn fib(n)
+fn fib(n)
   if n = 0 or n = 1
     ^ n
   else
@@ -22,7 +22,7 @@ fn fact (n)
 end
 %%expect
 fn quack() :- console.write("Quack Quack!")
-pub fn fib(n)
+fn fib(n)
   if n = 0 or n = 1 ^ n
   else
     ^ fib(n - 1) + fib(n - 2)

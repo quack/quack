@@ -5,8 +5,6 @@ do &x -> x              -- Identity
 do &[x] -> x            -- Identity with parenthesis
 do &[a, b] -> a         -- Binary
 do &[] -> 1             -- Unit
-do &[*x] -> x           -- Unary, reference param
-do &[*p] -> *p          -- Reference param
 do &[name] -> begin
   do debug.trace( name )
 end
@@ -15,8 +13,6 @@ do &x -> x
 do &[x] -> x
 do &[a, b] -> a
 do &[] -> 1
-do &[*x] -> x
-do &[*p] -> *p
 do &[name] -> begin
   do debug.trace(name)
 end

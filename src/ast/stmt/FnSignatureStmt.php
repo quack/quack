@@ -21,56 +21,30 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
-class ClassStmt extends Stmt
+class FnSignatureStmt extends Stmt
 {
-    public $name;
-    public $body;
-    public $native = false;
-
-    public function __construct($name, $body)
+    public function __construct()
     {
-        $this->name = $name;
-        $this->body = $body;
+
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->native ? 'native ' : '';
-        $source .= 'class ';
-        $source .= $this->name;
-        $source .= $parser->indent();
-        $source .= PHP_EOL;
-        $parser->openScope();
 
-        foreach ($this->body as $sign) {
-            $source .= $parser->indent();
-            $source .= $sign->name;
-            $source .= '(';
-            $source .= implode(', ', array_map(function ($param) {
-                return ($param->is_reference ? '*' : '') . $param->name;
-            }, $sign->parameters));
-
-            $source .= ')';
-            $source .= PHP_EOL;
-        }
-
-        $parser->closeScope();
-        $source .= $parser->indent();
-        $source .= 'end';
-        $source .= PHP_EOL;
-
-        return $source;
     }
 
     public function injectScope(&$parent_scope)
     {
-        // Pass :)
+        // TODO
     }
 
     public function runTypeChecker()
     {
-        // Pass :)
+        // TODO
     }
 }

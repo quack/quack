@@ -117,4 +117,9 @@ class ImplStmt extends Stmt
             $node->injectScope($this->scope);
         }
     }
+
+    public function runTypeChecker()
+    {
+        // TODO
+    }
 }

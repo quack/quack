@@ -336,7 +336,6 @@ class StmtParser
     {
         $decl_table = [
             Tag::T_FN     => '_fnStmt',
-            Tag::T_PUB    => '_fnStmt',
             Tag::T_MODULE => '_moduleStmt',
             Tag::T_ENUM   => '_enumStmt',
             Tag::T_IMPL   => '_implStmt',

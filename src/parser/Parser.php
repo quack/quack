@@ -175,7 +175,7 @@ abstract class Parser
 
     public function isReservedOperator($operator)
     {
-        $reserved = ['::', '.', '?', ':-'];
+        $reserved = ['::', '.', '?', ':-', '->'];
 
         return in_array($operator, $reserved, true);
     }

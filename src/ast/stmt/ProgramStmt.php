@@ -38,6 +38,11 @@ class ProgramStmt extends Stmt
         $source = '';
 
         foreach ($this->stmt_list as $stmt) {
+            // TODO: Remove this after porting signature to a node
+            if ($stmt instanceof \stdClass) {
+                continue;
+            }
+
             $source .= $stmt->format($parser);
         }
 
@@ -50,6 +55,11 @@ class ProgramStmt extends Stmt
         $this->bindDeclarations($this->stmt_list);
 
         foreach ($this->stmt_list as $node) {
+            // TODO: Remove this after porting signature to a node
+            if ($node instanceof \stdClass) {
+                continue;
+            }
+
             $node->injectScope($this->scope);
         }
     }
@@ -57,6 +67,11 @@ class ProgramStmt extends Stmt
     public function runTypeChecker()
     {
         foreach ($this->stmt_list as $node) {
+            // TODO: Remove this after porting signature to a node
+            if ($node instanceof \stdClass) {
+                continue;
+            }
+
             $node->runTypeChecker();
         }
     }

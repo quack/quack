@@ -22,7 +22,6 @@
 
 prefix &(-)
 prefix &(+)
-prefix &(*)
 prefix &(~)
 
 -- infixl 3 &(|>)
@@ -46,4 +45,25 @@ infixl 18 &(/)
 
 -- infixr 22 &(**)
 
-do 'vim: syntax=haskell
+native class number
+    &(+)()
+    &(-)()
+    &(~)()
+    &(+)(rhs :: number)
+    &(-)(rhs :: number)
+    &(*)(rhs :: number)
+    &(/)(rhs :: number)
+    &(|)(rhs :: number)
+    &(^)(rhs :: number)
+    &(&)(rhs :: number)
+end
+
+native fn &(=)(lhs :: a, rhs :: a) -> a
+-- native fn &(|>)(lhs :: a, rhs :: &[a] -> b) -> b
+
+class Walkable
+  walk(steps)
+  join(other)
+  not_bang()
+  multiple_args(a, b, c)
+end
