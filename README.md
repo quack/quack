@@ -36,7 +36,7 @@ The language is metaprogrammable and very extensible. You can easily build exten
 #### Hello World
 
 ```ruby
-fn main
+fn main()
   print "Hello World!"
 end
 ```
@@ -44,16 +44,16 @@ end
 #### Factorial
 
 ```ruby
--: imperative
-fn fact [n]
+[imperative]
+fn fact(n)
   let fact :- 1
   for i from 1 to n do fact :- fact * i
   ^ fact
 end
 
--: tail_call_recursion
-fn fact [n]
-  ^ n = 0 then 1 else n * fact[ n - 1 ]
+[tail_call_recursion]
+fn fact(n)
+  ^ n = 0 then 1 else n * fact(n - 1)
 end
 ```
 

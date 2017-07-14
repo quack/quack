@@ -166,6 +166,7 @@
 
 # Bug fixes and tasks left on AST
 
+  - [x] Fix example on README file
   - [x] Change WhenExpr separators from `|` and `;` to `,`
   - [ ] Create ImportStmt (like ES6)
   - [ ] Make ModuleStmt the first statement of a file.
