@@ -37,7 +37,7 @@ The language is metaprogrammable and very extensible. You can easily build exten
 
 ```ruby
 fn main()
-  print "Hello World!"
+  do print("Hello World!")
 end
 ```
 
@@ -52,9 +52,7 @@ fn fact(n)
 end
 
 [tail_call_recursion]
-fn fact(n)
-  ^ n = 0 then 1 else n * fact(n - 1)
-end
+fn fact(n) :- n = 0 then 1 else n * fact(n - 1)
 ```
 
 ### How does it work?
