@@ -30,18 +30,16 @@ class FnStmt extends Stmt
 {
     public $signature;
     public $body;
-    public $is_pub;
     public $is_method;
     public $is_short;
 
     private $flag_bind_self = false;
     private $flag_bind_super = false;
 
-    public function __construct($signature, $body, $is_pub, $is_method, $is_short)
+    public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short)
     {
         $this->signature = $signature;
         $this->body = $body;
-        $this->is_pub = $is_pub;
         $this->is_method = $is_method;
         $this->is_short = $is_short;
         // Standard compatibilization for `Named'
@@ -50,20 +48,8 @@ class FnStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = '';
-
-        if (!$this->is_method) {
-            $source = $this->is_pub ? 'pub fn ' : 'fn ';
-        }
-
-        $source .= ($this->signature->is_recursive ? 'rec ' : '')
-                 . ($this->signature->is_reference ? '*' : '')
-                 . $this->signature->name;
-        $source .= '(';
-        $source .= implode(', ', array_map(function ($param) {
-            return ($param->is_reference ? '*' : '') . $param->name;
-        }, $this->signature->parameters));
-        $source .= ')';
+        $source = $this->is_method ? '' : 'fn ';
+        $source .= $this->signature->format($parser);
 
         if ($this->is_short) {
             $source .= ' :- ';
@@ -104,14 +90,9 @@ class FnStmt extends Stmt
             $this->scope->insert('super', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
         }
 
-        // Pre-inject parameters
-        foreach ($this->signature->parameters as $param) {
-            if ($this->scope->hasLocal($param->name)) {
-                throw new ScopeError(Localization::message('SCO060', [$param->name, $this->signature->name]));
-            }
 
-            $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
-        }
+        // Pre-inject parameters
+        $this->signature->injectScope($this->scope);
 
         if ($this->is_short) {
             $this->body->injectScope($this->scope);

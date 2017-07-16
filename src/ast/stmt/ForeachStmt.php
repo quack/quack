@@ -33,15 +33,13 @@ use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
 {
-    public $by_reference;
     public $key;
     public $alias;
     public $generator;
     public $body;
 
-    public function __construct($by_reference, $key, $alias, $generator, $body)
+    public function __construct($key, $alias, $generator, $body)
     {
-        $this->by_reference = $by_reference;
         $this->key = $key;
         $this->alias = $alias;
         $this->generator = $generator;
@@ -55,10 +53,6 @@ class ForeachStmt extends Stmt
         if (null !== $this->key) {
             $source .= $this->key;
             $source .= ': ';
-        }
-
-        if ($this->by_reference) {
-            $source .= '*';
         }
 
         $source .= $this->alias;

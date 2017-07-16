@@ -27,6 +27,7 @@ class SymbolDecypher
     {
         $context = &$args[0];
 
+        // TODO: Remove non-reserved operators when using a custom core.qk file
         switch ($method) {
             case '<':
                 return static::tryMatch($context, ['<<', '<>', '<=']);
@@ -42,8 +43,6 @@ class SymbolDecypher
                 return static::tryMatch($context, ['=~']);
             case '|':
                 return static::tryMatch($context, ['|>']);
-            case '^':
-                return static::tryMatch($context, ['^^']);
             case '-':
                 return static::tryMatch($context, ['->']);
             case '&':

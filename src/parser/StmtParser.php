@@ -75,19 +75,6 @@ class StmtParser
         }
     }
 
-    public function _blueprintStmtList()
-    {
-        while (!$this->checker->isEoF()) {
-            switch ($this->reader->lookahead->getTag()) {
-                case Tag::T_FN:
-                    yield $this->_blueprintStmt();
-                    continue 2;
-                default:
-                    break 2;
-            }
-        }
-    }
-
     public function _stmt()
     {
         $branch_table = [
@@ -240,7 +227,6 @@ class StmtParser
     public function _foreachStmt()
     {
         $key = null;
-        $by_reference = false;
         $this->reader->match(Tag::T_FOREACH);
 
         if ($this->reader->is(Tag::T_IDENT)) {
@@ -249,11 +235,9 @@ class StmtParser
             if ($this->reader->consumeIf(':')) {
                 $key = $alias;
 
-                $by_reference = $this->reader->consumeIf('*');
                 $alias = $this->name_parser->_identifier();
             }
         } else {
-            $by_reference = $this->reader->consumeIf('*');
             $alias = $this->name_parser->_identifier();
         }
 
@@ -262,7 +246,7 @@ class StmtParser
         $body = iterator_to_array($this->_innerStmtList());
         $this->reader->match(Tag::T_END);
 
-        return new ForeachStmt($by_reference, $key, $alias, $iterable, $body);
+        return new ForeachStmt($key, $alias, $iterable, $body);
     }
 
     public function _switchStmt()
@@ -347,21 +331,33 @@ class StmtParser
 
     public function _topStmt()
     {
-        $branch_table = [
-            Tag::T_FN        => '_fnStmt',
-            Tag::T_PUB       => '_fnStmt',
-            Tag::T_MODULE    => '_moduleStmt',
-            Tag::T_ENUM      => '_enumStmt',
-            Tag::T_IMPL      => '_implStmt',
-            Tag::T_CLASS     => '_classStmt',
-            Tag::T_SHAPE     => '_shapeStmt'
+        $decl_table = [
+            Tag::T_FN     => '_fnStmt',
+            Tag::T_MODULE => '_moduleStmt',
+            Tag::T_ENUM   => '_enumStmt',
+            Tag::T_IMPL   => '_implStmt',
+            Tag::T_CLASS  => '_classStmt',
+            Tag::T_SHAPE  => '_shapeStmt'
+        ];
+
+        $meta_table = [
+            Tag::T_NATIVE => '_nativeStmt',
+            Tag::T_INFIXL => '_operatorStmt',
+            Tag::T_INFIXR => '_operatorStmt',
+            Tag::T_PREFIX => '_operatorStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();
 
-        return array_key_exists($next_tag, $branch_table)
-            ? call_user_func([$this->decl_parser, $branch_table[$next_tag]])
-            : $this->_stmt();
+        if (array_key_exists($next_tag, $decl_table)) {
+            return call_user_func([$this->decl_parser, $decl_table[$next_tag]]);
+        }
+
+        if (array_key_exists($next_tag, $meta_table)) {
+            return call_user_func([$this->meta_parser, $meta_table[$next_tag]]);
+        }
+
+        return $this->_stmt();
     }
 
     public function _innerStmt()
@@ -376,18 +372,6 @@ class StmtParser
         return array_key_exists($next_tag, $branch_table)
             ? call_user_func([$this, $branch_table[$next_tag]])
             : $this->_stmt();
-    }
-
-    public function _blueprintStmt()
-    {
-        $branch_table = [
-            Tag::T_FN => '_fnStmt',
-        ];
-
-        return call_user_func([
-            $this,
-            $branch_table[$this->reader->lookahead->getTag()]
-        ]);
     }
 
     public function _constStmt()
@@ -418,16 +402,15 @@ class StmtParser
 
     public function _parameter()
     {
-        $by_reference = $this->reader->consumeIf('*');
         $name = $this->name_parser->_identifier();
-        // TODO: Bind type to parameter
+        $type = null;
         if ($this->reader->consumeIf('::')) {
             $type = $this->type_parser->_type();
         }
 
         return (object)[
-            'name'         => $name,
-            'is_reference' => $by_reference
+            'name' => $name,
+            'type' => $type
         ];
     }
 

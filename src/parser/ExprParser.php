@@ -86,8 +86,6 @@ class ExprParser
 
         $this->prefix('+', Precedence::PREFIX);
         $this->prefix('-', Precedence::PREFIX);
-        $this->prefix('^^', Precedence::PREFIX);
-        $this->prefix('*', Precedence::PREFIX);
         $this->prefix('~', Precedence::PREFIX);
         $this->prefix(Tag::T_NOT, Precedence::PREFIX);
 
