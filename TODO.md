@@ -133,7 +133,6 @@
   - [x] LabelStmt
   - [x] LetStmt
   - [x] ModuleStmt
-  - [ ] OpenStmt
   - [x] PostConditionalStmt
   - [x] RaiseStmt
   - [x] ReturnStmt
@@ -164,3 +163,12 @@
   - [x] TernaryExpr
   - [x] WhenExpr
   - [x] WhereExpr
+
+# Bug fixes and tasks left on AST
+
+  - [x] Fix example on README file
+  - [x] Change WhenExpr separators from `|` and `;` to `,`
+  - [ ] Create ImportStmt (like ES6)
+  - [ ] Make ModuleStmt the first statement of a file.
+  - [ ] Check and fix ImplStmt
+  - [ ] Fix WhereExpr and change from `;` to `,`

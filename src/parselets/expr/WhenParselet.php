@@ -33,31 +33,30 @@ class WhenParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $cases = [];
+        $default = null;
 
         do {
-            $grammar->reader->match('|');
-
-            // Default operation
-            if ($grammar->reader->is(Tag::T_ELSE)) {
+            // Only one default operation allowed
+            if (null === $default && $grammar->reader->is(Tag::T_ELSE)) {
                 $grammar->reader->consume();
                 $default = new \stdClass;
                 $default->condition = null;
                 $default->action = $grammar->_expr();
                 $cases[] = $default;
-                goto fetch_next;
+            } else {
+                $case = new \stdClass;
+                $case->condition = $grammar->_expr();
+                $grammar->reader->match('->');
+                $case->action = $grammar->_expr();
+                $cases[] = $case;
             }
 
-            $case = new \stdClass;
-            $case->condition = $grammar->_expr();
-            $grammar->reader->match('->');
-            $case->action = $grammar->_expr();
-            $cases[] = $case;
-
-            fetch_next:
             if (!$grammar->reader->is(Tag::T_END)) {
-                $grammar->reader->match(';');
+                $grammar->reader->match(',');
+            } else {
+                break;
             }
-        } while ($grammar->reader->is('|'));
+        } while (true);
 
         $grammar->reader->match(Tag::T_END);
 
