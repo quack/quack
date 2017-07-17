@@ -43,7 +43,8 @@ function session()
         $session = (object) [
             'command' => '',
             'complete_stmt' => true,
-            'program_ast' => null
+            'program_ast' => null,
+            'core' => file_get_contents(dirname(__FILE__) . '/../../lib/core.qk')
         ];
     }
 
@@ -126,16 +127,8 @@ function readline_callback($command)
 
     try {
         $parser->parse();
-        if (null === $session->program_ast) {
-            $global_scope = new Scope();
-            $parser->ast->injectScope($global_scope);
-            $parser->ast->runTypeChecker();
-            // It will only save if success
-            $session->program_ast = $parser->ast;
-        } else {
-            // attachValidAST will injectScope and run type checker automatically
-            $session->program_ast->attachValidAST($parser->ast);
-        }
+        // attachValidAST will injectScope and run type checker automatically
+        $session->program_ast->attachValidAST($parser->ast);
 
         $session->complete_stmt = true;
         /* when */// args_have('-a', '--ast') && var_dump($parser->ast);
@@ -164,6 +157,15 @@ function readline_callback($command)
 
 function repl()
 {
+    $session = session();
+    $lexer = new Tokenizer($session->core);
+    $parser = new TokenReader($lexer);
+    $parser->parse();
+    $global_scope = new Scope();
+    $parser->ast->injectScope($global_scope);
+    $parser->ast->runTypeChecker();
+    $session->program_ast = $parser->ast;
+
     $title = "Quack interactive mode";
     if (isPOSIX()) {
         fwrite(STDOUT, "\x1b]2;{$title}\x07");
