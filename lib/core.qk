@@ -1,4 +1,4 @@
-#!/usr/bin/php /home/haskell/projects/quack/src/Quack.php
+#!/usr/bin/php /quack/quack/src/Quack.php
 {-
  | Quack Compiler and toolkit
  | Copyright (C) 2016 Marcelo Camargo <marcelocamargo@linuxmail.org> and
@@ -20,17 +20,17 @@
  | along with Quack.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
--- prefix &(-)
--- prefix &(+)
--- prefix &(~)
+prefix &(-)
+prefix &(+)
+prefix &(~)
 
 -- -- infixl 3 &(|>)
 -- -- infixl 6 &(??)
--- infixl 11 &(|)
--- infixl 12 &(^)
--- infixl 13 &(&)
--- infixl 14 &(=)
--- -- infixl 14 &(=~)
+infixl 11 &(|)
+infixl 12 &(^)
+infixl 13 &(&)
+infixl 14 &(=)
+-- infixl 14 &(=~)
 -- -- infixl 14 &(<>)
 -- -- infixl 15 &(<=)
 -- -- infixl 15 &(<)
@@ -38,35 +38,25 @@
 -- -- infixl 15 &(>)
 -- -- infixl 16 &(<<)
 -- -- infixl 16 &(>>)
--- infixl 17 &(+)
--- infixl 17 &(-)
--- infixl 18 &(*)
--- infixl 18 &(/)
+infixl 17 &(+)
+infixl 17 &(-)
+infixl 18 &(*)
+infixl 18 &(/)
 
 -- -- infixr 22 &(**)
 
--- native class number
---     &(+)()
---     &(-)()
---     &(~)()
---     &(+)(rhs :: number)
---     &(-)(rhs :: number)
---     &(*)(rhs :: number)
---     &(/)(rhs :: number)
---     &(|)(rhs :: number)
---     &(^)(rhs :: number)
---     &(&)(rhs :: number)
--- end
-
--- native fn &(=)(lhs :: a, rhs :: a) -> a
--- native fn &(|>)(lhs :: a, rhs :: &[a] -> b) -> b
-
--- class Walkable
---   walk(steps)
---   join(other)
---   not_bang()
---   multiple_args(a, b, c)
--- end
-
-fn add(x::number,y::number) -> number
+native class number
+    &(+)() -> number
+    &(-)() -> number
+    &(~)() -> number
+    &(+)(rhs :: number) -> number
+    &(-)(rhs :: number) -> number
+    &(*)(rhs :: number) -> number
+    &(/)(rhs :: number) -> number
+    &(|)(rhs :: number) -> number
+    &(^)(rhs :: number) -> number
+    &(&)(rhs :: number) -> number
 end
+
+native fn &(=)(lhs :: a, rhs :: a) -> boolean
+-- native fn &(|>)(lhs :: a, rhs :: &[a] -> b) -> b
