@@ -139,6 +139,7 @@ import(AST, 'stmt/ForStmt');
 import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/EnumStmt');
 import(AST, 'stmt/ExprStmt');
+import(AST, 'stmt/FnSignatureStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');

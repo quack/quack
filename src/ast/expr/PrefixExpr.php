@@ -75,9 +75,6 @@ class PrefixExpr extends Expr
                 }
 
                 throw $type_error;
-            case '^^':
-            case '*':
-                return clone $right_type;
         }
     }
 }

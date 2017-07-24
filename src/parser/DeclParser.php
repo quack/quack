@@ -27,6 +27,7 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\ClassStmt;
 use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
+use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
@@ -50,7 +51,7 @@ class DeclParser
         $name = $this->name_parser->_identifier();
         $body = [];
 
-        while ($this->reader->is(Tag::T_IDENT)) {
+        while (0 !== $this->reader->lookahead->getTag() && ! $this->reader->is(Tag::T_END)) {
             $body[] = $this->_fnSignature();
         }
 
@@ -76,40 +77,35 @@ class DeclParser
 
     public function _fnSignature()
     {
-        $signature = (object)[
-            'is_recursive' => false,
-            'is_reference' => false,
-            'name'         => '<anonymous function>',
-            'parameters'   => []
-        ];
-
-        $signature->is_recursive = $this->reader->consumeIf(Tag::T_REC);
-        $signature->is_reference = $this->reader->consumeIf('*');
-        $signature->name = $this->name_parser->_identifier();
+        $name = null;
+        $parameters = [];
+        $type = null;
+        $name = $this->name_parser->_identifier();
 
         $this->reader->match('(');
 
         if (!$this->reader->consumeIf(')')) {
             do {
-                $signature->parameters[] = $this->stmt_parser->_parameter();
+                $parameters[] = $this->stmt_parser->_parameter();
             } while ($this->reader->consumeIf(','));
             $this->reader->match(')');
         }
 
-        return $signature;
+        if ($this->reader->consumeIf('->')) {
+            $type = $this->type_parser->_type();
+        }
+
+        return new FnSignatureStmt($name, $parameters, $type);
     }
 
     public function _fnStmt($is_method = false)
     {
-        $is_pub = false;
         $is_short = false;
         $body = null;
 
         if (!$is_method) {
-            $is_pub = $this->reader->consumeIf(Tag::T_PUB);
             $this->reader->match(Tag::T_FN);
         }
-
         $signature = $this->_fnSignature();
 
         // Is short method?
@@ -121,7 +117,7 @@ class DeclParser
             $this->reader->match(Tag::T_END);
         }
 
-        return new FnStmt($signature, $body, $is_pub, $is_method, $is_short);
+        return new FnStmt($signature, $body, $is_method, $is_short);
     }
 
     public function _implStmt()

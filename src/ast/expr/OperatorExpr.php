@@ -46,7 +46,7 @@ class OperatorExpr extends Expr
 
     private function isMemberAccess()
     {
-        return '.' === $this->operator || '?.' === $this->operator;
+        return '.' === $this->operator;
     }
 
     public function format(Parser $parser)

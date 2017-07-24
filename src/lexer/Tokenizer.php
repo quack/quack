@@ -39,9 +39,7 @@ class Tokenizer extends Lexer
             }
 
             if ((ctype_alpha($this->peek) || $this->is('_'))
-                ||
-                ($this->is('_') && ctype_alnum((string) $this->preview()))
-                ) {
+                || ($this->is('_') && ctype_alnum((string) $this->preview()))) {
                     return $this->identifier();
             }
 

@@ -46,7 +46,6 @@ class Tag
     const T_WHILE = 264;
     const T_DO = 265;
     const T_MODULE = 269;
-    const T_EXTENSION = 271;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
@@ -83,8 +82,6 @@ class Tag
     const T_IMPL = 309;
     const T_CLASS = 310;
     const T_SHAPE = 311;
-    const T_PUB = 312;
-    const T_REC = 313;
 
     public static function getOperatorLexeme($op)
     {
@@ -142,6 +139,6 @@ class Tag
     {
         $token_name = array_search($tag, (new ReflectionClass(__CLASS__))->getConstants(), true);
         // Yeah, I need to do a strict check here (for the glory of Satan of course)
-        return false === $token ? $tag : $token_name;
+        return false === $token_name ? $tag : $token_name;
     }
 }
