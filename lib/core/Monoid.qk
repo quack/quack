@@ -1,6 +1,0 @@
-module Core
-
-class Monoid :self
-    empty! -> :self
-    append( :self ) -> :self
-end
