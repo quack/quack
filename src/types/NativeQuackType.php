@@ -46,4 +46,3 @@ class NativeQuackType
     // let arr :- <list.of(int)>{}
     // arr.push[ 1 ] (* pass *)
 }
-

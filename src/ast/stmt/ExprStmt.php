@@ -66,6 +66,8 @@ class ExprStmt extends Stmt
             $type_list[] = $expr->getType();
         }
 
-        var_dump(array_map(function ($type) { return (string) $type; }, $type_list));
+        var_dump(array_map(function ($type) {
+            return (string) $type;
+        }, $type_list));
     }
 }

@@ -71,7 +71,8 @@ class IfStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope) {
+    public function injectScope(&$parent_scope)
+    {
         // Bind scope in the body of if-statement
         $this->body->createScopeWithParent($parent_scope);
         $this->body->bindDeclarations($this->body->stmt_list);

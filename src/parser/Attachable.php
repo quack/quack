@@ -25,8 +25,7 @@ trait Attachable
 {
     public function attachParsers($parsers)
     {
-        foreach ($parsers as $name => $parser)
-        {
+        foreach ($parsers as $name => $parser) {
             $this->{$name} = $parser;
         }
     }

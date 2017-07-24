@@ -148,10 +148,7 @@ class SyntaxError extends Exception
 
         return $offset + (0 === $found_tag
             ? -1
-            : strlen(null !== $token_val
-                ? $token_val
-                : $found_tag
-            ));
+            : strlen(null !== $token_val ? $token_val : $found_tag));
     }
 
     private function getOriginalSource()

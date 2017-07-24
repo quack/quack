@@ -85,9 +85,7 @@ class Tokenizer extends Lexer
         $number = $this->readChar();
 
         // check if the number is /0.{1}[0-9a-fA-F]/
-        if (!$this->isEnd() && $number === '0' &&
-            ctype_xdigit($this->preview())) {
-
+        if (!$this->isEnd() && $number === '0' && ctype_xdigit($this->preview())) {
             $tag = Tag::T_INT_HEX;
             $found = false;
             if ($this->peek === 'x') { // we know that preview is hexadec
@@ -146,9 +144,9 @@ class Tokenizer extends Lexer
         // check optional exp state: looking for a 'e', 'e+' or 'e-' and integers
         if (!$this->isEnd() && $this->is('e')) {
             if (ctype_digit($this->preview())) {
-              $tag = Tag::T_DOUBLE_EXP;
-              $buffer[] = $this->readChar(); // append 'e'
-              $buffer = array_merge($buffer, $this->integer());
+                $tag = Tag::T_DOUBLE_EXP;
+                $buffer[] = $this->readChar(); // append 'e'
+                $buffer = array_merge($buffer, $this->integer());
             } else if (($this->preview() === '+' || $this->preview() === '-')
               && ctype_digit($this->preview(2))) {
                 $tag = Tag::T_DOUBLE_EXP;

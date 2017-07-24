@@ -73,7 +73,8 @@ class ShapeStmt extends Stmt
         }
     }
 
-    public function runTypeChecker() {
+    public function runTypeChecker()
+    {
         // TODO: Implement type checking for shape
     }
 }

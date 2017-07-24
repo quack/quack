@@ -130,7 +130,9 @@ class TryStmt extends Stmt
     {
         $this->try->runTypeChecker();
 
-        foreach (array_map(function ($item) { return (object) $item; }, $this->rescues) as $rescue) {
+        foreach (array_map(function ($item) {
+            return (object) $item;
+        }, $this->rescues) as $rescue) {
             $rescue->body->runTypeChecker();
         }
 
