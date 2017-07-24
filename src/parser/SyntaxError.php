@@ -24,6 +24,7 @@ namespace QuackCompiler\Parser;
 use \Exception;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Lexer\Word;
 
 define('BEGIN_RED', "\033[01;31m");
 define('END_RED', "\033[0m");
@@ -130,7 +131,7 @@ class SyntaxError extends Exception
 
     private function getFoundTokenSize()
     {
-        if ($this->found instanceof \QuackCompiler\Lexer\Word) {
+        if ($this->found instanceof Word) {
             // Keyword found
             return strlen($this->found->lexeme);
         }

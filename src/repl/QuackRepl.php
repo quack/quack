@@ -106,11 +106,14 @@ function readline_callback($command)
         case ':quit':
         case ':q':
             exit;
+            // no break
         case 'show c':
             print_entire_license();
             goto next;
+            // no break
         case '':
             goto next;
+            // no break
         case ':clear':
             $clear = isPOSIX() ? 'clear' : 'cls';
             system($clear);
