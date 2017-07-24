@@ -19,6 +19,7 @@ let celao :: %Person
 let f1 :: &string
 let f2 :: &[string] -> unit
 let f3 :: &[string, byte] -> &[@me | @you] -> number
+let id :: &a -> a
 
 %%expect
 let name
@@ -36,3 +37,4 @@ let celao
 let f1
 let f2
 let f3
+let id
