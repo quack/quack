@@ -9,8 +9,6 @@ php:
 install:
   - pip install --user hy==0.11.1
   - pip install --user termcolor
-  - pyrus install pear/PHP_CodeSniffer
-  - phpenv rehash
   - export PATH=$PATH:$HOME/.local/bin
 
-script: make lint && hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
+script: hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
