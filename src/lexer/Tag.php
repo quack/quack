@@ -138,8 +138,10 @@ class Tag
         return $op_table;
     }
 
-    public static function getName($x)
+    public static function getName($tag)
     {
-        return array_search($x, (new ReflectionClass(__CLASS__))->getConstants());
+        $token_name = array_search($tag, (new ReflectionClass(__CLASS__))->getConstants(), true);
+        // Yeah, I need to do a strict check here (for the glory of Satan of course)
+        return false === $token ? $tag : $token_name;
     }
 }

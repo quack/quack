@@ -37,50 +37,40 @@ class LiteralParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $tag = $token->getTag();
+        $content = $token->getContent();
 
         switch ($tag) {
             case Tag::T_ATOM:
-                return new AtomExpr($grammar->reader->resolveScope($token->getPointer()));
+                return new AtomExpr($content);
 
             case Tag::T_STRING:
-                return new StringExpr($grammar->reader->resolveScope($token->getPointer()),
-                    $token->metadata['delimiter']);
+                return new StringExpr($content, $token->metadata['delimiter']);
 
             case Tag::T_DOUBLE:
             case Tag::T_INTEGER:
-                return new NumberExpr($grammar->reader->resolveScope($token->getPointer()),
-                    $tag === Tag::T_DOUBLE ? 'double' : 'int'
-                );
+                return new NumberExpr($content, $tag === Tag::T_DOUBLE ? 'double' : 'int');
 
             case Tag::T_INT_HEX:
-                return new NumberExpr(
-                    $grammar->reader->resolveScope($token->getPointer()),
-                    'int', 'hexadec');
+                return new NumberExpr($content, 'int', 'hexadec');
 
             case Tag::T_INT_OCT:
-                return new NumberExpr(
-                    $grammar->reader->resolveScope($token->getPointer()),
-                    'int', 'octal');
+                return new NumberExpr($content, 'int', 'octal');
 
             case Tag::T_INT_BIN:
-                return new NumberExpr(
-                    $grammar->reader->resolveScope($token->getPointer()),
-                    'int', 'binary');
+                return new NumberExpr($content, 'int', 'binary');
 
             case Tag::T_DOUBLE_EXP:
-                return new NumberExpr(
-                    $grammar->reader->resolveScope($token->getPointer()),
-                    'double', 'scientific');
+                return new NumberExpr($content, 'double', 'scientific');
 
             case Tag::T_NIL:
-                return new NilExpr;
+                return new NilExpr();
 
             case Tag::T_TRUE:
             case Tag::T_FALSE:
                 return new BoolExpr($tag === Tag::T_TRUE);
 
             case Tag::T_REGEX:
-                return new RegexExpr($grammar->reader->resolveScope($token->getPointer()));
+                return new RegexExpr($content);
         }
     }
 }

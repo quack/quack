@@ -36,7 +36,7 @@ class NameParser
 
     public function _identifier()
     {
-        return $this->reader->resolveScope($this->reader->match(Tag::T_IDENT));
+        return $this->reader->match(Tag::T_IDENT);
     }
 
     public function _qualifiedName()

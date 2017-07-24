@@ -144,9 +144,7 @@ class SyntaxError extends Exception
             $offset += 2;
         }
 
-        $token_val = $this->reader->input->getSymbolTable()->get(
-            $this->found->getPointer()
-        );
+        $token_val = $this->found->getContent();
 
         return $offset + (0 === $found_tag
             ? -1

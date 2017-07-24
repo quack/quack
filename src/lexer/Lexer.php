@@ -32,8 +32,7 @@ abstract class Lexer
 
     protected $words = [];
 
-    public $symbol_table;
-    public $keywords_hash = [];
+    public $keywords = [];
 
     public function __construct($input)
     {
@@ -43,7 +42,6 @@ abstract class Lexer
             exit;
         }
 
-        $this->symbol_table = new SymbolTable;
         $this->input = $input;
         $this->peek  = $input[0];
 
@@ -95,7 +93,7 @@ abstract class Lexer
 
     private function reserve(Word $t)
     {
-        $this->keywords_hash[$t->getTag()] = $t->lexeme;
+        $this->keywords[$t->getTag()] = $t->lexeme;
         $this->words[$t->lexeme] = $t;
     }
 
@@ -169,11 +167,6 @@ abstract class Lexer
     public function is($symbol)
     {
         return $this->peek === $symbol;
-    }
-
-    public function isNot($symbol)
-    {
-        return $this->peek !== $symbol;
     }
 
     abstract public function nextToken();
