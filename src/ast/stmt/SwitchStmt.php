@@ -74,7 +74,7 @@ class SwitchStmt extends Stmt
         foreach ($this->cases as $case) {
             if (!$case->is_else) {
                 $case_type = $case->value->getType();
-                if (!$case_type->isExactlySameAs($value_type)) {
+                if (!$value_type->check($case_type)) {
                     throw new TypeError(Localization::message('TYP150', [$value_type, $case_type]));
                 }
             } else {

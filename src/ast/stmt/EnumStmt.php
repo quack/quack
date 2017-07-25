@@ -87,15 +87,6 @@ class EnumStmt extends Stmt implements Membered
     public function getMembers()
     {
         // TODO: Remodel subtyping. See paper https://hal.inria.fr/hal-00695034/document
-        $type = new Type(NativeQuackType::T_ENUM);
-        $type->subtype = $this->name;
-        $members = [];
-        foreach ($this->entries as $entry) {
-            $members[$entry] = [
-                'type' => (string) $type
-            ];
-        }
-
-        return $members;
+        return null;
     }
 }

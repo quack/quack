@@ -21,7 +21,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Util;
+use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
@@ -107,8 +108,8 @@ class ForeachStmt extends Stmt
         // Map { key -> value } = ∀ a b. Map { a' -> b' }
         $generator_type = $this->generator->getType();
 
-        // When the element has no subtype to be an iterable
-        if (null === $generator_type->subtype) {
+        // When the element is not iterable
+        if (!$generator_type->isIterable()) {
             throw new TypeError(Localization::message('TYP260', [$generator_type]));
         }
 

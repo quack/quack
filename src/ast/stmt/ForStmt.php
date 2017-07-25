@@ -22,13 +22,13 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class ForStmt extends Stmt
@@ -109,7 +109,7 @@ class ForStmt extends Stmt
             }
         }
 
-        $this->scope->setMeta(Meta::M_TYPE, $this->variable, new Type(NativeQuackType::T_NUMBER));
+        $this->scope->setMeta(Meta::M_TYPE, $this->variable, new LiteralType(NativeQuackType::T_NUMBER));
         $this->body->runTypeChecker();
     }
 }

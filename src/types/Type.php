@@ -126,46 +126,4 @@ class Type
     {
         return null !== $this->subtype;
     }
-
-    public function isExactlySameAs(Type $other)
-    {
-        if ($this->hasSubType() && $other->hasSubtype()) {
-            if ($this->code !== $other->code) {
-                return false;
-            }
-
-            switch ($this->code) {
-                case NativeQuackType::T_LIST:
-                    return $this->subtype->isExactlySameAs($other->subtype);
-                case NativeQuackType::T_MAP:
-                    return $this->subtype['key']->isExactlySameAs($other->subtype['key'])
-                        && $this->subtype['value']->isExactlySameAs($other->subtype['value']);
-                default:
-                    return false;
-            }
-        }
-
-        return $this->code === $other->code;
-    }
-
-    public function getDeepestSubtype()
-    {
-        if ($this->hasSubtype()) {
-            switch ($this->code) {
-                case NativeQuackType::T_LIST:
-                    return $this->subtype->getDeepestSubtype();
-                case NativeQuackType::T_MAP:
-                    return [$this->subtype['key']->getDeepestSubtype(), $this->subtype['value']->getDeepestSubtype()];
-            }
-        }
-
-        return $this;
-    }
-
-    public function importFrom(Type $type)
-    {
-        $this->code = $type->code;
-        $this->subtype = $type->subtype;
-        $this->props = $type->props;
-    }
 }

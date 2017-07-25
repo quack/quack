@@ -12,7 +12,7 @@
 [x] Return type for NilExpr
 [x] Return type for NumberExpr
 [x] Return type for ObjectExpr
-[ ] Return type for OperatorExpr
+[x] Return type for OperatorExpr
 [/] Return type for PartialFuncExpr
 [x] Return type for PostfixExpr
 [x] Return type for PrefixExpr

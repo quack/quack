@@ -60,4 +60,16 @@ abstract class TypeNode
         return $this instanceof LiteralType
             && NativeQuackType::T_BOOL === $this->code;
     }
+
+    public function isRegex()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_REGEX === $this->code;
+    }
+
+    public function isIterable()
+    {
+        return $this instanceof MapType
+            || $this instanceof ListType;
+    }
 }
