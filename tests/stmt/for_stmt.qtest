@@ -1,14 +1,14 @@
 %%describe
 Supports formatting for statements
 %%source
-let fact :- 1, n :- 10
+let fact :- 1 let n :- 10
 for i from 1 to n do fact :- fact * i end
 for j from -2 to 8 by 2
   continue
 end
 %%expect
 let fact :- 1
-  , n :- 10
+let n :- 10
 for i from 1 to n
   do fact :- fact * i
 end

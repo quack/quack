@@ -41,7 +41,8 @@ class LiteralType extends TypeNode
             NativeQuackType::T_REGEX  => 'regex',
             NativeQuackType::T_BLOCK  => 'block',
             NativeQuackType::T_UNIT   => 'unit',
-            NativeQuackType::T_NIL    => 'nil'
+            NativeQuackType::T_NIL    => 'nil',
+            NativeQuackType::T_BYTE   => 'byte'
         ];
 
         return $this->parenthesize(

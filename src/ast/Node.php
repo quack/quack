@@ -44,24 +44,19 @@ abstract class Node
 
     private function bindVariableDecl($var)
     {
-        foreach ($var->definitions as $def) {
-            $name = &$def[0];
-            $value = &$def[1];
-
-            if ($this->scope->hasLocal($name)) {
-                throw new ScopeError(Localization::message('SCO130', [$name, 'variable']));
-            }
-
-            $bitfield = Kind::K_VARIABLE;
-            if (null !== $value) {
-                $bitfield |= Kind::K_INITIALIZED;
-            }
-            if (!($var instanceof ConstStmt)) {
-                $bitfield |= Kind::K_MUTABLE;
-            }
-
-            $this->scope->insert($name, $bitfield);
+        if ($this->scope->hasLocal($var->name)) {
+            throw new ScopeError(Localization::message('SCO130', [$var->name, 'variable']));
         }
+
+        $flags = Kind::K_VARIABLE;
+        if (null !== $var->value) {
+            $flags |= Kind::K_INITIALIZED;
+        }
+        if (!($var instanceof ConstStmt)) {
+            $flags |= Kind::K_MUTABLE;
+        }
+
+        $this->scope->insert($var->name, $flags);
     }
 
     private function bindDecl($named_node, $type, $kind)
