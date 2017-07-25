@@ -54,4 +54,10 @@ abstract class TypeNode
         return $this instanceof LiteralType
             && NativeQuackType::T_STR === $this->code;
     }
+
+    public function isBoolean()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_BOOL === $this->code;
+    }
 }
