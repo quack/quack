@@ -16,8 +16,8 @@
 [ ] Return type for PartialFuncExpr
 [ ] Return type for PostfixExpr
 [ ] Return type for PrefixExpr
-[ ] Return type for RangeExpr
-[ ] Return type for RegexExpr
+[x] Return type for RangeExpr
+[x] Return type for RegexExpr
 [x] Return type for StringExpr
 [ ] Return type for TernaryExpr
 [ ] Return type for WhenExpr
