@@ -19,8 +19,8 @@
 [x] Return type for RangeExpr
 [x] Return type for RegexExpr
 [x] Return type for StringExpr
-[ ] Return type for TernaryExpr
-[ ] Return type for WhenExpr
-[ ] Return type for WhereExpr
+[x] Return type for TernaryExpr
+[x] Return type for WhenExpr
+[x] Return type for WhereExpr
 
 [ ] Type checking must display the stack of comparisons when find wrong types

@@ -103,7 +103,7 @@ class WhenExpr extends Expr
 
             if (null === $type) {
                 $type = $action_type;
-            } else if (!$type->isExactlySameAs($action_type)) {
+            } else if (!$type->check($action_type)) {
                 // After initializing the first type, let's compare the others
                 throw new TypeError(Localization::message('TYP210', [$type, $conds, $action_type]));
             }
