@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
@@ -90,13 +91,11 @@ class ObjectExpr extends Expr
 
     public function getType()
     {
-        $newtype = new Type(NativeQuackType::T_OBJ);
-        $newtype->props = [];
-
-        for ($i = 0, $size_t = sizeof($this->keys); $i < $size_t; $i++) {
-            $newtype->props[$this->keys[$i]] = $this->values[$i]->getType();
+        $properties = [];
+        for ($i = 0, $size = sizeof($this->keys); $i < $size; $i++) {
+            $properties[$this->keys[$i]] = $this->values[$i]->getType();
         }
 
-        return $newtype;
+        return new ObjectType($properties);
     }
 }

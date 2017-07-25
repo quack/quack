@@ -33,11 +33,34 @@ class ObjectType extends TypeNode
     public function __toString()
     {
         $source = '%{';
-        foreach ($this->properties as $name => $type) {
-            $source .= $name . ': ' . $type;
-        }
+        $source .= implode(', ', array_map(function ($name) {
+            return "{$name}: {$this->properties[$name]}";
+        }, array_keys($this->properties)));
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof ObjectType)) {
+            return false;
+        }
+
+        // Get all properties that are in this object but not in the other
+        $different_properties = array_diff_key($this->properties, $other->properties);
+        if (sizeof($different_properties) > 0) {
+            // If there is something like %{a:1}, %{}, so, we are missing `a'
+            return false;
+        }
+
+        // When properties match their names, try matching their types
+        foreach (array_keys($this->properties) as $property) {
+            if (!$this->properties[$property]->check($other->properties[$property])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

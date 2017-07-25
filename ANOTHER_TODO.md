@@ -11,7 +11,7 @@
 [ ] Return type for NewExpr
 [x] Return type for NilExpr
 [x] Return type for NumberExpr
-[ ] Return type for ObjectExpr
+[x] Return type for ObjectExpr
 [ ] Return type for OperatorExpr
 [ ] Return type for PartialFuncExpr
 [ ] Return type for PostfixExpr
@@ -22,3 +22,5 @@
 [ ] Return type for TernaryExpr
 [ ] Return type for WhenExpr
 [ ] Return type for WhereExpr
+
+[ ] Type checking must display the stack of comparisons when find wrong types
