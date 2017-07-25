@@ -21,9 +21,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
+use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Scope\Meta;
 
 class LetStmt extends Stmt
@@ -66,10 +67,25 @@ class LetStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // TODO: Throw error when there are neither value nor type signature
-        if (!is_null($this->value)) {
-            $type = $this->value->getType();
-            $this->scoperef->setMeta(Meta::M_TYPE, $this->name, $type);
+        $type = null;
+        // No type, no value. Free variable
+        if (is_null($this->type) && is_null($this->value)) {
+            throw new TypeError(Localization::message('TYP290', [$this->name]));
         }
+
+        // type ^ value | type & value
+        if (is_null($this->value)) {
+            $type = $this->type;
+        } else if (is_null($this->type)) {
+            $type = $this->value->getType();
+        } else {
+            $value_type = $this->value->getType();
+            if (!$this->type->check($value_type)) {
+                throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
+            }
+            $type = $this->type;
+        }
+
+        $this->scoperef->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }

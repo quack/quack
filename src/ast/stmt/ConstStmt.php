@@ -21,8 +21,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Types\TypeError;
 
 class ConstStmt extends Stmt
 {
@@ -59,7 +61,17 @@ class ConstStmt extends Stmt
 
     public function runTypeChecker()
     {
-        $type = $this->value->getType();
+        $value_type = $this->value->getType();
+        $type = null;
+        if (is_null($this->type)) {
+            $type = $value_type;
+        } else {
+            if (!$this->type->check($value_type)) {
+                throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
+            }
+            $type = $this->type;
+        }
+
         $this->scoperef->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }
