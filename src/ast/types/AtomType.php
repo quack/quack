@@ -34,4 +34,13 @@ class AtomType extends TypeNode
     {
         return $this->parenthesize($this->name);
     }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof AtomType)) {
+            return false;
+        }
+
+        return $this->name === $other->name;
+    }
 }
