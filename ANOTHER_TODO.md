@@ -14,7 +14,7 @@
 [x] Return type for ObjectExpr
 [ ] Return type for OperatorExpr
 [ ] Return type for PartialFuncExpr
-[ ] Return type for PostfixExpr
+[x] Return type for PostfixExpr
 [ ] Return type for PrefixExpr
 [x] Return type for RangeExpr
 [x] Return type for RegexExpr
