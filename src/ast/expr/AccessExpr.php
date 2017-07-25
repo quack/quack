@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
@@ -59,27 +62,33 @@ class AccessExpr extends Expr
         $index_type = $this->index->getType();
 
         // Access is valid for lists
-        if (NativeQuackType::T_LIST === $left_type->code) {
-            // Expected numeric index
+        if ($left_type instanceof ListType) {
             if (!$index_type->isNumber()) {
                 throw new TypeError(Localization::message('TYP040', [$index_type]));
             }
 
-            return clone $left_type->subtype;
+            // Return the subtype of the list as type of access
+            return $left_type->type;
         }
 
         // Access is valid for maps
-        if ($left_type->isMap()) {
-            if (!$index_type->isExactlySameAs($left_type->subtype['key'])) {
-                throw new TypeError(Localization::message('TYP050', [$left_type->subtype['key'], $index_type]));
+        if ($left_type instanceof MapType) {
+            if (!$index_type->check($left_type->key)) {
+                throw new TypeError(Localization::message('TYP050', [$left_type->key, $index_type]));
             }
 
-            return clone $left_type->subtype['value'];
+            // Return the value type of a map
+            return $left_type->value;
         }
 
-        // Access on strings returns also a string
+        // Access is valid for strings
         if ($left_type->isString()) {
-            return clone $left_type;
+            if (!$index_type->isNumber()) {
+                throw new TypeError(Localization::message('TYP040', [$index_type]));
+            }
+
+            // Return string itself
+            return $left_type;
         }
 
         throw new TypeError(Localization::message('TYP060', [$left_type]));

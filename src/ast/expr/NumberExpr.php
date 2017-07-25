@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -51,6 +52,6 @@ class NumberExpr extends Expr
 
     public function getType()
     {
-        return new Type(NativeQuackType::T_NUMBER);
+        return new LiteralType(NativeQuackType::T_NUMBER);
     }
 }

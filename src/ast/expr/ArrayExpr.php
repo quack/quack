@@ -21,8 +21,11 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
@@ -30,12 +33,10 @@ use \QuackCompiler\Types\TypeError;
 class ArrayExpr extends Expr
 {
     public $items;
-    private $memoized_type;
 
     public function __construct($items)
     {
         $this->items = $items;
-        $this->memoized_type = null;
     }
 
     public function format(Parser $parser)
@@ -62,29 +63,20 @@ class ArrayExpr extends Expr
 
     public function getType()
     {
-        if (null !== $this->memoized_type) {
-            return $this->memoized_type;
+        // Empty array, generic type
+        if (0 === sizeof($this->items)) {
+            return new ListType(new GenericType(Meta::nextGenericVarName()));
         }
 
-        $newtype = new Type(NativeQuackType::T_LIST);
-        $list_size = sizeof($this->items);
-
-        if (0 === $list_size) {
-            $newtype->subtype = new Type(NativeQuackType::T_LAZY);
-            return $newtype;
-        }
-
-        $newtype->subtype = $this->items[0]->getType();
-
+        // Decidable type
+        $subtype = $this->items[0]->getType();
         foreach (array_slice($this->items, 1) as $item) {
             $type = $item->getType();
-
-            if (!$type->isExactlySameAs($newtype->subtype)) {
-                throw new TypeError(Localization::message('TYP020', [$type, $newtype]));
+            if (!$subtype->check($type)) {
+                throw new TypeError(Localization::message('TYP020', [$type, $subtype]));
             }
         }
 
-        $this->memoized_type = &$newtype;
-        return $newtype;
+        return new ListType($subtype);
     }
 }

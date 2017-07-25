@@ -22,7 +22,7 @@
     "SCO210": "Reference to undeclared shape `%s' in implementation",
     "SCO220": "Name `%s' is not a shape in implementation",
     "TYP010": "Value passed to while loop should be a `boolean', not a `%s'",
-    "TYP020": "Cannot add element of type `%s' to array of type `%s'",
+    "TYP020": "Cannot add element of type `%s' to array of `%s'",
     "TYP030": "The type of post conditional statement should be a `boolean', not a `%s'",
     "TYP040": "Expected index of array to be a number. Got `%s'",
     "TYP050": "Expected index of map to be a `%s'. Got `%s'",

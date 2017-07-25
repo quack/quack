@@ -21,8 +21,11 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
@@ -76,34 +79,30 @@ class MapExpr extends Expr
     public function getType()
     {
         $size = sizeof($this->keys);
-        $newtype = new Type(NativeQuackType::T_MAP);
 
+        // Generic type when no initializer provided
         if (0 === $size) {
-            $newtype->subtype = [
-                'key'   => new Type(NativeQuackType::T_LAZY),
-                'value' => new Type(NativeQuackType::T_LAZY)
-            ];
-            return $newtype;
+            return new MapType(
+                new GenericType(Meta::nextGenericVarName()),
+                new GenericType(Meta::nextGenericVarName()));
         }
 
-        $newtype->subtype = [
-            'key'   => $this->keys[0]->getType(),
-            'value' => $this->values[0]->getType()
-        ];
+        $original_key_type = $this->keys[0]->getType();
+        $original_value_type = $this->values[0]->getType();
 
         for ($i = 1; $i < $size; $i++) {
             $key_type = $this->keys[$i]->getType();
-            $val_type = $this->values[$i]->getType();
+            $value_type = $this->values[$i]->getType();
 
-            if (!$key_type->isExactlySameAs($newtype->subtype['key'])) {
-                throw new TypeError(Localization::message('TYP070', [$i, $newtype->subtype['key'], $key_type]));
+            if (!$original_key_type->check($key_type)) {
+                throw new TypeError(Localization::message('TYP070', [$i, $original_key_type, $key_type]));
             }
 
-            if (!$val_type->isExactlySameAs($newtype->subtype['value'])) {
-                throw new TypeError(Localization::message('TYP080', [$i, $newtype->subtype['value'], $val_type]));
+            if (!$original_value_type->check($value_type)) {
+                throw new TypeError(Localization::message('TYP080', [$i, $original_value_type, $value_type]));
             }
         }
 
-        return $newtype;
+        return new MapType($original_key_type, $original_value_type);
     }
 }

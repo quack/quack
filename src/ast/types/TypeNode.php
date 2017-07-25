@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Types\NativeQuackType;
+
 abstract class TypeNode
 {
     protected $parentheses_level = 0;
@@ -39,5 +41,17 @@ abstract class TypeNode
     {
         $level = $this->parentheses_level;
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
+    }
+
+    public function isNumber()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_NUMBER === $this->code;
+    }
+
+    public function isString()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_STR === $this->code;
     }
 }
