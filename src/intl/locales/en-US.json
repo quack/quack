@@ -50,5 +50,8 @@
     "TYP270": "Undeducible subtype `%s' of `%s' in foreach",
     "TYP280": "Undeducible map subtype in `%s' in foreach",
     "TYP290": "Caught declaration of free variable `%s'",
-    "TYP300": "Cannot assign to variable `%s' of type `%s' a value of type `%s'"
+    "TYP300": "Cannot assign to variable `%s' of type `%s' a value of type `%s'",
+    "TYP310": "I'm sorry, but type `%s' is not callable",
+    "TYP320": "Function of type `%s' expected %d arguments, but received %d",
+    "TYP330": "Argument number %d of call expected to be a `%s', but it is a `%s'"
 }
