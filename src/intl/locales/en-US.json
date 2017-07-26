@@ -53,5 +53,10 @@
     "TYP300": "Cannot assign to variable `%s' of type `%s' a value of type `%s'",
     "TYP310": "I'm sorry, but type `%s' is not callable",
     "TYP320": "Function of type `%s' expected %d arguments, but received %d",
-    "TYP330": "Argument number %d of call expected to be a `%s', but it is a `%s'"
+    "TYP330": "Argument number %d of call expected to be a `%s', but it is a `%s'",
+    "TYP340": "On map, cannot match the type of %s `%s' with `%s'",
+    "TYP350": "Bad equation: `%s' and `%s', because:\r\n",
+    "TYP360": "Functions have different number of arguments. One has %d, the other has %d",
+    "TYP370": "Parameter number %d of function needs to be a `%s', but it is a `%s'",
+    "TYP380": "I was expecting to have a function with return type of `%s', but you gave me a `%s'"
 }

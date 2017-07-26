@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
+
 class FunctionType extends TypeNode
 {
     public $parameters;
@@ -41,6 +44,7 @@ class FunctionType extends TypeNode
 
     public function check(TypeNode $other)
     {
+        $message = Localization::message('TYP350', [$this, $other]);
         if (!($other instanceof FunctionType)) {
             return false;
         }
@@ -49,7 +53,8 @@ class FunctionType extends TypeNode
         $self_arity = sizeof($this->parameters);
         $other_arity = sizeof($other->parameters);
         if ($self_arity !== $other_arity) {
-            return false;
+            $message .= '     > ' . Localization::message('TYP360', [$self_arity, $other_arity]);
+            throw new TypeError($message);
         }
 
         // Check type for each parameter
@@ -58,13 +63,15 @@ class FunctionType extends TypeNode
             $other_type = $other->parameters[$i];
 
             if (!$self_type->check($other_type)) {
-                return false;
+                $message .= '     > ' . Localization::message('TYP370', [$i + 1, $self_type, $other_type]);
+                throw new TypeError($message);
             }
         }
 
         // Check return type
         if (!$this->return->check($other->return)) {
-            return false;
+            $message .= '     > ' . Localization::message('TYP380', [$this->return, $other->return]);
+            throw new TypeError($message);
         }
 
         return true;
