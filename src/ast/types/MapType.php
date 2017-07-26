@@ -38,4 +38,13 @@ class MapType extends TypeNode
             '#{' . $this->key . ': ' . $this->value . '}'
         );
     }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof MapType)) {
+            return false;
+        }
+
+        return $this->key->check($other->key) && $this->value->check($other->value);
+    }
 }
