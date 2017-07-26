@@ -8,10 +8,14 @@ let age :: number :- 10
 let bool :: boolean :- true and false
 let email :: regex :- &/.@./
 let atom :: @GET :- @GET
-let people :: {%{name: string, age: number}} :- {
-    %{ name: 'Celao', age: 20 },
-    %{ name: 'Jaca', age: 99 }
-}
+let people :: {%{name: string, age: number}} :- { %{
+  name: 'Celao',
+  age: 20
+}, %{
+  name: 'Jaca',
+  age: 99
+} }
+let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
 %%expect
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
@@ -25,3 +29,4 @@ let people :: {%{name: string, age: number}} :- { %{
   name: 'Jaca',
   age: 99
 } }
+let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
