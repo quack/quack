@@ -16,7 +16,13 @@ let people :: {%{name: string, age: number}} :- { %{
   age: 99
 } }
 let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
+do add(10, age)
+let id :- &[x] -> x
 %%expect
+array(1) {
+  [0]=>
+  string(6) "number"
+}
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
 let bool :: boolean :- true and false
@@ -30,3 +36,5 @@ let people :: {%{name: string, age: number}} :- { %{
   age: 99
 } }
 let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
+do add(10, age)
+let id :- &[x] -> x
