@@ -5,7 +5,7 @@
 [x] Return type for BoolExpr
 [ ] Return type for CallExpr
 [/] Return type for Expr
-[ ] Return type for LambdaExpr
+[x] Return type for LambdaExpr
 [x] Return type for MapExpr
 [x] Return type for NameExpr
 [/] Return type for NewExpr
@@ -24,3 +24,4 @@
 [x] Return type for WhereExpr
 
 [ ] Type checking must display the stack of comparisons when find wrong types
+[ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths

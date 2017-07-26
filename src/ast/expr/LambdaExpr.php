@@ -21,10 +21,13 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
 class LambdaExpr extends Expr
@@ -104,6 +107,9 @@ class LambdaExpr extends Expr
             }
 
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
+            $this->scope->setMeta(Meta::M_TYPE, $param->name, isset($param->type)
+                ? $param->type
+                : new GenericType(Meta::nextGenericVarName()));
         }
 
         if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
@@ -115,5 +121,19 @@ class LambdaExpr extends Expr
         } else {
             $this->body->injectScope($this->scope);
         }
+    }
+
+    public function getType()
+    {
+        if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
+            return new FunctionType(array_map(function ($parameter) {
+                return isset($parameter->type)
+                    ? $parameter->type
+                    : new GenericType(Meta::nextGenericVarName());
+            }, $this->parameters), $this->body->getType());
+        }
+
+        // TODO: Must implement return for blocks
+        return null;
     }
 }
