@@ -38,4 +38,35 @@ class FunctionType extends TypeNode
             '&[' . join(', ', $this->parameters) . '] -> ' . $this->return
         );
     }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof FunctionType)) {
+            return false;
+        }
+
+        // Functions with different number of arguments
+        $self_arity = sizeof($this->parameters);
+        $other_arity = sizeof($other->parameters);
+        if ($self_arity !== $other_arity) {
+            return false;
+        }
+
+        // Check type for each parameter
+        for ($i = 0; $i < $self_arity; $i++) {
+            $self_type = $this->parameters[$i];
+            $other_type = $other->parameters[$i];
+
+            if (!$self_type->check($other_type)) {
+                return false;
+            }
+        }
+
+        // Check return type
+        if (!$this->return->check($other->return)) {
+            return false;
+        }
+
+        return true;
+    }
 }
