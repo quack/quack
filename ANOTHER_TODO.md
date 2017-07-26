@@ -3,7 +3,7 @@
 [x] Return type for AtomExpr
 [x] Return type for BlockExpr
 [x] Return type for BoolExpr
-[ ] Return type for CallExpr
+[x] Return type for CallExpr
 [/] Return type for Expr
 [x] Return type for LambdaExpr
 [x] Return type for MapExpr
@@ -25,3 +25,5 @@
 
 [ ] Type checking must display the stack of comparisons when find wrong types
 [ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
+[ ] Add name property for function type for better error messages
+
