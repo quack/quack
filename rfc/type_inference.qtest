@@ -1,0 +1,27 @@
+%%command
+php ./src/Quack.php %s
+%%describe
+Local type inference
+%%source
+let name :: string :- 'lorem ipsum dolor sit' + 'l'
+let age :: number :- 10
+let bool :: boolean :- true and false
+let email :: regex :- &/.@./
+let atom :: @GET :- @GET
+let people :: {%{name: string, age: number}} :- {
+    %{ name: 'Celao', age: 20 },
+    %{ name: 'Jaca', age: 99 }
+}
+%%expect
+let name :: string :- 'lorem ipsum dolor sit' + 'l'
+let age :: number :- 10
+let bool :: boolean :- true and false
+let email :: regex :- &/.@./
+let atom :: @GET :- @GET
+let people :: {%{name: string, age: number}} :- { %{
+  name: 'Celao',
+  age: 20
+}, %{
+  name: 'Jaca',
+  age: 99
+} }
