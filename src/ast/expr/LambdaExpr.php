@@ -36,6 +36,7 @@ class LambdaExpr extends Expr
     public $kind;
     public $body;
     public $has_brackets;
+    private $argument_types;
 
     public function __construct($parameters, $kind, $body, $has_brackets)
     {
@@ -43,6 +44,7 @@ class LambdaExpr extends Expr
         $this->kind = $kind;
         $this->body = $body;
         $this->has_brackets = $has_brackets;
+        $this->argument_types = [];
     }
 
     public function format(Parser $parser)
@@ -107,9 +109,13 @@ class LambdaExpr extends Expr
             }
 
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
-            $this->scope->setMeta(Meta::M_TYPE, $param->name, isset($param->type)
+            // Use or infer type for parameter and store it
+            $param_type = isset($param->type)
                 ? $param->type
-                : new GenericType(Meta::nextGenericVarName()));
+                : new GenericType(Meta::nextGenericVarName());
+
+            $this->argument_types[$param->name] = $param_type;
+            $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);
         }
 
         if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
@@ -127,9 +133,7 @@ class LambdaExpr extends Expr
     {
         if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
             return new FunctionType(array_map(function ($parameter) {
-                return isset($parameter->type)
-                    ? $parameter->type
-                    : new GenericType(Meta::nextGenericVarName());
+                return $this->argument_types[$parameter->name];
             }, $this->parameters), $this->body->getType());
         }
 
