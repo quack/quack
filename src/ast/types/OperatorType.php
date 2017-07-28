@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
+
 class OperatorType extends TypeNode
 {
     public $operator;
@@ -39,5 +42,21 @@ class OperatorType extends TypeNode
         return $this->parenthesize(
             $this->left . " {$this->operator} " . $this->right
         );
+    }
+
+    public function check(TypeNode $other)
+    {
+        try {
+            // Match first type
+            if (!$this->left->check($other)) {
+                throw new TypeError(null);
+            }
+        } catch (TypeError $err) {
+            if (!$this->right->check($other)) {
+                throw new TypeError(Localization::message('TYP390', [$this->left, $this->right, $other]));
+            }
+        }
+
+        return true;
     }
 }

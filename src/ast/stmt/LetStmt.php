@@ -92,7 +92,9 @@ class LetStmt extends Stmt
             if (!$this->type->check($value_type)) {
                 throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
             }
-            $type = $this->type;
+
+            // After processing type, update type of current variable to the inferred one
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $value_type);
         }
     }
 }

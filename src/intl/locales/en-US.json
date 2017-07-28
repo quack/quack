@@ -58,5 +58,6 @@
     "TYP350": "Bad equation: `%s' and `%s', because:\r\n",
     "TYP360": "Functions have different number of arguments. One has %d, the other has %d",
     "TYP370": "Parameter number %d of function needs to be a `%s', but it is a `%s'",
-    "TYP380": "I was expecting to have a function with return type of `%s', but you gave me a `%s'"
+    "TYP380": "I was expecting to have a function with return type of `%s', but you gave me a `%s'",
+    "TYP390": "Join doesn't satisfy any type.\n     > On `%s' | `%s'\n     > For type `%s'"
 }
