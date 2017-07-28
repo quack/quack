@@ -51,7 +51,7 @@ class FnSignatureStmt extends Stmt
         $source .= implode(', ', array_map(function ($param) {
             $parameter = $param->name;
 
-            if (isset($param->type)) {
+            if (property_exists($param, 'type')) {
                 $parameter .= ' :: ' . $param->type;
             }
 
