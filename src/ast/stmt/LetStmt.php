@@ -25,6 +25,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 
 class LetStmt extends Stmt
@@ -32,7 +33,7 @@ class LetStmt extends Stmt
     public $name;
     public $type;
     public $value;
-    private $scoperef;
+    private $scope;
 
     public function __construct($name, $type, $value)
     {
@@ -59,8 +60,11 @@ class LetStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = $parent_scope;
-        if (!is_null($this->value)) {
+        $this->scope = $parent_scope;
+        if (is_null($this->value)) {
+            $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_MUTABLE);
+        } else {
+            $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
             $this->value->injectScope($parent_scope);
         }
     }
@@ -75,17 +79,20 @@ class LetStmt extends Stmt
 
         // type ^ value | type & value
         if (is_null($this->value)) {
-            $type = $this->type;
+            // Has type, but not value
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
         } else if (is_null($this->type)) {
+            // Has value, but not type
             $type = $this->value->getType();
+            // TODO: We need to bind some type for the variable to avoid null types
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
         } else {
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
             $value_type = $this->value->getType();
             if (!$this->type->check($value_type)) {
                 throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
             }
             $type = $this->type;
         }
-
-        $this->scoperef->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }

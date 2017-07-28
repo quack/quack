@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
@@ -55,23 +56,23 @@ class ConstStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = $parent_scope;
+        $this->scope = $parent_scope;
+        $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_INITIALIZED);
         $this->value->injectScope($parent_scope);
     }
 
     public function runTypeChecker()
     {
-        $value_type = $this->value->getType();
-        $type = null;
         if (is_null($this->type)) {
-            $type = $value_type;
+            // TODO: deal with mutual recursion, as const x :- x
+            $value_type = $this->value->getType();
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $value_type);
         } else {
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
+            $value_type = $this->value->getType();
             if (!$this->type->check($value_type)) {
                 throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
             }
-            $type = $this->type;
         }
-
-        $this->scoperef->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }

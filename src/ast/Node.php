@@ -78,8 +78,6 @@ abstract class Node
     {
         foreach ($stmt_list as $node) {
             switch ($this->getNodeType($node)) {
-                case 'LetStmt':
-                case 'ConstStmt':
                 case 'MemberStmt':
                     $this->bindVariableDecl($node);
                     break;

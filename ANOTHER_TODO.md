@@ -26,4 +26,4 @@
 [ ] Type checking must display the stack of comparisons when find wrong types
 [ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
 [ ] Add name property for function type for better error messages
-
+[x] Inject self variable for let statement on value, allowing  let x :: number :- x

@@ -18,6 +18,7 @@ let people :: {%{name: string, age: number}} :- { %{
 let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
 do add(10, age)
 let id :- &[x] -> x
+let fact :: &[number] -> number :- &[n :: number] -> n = 0 then 1 else n * fact(n - 1)
 %%expect
 array(1) {
   [0]=>
@@ -38,3 +39,4 @@ let people :: {%{name: string, age: number}} :- { %{
 let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
 do add(10, age)
 let id :- &[x] -> x
+let fact :: &[number] -> number :- &[n :: number] -> n = 0 then 1 else n * fact(n - 1)
