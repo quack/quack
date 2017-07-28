@@ -47,7 +47,7 @@ class Quack
         $this->inArguments('-h', '--help') && print $this->getHelpContent();
 
         try {
-            array_walk($files, function ($file) {
+            array_walk($files, function($file) {
                 if (!file_exists($file)) {
                     echo "File [$file] not found";
                     exit(1);
@@ -76,7 +76,7 @@ class Quack
 
     private function getFileNames()
     {
-        return array_filter($this->argv, function ($x) {
+        return array_filter($this->argv, function($x) {
             return '-' !== substr($x, 0, 1);
         });
     }

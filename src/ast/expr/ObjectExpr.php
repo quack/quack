@@ -50,7 +50,7 @@ class ObjectExpr extends Expr
             $parser->openScope();
 
             // Iterate based on index
-            $source .= implode(',' . PHP_EOL, array_map(function ($index) use ($keys, $values, $parser) {
+            $source .= implode(',' . PHP_EOL, array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $parser->indent();
                 $subsource .= $keys[$index];
                 $subsource .= ': ';

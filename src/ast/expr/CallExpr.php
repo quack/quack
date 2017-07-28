@@ -38,7 +38,7 @@ class CallExpr extends Expr
     {
         $source = $this->func->format($parser);
         $source .= '(';
-        $source .= implode(', ', array_map(function (Expr $arg) use ($parser) {
+        $source .= implode(', ', array_map(function(Expr $arg) use ($parser) {
             return $arg->format($parser);
         }, $this->arguments));
         $source .= ')';

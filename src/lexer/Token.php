@@ -50,7 +50,7 @@ class Token
     {
         if (!is_null($this->content)) {
             $tag_name = Tag::getName($this->tag);
-            return "[" . $tag_name . ", " . $this->content. "]";
+            return "[" . $tag_name . ", " . $this->content . "]";
         }
 
         return "[" . $this->tag . "]";

@@ -24,7 +24,7 @@ namespace QuackCompiler\Lexer;
 abstract class Lexer
 {
     const EOF      = -1;
-    const EOF_TYPE =  0;
+    const EOF_TYPE = 0;
 
     public $input;
     public $position = 0;
