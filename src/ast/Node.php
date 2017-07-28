@@ -81,9 +81,6 @@ abstract class Node
                 case 'MemberStmt':
                     $this->bindVariableDecl($node);
                     break;
-                case 'FnStmt':
-                    $this->bindDecl($node, 'function', Kind::K_FUNCTION);
-                    break;
                 case 'EnumStmt':
                     $this->bindDecl($node, 'enum', Kind::K_ENUM);
                     break;

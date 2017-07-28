@@ -21,10 +21,14 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\TypeError;
 
 class FnStmt extends Stmt
 {
@@ -34,7 +38,6 @@ class FnStmt extends Stmt
     public $is_short;
 
     private $flag_bind_self = false;
-    private $flag_bind_super = false;
 
     public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short)
     {
@@ -77,17 +80,12 @@ class FnStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $parent_scope->insert($this->signature->name, Kind::K_VARIABLE | Kind::K_FUNCTION);
+        $this->scope = new Scope($parent_scope);
 
         // Pre-inject `self' if it should
         if ($this->flag_bind_self) {
             $this->scope->insert('self', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
-        }
-
-        // When we are in the blueprint context and it extends another
-        // blueprint, insert `super'
-        if ($this->flag_bind_super) {
-            $this->scope->insert('super', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
         }
 
         // Pre-inject parameters
@@ -108,13 +106,39 @@ class FnStmt extends Stmt
         $this->flag_bind_self = true;
     }
 
-    public function flagBindSuper()
-    {
-        $this->flag_bind_super = true;
-    }
-
     public function runTypeChecker()
     {
-        // TODO
+        // TODO: Need to implement proofs for blocks
+        // TODO: don't default to is_short
+        $parameters_types = $this->signature->getParametersTypes();
+
+        // If the function type is statically defined, preset it
+        if (null !== $this->signature->type) {
+            $function_type = new FunctionType($parameters_types, $this->signature->type);
+            $this->scope->setMeta(Meta::M_TYPE, $this->signature->name, $function_type);
+            $this->injectParametersTypes($parameters_types);
+
+            // Compare return type with body type
+            $body_type = $this->body->getType();
+            if (!$this->signature->type->check($body_type)) {
+                throw new TypeError(Localization::message('TYP380', [$this->signature->type, $body_type]));
+            }
+        } else {
+            // Bind returned type to the function
+            $this->injectParametersTypes($parameters_types);
+            $body_type = $this->body->getType();
+            $function_type = new FunctionType($parameters_types, $body_type);
+            $this->scope->setMeta(Meta::M_TYPE, $this->signature->name, $function_type);
+        }
+    }
+
+    private function injectParametersTypes($parameters_types)
+    {
+        $size = sizeof($parameters_types);
+        for ($i = 0 ; $i < $size; $i++) {
+            $parameter = $this->signature->parameters[$i]->name;
+            $type = $parameters_types[$i];
+            $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
+        }
     }
 }

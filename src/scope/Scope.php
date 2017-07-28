@@ -30,6 +30,11 @@ class Scope
     public $parent;
     public $meta = [];
 
+    public function __construct(Scope $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
     public function hasLocal($symbol)
     {
         return array_key_exists($symbol, $this->table);
