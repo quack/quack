@@ -62,7 +62,7 @@ class LambdaExpr extends Expr
                 $source .= implode(', ', array_map(function ($param) {
                     $parameter = $param->name;
 
-                    if (property_exists($param, 'type')) {
+                    if (null !== $param->type) {
                         $parameter .= " :: {$param->type}";
                     }
 
