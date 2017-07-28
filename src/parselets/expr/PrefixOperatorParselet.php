@@ -25,24 +25,13 @@ use \QuackCompiler\Ast\Expr\PrefixExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\Precedence;
 
 class PrefixOperatorParselet implements PrefixParselet
 {
-    public $precedence;
-
-    public function __construct($precedence)
-    {
-        $this->precedence = $precedence;
-    }
-
     public function parse($parser, Token $token)
     {
-        $operand = $parser->_expr($this->precedence);
+        $operand = $parser->_expr(Precedence::PREFIX);
         return new PrefixExpr($token, $operand);
-    }
-
-    public function getPrecedence()
-    {
-        return $this->precedence;
     }
 }

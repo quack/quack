@@ -29,21 +29,11 @@ class NativeQuackType
     const T_OBJ      = 4;
     const T_MAP      = 5;
     const T_LIST     = 6;
-    const T_DYN      = 7;
-    const T_RESOURCE = 8;
     const T_ATOM     = 9;
     const T_REGEX    = 10;
     const T_LAZY     = 11;
     const T_BLOCK    = 12;
     const T_ENUM     = 13;
     const T_UNIT     = 14;
-
-    // Please note that T_LAZY represents lazy type inference. It should be used
-    // to represent unknown subtypes (such as empty arrays), and it must allow
-    // be casted to any Type<any>. Example:
-    // let arr :- {}
-    // arr.push[ 1 ] (* type error *)
-    // let arr :- <list.of(int)>{}
-    // arr.push[ 1 ] (* pass *)
+    const T_BYTE     = 15;
 }
-

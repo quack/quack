@@ -24,7 +24,7 @@ namespace QuackCompiler\Intl;
 class Localization
 {
     const LOCALE = 'en-US';
-    static $messages = null;
+    private static $messages = null;
 
     public static function message($key, $arguments)
     {

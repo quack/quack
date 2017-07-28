@@ -12,7 +12,7 @@ end
 let x :- 1
 do when x = 1 -> 1 end
 %%expect
-fn mySwitch(what)
+fn mySwitch(what :: string)
   ^ when
     what = "Luiz" -> "Turing Tape!",
     what = "Marcelo" -> "Lambda Calculus!",

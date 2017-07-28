@@ -81,7 +81,7 @@ class Quack
         });
     }
 
-    private function inArguments(/* ...$args */)
+    private function inArguments()
     {
         return sizeof(array_intersect($this->argv, func_get_args())) > 0;
     }

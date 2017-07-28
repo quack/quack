@@ -39,9 +39,7 @@ class Tokenizer extends Lexer
             }
 
             if ((ctype_alpha($this->peek) || $this->is('_'))
-                ||
-                ($this->is('_') && ctype_alnum((string) $this->preview()))
-                ) {
+                || ($this->is('_') && ctype_alnum((string) $this->preview()))) {
                     return $this->identifier();
             }
 
@@ -85,9 +83,7 @@ class Tokenizer extends Lexer
         $number = $this->readChar();
 
         // check if the number is /0.{1}[0-9a-fA-F]/
-        if (!$this->isEnd() && $number === '0' &&
-            ctype_xdigit($this->preview())) {
-
+        if (!$this->isEnd() && $number === '0' && ctype_xdigit($this->preview())) {
             $tag = Tag::T_INT_HEX;
             $found = false;
             if ($this->peek === 'x') { // we know that preview is hexadec
@@ -128,7 +124,7 @@ class Tokenizer extends Lexer
             if ($found) {
                 $value = implode($buffer);
                 $this->column += sizeof($buffer);
-                return new Token($tag, $this->symbol_table->add($value));
+                return new Token($tag, $value);
             }
         }
 
@@ -146,9 +142,9 @@ class Tokenizer extends Lexer
         // check optional exp state: looking for a 'e', 'e+' or 'e-' and integers
         if (!$this->isEnd() && $this->is('e')) {
             if (ctype_digit($this->preview())) {
-              $tag = Tag::T_DOUBLE_EXP;
-              $buffer[] = $this->readChar(); // append 'e'
-              $buffer = array_merge($buffer, $this->integer());
+                $tag = Tag::T_DOUBLE_EXP;
+                $buffer[] = $this->readChar(); // append 'e'
+                $buffer = array_merge($buffer, $this->integer());
             } else if (($this->preview() === '+' || $this->preview() === '-')
               && ctype_digit($this->preview(2))) {
                 $tag = Tag::T_DOUBLE_EXP;
@@ -160,7 +156,7 @@ class Tokenizer extends Lexer
 
         $value = implode($buffer);
         $this->column += sizeof($buffer);
-        return new Token($tag, $this->symbol_table->add($value));
+        return new Token($tag, $value);
     }
 
     private function integer()
@@ -190,7 +186,7 @@ class Tokenizer extends Lexer
             return $word;
         }
 
-        return new Token(Tag::T_IDENT, $this->symbol_table->add($string));
+        return new Token(Tag::T_IDENT, $string);
     }
 
     private function space()
@@ -227,7 +223,7 @@ class Tokenizer extends Lexer
             $this->column++;
         }
 
-        $token = new Token(Tag::T_STRING, $this->symbol_table->add($string));
+        $token = new Token(Tag::T_STRING, $string);
         // Inject information about the delimiter for code formatting
         $token->metadata['delimiter'] = $delimiter;
         return $token;
@@ -268,7 +264,7 @@ class Tokenizer extends Lexer
         }
 
         $regex = implode($buffer);
-        return new Token(Tag::T_REGEX, $this->symbol_table->add($regex));
+        return new Token(Tag::T_REGEX, $regex);
     }
 
     private function singleLineComment()
@@ -315,7 +311,7 @@ class Tokenizer extends Lexer
         } while (ctype_alnum((string) $this->peek) || $this->peek === '_');
 
         $atom = implode($buffer);
-        return new Token(Tag::T_ATOM, $this->symbol_table->add($atom));
+        return new Token(Tag::T_ATOM, $atom);
     }
 
     private function readChar()
@@ -325,22 +321,13 @@ class Tokenizer extends Lexer
         return $char;
     }
 
-    public function & getSymbolTable()
-    {
-        return $this->symbol_table;
-    }
-
-    public function eagerlyEvaluate($show_symbol_table = false)
+    public function eagerlyEvaluate()
     {
         $this->rewind();
-        $symbol_table = &$this->getSymbolTable();
         $token_stream = [];
 
         while ($this->peek != self::EOF) {
             $token_stream[] = $this->nextToken();
-            if ($show_symbol_table) {
-                $token_stream[sizeof($token_stream) - 1]->showSymbolTable($symbol_table);
-            }
         }
 
         return $token_stream;
@@ -349,15 +336,11 @@ class Tokenizer extends Lexer
     public function printTokens()
     {
         $this->rewind();
-        $symbol_table = &$this->getSymbolTable();
-
         $token = $this->nextToken();
-        $token->showSymbolTable($symbol_table);
 
         while ($token->getTag() !== static::EOF_TYPE) {
             echo $token;
             $token = $this->nextToken();
-            $token->showSymbolTable($symbol_table);
         }
     }
 }

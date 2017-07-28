@@ -52,9 +52,9 @@ abstract class Parser
         // When, after an error, the programmer provided an identifier,
         // we'll calculate the levenshtein distance between the expected lexeme
         // and the provided lexeme and give a hint about
-        if (Tag::T_IDENT === $this->lookahead->getTag() && array_key_exists($tag, $this->input->keywords_hash)) {
-            $expected_lexeme = $this->input->keywords_hash[$tag];
-            $provided_lexeme = $this->resolveScope($this->lookahead->getPointer());
+        if (Tag::T_IDENT === $this->lookahead->getTag() && array_key_exists($tag, $this->input->keywords)) {
+            $expected_lexeme = $this->input->keywords[$tag];
+            $provided_lexeme = $this->lookahead->getContent();
 
             $distance = levenshtein($expected_lexeme, $provided_lexeme);
 
@@ -93,9 +93,9 @@ abstract class Parser
 
     public function consume()
     {
-        $pointer = $this->lookahead === null ?: $this->lookahead->getPointer();
+        $content = $this->lookahead === null ?: $this->lookahead->getContent();
         $this->lookahead = $this->input->nextToken();
-        return $pointer;
+        return $content;
     }
 
     public function consumeIf($symbol)
@@ -113,11 +113,6 @@ abstract class Parser
         $clone = $this->lookahead;
         $this->lookahead = $this->input->nextToken();
         return $clone;
-    }
-
-    public function resolveScope($pointer)
-    {
-        return $this->input->getSymbolTable()->get($pointer);
     }
 
     public function position()

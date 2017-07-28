@@ -46,7 +46,7 @@ class OperatorExpr extends Expr
 
     private function isMemberAccess()
     {
-        return '.' === $this->operator || '?.' === $this->operator;
+        return '.' === $this->operator;
     }
 
     public function format(Parser $parser)
@@ -143,7 +143,6 @@ class OperatorExpr extends Expr
         // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '^', '&', '|', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
-
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
                 return new Type(NativeQuackType::T_STR);
             }

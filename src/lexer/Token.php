@@ -24,17 +24,16 @@ namespace QuackCompiler\Lexer;
 class Token
 {
     private $tag;
-    private $pointer;
-    private $symbol_table;
+    private $content;
 
     // Carries all the metadata about the tokens based in key => value
     // Obs.: Currently used only to disambiguate ' from "
     public $metadata = [];
 
-    public function __construct($tag, $pointer = null)
+    public function __construct($tag, $content = null)
     {
         $this->tag = $tag;
-        $this->pointer = $pointer;
+        $this->content = $content;
     }
 
     public function getTag()
@@ -42,24 +41,18 @@ class Token
         return $this->tag;
     }
 
-    public function getPointer()
+    public function getContent()
     {
-        return $this->pointer;
+        return $this->content;
     }
 
     public function __toString()
     {
-        if (isset($this->pointer)) {
+        if (!is_null($this->content)) {
             $tag_name = Tag::getName($this->tag);
-            return isset($this->symbol_table)
-                ? "[" . $tag_name . ", " . $this->symbol_table->get($this->pointer) . "]"
-                : "[" . $tag_name . ", " . $this->pointer . "]";
+            return "[" . $tag_name . ", " . $this->content. "]";
         }
-        return "[" . $this->tag . "]";
-    }
 
-    public function showSymbolTable(SymbolTable &$symbol_table)
-    {
-        $this->symbol_table = $symbol_table;
+        return "[" . $this->tag . "]";
     }
 }

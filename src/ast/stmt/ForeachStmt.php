@@ -33,15 +33,13 @@ use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
 {
-    public $by_reference;
     public $key;
     public $alias;
     public $generator;
     public $body;
 
-    public function __construct($by_reference, $key, $alias, $generator, $body)
+    public function __construct($key, $alias, $generator, $body)
     {
-        $this->by_reference = $by_reference;
         $this->key = $key;
         $this->alias = $alias;
         $this->generator = $generator;
@@ -55,10 +53,6 @@ class ForeachStmt extends Stmt
         if (null !== $this->key) {
             $source .= $this->key;
             $source .= ': ';
-        }
-
-        if ($this->by_reference) {
-            $source .= '*';
         }
 
         $source .= $this->alias;
@@ -114,7 +108,7 @@ class ForeachStmt extends Stmt
         $generator_type = $this->generator->getType();
 
         // When the element has no subtype to be an iterable
-        if (null === $generator_type->subtype)  {
+        if (null === $generator_type->subtype) {
             throw new TypeError(Localization::message('TYP260', [$generator_type]));
         }
 
@@ -130,16 +124,18 @@ class ForeachStmt extends Stmt
         }
 
         if (null !== $this->key) {
-            $this->scope->setMeta(Meta::M_TYPE, $this->key, $generator_type->isList()
-                ? new Type(NativeQuackType::T_NUMBER)
-                : clone $generator_type->subtype['key']
+            $this->scope->setMeta(
+                Meta::M_TYPE,
+                $this->key,
+                $generator_type->isList()
+                    ? new Type(NativeQuackType::T_NUMBER)
+                    : clone $generator_type->subtype['key']
             );
         }
 
         $this->scope->setMeta(Meta::M_TYPE, $this->alias, $generator_type->isList()
             ? clone $generator_type->subtype
-            : clone $generator_type->subtype['value']
-        );
+            : clone $generator_type->subtype['value']);
 
         foreach ($this->body as $stmt) {
             $stmt->runTypeChecker();

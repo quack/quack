@@ -23,58 +23,67 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\ScopeError;
 
-class ShapeStmt extends Stmt
+class FnSignatureStmt extends Stmt
 {
     public $name;
-    public $members;
+    public $parameters;
+    public $type;
+    public $native;
 
-    public function __construct($name, $members)
+    public function __construct($name, $parameters, $type)
     {
         $this->name = $name;
-        $this->members = $members;
+        $this->parameters = $parameters;
+        $this->type = $type;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'shape ';
+        $source = '';
+        if ($this->native) {
+            $source .= 'native fn ';
+        }
         $source .= $this->name;
-        $source .= PHP_EOL;
+        $source .= '(';
+        $source .= implode(', ', array_map(function ($param) {
+            $parameter = $param->name;
 
-        $parser->openScope();
+            if (null !== $param->type) {
+                $parameter .= ' :: ' . $param->type;
+            }
 
-        foreach ($this->members as $member) {
-            $source .= $parser->indent();
-            $source .= $member;
-            $source .= PHP_EOL;
+            return $parameter;
+        }, $this->parameters));
+        $source .= ')';
+
+        if (!is_null($this->type)) {
+            $source .= ' -> ' . $this->type;
         }
 
-        $parser->closeScope();
-
-        $source .= $parser->indent();
-        $source .= 'end';
-        $source .= PHP_EOL;
+        if ($this->native) {
+            $source .= PHP_EOL;
+        }
 
         return $source;
     }
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
-        foreach ($this->members as $member) {
-            if ($this->scope->hasLocal($member)) {
-                throw new ScopeError(Localization::message('SCO110', [$member, $this->name]));
+        foreach ($this->parameters as $param) {
+            if ($parent_scope->hasLocal($param->name)) {
+                throw new ScopeError(Localization::message('SCO060', [$param->name, $this->name]));
             }
 
-            $this->scope->insert($member, Kind::K_INITIALIZED | Kind::K_MEMBER);
+            // TODO: inject type too?
+            $parent_scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
         }
     }
 
     public function runTypeChecker()
     {
-        // TODO: Implement type checking for shape
+        // Pass :)
     }
 }

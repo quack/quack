@@ -44,8 +44,8 @@ class LambdaParselet implements PrefixParselet
         if ($grammar->reader->is(Tag::T_IDENT)) {
             $name = $grammar->name_parser->_identifier();
             $parameters[] = (object)[
-                'name'         => $name,
-                'is_reference' => false
+                'name' => $name,
+                'type' => null
             ];
         } else {
             $has_brackets = true;

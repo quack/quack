@@ -30,6 +30,6 @@ class NameParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        return new NameExpr($grammar->reader->resolveScope($token->getPointer()));
+        return new NameExpr($token->getContent());
     }
 }

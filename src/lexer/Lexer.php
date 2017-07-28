@@ -32,8 +32,7 @@ abstract class Lexer
 
     protected $words = [];
 
-    public $symbol_table;
-    public $keywords_hash = [];
+    public $keywords = [];
 
     public function __construct($input)
     {
@@ -43,59 +42,56 @@ abstract class Lexer
             exit;
         }
 
-        $this->symbol_table = new SymbolTable;
         $this->input = $input;
         $this->peek  = $input[0];
 
         // Reserve keywords
-        $this->reserve(new Word(Tag::T_TRUE, "true"));
-        $this->reserve(new Word(Tag::T_FALSE, "false"));
-        $this->reserve(new Word(Tag::T_LET, "let"));
-        $this->reserve(new Word(Tag::T_IF, "if"));
-        $this->reserve(new Word(Tag::T_FOR, "for"));
-        $this->reserve(new Word(Tag::T_WHILE, "while"));
-        $this->reserve(new Word(Tag::T_DO, "do"));
-        $this->reserve(new Word(Tag::T_MODULE, "module"));
-        $this->reserve(new Word(Tag::T_FOREACH, "foreach"));
-        $this->reserve(new Word(Tag::T_IN, "in"));
-        $this->reserve(new Word(Tag::T_MOD, "mod"));
-        $this->reserve(new Word(Tag::T_WHERE, "where"));
-        $this->reserve(new Word(Tag::T_CONST, "const"));
-        $this->reserve(new Word(Tag::T_NIL, "nil"));
-        $this->reserve(new Word(Tag::T_ENUM, "enum"));
-        $this->reserve(new Word(Tag::T_CONTINUE, "continue"));
-        $this->reserve(new Word(Tag::T_SWITCH, "switch"));
-        $this->reserve(new Word(Tag::T_BREAK, "break"));
-        $this->reserve(new Word(Tag::T_AND, "and"));
-        $this->reserve(new Word(Tag::T_OR, "or"));
-        $this->reserve(new Word(Tag::T_XOR, "xor"));
-        $this->reserve(new Word(Tag::T_TRY, "try"));
-        $this->reserve(new Word(Tag::T_RESCUE, "rescue"));
-        $this->reserve(new Word(Tag::T_FINALLY, "finally"));
-        $this->reserve(new Word(Tag::T_RAISE, "raise"));
-        $this->reserve(new Word(Tag::T_ELIF, "elif"));
-        $this->reserve(new Word(Tag::T_ELSE, "else"));
-        $this->reserve(new Word(Tag::T_CASE, "case"));
-        $this->reserve(new Word(Tag::T_NOT, "not"));
-        $this->reserve(new Word(Tag::T_FN, "fn"));
-        $this->reserve(new Word(Tag::T_THEN, "then"));
-        $this->reserve(new Word(Tag::T_BEGIN, "begin"));
-        $this->reserve(new Word(Tag::T_END, "end"));
-        $this->reserve(new Word(Tag::T_FROM, "from"));
-        $this->reserve(new Word(Tag::T_TO, "to"));
-        $this->reserve(new Word(Tag::T_BY, "by"));
-        $this->reserve(new Word(Tag::T_WHEN, "when"));
-        $this->reserve(new Word(Tag::T_UNLESS, "unless"));
-        $this->reserve(new Word(Tag::T_IMPL, "impl"));
-        $this->reserve(new Word(Tag::T_CLASS, "class"));
-        $this->reserve(new Word(Tag::T_SHAPE, "shape"));
-        $this->reserve(new Word(Tag::T_PUB, "pub"));
-        $this->reserve(new Word(Tag::T_REC, "rec"));
+        $this->reserve(new Word(Tag::T_TRUE, 'true'));
+        $this->reserve(new Word(Tag::T_FALSE, 'false'));
+        $this->reserve(new Word(Tag::T_LET, 'let'));
+        $this->reserve(new Word(Tag::T_IF, 'if'));
+        $this->reserve(new Word(Tag::T_FOR, 'for'));
+        $this->reserve(new Word(Tag::T_WHILE, 'while'));
+        $this->reserve(new Word(Tag::T_DO, 'do'));
+        $this->reserve(new Word(Tag::T_MODULE, 'module'));
+        $this->reserve(new Word(Tag::T_FOREACH, 'foreach'));
+        $this->reserve(new Word(Tag::T_IN, 'in'));
+        $this->reserve(new Word(Tag::T_MOD, 'mod'));
+        $this->reserve(new Word(Tag::T_WHERE, 'where'));
+        $this->reserve(new Word(Tag::T_CONST, 'const'));
+        $this->reserve(new Word(Tag::T_NIL, 'nil'));
+        $this->reserve(new Word(Tag::T_ENUM, 'enum'));
+        $this->reserve(new Word(Tag::T_CONTINUE, 'continue'));
+        $this->reserve(new Word(Tag::T_SWITCH, 'switch'));
+        $this->reserve(new Word(Tag::T_BREAK, 'break'));
+        $this->reserve(new Word(Tag::T_AND, 'and'));
+        $this->reserve(new Word(Tag::T_OR, 'or'));
+        $this->reserve(new Word(Tag::T_XOR, 'xor'));
+        $this->reserve(new Word(Tag::T_TRY, 'try'));
+        $this->reserve(new Word(Tag::T_RESCUE, 'rescue'));
+        $this->reserve(new Word(Tag::T_FINALLY, 'finally'));
+        $this->reserve(new Word(Tag::T_RAISE, 'raise'));
+        $this->reserve(new Word(Tag::T_ELIF, 'elif'));
+        $this->reserve(new Word(Tag::T_ELSE, 'else'));
+        $this->reserve(new Word(Tag::T_CASE, 'case'));
+        $this->reserve(new Word(Tag::T_NOT, 'not'));
+        $this->reserve(new Word(Tag::T_FN, 'fn'));
+        $this->reserve(new Word(Tag::T_THEN, 'then'));
+        $this->reserve(new Word(Tag::T_BEGIN, 'begin'));
+        $this->reserve(new Word(Tag::T_END, 'end'));
+        $this->reserve(new Word(Tag::T_FROM, 'from'));
+        $this->reserve(new Word(Tag::T_TO, 'to'));
+        $this->reserve(new Word(Tag::T_BY, 'by'));
+        $this->reserve(new Word(Tag::T_WHEN, 'when'));
+        $this->reserve(new Word(Tag::T_UNLESS, 'unless'));
+        $this->reserve(new Word(Tag::T_IMPL, 'impl'));
+        $this->reserve(new Word(Tag::T_CLASS, 'class'));
+        $this->reserve(new Word(Tag::T_SHAPE, 'shape'));
     }
 
     private function reserve(Word $t)
     {
-        $this->keywords_hash[$t->getTag()] = $t->lexeme;
+        $this->keywords[$t->getTag()] = $t->lexeme;
         $this->words[$t->lexeme] = $t;
     }
 
@@ -169,11 +165,6 @@ abstract class Lexer
     public function is($symbol)
     {
         return $this->peek === $symbol;
-    }
-
-    public function isNot($symbol)
-    {
-        return $this->peek !== $symbol;
     }
 
     abstract public function nextToken();

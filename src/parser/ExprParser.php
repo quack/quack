@@ -76,7 +76,6 @@ class ExprParser
         $this->register('&', new LambdaParselet);
         $this->register('%', new NewParselet);
         $this->register('.', new MemberAccessParselet);
-        $this->register('?.', new MemberAccessParselet);
         $this->register(Tag::T_TRUE, new LiteralParselet);
         $this->register(Tag::T_FALSE, new LiteralParselet);
         $this->register(Tag::T_NIL, new LiteralParselet);
@@ -84,12 +83,12 @@ class ExprParser
         $this->register(Tag::T_WHEN, new WhenParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
 
-        $this->prefix('+', Precedence::PREFIX);
-        $this->prefix('-', Precedence::PREFIX);
-        $this->prefix('^^', Precedence::PREFIX);
-        $this->prefix('*', Precedence::PREFIX);
-        $this->prefix('~', Precedence::PREFIX);
-        $this->prefix(Tag::T_NOT, Precedence::PREFIX);
+        $this->prefix('+');
+        $this->prefix('-');
+        $this->prefix('^^');
+        $this->prefix('*');
+        $this->prefix('~');
+        $this->prefix(Tag::T_NOT);
 
         $this->infixLeft('+', Precedence::ADDITIVE);
         $this->infixLeft('-', Precedence::ADDITIVE);
@@ -154,9 +153,9 @@ class ExprParser
         $this->register($tag, new PostfixOperatorParselet($precedence));
     }
 
-    private function prefix($tag, $precedence)
+    private function prefix($tag)
     {
-        $this->register($tag, new PrefixOperatorParselet($precedence));
+        $this->register($tag, new PrefixOperatorParselet());
     }
 
     private function infixLeft($tag, $precedence)

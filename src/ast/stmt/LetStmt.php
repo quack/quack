@@ -63,19 +63,11 @@ class LetStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = &$parent_scope;
-
+        $this->scoperef = $parent_scope;
         foreach ($this->definitions as $def) {
             if (null !== $def[1]) {
                 $def[1]->injectScope($parent_scope);
             }
-        }
-
-        // After all, process type inference rules
-        foreach ($this->definitions as $def) {
-            $parent_scope->setMeta(Meta::M_TYPE, $def[0], null === $def[1]
-                ? null
-                : $def[1]->getType());
         }
     }
 
