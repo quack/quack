@@ -36,7 +36,7 @@ abstract class Node
 
     abstract public function injectScope(&$parent_scope);
 
-    public function createScopeWithParent(Scope &$parent)
+    public function createScopeWithParent(Scope & $parent)
     {
         $this->scope = new Scope();
         $this->scope->parent = $parent;

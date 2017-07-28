@@ -59,7 +59,7 @@ class LambdaExpr extends Expr
                 break;
             default:
                 $source .= '[';
-                $source .= implode(', ', array_map(function ($param) {
+                $source .= implode(', ', array_map(function($param) {
                     $parameter = $param->name;
 
                     if (null !== $param->type) {

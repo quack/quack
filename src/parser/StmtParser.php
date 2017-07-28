@@ -396,7 +396,7 @@ class StmtParser
             $type = $this->type_parser->_type();
         }
 
-        return (object)[
+        return (object) [
             'name' => $name,
             'type' => $type
         ];

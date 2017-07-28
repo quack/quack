@@ -68,13 +68,13 @@ class RangeExpr extends Expr
     {
         $newtype = new Type(NativeQuackType::T_LIST);
 
-        $type = (object)[
+        $type = (object) [
             'from' => $this->from->getType(),
             'to'   => $this->to->getType(),
             'by'   => null !== $this->by ? $this->by->getType() : null
         ];
 
-        $throw_error_on = function ($operand, $got) {
+        $throw_error_on = function($operand, $got) {
             throw new TypeError(Localization::message('TYP220', [$operand, $got]));
         };
 
