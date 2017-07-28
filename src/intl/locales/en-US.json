@@ -11,7 +11,7 @@
     "SCO100": "Array destructuring expects all children to be names",
     "SCO110": "Duplicated entry `%s' for shape `%s'",
     "SCO120": "Duplicated declaration of `%s' on where clause",
-    "SCO130": "Symbol `%s' for %s declared twice",
+    "SCO130": "Symbol `%s' declared twice",
     "SCO140": "Called %s outside a loop",
     "SCO150": "Called %s with undefined label `%s'",
     "SCO160": "Called %s with invalid label `%s'",

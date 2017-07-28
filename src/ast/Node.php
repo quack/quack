@@ -45,7 +45,7 @@ abstract class Node
     private function bindVariableDecl($var)
     {
         if ($this->scope->hasLocal($var->name)) {
-            throw new ScopeError(Localization::message('SCO130', [$var->name, 'variable']));
+            throw new ScopeError(Localization::message('SCO130', [$var->name]));
         }
 
         $flags = Kind::K_VARIABLE;
@@ -62,7 +62,7 @@ abstract class Node
     private function bindDecl($named_node, $type, $kind)
     {
         if ($this->scope->hasLocal($named_node->name)) {
-            throw new ScopeError(Localization::message('SCO130', [$named_node->name, $type]));
+            throw new ScopeError(Localization::message('SCO130', [$named_node->name]));
         }
 
         $this->scope->insert($named_node->name, Kind::K_FUNCTION);

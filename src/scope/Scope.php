@@ -21,7 +21,8 @@
  */
 namespace QuackCompiler\Scope;
 
-use QuackCompiler\Scope\Meta;
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Meta;
 
 class Scope
 {
@@ -36,6 +37,9 @@ class Scope
 
     public function insert($symbol, $value)
     {
+        if ($this->hasLocal($symbol)) {
+            throw new ScopeError(Localization::message('SCO130', [$symbol]));
+        }
         $this->table[$symbol] = $value;
     }
 
