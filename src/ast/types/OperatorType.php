@@ -46,17 +46,6 @@ class OperatorType extends TypeNode
 
     public function check(TypeNode $other)
     {
-        try {
-            // Match first type
-            if (!$this->left->check($other)) {
-                throw new TypeError(null);
-            }
-        } catch (TypeError $err) {
-            if (!$this->right->check($other)) {
-                throw new TypeError(Localization::message('TYP390', [$this->left, $this->right, $other]));
-            }
-        }
-
-        return true;
+        // TODO: Implement type intersection
     }
 }
