@@ -62,6 +62,7 @@ class TypeParser
         $this->register('%', new InstanceTypeParselet);
         $this->register('%{', new ObjectTypeParselet);
         $this->register('&', new FunctionTypeParselet);
+        $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));
         $this->register('&', new BinaryOperatorTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
 
