@@ -23,12 +23,18 @@
 [x] Return type for WhenExpr
 [x] Return type for WhereExpr
 
-[ ] Type checking must display the stack of comparisons when find wrong types
+## Must for 0.1.0:
+
+[ ] Implement "atom" literal type
 [ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
-[ ] Add name property for function type for better error messages
 [x] Inject self variable for let statement on value, allowing  let x :: number :- x
-[ ] Support for algebraic data types and type constructors
-[ ] Implement runtime pattern matching (Haskell like)
 [ ] Implement type merging via intersection (&)
 [ ] Implement ad-hoc polymorphism
+
+## Future work
+
+[ ] Implement runtime pattern matching (Haskell like)
+[ ] Type checking must display the stack of comparisons when find wrong types
+[ ] Add name property for function type for better error messages
+[ ] Support for algebraic data types and type constructors
 [ ] Implement parametric polymophism
