@@ -72,4 +72,11 @@ abstract class TypeNode
         return $this instanceof MapType
             || $this instanceof ListType;
     }
+
+    public function simplify()
+    {
+        return $this;
+    }
+
+    abstract function check(TypeNode $other);
 }

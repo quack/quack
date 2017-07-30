@@ -24,6 +24,15 @@ fn f(n :: number) -> number :- when
   else n * f(n - 1)
 end
 let request :: atom :- @POST
+let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
+  x: 1,
+  y: 'foo',
+  z: true
+}
+let my_list :: {%{name: string} & %{age: number}} :- { %{
+  name: 'Celao',
+  age: 20
+} }
 %%expect
 array(1) {
   [0]=>
@@ -50,3 +59,12 @@ fn f(n :: number) -> number :- when
   else n * f(n - 1)
 end
 let request :: atom :- @POST
+let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
+  x: 1,
+  y: 'foo',
+  z: true
+}
+let my_list :: {%{name: string} & %{age: number}} :- { %{
+  name: 'Celao',
+  age: 20
+} }

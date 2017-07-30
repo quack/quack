@@ -34,4 +34,10 @@ class InstanceType extends TypeNode
     {
         return $this->parenthesize('%' . join('.', $this->qualified_name));
     }
+
+    public function check(TypeNode $other)
+    {
+        // TODO
+        return false;
+    }
 }

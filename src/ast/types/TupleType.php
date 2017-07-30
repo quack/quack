@@ -36,4 +36,10 @@ class TupleType extends TypeNode
     {
         return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
     }
+
+    public function check(TypeNode $other)
+    {
+        // TODO
+        return false;
+    }
 }
