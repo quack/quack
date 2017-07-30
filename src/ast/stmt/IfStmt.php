@@ -101,7 +101,7 @@ class IfStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->condition->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP140', [$condition_type]));
         }
 

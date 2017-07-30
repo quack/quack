@@ -66,7 +66,7 @@ class PostConditionalStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->predicate->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP030', [$condition_type]));
         }
     }

@@ -70,7 +70,7 @@ class ElifStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->condition->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP180', [$condition_type]));
         }
 
