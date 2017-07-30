@@ -31,7 +31,7 @@
 [x] Implement type simplification, where %{x:number} & %{y:string} is %{x:number, y:string}
 [x] Call simplification on checks
 [x] Analyse statements for type checkings and replace ->code for ->check()
-[ ] Implement simplification on let, const, fn signature, lambda signature or a function to prove type paths
+[x] Implement simplification on let, const, fn signature, lambda signature or a function to prove type paths
 [ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
 [ ] Implement ad-hoc polymorphism
 

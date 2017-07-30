@@ -80,6 +80,8 @@ class LetStmt extends Stmt
         // type ^ value | type & value
         if (is_null($this->value)) {
             // Has type, but not value
+            // Try to simplify the type to ensure that it is deducible
+            $this->type->simplify();
             $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
         } else if (is_null($this->type)) {
             // Has value, but not type
