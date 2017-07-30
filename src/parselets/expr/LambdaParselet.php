@@ -43,7 +43,7 @@ class LambdaParselet implements PrefixParselet
         // When identifier, we have an unary function
         if ($grammar->reader->is(Tag::T_IDENT)) {
             $name = $grammar->name_parser->_identifier();
-            $parameters[] = (object)[
+            $parameters[] = (object) [
                 'name' => $name,
                 'type' => null
             ];

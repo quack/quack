@@ -50,7 +50,7 @@ class MapExpr extends Expr
         if (sizeof($this->keys) > 0) {
             $source .= ' ';
             // Iterate based on index
-            $source .= implode(', ', array_map(function ($index) use (&$keys, &$values, $parser) {
+            $source .= implode(', ', array_map(function($index) use (&$keys, &$values, $parser) {
                 $subsource = $keys[$index]->format($parser);
                 $subsource .= ': ';
                 $subsource .= $values[$index]->format($parser);

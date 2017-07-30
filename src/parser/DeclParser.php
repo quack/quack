@@ -51,7 +51,7 @@ class DeclParser
         $name = $this->name_parser->_identifier();
         $body = [];
 
-        while (0 !== $this->reader->lookahead->getTag() && ! $this->reader->is(Tag::T_END)) {
+        while (0 !== $this->reader->lookahead->getTag() && !$this->reader->is(Tag::T_END)) {
             $body[] = $this->_fnSignature();
         }
 

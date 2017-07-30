@@ -92,7 +92,7 @@ class SyntaxError extends Exception
             return '';
         }
 
-        return PHP_EOL . PHP_EOL . BEGIN_BLUE .BEGIN_BOLD . "~Hint:" .
+        return PHP_EOL . PHP_EOL . BEGIN_BLUE . BEGIN_BOLD . "~Hint:" .
             " {$this->hint}" . END_BLUE . END_BOLD . PHP_EOL;
     }
 

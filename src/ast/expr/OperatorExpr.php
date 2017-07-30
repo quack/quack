@@ -108,7 +108,7 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        $type = (object)[
+        $type = (object) [
             'left'  => $this->left->getType(),
             'right' => 'string' === gettype($this->right) ? $this->right : $this->right->getType()
         ];

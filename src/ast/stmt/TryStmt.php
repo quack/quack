@@ -97,7 +97,7 @@ class TryStmt extends Stmt
         }
 
         // Inject scope in all the rescue cases
-        foreach (array_map(function ($item) {
+        foreach (array_map(function($item) {
             return (object) $item;
         }, $this->rescues) as $rescue) {
             $rescue->body->scope = new Scope($parent_scope);
@@ -126,7 +126,7 @@ class TryStmt extends Stmt
     {
         $this->try->runTypeChecker();
 
-        foreach (array_map(function ($item) {
+        foreach (array_map(function($item) {
             return (object) $item;
         }, $this->rescues) as $rescue) {
             $rescue->body->runTypeChecker();
