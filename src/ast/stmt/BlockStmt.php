@@ -54,8 +54,6 @@ class BlockStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->stmt_list);
-
         foreach ($this->stmt_list as $node) {
             $node->injectScope($this->scope);
         }

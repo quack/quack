@@ -63,7 +63,6 @@ class WhileStmt extends Stmt
     {
         $this->createScopeWithParent($parent_scope);
         $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
-        $this->bindDeclarations($this->body);
 
         $this->condition->injectScope($parent_scope);
 

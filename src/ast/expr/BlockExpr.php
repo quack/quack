@@ -55,7 +55,6 @@ class BlockExpr extends Expr
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body->stmt_list);
 
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);

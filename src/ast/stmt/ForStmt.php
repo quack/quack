@@ -80,8 +80,6 @@ class ForStmt extends Stmt
         // Bind for-variable for its local scope
         $this->scope->insert($this->variable, Kind::K_VARIABLE | Kind::K_MUTABLE | Kind::K_INITIALIZED);
 
-        $this->bindDeclarations($this->body->stmt_list);
-
         $this->from->injectScope($parent_scope);
         $this->to->injectScope($parent_scope);
 

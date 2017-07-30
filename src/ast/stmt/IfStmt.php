@@ -75,8 +75,6 @@ class IfStmt extends Stmt
     {
         // Bind scope in the body of if-statement
         $this->body->createScopeWithParent($parent_scope);
-        $this->body->bindDeclarations($this->body->stmt_list);
-
         $this->condition->injectScope($parent_scope);
 
         foreach ($this->body->stmt_list as $node) {
@@ -92,7 +90,6 @@ class IfStmt extends Stmt
         // If we have `else', bind in depth
         if (null !== $this->else) {
             $this->else->createScopeWithParent($parent_scope);
-            $this->else->bindDeclarations($this->else->stmt_list);
 
             foreach ($this->else->stmt_list as $node) {
                 $node->injectScope($this->else->scope);

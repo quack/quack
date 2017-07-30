@@ -59,8 +59,6 @@ class ElifStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body);
-
         $this->condition->injectScope($parent_scope);
 
         foreach ($this->body as $node) {

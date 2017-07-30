@@ -93,7 +93,6 @@ class ForeachStmt extends Stmt
         }
 
         $this->scope->insert($this->alias, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
-        $this->bindDeclarations($this->body);
         $this->generator->injectScope($parent_scope);
 
         foreach ($this->body as $node) {

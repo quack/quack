@@ -52,8 +52,6 @@ class CaseStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body->stmt_list);
-
         if (!$this->is_else) {
             $this->value->injectScope($parent_scope);
         }

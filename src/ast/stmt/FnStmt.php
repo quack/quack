@@ -94,7 +94,6 @@ class FnStmt extends Stmt
         if ($this->is_short) {
             $this->body->injectScope($this->scope);
         } else {
-            $this->bindDeclarations($this->body);
             foreach ($this->body as $node) {
                 $node->injectScope($this->scope);
             }

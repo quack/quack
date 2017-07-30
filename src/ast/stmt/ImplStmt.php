@@ -107,7 +107,6 @@ class ImplStmt extends Stmt
         }
 
         $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body->stmt_list);
 
         foreach ($this->body->stmt_list as $node) {
             if ($node instanceof FnStmt) {

@@ -123,8 +123,6 @@ class LambdaExpr extends Expr
         }
 
         if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
-            $this->bindDeclarations($this->body);
-
             foreach ($this->body as $node) {
                 $node->injectScope($this->scope);
             }
