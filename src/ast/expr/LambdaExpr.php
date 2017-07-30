@@ -28,6 +28,7 @@ use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class LambdaExpr extends Expr
@@ -105,8 +106,7 @@ class LambdaExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         foreach ($this->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
                 throw new ScopeError(Localization::message('SCO010', [$param->name]));

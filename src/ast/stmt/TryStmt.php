@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class TryStmt extends Stmt
@@ -88,7 +89,7 @@ class TryStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         // Inject scope on try body
-        $this->try->createScopeWithParent($parent_scope);
+        $this->try->scope = new Scope($parent_scope);
 
         // Continue depth-based traversal on try body
         foreach ($this->try->stmt_list as $node) {
@@ -99,7 +100,7 @@ class TryStmt extends Stmt
         foreach (array_map(function ($item) {
             return (object) $item;
         }, $this->rescues) as $rescue) {
-            $rescue->body->createScopeWithParent($parent_scope);
+            $rescue->body->scope = new Scope($parent_scope);
 
             // Pre-bind rescue variable
             $rescue->body->scope->insert($rescue->variable, Kind::K_VARIABLE | Kind::K_INITIALIZED);
@@ -112,7 +113,7 @@ class TryStmt extends Stmt
 
         // When finally is provided, inject scope and traverse
         if (null !== $this->finally) {
-            $this->finally->createScopeWithParent($parent_scope);
+            $this->finally->scope = new Scope($parent_scope);
 
             // Continue depth-based traversal
             foreach ($this->finally->stmt_list as $node) {

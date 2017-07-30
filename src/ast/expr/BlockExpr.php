@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
 
@@ -54,8 +55,7 @@ class BlockExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         foreach ($this->body->stmt_list as $node) {
             $node->injectScope($this->scope);
         }
