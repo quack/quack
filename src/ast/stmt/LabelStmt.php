@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class LabelStmt extends Stmt
@@ -47,7 +48,7 @@ class LabelStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
         // Pre-inject label symbol
         $this->scope->insert($this->name, Kind::K_LABEL);
         $this->stmt->injectScope($this->scope);

@@ -25,6 +25,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class ImplStmt extends Stmt
@@ -106,8 +107,7 @@ class ImplStmt extends Stmt
             }
         }
 
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         foreach ($this->body->stmt_list as $node) {
             if ($node instanceof FnStmt) {
                 $node->flagBindSelf();

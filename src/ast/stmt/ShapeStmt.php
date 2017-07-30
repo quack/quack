@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Kind;
 
@@ -62,7 +63,7 @@ class ShapeStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
 
         foreach ($this->members as $member) {
             if ($this->scope->hasLocal($member)) {

@@ -24,6 +24,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -74,7 +75,7 @@ class IfStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         // Bind scope in the body of if-statement
-        $this->body->createScopeWithParent($parent_scope);
+        $this->body->scope = new Scope($parent_scope);
         $this->condition->injectScope($parent_scope);
 
         foreach ($this->body->stmt_list as $node) {
@@ -89,7 +90,7 @@ class IfStmt extends Stmt
 
         // If we have `else', bind in depth
         if (null !== $this->else) {
-            $this->else->createScopeWithParent($parent_scope);
+            $this->else->scope = new Scope($parent_scope);
 
             foreach ($this->else->stmt_list as $node) {
                 $node->injectScope($this->else->scope);

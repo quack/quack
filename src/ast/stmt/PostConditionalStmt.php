@@ -25,6 +25,7 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -57,7 +58,7 @@ class PostConditionalStmt extends Stmt
     {
         // As much as it is conditional, and there may be conditional variable
         // declarations, we must give to the post conditional an own scope
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
         $this->predicate->injectScope($parent_scope);
         $this->stmt->injectScope($this->scope);
     }

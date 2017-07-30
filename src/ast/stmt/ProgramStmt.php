@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \Exception;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 
 class ProgramStmt extends Stmt
 {
@@ -46,7 +47,7 @@ class ProgramStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
 
         foreach ($this->stmt_list as $node) {
             $node->injectScope($this->scope);

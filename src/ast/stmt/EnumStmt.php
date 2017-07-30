@@ -25,6 +25,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Membered;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\Type;
@@ -65,8 +66,7 @@ class EnumStmt extends Stmt implements Membered
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         // Inject its own members
         foreach ($this->entries as $entry) {
             if ($this->scope->hasLocal($entry)) {
