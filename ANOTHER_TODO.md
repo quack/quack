@@ -25,7 +25,7 @@
 
 ## Must for 0.1.0:
 
-[ ] Implement "atom" literal type
+[x] Implement "atom" literal type
 [ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
 [x] Inject self variable for let statement on value, allowing  let x :: number :- x
 [ ] Implement type merging via intersection (&)

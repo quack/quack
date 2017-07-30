@@ -23,6 +23,7 @@ fn f(n :: number) -> number :- when
   n = 0 -> 1,
   else n * f(n - 1)
 end
+let request :: atom :- @POST
 %%expect
 array(1) {
   [0]=>
@@ -48,3 +49,4 @@ fn f(n :: number) -> number :- when
   n = 0 -> 1,
   else n * f(n - 1)
 end
+let request :: atom :- @POST
