@@ -32,7 +32,6 @@ class ConstStmt extends Stmt
     public $name;
     public $type;
     public $value;
-    private $scoperef;
 
     public function __construct($name, $type, $value)
     {

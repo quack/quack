@@ -36,7 +36,6 @@ class OperatorExpr extends Expr
     public $left;
     public $operator;
     public $right;
-    private $scoperef;
 
     public function __construct(Expr $left, $operator, $right)
     {
@@ -65,7 +64,7 @@ class OperatorExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = &$parent_scope;
+        $this->scope = &$parent_scope;
         $this->left->injectScope($parent_scope);
 
         if (!$this->isMemberAccess()) {
