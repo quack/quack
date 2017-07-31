@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
@@ -30,7 +31,6 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
@@ -129,7 +129,7 @@ class ForeachStmt extends Stmt
                 Meta::M_TYPE,
                 $this->key,
                 $generator_type->isList()
-                    ? new Type(NativeQuackType::T_NUMBER)
+                    ? new LiteralType(NativeQuackType::T_NUMBER)
                     : clone $generator_type->subtype['key']
             );
         }

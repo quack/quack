@@ -26,7 +26,6 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class NameExpr extends Expr

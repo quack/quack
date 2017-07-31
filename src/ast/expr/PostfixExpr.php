@@ -25,7 +25,6 @@ use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type; // TODO: Find and kill all these references later
 
 class PostfixExpr extends Expr
 {

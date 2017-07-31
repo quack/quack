@@ -24,7 +24,6 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 
 class BoolExpr extends Expr
 {

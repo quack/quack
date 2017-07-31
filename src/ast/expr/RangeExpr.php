@@ -26,7 +26,6 @@ use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class RangeExpr extends Expr

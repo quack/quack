@@ -28,7 +28,6 @@ use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 
 class EnumStmt extends Stmt implements Membered
 {
