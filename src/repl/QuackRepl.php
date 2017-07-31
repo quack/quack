@@ -159,7 +159,9 @@ function readline_callback($command)
         $session->command = '';
         $session->complete_stmt = true;
         echo $e;
-        quack();
+        if (!args_have('--shut-up-duck')) {
+            quack();
+        }
     }
 
     next:
