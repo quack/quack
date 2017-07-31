@@ -37,6 +37,6 @@ class Meta
 
     public static function nextGenericVarName()
     {
-        return 'a' . static::$generic_num++;
+        return 'A' . static::$generic_num++;
     }
 }
