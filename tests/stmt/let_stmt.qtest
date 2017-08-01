@@ -2,8 +2,8 @@
 Supports formatting let statements
 %%source
 let greeting :- "Hello World!"
-let x :- 1, y :- 2
+let x :- 1 let y :- 2
 %%expect
 let greeting :- "Hello World!"
 let x :- 1
-  , y :- 2
+let y :- 2

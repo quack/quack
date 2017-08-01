@@ -21,9 +21,9 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 
 class RegexExpr extends Expr
 {
@@ -47,6 +47,6 @@ class RegexExpr extends Expr
 
     public function getType()
     {
-        return new Type(NativeQuackType::T_REGEX);
+        return new LiteralType(NativeQuackType::T_REGEX);
     }
 }

@@ -25,6 +25,7 @@ use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -61,9 +62,8 @@ class WhileStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
         $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
-        $this->bindDeclarations($this->body);
 
         $this->condition->injectScope($parent_scope);
 
@@ -75,7 +75,7 @@ class WhileStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->condition->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP010', [$condition_type]));
         }
 

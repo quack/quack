@@ -21,10 +21,11 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class RangeExpr extends Expr
@@ -66,9 +67,7 @@ class RangeExpr extends Expr
 
     public function getType()
     {
-        $newtype = new Type(NativeQuackType::T_LIST);
-
-        $type = (object) [
+        $type = (object)[
             'from' => $this->from->getType(),
             'to'   => $this->to->getType(),
             'by'   => null !== $this->by ? $this->by->getType() : null
@@ -90,7 +89,6 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        $newtype->subtype = new Type(NativeQuackType::T_NUMBER);
-        return $newtype;
+        return new ListType(new LiteralType(NativeQuackType::T_NUMBER));
     }
 }

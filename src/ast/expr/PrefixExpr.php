@@ -65,13 +65,13 @@ class PrefixExpr extends Expr
             case '-':
             case '~':
                 if ($right_type->isNumber()) {
-                    return clone $right_type;
+                    return $right_type;
                 }
 
                 throw $type_error;
             case Tag::T_NOT:
                 if ($right_type->isBoolean()) {
-                    return clone $right_type;
+                    return $right_type;
                 }
 
                 throw $type_error;

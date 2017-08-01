@@ -34,4 +34,13 @@ class ListType extends TypeNode
     {
         return $this->parenthesize('{' . $this->type . '}');
     }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof ListType)) {
+            return false;
+        }
+
+        return $this->type->check($other->type);
+    }
 }

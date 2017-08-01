@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 
 class CaseStmt extends Stmt
 {
@@ -51,9 +52,7 @@ class CaseStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body->stmt_list);
-
+        $this->scope = new Scope($parent_scope);
         if (!$this->is_else) {
             $this->value->injectScope($parent_scope);
         }

@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Types\NativeQuackType;
+
 abstract class TypeNode
 {
     protected $parentheses_level = 0;
@@ -40,4 +42,41 @@ abstract class TypeNode
         $level = $this->parentheses_level;
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
     }
+
+    public function isNumber()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_NUMBER === $this->code;
+    }
+
+    public function isString()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_STR === $this->code;
+    }
+
+    public function isBoolean()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_BOOL === $this->code;
+    }
+
+    public function isRegex()
+    {
+        return $this instanceof LiteralType
+            && NativeQuackType::T_REGEX === $this->code;
+    }
+
+    public function isIterable()
+    {
+        return $this instanceof MapType
+            || $this instanceof ListType;
+    }
+
+    public function simplify()
+    {
+        return $this;
+    }
+
+    abstract function check(TypeNode $other);
 }

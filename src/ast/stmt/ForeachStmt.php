@@ -21,14 +21,16 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Util;
+use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
@@ -79,7 +81,7 @@ class ForeachStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
+        $this->scope = new Scope($parent_scope);
         $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
 
         // Pre-inject key and value in block scope
@@ -92,7 +94,6 @@ class ForeachStmt extends Stmt
         }
 
         $this->scope->insert($this->alias, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
-        $this->bindDeclarations($this->body);
         $this->generator->injectScope($parent_scope);
 
         foreach ($this->body as $node) {
@@ -107,8 +108,8 @@ class ForeachStmt extends Stmt
         // Map { key -> value } = ∀ a b. Map { a' -> b' }
         $generator_type = $this->generator->getType();
 
-        // When the element has no subtype to be an iterable
-        if (null === $generator_type->subtype) {
+        // When the element is not iterable
+        if (!$generator_type->isIterable()) {
             throw new TypeError(Localization::message('TYP260', [$generator_type]));
         }
 
@@ -128,7 +129,7 @@ class ForeachStmt extends Stmt
                 Meta::M_TYPE,
                 $this->key,
                 $generator_type->isList()
-                    ? new Type(NativeQuackType::T_NUMBER)
+                    ? new LiteralType(NativeQuackType::T_NUMBER)
                     : clone $generator_type->subtype['key']
             );
         }

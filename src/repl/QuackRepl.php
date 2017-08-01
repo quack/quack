@@ -70,6 +70,14 @@ LICENSE
     repl();
 }
 
+function quack()
+{
+    if (isPOSIX()) {
+        $wav = realpath(dirname(__FILE__) . '/../../resource/quack.wav');
+        exec("aplay $wav 2> /dev/null &");
+    }
+}
+
 function install_stream_handler()
 {
     $prompt = session()->complete_stmt ? "Quack> " : "\__(\"> ";
@@ -151,6 +159,9 @@ function readline_callback($command)
         $session->command = '';
         $session->complete_stmt = true;
         echo $e;
+        if (!args_have('--shut-up-duck')) {
+            quack();
+        }
     }
 
     next:

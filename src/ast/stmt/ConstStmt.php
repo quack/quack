@@ -21,55 +21,57 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Types\TypeError;
 
 class ConstStmt extends Stmt
 {
-    public $definitions;
-    private $scoperef;
+    public $name;
+    public $type;
+    public $value;
 
-    public function __construct($definitions)
+    public function __construct($name, $type, $value)
     {
-        $this->definitions = $definitions;
+        $this->name = $name;
+        $this->type = $type;
+        $this->value = $value;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'const ';
-        $first = true;
+        $source = 'const ' . $this->name;
 
-        foreach ($this->definitions as $def) {
-            if (!$first) {
-                $source .= $parser->indent();
-                $source .= '    , ';
-            } else {
-                $first = false;
-            }
-
-            $source .= $def[0];
-            $source .= ' :- ';
-            $source .= $def[1]->format($parser);
-            $source .= PHP_EOL;
+        if (!is_null($this->type)) {
+            $source .= ' :: ' . $this->type;
         }
 
+        $source .= ' :- ' . $this->value->format($parser);
+        $source .= PHP_EOL;
         return $source;
     }
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = $parent_scope;
-        foreach ($this->definitions as $def) {
-            $def[1]->injectScope($parent_scope);
-        }
+        $this->scope = $parent_scope;
+        $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_INITIALIZED);
+        $this->value->injectScope($parent_scope);
     }
 
     public function runTypeChecker()
     {
-        foreach ($this->definitions as $def) {
-            $vartype = $def[1]->getType();
-            // Store type in the meta-scope
-            $this->scoperef->setMeta(Meta::M_TYPE, $def[0], $vartype);
+        if (is_null($this->type)) {
+            // TODO: deal with mutual recursion, as const x :- x
+            $value_type = $this->value->getType();
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $value_type);
+        } else {
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
+            $value_type = $this->value->getType();
+            if (!$this->type->check($value_type)) {
+                throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
+            }
         }
     }
 }

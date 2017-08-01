@@ -25,9 +25,9 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Membered;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 
 class EnumStmt extends Stmt implements Membered
 {
@@ -65,8 +65,7 @@ class EnumStmt extends Stmt implements Membered
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         // Inject its own members
         foreach ($this->entries as $entry) {
             if ($this->scope->hasLocal($entry)) {
@@ -87,15 +86,6 @@ class EnumStmt extends Stmt implements Membered
     public function getMembers()
     {
         // TODO: Remodel subtyping. See paper https://hal.inria.fr/hal-00695034/document
-        $type = new Type(NativeQuackType::T_ENUM);
-        $type->subtype = $this->name;
-        $members = [];
-        foreach ($this->entries as $entry) {
-            $members[$entry] = [
-                'type' => (string) $type
-            ];
-        }
-
-        return $members;
+        return null;
     }
 }

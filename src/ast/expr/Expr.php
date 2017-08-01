@@ -22,7 +22,6 @@
 namespace QuackCompiler\Ast\Expr;
 
 use QuackCompiler\Ast\Node;
-use QuackCompiler\Types\Type;
 
 abstract class Expr extends Node
 {
@@ -42,10 +41,5 @@ abstract class Expr extends Node
     {
         $level = $this->parentheses_level;
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
-    }
-
-    public /* temporary */ function getType()
-    {
-        return new Type(null);
     }
 }

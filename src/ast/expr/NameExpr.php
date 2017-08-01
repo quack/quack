@@ -26,13 +26,11 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class NameExpr extends Expr
 {
     public $name;
-    private $scoperef;
 
     public function __construct($name)
     {
@@ -47,7 +45,7 @@ class NameExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = &$parent_scope;
+        $this->scope = $parent_scope;
         $symbol = $parent_scope->lookup($this->name);
 
         if (null === $symbol) {
@@ -69,10 +67,10 @@ class NameExpr extends Expr
 
     public function getType()
     {
-        $symbol = $this->scoperef->lookup($this->name);
+        $symbol = $this->scope->lookup($this->name);
 
         if ($symbol & Kind::K_VARIABLE) {
-            $variable_scope = $this->scoperef->getSymbolScope($this->name);
+            $variable_scope = $this->scope->getSymbolScope($this->name);
             return $variable_scope->getMeta(Meta::M_TYPE, $this->name);
         }
 

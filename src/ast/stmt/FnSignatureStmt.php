@@ -21,9 +21,11 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
 class FnSignatureStmt extends Stmt
@@ -31,7 +33,6 @@ class FnSignatureStmt extends Stmt
     public $name;
     public $parameters;
     public $type;
-    public $native;
 
     public function __construct($name, $parameters, $type)
     {
@@ -42,13 +43,8 @@ class FnSignatureStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = '';
-        if ($this->native) {
-            $source .= 'native fn ';
-        }
-        $source .= $this->name;
-        $source .= '(';
-        $source .= implode(', ', array_map(function($param) {
+        $source = $this->name . '(';
+        $source .= implode(', ', array_map(function ($param) {
             $parameter = $param->name;
 
             if (null !== $param->type) {
@@ -61,10 +57,6 @@ class FnSignatureStmt extends Stmt
 
         if (!is_null($this->type)) {
             $source .= ' -> ' . $this->type;
-        }
-
-        if ($this->native) {
-            $source .= PHP_EOL;
         }
 
         return $source;
@@ -80,6 +72,15 @@ class FnSignatureStmt extends Stmt
             // TODO: inject type too?
             $parent_scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
         }
+    }
+
+    public function getParametersTypes()
+    {
+        return array_map(function($parameter) {
+            return null === $parameter->type
+                ? new GenericType(Meta::nextGenericVarName())
+                : $parameter->type;
+        }, $this->parameters);
     }
 
     public function runTypeChecker()

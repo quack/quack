@@ -25,13 +25,13 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class WhereExpr extends Expr
 {
     public $expr;
     public $clauses;
-    private $scoperef;
 
     public function __construct(Expr $expr, $clauses)
     {
@@ -82,9 +82,7 @@ class WhereExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-        $this->scoperef = $this->scope;
-
+        $this->scope = new Scope($parent_scope);
         // Bind where-symbols
         foreach ($this->clauses as $clause) {
             $key = &$clause[0];
@@ -105,7 +103,7 @@ class WhereExpr extends Expr
     {
         // Infer type for each declaration in this scope
         foreach ($this->clauses as $clause) {
-            $this->scoperef->setMeta(Meta::M_TYPE, $clause[0], $clause[1]->getType());
+            $this->scope->setMeta(Meta::M_TYPE, $clause[0], $clause[1]->getType());
         }
         // Retain type based on previous inference.
         return $this->expr->getType();

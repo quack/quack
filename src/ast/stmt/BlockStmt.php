@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 
 class BlockStmt extends Stmt
 {
@@ -53,9 +54,7 @@ class BlockStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->stmt_list);
-
+        $this->scope = new Scope($parent_scope);
         foreach ($this->stmt_list as $node) {
             $node->injectScope($this->scope);
         }

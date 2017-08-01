@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -58,9 +59,7 @@ class ElifStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations($this->body);
-
+        $this->scope = new Scope($parent_scope);
         $this->condition->injectScope($parent_scope);
 
         foreach ($this->body as $node) {
@@ -71,7 +70,7 @@ class ElifStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->condition->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP180', [$condition_type]));
         }
 

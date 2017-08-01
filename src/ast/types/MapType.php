@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
+
 class MapType extends TypeNode
 {
     public $key;
@@ -37,5 +40,33 @@ class MapType extends TypeNode
         return $this->parenthesize(
             '#{' . $this->key . ': ' . $this->value . '}'
         );
+    }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof MapType)) {
+            return false;
+        }
+
+        $match_keys = $this->key->check($other->key);
+        $match_values = $this->value->check($other->value);
+
+        if (!$match_keys || !$match_values) {
+            $message = Localization::message('TYP350', [$this, $other]);
+
+            if (!$match_keys) {
+                $message .= '     > ' . Localization::message('TYP340',
+                    ['key', $this->key, $other->key]);
+            }
+
+            if (!$match_values) {
+                $message .= PHP_EOL . '     > ' . Localization::message('TYP340',
+                    ['value', $this->value, $other->value]);
+            }
+
+            throw new TypeError($message);
+        }
+
+        return true;
     }
 }

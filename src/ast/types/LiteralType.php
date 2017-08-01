@@ -40,7 +40,10 @@ class LiteralType extends TypeNode
             NativeQuackType::T_BOOL   => 'boolean',
             NativeQuackType::T_REGEX  => 'regex',
             NativeQuackType::T_BLOCK  => 'block',
-            NativeQuackType::T_UNIT   => 'unit'
+            NativeQuackType::T_UNIT   => 'unit',
+            NativeQuackType::T_NIL    => 'nil',
+            NativeQuackType::T_BYTE   => 'byte',
+            NativeQuackType::T_ATOM   => 'atom'
         ];
 
         return $this->parenthesize(
@@ -48,5 +51,15 @@ class LiteralType extends TypeNode
                 ? $map[$this->code]
                 : 'unknown'
         );
+    }
+
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof LiteralType)) {
+            // Fallback for atom check
+            return $other instanceof AtomType && NativeQuackType::T_ATOM === $this->code;
+        }
+
+        return $this->code === $other->code;
     }
 }

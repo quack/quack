@@ -23,17 +23,18 @@ namespace QuackCompiler\Types;
 
 class NativeQuackType
 {
-    const T_STR      = 0;
-    const T_NUMBER   = 2;
-    const T_BOOL     = 3;
-    const T_OBJ      = 4;
-    const T_MAP      = 5;
-    const T_LIST     = 6;
-    const T_ATOM     = 9;
-    const T_REGEX    = 10;
-    const T_LAZY     = 11;
-    const T_BLOCK    = 12;
-    const T_ENUM     = 13;
-    const T_UNIT     = 14;
-    const T_BYTE     = 15;
+    const T_STR    = 0;
+    const T_NUMBER = 2;
+    const T_BOOL   = 3;
+    const T_OBJ    = 4;
+    const T_MAP    = 5;
+    const T_LIST   = 6;
+    const T_ATOM   = 9;
+    const T_REGEX  = 10;
+    const T_LAZY   = 11;
+    const T_BLOCK  = 12;
+    const T_ENUM   = 13;
+    const T_UNIT   = 14;
+    const T_BYTE   = 15;
+    const T_NIL    = 16;
 }

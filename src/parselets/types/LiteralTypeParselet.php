@@ -39,7 +39,8 @@ class LiteralTypeParselet implements PrefixParselet
             'regex'   => NativeQuackType::T_REGEX,
             'block'   => NativeQuackType::T_BLOCK,
             'unit'    => NativeQuackType::T_UNIT,
-            'byte'    => NativeQuackType::T_BYTE
+            'byte'    => NativeQuackType::T_BYTE,
+            'atom'    => NativeQuackType::T_ATOM
         ];
         $name = $token->getContent();
 

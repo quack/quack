@@ -21,13 +21,19 @@
  */
 namespace QuackCompiler\Scope;
 
-use QuackCompiler\Scope\Meta;
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Meta;
 
 class Scope
 {
     public $table = [];
     public $parent;
     public $meta = [];
+
+    public function __construct(Scope $parent = null)
+    {
+        $this->parent = $parent;
+    }
 
     public function hasLocal($symbol)
     {
@@ -36,6 +42,9 @@ class Scope
 
     public function insert($symbol, $value)
     {
+        if ($this->hasLocal($symbol)) {
+            throw new ScopeError(Localization::message('SCO130', [$symbol]));
+        }
         $this->table[$symbol] = $value;
     }
 

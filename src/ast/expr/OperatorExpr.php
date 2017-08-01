@@ -21,13 +21,14 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorExpr extends Expr
@@ -35,7 +36,6 @@ class OperatorExpr extends Expr
     public $left;
     public $operator;
     public $right;
-    private $scoperef;
 
     public function __construct(Expr $left, $operator, $right)
     {
@@ -64,7 +64,7 @@ class OperatorExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->scoperef = &$parent_scope;
+        $this->scope = &$parent_scope;
         $this->left->injectScope($parent_scope);
 
         if (!$this->isMemberAccess()) {
@@ -115,11 +115,10 @@ class OperatorExpr extends Expr
 
         $op_name = Tag::getOperatorLexeme($this->operator);
 
-        $member_access = ['.', '?.'];
-        if (in_array($this->operator, $member_access, true)) {
+        if ('.' === $this->operator) {
             // When member access and the property exists on the left type
-            if (is_array($type->left->props) && array_key_exists($this->right, $type->left->props)) {
-                return clone $type->left->props[$this->right];
+            if ($type->left instanceof ObjectType && isset($type->left->properties[$this->right])) {
+                return $type->left->properties[$this->right];
             }
 
             throw new TypeError(Localization::message('TYP090', [$type->left, $type->right]));
@@ -129,26 +128,26 @@ class OperatorExpr extends Expr
         // scope injection
         if (':-' === $this->operator) {
             // When right side cannot be attributed to left side
-            if (!$type->right->isExactlySameAs($type->left)) {
+            if (!$type->left->check($type->right)) {
                 $target = $this->left instanceof NameExpr
                     ? "`{$this->left->name}' :: {$type->left}"
-                    : (string) $type->right;
+                    : $type->right;
 
                 throw new TypeError(Localization::message('TYP100', [$type->right, $target]));
             }
 
-            return clone $type->right;
+            return $type->left;
         }
 
         // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '^', '&', '|', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return new Type(NativeQuackType::T_STR);
+                return new LiteralType(NativeQuackType::T_STR);
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new Type(NativeQuackType::T_NUMBER);
+                return new LiteralType(NativeQuackType::T_NUMBER);
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
@@ -156,21 +155,21 @@ class OperatorExpr extends Expr
 
         // Null coalesce operator
         if ('??' === $this->operator) {
-            if (!$type->left->isExactlySameAs($type->right)) {
+            if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP120', [$type->left, $type->right]));
             }
 
-            return clone $type->left;
+            return $type->left;
         }
 
         // Type checking for equality operators and coalescence
         $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
-            if (!$type->left->isExactlySameAs($type->right)) {
+            if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
             }
 
-            return new Type(NativeQuackType::T_BOOL);
+            return new LiteralType(NativeQuackType::T_BOOL);
         }
 
         // Type checking for string matched by regex
@@ -179,7 +178,7 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
-            return new Type(NativeQuackType::T_BOOL);
+            return new LiteralType(NativeQuackType::T_BOOL);
         }
 
         // Boolean algebra
@@ -189,7 +188,7 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
-            return new Type(NativeQuackType::T_BOOL);
+            return new LiteralType(NativeQuackType::T_BOOL);
         }
     }
 }

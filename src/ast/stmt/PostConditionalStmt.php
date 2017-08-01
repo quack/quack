@@ -25,6 +25,7 @@ use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -57,8 +58,7 @@ class PostConditionalStmt extends Stmt
     {
         // As much as it is conditional, and there may be conditional variable
         // declarations, we must give to the post conditional an own scope
-        $this->createScopeWithParent($parent_scope);
-        $this->bindDeclarations([$this->stmt]);
+        $this->scope = new Scope($parent_scope);
         $this->predicate->injectScope($parent_scope);
         $this->stmt->injectScope($this->scope);
     }
@@ -66,7 +66,7 @@ class PostConditionalStmt extends Stmt
     public function runTypeChecker()
     {
         $condition_type = $this->predicate->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        if (!$condition_type->isBoolean()) {
             throw new TypeError(Localization::message('TYP030', [$condition_type]));
         }
     }

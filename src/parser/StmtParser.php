@@ -161,37 +161,18 @@ class StmtParser
     public function _letStmt()
     {
         $this->reader->match(Tag::T_LET);
-        $definitions = [];
-
-        // First definition is required (without comma)
-        // I could just use a goto, but, Satan would want my soul...
         $name = $this->name_parser->_identifier();
-
+        $type = null;
+        $value = null;
         if ($this->reader->consumeIf('::')) {
-            // TODO: bind type for symbol. Currently ignored
             $type = $this->type_parser->_type();
         }
 
         if ($this->reader->consumeIf(':-')) {
             $value = $this->expr_parser->_expr();
-
-            $definitions[] = [$name, $value];
-        } else {
-            $definitions[] = [$name, null];
         }
 
-        while ($this->reader->consumeIf(',')) {
-            $name = $this->name_parser->_identifier();
-
-            if ($this->reader->consumeIf(':-')) {
-                $value = $this->expr_parser->_expr();
-                $definitions[] = [$name, $value];
-            } else {
-                $definitions[] = [$name, null];
-            }
-        }
-
-        return new LetStmt($definitions);
+        return new LetStmt($name, $type, $value);
     }
 
     public function _whileStmt()
@@ -365,27 +346,17 @@ class StmtParser
     public function _constStmt()
     {
         $this->reader->match(Tag::T_CONST);
-        $definitions = [];
-
         $name = $this->name_parser->_identifier();
+        $type = null;
 
         if ($this->reader->consumeIf('::')) {
-            // TODO: Bind type to value
             $type = $this->type_parser->_type();
         }
 
         $this->reader->match(':-');
         $value = $this->expr_parser->_expr();
-        $definitions[] = [$name, $value];
 
-        while ($this->reader->consumeIf(',')) {
-            $name = $this->name_parser->_identifier();
-            $this->reader->match(':-');
-            $value = $this->expr_parser->_expr();
-            $definitions[] = [$name, $value];
-        }
-
-        return new ConstStmt($definitions);
+        return new ConstStmt($name, $type, $value);
     }
 
     public function _parameter()

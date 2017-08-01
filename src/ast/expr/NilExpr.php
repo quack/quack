@@ -21,16 +21,15 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 
 class NilExpr extends Expr
 {
     public function format(Parser $_)
     {
-        $source = 'nil';
-        return $this->parenthesize($source);
+        return $this->parenthesize('nil');
     }
 
     public function injectScope(&$parent_scope)
@@ -40,6 +39,6 @@ class NilExpr extends Expr
 
     public function getType()
     {
-        return new Type(NativeQuackType::T_LAZY);
+        return new LiteralType(NativeQuackType::T_NIL);
     }
 }

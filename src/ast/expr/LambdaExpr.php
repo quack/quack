@@ -21,10 +21,14 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
 class LambdaExpr extends Expr
@@ -33,6 +37,7 @@ class LambdaExpr extends Expr
     public $kind;
     public $body;
     public $has_brackets;
+    private $argument_types;
 
     public function __construct($parameters, $kind, $body, $has_brackets)
     {
@@ -40,6 +45,7 @@ class LambdaExpr extends Expr
         $this->kind = $kind;
         $this->body = $body;
         $this->has_brackets = $has_brackets;
+        $this->argument_types = [];
     }
 
     public function format(Parser $parser)
@@ -52,7 +58,11 @@ class LambdaExpr extends Expr
                 break;
             case 1:
                 if ($this->has_brackets) {
-                    $source .= '[' . $this->parameters[0]->name . ']';
+                    $source .= '[' . $this->parameters[0]->name;
+                    if (isset($this->parameters[0]->type)) {
+                        $source .= ' :: ' . $this->parameters[0]->type;
+                    }
+                    $source .= ']';
                 } else {
                     $source .= $this->parameters[0]->name;
                 }
@@ -96,24 +106,40 @@ class LambdaExpr extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        $this->createScopeWithParent($parent_scope);
-
+        $this->scope = new Scope($parent_scope);
         foreach ($this->parameters as $param) {
             if ($this->scope->hasLocal($param->name)) {
                 throw new ScopeError(Localization::message('SCO010', [$param->name]));
             }
 
             $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
+            // Use or infer type for parameter and store it
+            $param_type = isset($param->type)
+                ? $param->type
+                : new GenericType(Meta::nextGenericVarName());
+
+            $this->argument_types[$param->name] = $param_type;
+            $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);
         }
 
         if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
-            $this->bindDeclarations($this->body);
-
             foreach ($this->body as $node) {
                 $node->injectScope($this->scope);
             }
         } else {
             $this->body->injectScope($this->scope);
         }
+    }
+
+    public function getType()
+    {
+        if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
+            return new FunctionType(array_map(function ($parameter) {
+                return $this->argument_types[$parameter->name];
+            }, $this->parameters), $this->body->getType());
+        }
+
+        // TODO: Must implement return for blocks
+        return null;
     }
 }

@@ -24,7 +24,6 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\NativeQuackType;
-use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 class TernaryExpr extends Expr
@@ -60,18 +59,18 @@ class TernaryExpr extends Expr
 
     public function getType()
     {
-        $condition_type = $this->condition->getType();
-        if (NativeQuackType::T_BOOL !== $condition_type->code) {
+        $condition = $this->condition->getType();
+        if (!$condition->isBoolean()) {
             throw new TypeError(Localization::message('TYP240', [$condition_type]));
         }
 
-        $when_true_type = $this->then->getType();
-        $when_false_type = $this->else->getType();
+        $truthy = $this->then->getType();
+        $falsy = $this->else->getType();
 
-        if (!$when_true_type->isExactlySameAs($when_false_type)) {
-            throw new TypeError(Localization::message('TYP250', [$when_true_type, $when_false_type]));
+        if (!$truthy->check($falsy)) {
+            throw new TypeError(Localization::message('TYP250', [$truthy, $falsy]));
         }
 
-        return clone $when_true_type;
+        return $truthy;
     }
 }

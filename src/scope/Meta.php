@@ -28,9 +28,15 @@ class Meta
     const M_LABEL     = 'label'; // implicit meta labels
 
     private static $label_num = 0;
+    private static $generic_num = 0;
 
     public static function nextMetaLabel()
     {
         return  'LB' . static::$label_num++;
+    }
+
+    public static function nextGenericVarName()
+    {
+        return 'A' . static::$generic_num++;
     }
 }

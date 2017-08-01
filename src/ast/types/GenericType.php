@@ -34,4 +34,10 @@ class GenericType extends TypeNode
     {
         return $this->parenthesize($this->name);
     }
+
+    public function check(TypeNode $other)
+    {
+        // TODO: Implement generic types
+        return false;
+    }
 }

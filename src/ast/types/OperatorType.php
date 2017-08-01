@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
+
 class OperatorType extends TypeNode
 {
     public $operator;
@@ -39,5 +42,44 @@ class OperatorType extends TypeNode
         return $this->parenthesize(
             $this->left . " {$this->operator} " . $this->right
         );
+    }
+
+    public function simplify()
+    {
+        if ('&' !== $this->operator) {
+            return $this;
+        }
+
+        $simple_left = $this->left->simplify();
+        $simple_right = $this->right->simplify();
+
+        if ($simple_left instanceof ObjectType && $simple_right instanceof ObjectType) {
+            // Merge two object types
+            $properties = [];
+            foreach ($simple_left->properties as $name => $type) {
+                $properties[$name] = $type;
+            }
+
+            foreach ($simple_right->properties as $name => $type) {
+                // If key already exists, ensure the type is compatible
+                if (array_key_exists($name, $properties)) {
+                    if (!$properties[$name]->check($type)) {
+                        throw new TypeError(Localization::message('TYP400',
+                            [$this->left, $this->right, $name, $properties[$name], $type]));
+                    }
+                } else {
+                    $properties[$name] = $type;
+                }
+            }
+
+            return new ObjectType($properties);
+        }
+
+        throw new TypeError(Localization::message('TYP390', [$this->left, $this->right]));
+    }
+
+    public function check(TypeNode $other)
+    {
+        return $this->simplify()->check($other);
     }
 }
