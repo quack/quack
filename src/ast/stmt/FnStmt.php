@@ -134,7 +134,7 @@ class FnStmt extends Stmt
     private function injectParametersTypes($parameters_types)
     {
         $size = sizeof($parameters_types);
-        for ($i = 0 ; $i < $size; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             $parameter = $this->signature->parameters[$i]->name;
             $type = $parameters_types[$i];
             $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
