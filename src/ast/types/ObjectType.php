@@ -33,7 +33,7 @@ class ObjectType extends TypeNode
     public function __toString()
     {
         $source = '%{';
-        $source .= implode(', ', array_map(function ($name) {
+        $source .= implode(', ', array_map(function($name) {
             return "{$name}: {$this->properties[$name]}";
         }, array_keys($this->properties)));
         $source .= '}';

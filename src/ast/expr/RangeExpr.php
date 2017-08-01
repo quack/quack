@@ -67,7 +67,7 @@ class RangeExpr extends Expr
 
     public function getType()
     {
-        $type = (object)[
+        $type = (object) [
             'from' => $this->from->getType(),
             'to'   => $this->to->getType(),
             'by'   => null !== $this->by ? $this->by->getType() : null

@@ -134,7 +134,7 @@ class LambdaExpr extends Expr
     public function getType()
     {
         if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
-            return new FunctionType(array_map(function ($parameter) {
+            return new FunctionType(array_map(function($parameter) {
                 return $this->argument_types[$parameter->name];
             }, $this->parameters), $this->body->getType());
         }

@@ -44,7 +44,7 @@ class FnSignatureStmt extends Stmt
     public function format(Parser $parser)
     {
         $source = $this->name . '(';
-        $source .= implode(', ', array_map(function ($param) {
+        $source .= implode(', ', array_map(function($param) {
             $parameter = $param->name;
 
             if (null !== $param->type) {
