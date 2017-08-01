@@ -104,8 +104,8 @@ class ForeachStmt extends Stmt
     public function runTypeChecker()
     {
         // The following type-rules are applicable:
-        // List { key -> value } = ∀ a. List { Int -> a' }
-        // Map { key -> value } = ∀ a b. Map { a' -> b' }
+        // List :: ∀ a. Int -> a
+        // Map :: ∀ a b. a -> b
         $generator_type = $this->generator->getType();
 
         // When the element is not iterable
@@ -113,30 +113,16 @@ class ForeachStmt extends Stmt
             throw new TypeError(Localization::message('TYP260', [$generator_type]));
         }
 
-        // When the element has no deducible subtype (list)
-        if ($generator_type->isList() && $generator_type->subtype->isLazy()) {
-            throw new TypeError(Localization::message('TYP270', [$generator_type->subtype, $generator_type]));
-        }
-
-        // When the element has no deducible subtype (map)
-        if (is_array($generator_type->subtype)
-            && ($generator_type->subtype['key']->isLazy() || $generator_type->subtype['value']->isLazy())) {
-            throw new ScopeError(Localization::message('TYP280', [$generator_type]));
-        }
-
         if (null !== $this->key) {
-            $this->scope->setMeta(
-                Meta::M_TYPE,
-                $this->key,
-                $generator_type->isList()
-                    ? new LiteralType(NativeQuackType::T_NUMBER)
-                    : clone $generator_type->subtype['key']
-            );
+            $key_type = $generator_type instanceof ListType
+                ? new LiteralType(NativeQuackType::T_NUMBER)
+                : $generator_type->key;
+            $this->scope->setMeta(Meta::M_TYPE, $this->key, $key_type);
         }
 
-        $this->scope->setMeta(Meta::M_TYPE, $this->alias, $generator_type->isList()
-            ? clone $generator_type->subtype
-            : clone $generator_type->subtype['value']);
+        $value_type = $generator_type instanceof ListType
+            ? $generator_type->type
+            : $generator_type->key;
 
         foreach ($this->body as $stmt) {
             $stmt->runTypeChecker();
