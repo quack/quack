@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
 
-class ModuleStmt extends Stmt
+class importStmt extends Stmt
 {
     public $qualified_name;
 
@@ -34,7 +34,7 @@ class ModuleStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = 'module ';
+        $source = 'import ';
         $source .= implode('.', $this->qualified_name);
         $source .= PHP_EOL;
         return $source;

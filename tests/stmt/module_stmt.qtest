@@ -1,12 +1,12 @@
 %%describe
 Supports formatting module statements
 %%source
-module Quack.Core.Math
+import Quack.Core.Math
 const pi :- 3.14
 fn add(x, y) :- x + y
 fn sub(x, y) :- add(x, -y)
 %%expect
-module Quack.Core.Math
+import Quack.Core.Math
 const pi :- 3.14
 fn add(x, y) :- x + y
 fn sub(x, y) :- add(x, -y)

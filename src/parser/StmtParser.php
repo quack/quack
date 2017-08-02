@@ -312,8 +312,9 @@ class StmtParser
     public function _topStmt()
     {
         $decl_table = [
+            Tag::T_EXPORT    => '_fnStmt',
             Tag::T_FN        => '_fnStmt',
-            Tag::T_MODULE    => '_moduleStmt',
+            Tag::T_IMPORT    => '_importStmt',
             Tag::T_ENUM      => '_enumStmt',
             Tag::T_IMPL      => '_implStmt',
             Tag::T_CLASS     => '_classStmt',
