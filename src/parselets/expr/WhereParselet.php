@@ -39,7 +39,7 @@ class WhereParselet implements InfixParselet
         $value = $grammar->_expr();
         $clauses[] = [$name, $value];
 
-        while ($grammar->reader->is(';')) {
+        while ($grammar->reader->is(',')) {
             $grammar->reader->consume();
             $name = $grammar->name_parser->_identifier();
             $grammar->reader->match(':-');

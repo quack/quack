@@ -170,4 +170,4 @@
   - [x] Change WhenExpr separators from `|` and `;` to `,`
   - [ ] Create ImportStmt (like ES6)
   - [ ] Make ModuleStmt the first statement of a file.
-  - [ ] Fix WhereExpr and change from `;` to `,`
+  - [x] Fix WhereExpr and change from `;` to `,`
