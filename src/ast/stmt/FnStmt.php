@@ -36,22 +36,25 @@ class FnStmt extends Stmt
     public $body;
     public $is_method;
     public $is_short;
+    public $is_export;
 
     private $flag_bind_self = false;
 
-    public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short)
+    public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short, $is_export)
     {
         $this->signature = $signature;
         $this->body = $body;
         $this->is_method = $is_method;
         $this->is_short = $is_short;
+        $this->is_export = $is_export;
         // Standard compatibilization for `Named'
         $this->name = $this->signature->name;
     }
 
     public function format(Parser $parser)
     {
-        $source = $this->is_method ? '' : 'fn ';
+        $source = $this->is_export ? 'export ' : '';
+        $source .= $this->is_method ? '' : 'fn ';
         $source .= $this->signature->format($parser);
 
         if ($this->is_short) {

@@ -168,6 +168,9 @@
 
   - [x] Fix example on README file
   - [x] Change WhenExpr separators from `|` and `;` to `,`
-  - [ ] Create ImportStmt (like ES6)
-  - [ ] Make ModuleStmt the first statement of a file.
+  - [x] Create ImportStmt (like ES6)
+  - [ ] Create ExportStmt for fn, shapes, bindings and others whenever it applies
+  - [x] Make ModuleStmt the first statement of a file.
+  - [x] Delete ModuleStmt
+  - [ ] Make sure ReturnStmt is returning in all branches
   - [ ] Fix WhereExpr and change from `;` to `,`

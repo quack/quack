@@ -29,7 +29,7 @@ use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\ImplStmt;
-use \QuackCompiler\Ast\Stmt\ModuleStmt;
+use \QuackCompiler\Ast\Stmt\ImportStmt;
 use \QuackCompiler\Ast\Stmt\OpenStmt;
 use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
@@ -100,8 +100,13 @@ class DeclParser
 
     public function _fnStmt($is_method = false)
     {
+        $is_export = false;
         $is_short = false;
         $body = null;
+
+        if ($is_export = $this->reader->is(Tag::T_EXPORT)) {
+            $this->reader->consume(); // export
+        }
 
         if (!$is_method) {
             $this->reader->match(Tag::T_FN);
@@ -117,7 +122,7 @@ class DeclParser
             $this->reader->match(Tag::T_END);
         }
 
-        return new FnStmt($signature, $body, $is_method, $is_short);
+        return new FnStmt($signature, $body, $is_method, $is_short, $is_export);
     }
 
     public function _implStmt()
@@ -148,10 +153,10 @@ class DeclParser
         }
     }
 
-    public function _moduleStmt()
+    public function _importStmt()
     {
-        $this->reader->match(Tag::T_MODULE);
-        return new ModuleStmt($this->name_parser->_qualifiedName());
+        $this->reader->match(Tag::T_IMPORT);
+        return new ImportStmt($this->name_parser->_qualifiedName());
     }
 
     public function _shapeStmt()

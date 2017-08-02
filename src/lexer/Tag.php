@@ -45,14 +45,14 @@ class Tag
     const T_FOR = 263;
     const T_WHILE = 264;
     const T_DO = 265;
-    const T_MODULE = 269;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
     const T_WHERE = 280;
     const T_FOREACH = 281;
     const T_IN = 284;
-    const T_OPEN = 502;
+    const T_EXPORT = 501;
+    const T_IMPORT = 502;
     const T_AS = 504;
     const T_ENUM = 506;
     const T_CONTINUE = 508;
