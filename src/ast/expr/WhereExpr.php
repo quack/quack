@@ -61,7 +61,7 @@ class WhereExpr extends Expr
 
             if (!$first) {
                 $source .= $parser->indent();
-                $source .= '    ; ';
+                $source .= '    , ';
             } else {
                 $first = false;
             }
