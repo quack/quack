@@ -37,8 +37,6 @@ class FnStmt extends Stmt
     public $is_method;
     public $is_short;
 
-    private $flag_bind_self = false;
-
     public function __construct(FnSignatureStmt $signature, $body, $is_method, $is_short)
     {
         $this->signature = $signature;
@@ -83,11 +81,6 @@ class FnStmt extends Stmt
         $parent_scope->insert($this->signature->name, Kind::K_VARIABLE | Kind::K_FUNCTION);
         $this->scope = new Scope($parent_scope);
 
-        // Pre-inject `self' if it should
-        if ($this->flag_bind_self) {
-            $this->scope->insert('self', Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_SPECIAL);
-        }
-
         // Pre-inject parameters
         $this->signature->injectScope($this->scope);
 
@@ -98,11 +91,6 @@ class FnStmt extends Stmt
                 $node->injectScope($this->scope);
             }
         }
-    }
-
-    public function flagBindSelf()
-    {
-        $this->flag_bind_self = true;
     }
 
     public function runTypeChecker()

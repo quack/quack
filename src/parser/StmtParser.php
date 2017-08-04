@@ -314,10 +314,7 @@ class StmtParser
         $decl_table = [
             Tag::T_FN        => '_fnStmt',
             Tag::T_MODULE    => '_moduleStmt',
-            Tag::T_ENUM      => '_enumStmt',
-            Tag::T_IMPL      => '_implStmt',
-            Tag::T_CLASS     => '_classStmt',
-            Tag::T_SHAPE     => '_shapeStmt'
+            Tag::T_ENUM      => '_enumStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();

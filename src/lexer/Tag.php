@@ -79,9 +79,6 @@ class Tag
     const T_BY = 305;
     const T_WHEN = 306;
     const T_UNLESS = 307;
-    const T_IMPL = 309;
-    const T_CLASS = 310;
-    const T_SHAPE = 311;
 
     public static function getOperatorLexeme($op)
     {

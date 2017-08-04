@@ -1,54 +1,24 @@
 %%describe
 Supports formatting try statements
 %%source
-shape HTTPRequest
-  url :: string
-  method :: @GET | @POST | @PUT | @DELETE | @PATCH
-  status :: number
-  responseText :: string
-end
-impl HttpRequest
-  openConn()
-    -- simulate an error
-    do self.status :- 404
-    raise 'Page not found!'
-  end
-
-  closeConn()
-  end
-
-  load()
-    try
-      do self.openConn(), console.write(self.responseText)
-    rescue (Exception e)
-      do console.error(e)
-    finally
-      do self.closeConn()
-    end
+fn load()
+  try
+    do self.openConn()
+    do console.write(self.responseText)
+  rescue (Exception e)
+    do console.error(e)
+  finally
+    do self.closeConn()
   end
 end
 %%expect
-shape HTTPRequest
-  url
-  method
-  status
-  responseText
-end
-impl HttpRequest
-  openConn()
-    do self.status :- 404
-    raise 'Page not found!'
-  end
-  closeConn()
-  end
-  load()
-    try
-      do self.openConn()
-       , console.write(self.responseText)
-    rescue (Exception e)
-      do console.error(e)
-    finally
-      do self.closeConn()
-    end
+fn load()
+  try
+    do self.openConn()
+    do console.write(self.responseText)
+  rescue (Exception e)
+    do console.error(e)
+  finally
+    do self.closeConn()
   end
 end
