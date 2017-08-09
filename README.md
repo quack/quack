@@ -29,7 +29,7 @@ Quack supports many programming paradigms, especially functional and imperative 
 
 #### Metaprogrammable and extensible
 
-The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide than as libraries with annotations. You can create operators at compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.
+The language is metaprogrammable and very extensible. You can easily build extensions for the language and provide them as libraries with annotations. You can create operators at compile time, override current operators, match operations by type, implement inline optimizations via the own compiler and easily build DSLs over it.
 
 ### Basic examples
 
@@ -63,7 +63,7 @@ First of all, Quack compiler is, currently, entirely written in PHP, by hand. I'
 
 #### REPL
 
-To get and try Quack, the steps are simple. Clone this repository and install the `src` folder under `/quack/quack`. I promise I'll provide a better way to do it later. After, `cd /quack/quack/src/repl` and `php QuackRepl.php --ast` (you can also try with `--python`, but it is unstable yet). You will be sent to the REPL. Currently, the REPL is only compatible with POSIX systems. I'll implement support for Windows later, I promise too!
+To get and try Quack, the steps are simple. Clone this repository and install the `src` folder under `/quack/quack`. I promise I'll provide a better way to do it later. After, `cd /quack/quack/src/repl` and `php QuackRepl.php --ast` (you can also try with `--python`, but it is unstable at the moment). You will be sent to the REPL. Currently, the REPL is only compatible with POSIX systems. I'll implement support for Windows later, I promise too!
 
 #### Run tests
 
@@ -84,7 +84,7 @@ Quack syntax support to Vim's built-in editor [quack/editor/vim/quack.vim](https
 
 ### Contribute to Quack!
 
-Yay! Your contribution for the Quack language core is **very** important! There is **a lot of work** to be done, and you can find them in this repository's issues! Look for the `accepting-pull-requests` label! Newcomers to the open-source contribution process are very welcome! Please, read the `CONTRIBUTING` file in this repository as well!
+Yay! Your contribution to the Quack language core is **very** important! There is **a lot of work** to be done, and you can find it in this repository's issues! Look for the `accepting-pull-requests` label! Newcomers to the open-source contribution process are very welcome! Please, read the `CONTRIBUTING` file in this repository as well!
 
 There are many ways to help! You can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
 
