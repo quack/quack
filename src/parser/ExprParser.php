@@ -31,7 +31,6 @@ use \QuackCompiler\Parselets\Expr\TernaryParselet;
 use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parselets\Expr\ArrayParselet;
-use \QuackCompiler\Parselets\Expr\NewParselet;
 use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
 use \QuackCompiler\Parselets\Expr\WhenParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
@@ -74,7 +73,6 @@ class ExprParser
         $this->register('#{', new MapParselet);
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
-        $this->register('%', new NewParselet);
         $this->register('.', new MemberAccessParselet);
         $this->register(Tag::T_TRUE, new LiteralParselet);
         $this->register(Tag::T_FALSE, new LiteralParselet);

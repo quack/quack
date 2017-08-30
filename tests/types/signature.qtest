@@ -8,12 +8,6 @@ let request :: @GET | @POST | @PUT | @DELETE
 let talkable :: %Person & %{ talks: boolean }
 let sig :: #(byte, byte, byte, byte)
 let hash :: #{byte: string}
-
-shape Person
-    name :: string
-    age :: number
-end
-
 let celao :: %Person
 
 let f1 :: &string
@@ -29,10 +23,6 @@ let request :: @GET | @POST | @PUT | @DELETE
 let talkable :: %Person & %{talks: boolean}
 let sig :: #(byte, byte, byte, byte)
 let hash :: #{byte: string}
-shape Person
-  name
-  age
-end
 let celao :: %Person
 let f1 :: &[string] -> unit
 let f2 :: &[string] -> unit

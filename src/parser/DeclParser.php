@@ -24,14 +24,10 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
-use \QuackCompiler\Ast\Stmt\ClassStmt;
 use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
-use \QuackCompiler\Ast\Stmt\ImplStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
-use \QuackCompiler\Ast\Stmt\OpenStmt;
-use \QuackCompiler\Ast\Stmt\ShapeStmt;
 use \QuackCompiler\Ast\Stmt\StmtList;
 
 class DeclParser
@@ -43,21 +39,6 @@ class DeclParser
     public function __construct($reader)
     {
         $this->reader = $reader;
-    }
-
-    public function _classStmt()
-    {
-        $this->reader->match(Tag::T_CLASS);
-        $name = $this->name_parser->_identifier();
-        $body = [];
-
-        while (0 !== $this->reader->lookahead->getTag() && !$this->reader->is(Tag::T_END)) {
-            $body[] = $this->_fnSignature();
-        }
-
-        $this->reader->match(Tag::T_END);
-
-        return new ClassStmt($name, $body);
     }
 
     public function _enumStmt()
@@ -118,57 +99,5 @@ class DeclParser
         }
 
         return new FnStmt($signature, $body, $is_method, $is_short);
-    }
-
-    public function _implStmt()
-    {
-        // Shapes are for properties
-        // Classes are for methods
-        $type = Tag::T_SHAPE;
-        $this->reader->match(Tag::T_IMPL);
-        $class_or_shape = $this->name_parser->_qualifiedName();
-        $class_for = null;
-        // When it contains "for", it is being applied for a class
-        if ($this->reader->is(Tag::T_FOR)) {
-            $type = Tag::T_CLASS;
-            $this->reader->consume();
-            $class_for = $this->name_parser->_qualifiedName();
-        }
-
-        $body = new StmtList(iterator_to_array($this->_implStmtList()));
-        $this->reader->match(Tag::T_END);
-
-        return new ImplStmt($type, $class_or_shape, $class_for, $body);
-    }
-
-    public function _implStmtList()
-    {
-        while ($this->reader->is(Tag::T_IDENT)) {
-            yield $this->_fnStmt(/* implicit */ true);
-        }
-    }
-
-    public function _moduleStmt()
-    {
-        $this->reader->match(Tag::T_MODULE);
-        return new ModuleStmt($this->name_parser->_qualifiedName());
-    }
-
-    public function _shapeStmt()
-    {
-        $this->reader->match(Tag::T_SHAPE);
-        $name = $this->name_parser->_identifier();
-        $members = [];
-
-        while ($this->reader->is(Tag::T_IDENT)) {
-            $members[] = $this->name_parser->_identifier();
-            // TODO: Bind type for member
-            $this->reader->match('::');
-            $type = $this->type_parser->_type();
-        }
-
-        $this->reader->match(Tag::T_END);
-
-        return new ShapeStmt($name, $members);
     }
 }
