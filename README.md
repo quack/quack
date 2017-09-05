@@ -4,6 +4,8 @@
   </a>
 </p>
 
+<a href="https://app.codesponsor.io/link/osmbVLutaA7HXKYJpSN5uQYQ/quack/quack" rel="nofollow"><img src="https://app.codesponsor.io/embed/osmbVLutaA7HXKYJpSN5uQYQ/quack/quack.svg" style="width: 888px; height: 68px;" alt="Sponsor" /></a>
+
 <p align="center">
   <a href="https://quack-lang.herokuapp.com/"><img alt="Slack" src="https://quack-lang.herokuapp.com/badge.svg" height="20" /></a>
   <a href="https://travis-ci.org/quack/quack"><img alt="Build Status" src="https://travis-ci.org/quack/quack.svg?branch=master" /></a>
