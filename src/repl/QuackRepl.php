@@ -72,15 +72,12 @@ LICENSE
 
 function quack()
 {
-    if (isPOSIX()) {
-        $wav = realpath(dirname(__FILE__) . '/../../resource/quack.wav');
-        exec("aplay $wav 2> /dev/null &");
-    }
+
 }
 
 function install_stream_handler()
 {
-    $prompt = session()->complete_stmt ? "Quack> " : "\__(\"> ";
+    $prompt = session()->complete_stmt ? "_> " : "\__(\"> ";
     if (isPOSIX()) {
         begin_yellow();
         readline_callback_handler_install($prompt, 'readline_callback');

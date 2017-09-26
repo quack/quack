@@ -43,7 +43,17 @@ class JSXElement extends Expr
             return "<{$this->name} />";
         }
 
-        return "TODO";
+        $source = "<{$this->name}>" . PHP_EOL;
+        $parser->openScope();
+
+        foreach ($this->children as $child) {
+            $source .= $parser->indent() . $child->format($parser) . PHP_EOL;
+        }
+
+        $parser->closeScope();
+        $source .= "</{$this->name}>";
+
+        return $source;
     }
 
     public function injectScope(&$parent_scope)

@@ -34,10 +34,7 @@ let my_list :: {%{name: string} & %{age: number}} :- { %{
   age: 20
 } }
 %%expect
-array(1) {
-  [0]=>
-  string(6) "number"
-}
+string(6) "number"
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
 let bool :: boolean :- true and false

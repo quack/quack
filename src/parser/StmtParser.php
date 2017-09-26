@@ -127,14 +127,8 @@ class StmtParser
     public function _exprStmt()
     {
         $this->reader->match(Tag::T_DO);
-
-        $expr_list = [$this->expr_parser->_expr()];
-
-        while ($this->reader->consumeIf(',')) {
-            $expr_list[] = $this->expr_parser->_expr();
-        }
-
-        return new ExprStmt($expr_list);
+        $expr = $this->expr_parser->_expr();
+        return new ExprStmt($expr);
     }
 
     public function _blockStmt()

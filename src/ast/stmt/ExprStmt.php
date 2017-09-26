@@ -25,49 +25,26 @@ use \QuackCompiler\Parser\Parser;
 
 class ExprStmt extends Stmt
 {
-    public $expr_list;
+    public $expr;
 
-    public function __construct($expr_list)
+    public function __construct($expr)
     {
-        $this->expr_list = $expr_list;
+        $this->expr = $expr;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'do ';
-        $first = true;
-
-        foreach ($this->expr_list as $expr) {
-            if (!$first) {
-                $source .= $parser->indent();
-                $source .= ' , ';
-            } else {
-                $first = false;
-            }
-
-            $source .= $expr->format($parser);
-            $source .= PHP_EOL;
-        }
-
-        return $source;
+        return 'do ' . $this->expr->format($parser) . PHP_EOL;
     }
 
     public function injectScope(&$parent_scope)
     {
-        foreach ($this->expr_list as $expr) {
-            $expr->injectScope($parent_scope);
-        }
+        $this->expr->injectScope($parent_scope);
     }
 
     public function runTypeChecker()
     {
-        $type_list = [];
-        foreach ($this->expr_list as $expr) {
-            $type_list[] = $expr->getType();
-        }
-
-        var_dump(array_map(function($type) {
-            return (string) $type;
-        }, $type_list));
+        $type = $this->expr->getType();
+        var_dump((string) $type);
     }
 }

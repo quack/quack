@@ -24,6 +24,7 @@ namespace QuackCompiler\Parselets\Expr;
 use \QuackCompiler\Ast\Expr\JSX\JSXElement;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Parser\SyntaxError;
 
 class JSXParselet implements PrefixParselet
 {
@@ -37,36 +38,38 @@ class JSXParselet implements PrefixParselet
         return $this->JSXElement(true);
     }
 
-    // inherit JSXSelfClosingElement,
-    //         JSXOpeningElement,
-    //         JSXClosingElement,
-    //         JSXIdentifier
-    public function JSXElement($initial = false)
+    public function JSXElement($partial = false)
     {
-        if (!$initial) {
+        if (!$partial) {
             $this->reader->match('<');
         }
 
         $name = $this->name_parser->_identifier();
 
-        if ($this->reader->consumeIf('/')) {
-            $this->reader->match('>');
+        if ($this->reader->consumeIf('/>')) {
             return new JSXElement($name, [], null);
         }
 
         $this->reader->match('>');
+
         $children = [];
-
-        while ($this->reader->consumeIf('<')) {
-            if ($this->reader->consumeIf('/')) {
-                $this->reader->match('>');
-
-                return new JSXElement($name, [], $children);
-            }
-
+        while ($this->reader->is('<')) {
             $children[] = $this->JSXElement();
         }
 
-        // TODO: throw error of missing closing tag
+        $this->reader->match('</');
+        $closing_tag = $this->name_parser->_identifier();
+
+        if ($name !== $closing_tag) {
+            throw new SyntaxError([
+                'expected' => "</{$name}>",
+                'found'    => $this->reader->lookahead,
+                'parser'   => $this->reader
+            ]);
+        }
+
+        $this->reader->match('>');
+
+        return new JSXElement($name, [], $children);
     }
 }
