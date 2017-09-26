@@ -19,16 +19,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parser;
+namespace QuackCompiler\Ast\Expr\JSX;
 
-class JSXParser
+use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Parser\Parser;
+
+class JSXElement extends Expr
 {
-    use Attachable;
+    public $name;
+    public $attributes;
+    public $children;
 
-    public $reader;
-
-    public function __construct($reader)
+    public function __construct($name, $attributes, $children = null)
     {
-        $this->reader = $reader;
+        $this->name = $name;
+        $this->attributes = $attributes;
+        $this->children = $children;
+    }
+
+    public function format(Parser $parser)
+    {
+        if (null === $this->children) {
+            return "<{$this->name} />";
+        }
+
+        return "TODO";
+    }
+
+    public function injectScope(&$parent_scope)
+    {
+        // TODO
+    }
+
+    public function getType()
+    {
+        // TODO
     }
 }

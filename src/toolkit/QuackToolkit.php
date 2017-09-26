@@ -70,6 +70,7 @@ import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
+import(PARSELETS, 'expr/JSXParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
@@ -88,7 +89,6 @@ import(PARSER, 'Attachable');
 import(PARSER, 'DeclParser');
 import(PARSER, 'ExprParser');
 import(PARSER, 'NameParser');
-import(PARSER, 'JSXParser');
 import(PARSER, 'StmtParser');
 import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
@@ -125,6 +125,7 @@ import(AST, 'expr/PartialFuncExpr');
 import(AST, 'expr/RegexExpr');
 import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
+import(AST, 'expr/jsx/JSXElement');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');

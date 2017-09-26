@@ -39,15 +39,13 @@ class TokenReader extends Parser
         $expr_parser = new ExprParser($this);
         $decl_parser = new DeclParser($this);
         $stmt_parser = new StmtParser($this);
-        $jsx_parser = new JSXParser($this);
 
         $type_parser->attachParsers([
             'name_parser' => $name_parser
         ]);
         $expr_parser->attachParsers([
             'name_parser' => $name_parser,
-            'stmt_parser' => $stmt_parser,
-            'jsx_parser' => $jsx_parser
+            'stmt_parser' => $stmt_parser
         ]);
         $decl_parser->attachParsers([
             'name_parser' => $name_parser,

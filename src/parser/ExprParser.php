@@ -41,6 +41,7 @@ use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
+use \QuackCompiler\Parselets\Expr\JSXParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -113,6 +114,9 @@ class ExprParser
 
         $this->infixRight('**', Precedence::EXPONENT);
         $this->infixRight(':-', Precedence::ASSIGNMENT);
+
+        // JSX Parsing
+        $this->register('<', new JSXParselet);
     }
 
     public function _expr($precedence = 0, $opt = false)
