@@ -1,0 +1,18 @@
+%%command
+php ./src/Quack.php %s
+%%describe
+JSX Parser
+%%source
+do <div />
+do <Counter>
+    <Button />
+    <Button />
+</Counter>
+%%expect
+string(0) ""
+string(0) ""
+do <div />
+do <Counter>
+  <Button />
+  <Button />
+</Counter>
