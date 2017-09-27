@@ -22,9 +22,12 @@
 namespace QuackCompiler\Ast\Expr\JSX;
 
 use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Types\AtomType;
+use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class JSXElement extends Expr
@@ -82,6 +85,12 @@ class JSXElement extends Expr
 
     public function injectScope(&$parent_scope)
     {
+        foreach ($this->attributes as $attr) {
+            if ($attr[1]) {
+                $attr[1]->injectScope($parent_scope);
+            }
+        }
+
         if (null === $this->children) {
             return;
         }
@@ -93,20 +102,25 @@ class JSXElement extends Expr
 
     public function getType()
     {
-        // TODO: Use lib/jsx.qkt as model
-        // TODO: Check what should be the return type of this based on
-        // annotations in React.createElement
+        foreach ($this->attributes as $attr) {
+            $name = $attr[0];
+            $type = sizeof($attr) > 1
+                ? $attr[1]->getType()
+                : new LiteralType(NativeQuackType::T_BOOL);
+            // TODO: Bind types for properties? Yes! When it get ready
+        }
+
         if (null === $this->children) {
-            return new ObjectType([]);
+            return new AtomType(':jsx_element');
         }
 
         foreach ($this->children as $child) {
             $type = $child->getType();
-            if (!($child instanceof JSXElement) && !$type->isString()) {
+            if (!$type->isString() && !$type->isAtom(':jsx_element')) {
                 throw new TypeError(Localization::message('TYP410', [$type]));
             }
         }
 
-        return new ObjectType([]);
+        return new AtomType(':jsx_element');
     }
 }

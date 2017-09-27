@@ -3,16 +3,32 @@ php ./src/Quack.php %s
 %%describe
 JSX Parser
 %%source
+let header :- (
+  <div>
+    { 'Counter '}
+  </div>
+)
 let counter :- (
   <div>
-    <button>{ 'Decrement' }</button>
+    { header }
+    <button>
+      { 'Decrement' }
+    </button>
     <input />
-    <button>{ 'Increment' }</button>
+    <button>
+      { 'Increment' }
+    </button>
   </div>
 )
 %%expect
+let header :- (
+  <div>
+    { 'Counter '}
+  </div>
+)
 let counter :- (
   <div>
+    { header }
     <button>
       { 'Decrement' }
     </button>

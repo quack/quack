@@ -93,7 +93,6 @@ class JSXParselet implements PrefixParselet
         return $expr;
     }
 
-    // TODO: Implement scope and typechecker for attributes
     public function JSXAttribute()
     {
         $name = $this->name_parser->_identifier();
