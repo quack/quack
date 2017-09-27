@@ -21,7 +21,9 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
+use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Expr\JSX\JSXElement;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 use \QuackCompiler\Parser\SyntaxError;
@@ -47,9 +49,14 @@ class JSXParselet implements PrefixParselet
         }
 
         $name = $this->name_parser->_identifier();
+        $attributes = [];
+
+        while (!$this->reader->is('/>') && !$this->reader->is('>')) {
+            $attributes[] = $this->JSXAttribute();
+        }
 
         if ($this->reader->consumeIf('/>')) {
-            return new JSXElement($name, [], null);
+            return new JSXElement($name, $attributes, null);
         }
 
         $this->reader->match('>');
@@ -71,7 +78,7 @@ class JSXParselet implements PrefixParselet
         }
 
         $this->reader->match('>');
-        return new JSXElement($name, [], $children);
+        return new JSXElement($name, $attributes, $children);
     }
 
     public function JSXChild()
@@ -84,5 +91,26 @@ class JSXParselet implements PrefixParselet
         $expr = $this->grammar->_expr();
         $this->reader->match('}');
         return $expr;
+    }
+
+    // TODO: Implement scope and typechecker for attributes
+    public function JSXAttribute()
+    {
+        $name = $this->name_parser->_identifier();
+
+        if (!$this->reader->consumeIf(':')) {
+            return [$name];
+        }
+
+        if ($this->reader->is(Tag::T_STRING)) {
+            $token = $this->reader->lookahead;
+            $content = $this->reader->consume();
+            return [$name, new StringExpr($content, $token->metadata['delimiter'])];
+        }
+
+        $this->reader->match('{');
+        $value = $this->grammar->_expr();
+        $this->reader->match('}');
+        return [$name, $value];
     }
 }
