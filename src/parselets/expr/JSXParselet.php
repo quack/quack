@@ -53,7 +53,7 @@ class JSXParselet implements PrefixParselet
         $this->reader->match('>');
 
         $children = [];
-        while ($this->reader->is('<')) {
+        while (!$this->reader->is('</')) {
             $children[] = $this->JSXElement();
         }
 
@@ -69,7 +69,6 @@ class JSXParselet implements PrefixParselet
         }
 
         $this->reader->match('>');
-
         return new JSXElement($name, [], $children);
     }
 }
