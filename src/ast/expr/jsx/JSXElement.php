@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Expr\JSX;
 
 use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Types\AtomType;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\ObjectType;
@@ -45,8 +46,22 @@ class JSXElement extends Expr
 
     public function format(Parser $parser)
     {
+        $attributes = empty($this->attributes) ? '' : ' ';
+        $attributes .= implode(' ', array_map(function ($attr) use ($parser) {
+            $source = $attr[0];
+            if (isset($attr[1])) {
+                $source .= ': ';
+                if ($attr[1] instanceof StringExpr) {
+                    $source .= $attr[1]->format($parser);
+                } else {
+                    $source .= "{ {$attr[1]->format($parser)} }";
+                }
+            }
+            return $source;
+        }, $this->attributes));
+
         if (null === $this->children) {
-            return $this->parenthesize("<{$this->name} />");
+            return $this->parenthesize("<{$this->name}{$attributes} />");
         }
 
         $parenthesized = $this->parentheses_level > 0;
@@ -57,7 +72,7 @@ class JSXElement extends Expr
             $source .= PHP_EOL . $parser->indent();
         }
 
-        $source .= "<{$this->name}>" . PHP_EOL;
+        $source .= "<{$this->name}{$attributes}>" . PHP_EOL;
         $parser->openScope();
 
         foreach ($this->children as $child) {
@@ -66,7 +81,7 @@ class JSXElement extends Expr
             if ($child instanceof JSXElement) {
                 $source .= $child->format($parser);
             } else {
-                $source .= "{ {$child->format($parser) } }";
+                $source .= "{ {$child->format($parser)} }";
             }
 
             $source .= PHP_EOL;
@@ -86,7 +101,7 @@ class JSXElement extends Expr
     public function injectScope(&$parent_scope)
     {
         foreach ($this->attributes as $attr) {
-            if ($attr[1]) {
+            if (isset($attr[1])) {
                 $attr[1]->injectScope($parent_scope);
             }
         }
@@ -104,7 +119,7 @@ class JSXElement extends Expr
     {
         foreach ($this->attributes as $attr) {
             $name = $attr[0];
-            $type = sizeof($attr) > 1
+            $type = isset($attr[1])
                 ? $attr[1]->getType()
                 : new LiteralType(NativeQuackType::T_BOOL);
             // TODO: Bind types for properties? Yes! When it get ready

@@ -5,7 +5,7 @@ JSX Parser
 %%source
 let header :- (
   <div>
-    { 'Counter '}
+    { 'Counter' }
   </div>
 )
 let counter :- (
@@ -14,7 +14,7 @@ let counter :- (
     <button>
       { 'Decrement' }
     </button>
-    <input />
+    <input disabled value: { 0 } />
     <button>
       { 'Increment' }
     </button>
@@ -23,7 +23,7 @@ let counter :- (
 %%expect
 let header :- (
   <div>
-    { 'Counter '}
+    { 'Counter' }
   </div>
 )
 let counter :- (
@@ -32,7 +32,7 @@ let counter :- (
     <button>
       { 'Decrement' }
     </button>
-    <input />
+    <input disabled value: { 0 } />
     <button>
       { 'Increment' }
     </button>
