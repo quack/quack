@@ -102,11 +102,11 @@ class JSXElement extends Expr
 
         foreach ($this->children as $child) {
             $type = $child->getType();
-            if (!($child instanceof JSXElement)) {
-                if (!$type->isString()) {
-                    throw new TypeError(Localization::message('TYP410', [$type]));
-                }
+            if (!($child instanceof JSXElement) && !$type->isString()) {
+                throw new TypeError(Localization::message('TYP410', [$type]));
             }
         }
+
+        return new ObjectType([]);
     }
 }
