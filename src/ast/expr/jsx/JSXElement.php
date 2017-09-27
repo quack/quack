@@ -40,20 +40,41 @@ class JSXElement extends Expr
     public function format(Parser $parser)
     {
         if (null === $this->children) {
-            return "<{$this->name} />";
+            return $this->parenthesize("<{$this->name} />");
         }
 
-        $source = "<{$this->name}>" . PHP_EOL;
+        $parenthesized = $this->parentheses_level > 0;
+        $source = '';
+
+        if ($parenthesized) {
+            $parser->openScope();
+            $source .= PHP_EOL . $parser->indent();
+        }
+
+        $source .= "<{$this->name}>" . PHP_EOL;
         $parser->openScope();
 
         foreach ($this->children as $child) {
-            $source .= $parser->indent() . $child->format($parser) . PHP_EOL;
+            $source .= $parser->indent();
+
+            if ($child instanceof JSXElement) {
+                $source .= $child->format($parser);
+            } else {
+                $source .= "{ {$child->format($parser) } }";
+            }
+
+            $source .= PHP_EOL;
         }
 
         $parser->closeScope();
-        $source .= "</{$this->name}>";
+        $source .= $parser->indent() . "</{$this->name}>";
 
-        return $source;
+        if ($parenthesized) {
+            $source .= PHP_EOL;
+            $parser->closeScope();
+        }
+
+        return $this->parenthesize($source);
     }
 
     public function injectScope(&$parent_scope)

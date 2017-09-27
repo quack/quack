@@ -5,7 +5,20 @@ JSX Parser
 %%source
 let counter :- (
   <div>
-    <button action="inc"></button>
+    <button>{ 'Decrement' }</button>
+    <input />
+    <button>{ 'Increment' }</button>
   </div>
 )
 %%expect
+let counter :- (
+  <div>
+    <button>
+      { 'Decrement' }
+    </button>
+    <input />
+    <button>
+      { 'Increment' }
+    </button>
+  </div>
+)

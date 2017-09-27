@@ -28,11 +28,13 @@ use \QuackCompiler\Parser\SyntaxError;
 
 class JSXParselet implements PrefixParselet
 {
+    private $grammar;
     private $reader;
     private $name_parser;
 
     public function parse($grammar, Token $token)
     {
+        $this->grammar = $grammar;
         $this->reader = $grammar->reader;
         $this->name_parser = $grammar->name_parser;
         return $this->JSXElement(true);
@@ -54,7 +56,7 @@ class JSXParselet implements PrefixParselet
 
         $children = [];
         while (!$this->reader->is('</')) {
-            $children[] = $this->JSXElement();
+            $children[] = $this->JSXChild();
         }
 
         $this->reader->match('</');
@@ -70,5 +72,17 @@ class JSXParselet implements PrefixParselet
 
         $this->reader->match('>');
         return new JSXElement($name, [], $children);
+    }
+
+    public function JSXChild()
+    {
+        if ($this->reader->is('<')) {
+            return $this->JSXElement();
+        }
+
+        $this->reader->match('{');
+        $expr = $this->grammar->_expr();
+        $this->reader->match('}');
+        return $expr;
     }
 }
