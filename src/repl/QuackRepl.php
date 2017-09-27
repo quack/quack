@@ -77,7 +77,7 @@ function quack()
 
 function install_stream_handler()
 {
-    $prompt = session()->complete_stmt ? "_> " : "\__(\"> ";
+    $prompt = session()->complete_stmt ? "Quack> " : "\__(\"> ";
     if (isPOSIX()) {
         begin_yellow();
         readline_callback_handler_install($prompt, 'readline_callback');
