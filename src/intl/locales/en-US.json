@@ -60,5 +60,6 @@
     "TYP370": "Parameter number %d of function needs to be a `%s', but it is a `%s'",
     "TYP380": "I was expecting to have a function with return type of `%s', but you gave me a `%s'",
     "TYP390": "Cannot merge type `%s' with `%s', I'm sorry",
-    "TYP400": "Ambiguous type for `%s' & `%s' because:\r\n     > `%s' can be either `%s' or `%s'"
+    "TYP400": "Ambiguous type for `%s' & `%s' because:\r\n     > `%s' can be either `%s' or `%s'",
+    "TYP410": "A JSX child should be a component or a string, but you gave me `%s' and I'm very sad about that"
 }

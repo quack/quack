@@ -22,7 +22,10 @@
 namespace QuackCompiler\Ast\Expr\JSX;
 
 use \QuackCompiler\Ast\Expr\Expr;
+use \QuackCompiler\Ast\Types\ObjectType;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\TypeError;
 
 class JSXElement extends Expr
 {
@@ -79,11 +82,31 @@ class JSXElement extends Expr
 
     public function injectScope(&$parent_scope)
     {
-        // TODO
+        if (null === $this->children) {
+            return;
+        }
+
+        foreach ($this->children as $child) {
+            $child->injectScope($parent_scope);
+        }
     }
 
     public function getType()
     {
-        // TODO
+        // TODO: Use lib/jsx.qkt as model
+        // TODO: Check what should be the return type of this based on
+        // annotations in React.createElement
+        if (null === $this->children) {
+            return new ObjectType([]);
+        }
+
+        foreach ($this->children as $child) {
+            $type = $child->getType();
+            if (!($child instanceof JSXElement)) {
+                if (!$type->isString()) {
+                    throw new TypeError(Localization::message('TYP410', [$type]));
+                }
+            }
+        }
     }
 }
