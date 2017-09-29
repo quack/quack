@@ -76,8 +76,9 @@ function quack()
         $wav = realpath(dirname(__FILE__) . '/../../resource/quack.wav');
         // Mac OS
         $player = "afplay";
+
+        // Linux
         if (`which aplay`) {
-          // Linux
           $player = "aplay";
         }
 

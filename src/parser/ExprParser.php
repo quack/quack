@@ -97,7 +97,7 @@ class ExprParser
         $this->infixLeft(Tag::T_OR, Precedence::LOGICAL_OR);
         $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
         $this->infixLeft('|', Precedence::BITWISE_OR);
-        $this->infixLeft('&', Precedence::BITWISE_AND_OR_REF);
+        $this->infixLeft('&', Precedence::BITWISE_AND);
         $this->infixLeft('^', Precedence::BITWISE_XOR);
         $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
         $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
