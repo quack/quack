@@ -155,18 +155,15 @@ class StmtParser
     public function _letStmt()
     {
         $this->reader->match(Tag::T_LET);
+        $mutable = $this->reader->consumeIf(Tag::T_MUT);
         $name = $this->name_parser->_identifier();
-        $type = null;
-        $value = null;
-        if ($this->reader->consumeIf('::')) {
-            $type = $this->type_parser->_type();
-        }
-
-        if ($this->reader->consumeIf(':-')) {
-            $value = $this->expr_parser->_expr();
-        }
-
-        return new LetStmt($name, $type, $value);
+        $type = $this->reader->consumeIf('::')
+            ? $this->type_parser->_type()
+            : null;
+        $value = $this->reader->consumeIf(':-')
+            ? $this->expr_parser->_expr()
+            : null;
+        return new LetStmt($name, $type, $value, $mutable);
     }
 
     public function _whileStmt()

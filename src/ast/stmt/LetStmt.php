@@ -33,18 +33,26 @@ class LetStmt extends Stmt
     public $name;
     public $type;
     public $value;
+    public $mutable;
     private $scope;
 
-    public function __construct($name, $type, $value)
+    public function __construct($name, $type, $value, $mutable)
     {
         $this->name = $name;
         $this->type = $type;
         $this->value = $value;
+        $this->mutable = $mutable;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'let ' . $this->name;
+        $source = 'let ';
+
+        if ($this->mutable) {
+            $source .= 'mut ';
+        }
+
+        $source .= $this->name;
 
         if (!is_null($this->type)) {
             $source .= ' :: ' . $this->type;
@@ -61,16 +69,28 @@ class LetStmt extends Stmt
     public function injectScope(&$parent_scope)
     {
         $this->scope = $parent_scope;
+        $mask = Kind::K_VARIABLE | ($this->mutable ? Kind::K_MUTABLE : 0x0);
+
         if (is_null($this->value)) {
-            $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_MUTABLE);
+            $this->scope->insert($this->name, $mask);
         } else {
-            $this->scope->insert($this->name, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
+            $this->scope->insert($this->name, $mask | Kind::K_INITIALIZED);
             $this->value->injectScope($parent_scope);
         }
     }
 
     public function runTypeChecker()
     {
+        // TODO: Apply type rules here:
+        // - Kill consts
+        // Rule mut
+        // - When there is not "mut", it MUST have a value
+        // - When there is "mut", it MUST have either a value OR a type
+        // Otherwise it is a free variable. Error
+        // - Recursive functions MUST have a type signature because we don't have global inference
+        // TODO:
+        // - Rethink about the model of declarations. It is one of the most important parts of the language
+
         $type = null;
         // No type, no value. Free variable
         if (is_null($this->type) && is_null($this->value)) {
