@@ -54,7 +54,6 @@ class Tag
     const T_IN = 284;
     const T_OPEN = 502;
     const T_AS = 504;
-    const T_ENUM = 506;
     const T_CONTINUE = 508;
     const T_SWITCH = 509;
     const T_BREAK = 510;

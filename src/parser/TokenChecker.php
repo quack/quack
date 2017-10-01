@@ -34,11 +34,7 @@ class TokenChecker
 
     public function startsInnerStmt()
     {
-        $possible_inner_stmts = [
-            Tag::T_FN,
-            Tag::T_ENUM
-        ];
-
+        $possible_inner_stmts = [Tag::T_FN];
         return in_array($this->reader->lookahead->getTag(), $possible_inner_stmts, true)
             || $this->startsStmt();
     }

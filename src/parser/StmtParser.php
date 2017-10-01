@@ -307,8 +307,7 @@ class StmtParser
     {
         $decl_table = [
             Tag::T_FN        => '_fnStmt',
-            Tag::T_MODULE    => '_moduleStmt',
-            Tag::T_ENUM      => '_enumStmt'
+            Tag::T_MODULE    => '_moduleStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();
@@ -323,8 +322,7 @@ class StmtParser
     public function _innerStmt()
     {
         $branch_table = [
-            Tag::T_FN        => '_fnStmt',
-            Tag::T_ENUM      => '_enumStmt'
+            Tag::T_FN        => '_fnStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();

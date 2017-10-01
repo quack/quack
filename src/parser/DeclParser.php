@@ -24,7 +24,6 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 
-use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
@@ -39,21 +38,6 @@ class DeclParser
     public function __construct($reader)
     {
         $this->reader = $reader;
-    }
-
-    public function _enumStmt()
-    {
-        $this->reader->match(Tag::T_ENUM);
-        $entries = [];
-        $name = $this->name_parser->_identifier();
-
-        while ($this->reader->is(Tag::T_IDENT)) {
-            $entries[] = $this->name_parser->_identifier();
-        }
-
-        $this->reader->match(Tag::T_END);
-
-        return new EnumStmt($name, $entries);
     }
 
     public function _fnSignature()
