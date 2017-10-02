@@ -51,7 +51,6 @@ class Tag
     const T_WHERE = 280;
     const T_FOREACH = 281;
     const T_IN = 284;
-    const T_OPEN = 502;
     const T_AS = 504;
     const T_CONTINUE = 508;
     const T_SWITCH = 509;
