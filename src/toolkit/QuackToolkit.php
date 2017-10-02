@@ -142,7 +142,6 @@ import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
-import(AST, 'stmt/ModuleStmt');
 import(AST, 'stmt/PostConditionalStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/RaiseStmt');

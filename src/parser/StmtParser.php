@@ -303,8 +303,7 @@ class StmtParser
     public function _topStmt()
     {
         $decl_table = [
-            Tag::T_FN        => '_fnStmt',
-            Tag::T_MODULE    => '_moduleStmt'
+            Tag::T_FN        => '_fnStmt'
         ];
 
         $next_tag = $this->reader->lookahead->getTag();

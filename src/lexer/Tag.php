@@ -45,7 +45,6 @@ class Tag
     const T_FOR = 263;
     const T_WHILE = 264;
     const T_DO = 265;
-    const T_MODULE = 269;
     const T_NIL = 272;
     const T_LET = 273;
     const T_CONST = 274;
