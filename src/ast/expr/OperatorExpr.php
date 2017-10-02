@@ -140,7 +140,7 @@ class OperatorExpr extends Expr
         }
 
         // Type checking for numeric and string concat operations
-        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', '^', '&', '|', Tag::T_MOD];
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
                 return new LiteralType(NativeQuackType::T_STR);
@@ -151,15 +151,6 @@ class OperatorExpr extends Expr
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
-        }
-
-        // Null coalesce operator
-        if ('??' === $this->operator) {
-            if (!$type->left->check($type->right)) {
-                throw new TypeError(Localization::message('TYP120', [$type->left, $type->right]));
-            }
-
-            return $type->left;
         }
 
         // Type checking for equality operators and coalescence
@@ -181,14 +172,18 @@ class OperatorExpr extends Expr
             return new LiteralType(NativeQuackType::T_BOOL);
         }
 
-        // Boolean algebra
+        // Boolean algebra and bitwise operations
         $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
         if (in_array($this->operator, $bool_op, true)) {
-            if (!$type->left->isBoolean() || !$type->right->isBoolean()) {
-                throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
+            if ($type->left->isBoolean() && $type->right->isBoolean()) {
+                return new LiteralType(NativeQuackType::T_BOOL);
             }
 
-            return new LiteralType(NativeQuackType::T_BOOL);
+            if ($type->left->isNumber() && $type->right->isNumber()) {
+                return new LiteralType(NativeQuackType::T_NUMBER);
+            }
+
+            throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
         }
     }
 }
