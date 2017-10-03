@@ -47,7 +47,6 @@ class Tag
     const T_DO = 265;
     const T_NIL = 272;
     const T_LET = 273;
-    const T_CONST = 274;
     const T_WHERE = 280;
     const T_FOREACH = 281;
     const T_IN = 284;

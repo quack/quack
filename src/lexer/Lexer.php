@@ -57,7 +57,6 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_IN, 'in'));
         $this->reserve(new Word(Tag::T_MOD, 'mod'));
         $this->reserve(new Word(Tag::T_WHERE, 'where'));
-        $this->reserve(new Word(Tag::T_CONST, 'const'));
         $this->reserve(new Word(Tag::T_NIL, 'nil'));
         $this->reserve(new Word(Tag::T_CONTINUE, 'continue'));
         $this->reserve(new Word(Tag::T_SWITCH, 'switch'));

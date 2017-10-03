@@ -25,7 +25,6 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\CaseStmt;
-use \QuackCompiler\Ast\Stmt\ConstStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
@@ -80,7 +79,6 @@ class StmtParser
         $branch_table = [
             Tag::T_IF       => '_ifStmt',
             Tag::T_LET      => '_letStmt',
-            Tag::T_CONST    => '_constStmt',
             Tag::T_WHILE    => '_whileStmt',
             Tag::T_DO       => '_exprStmt',
             Tag::T_FOR      => '_forStmt',
@@ -326,22 +324,6 @@ class StmtParser
         return array_key_exists($next_tag, $branch_table)
             ? call_user_func([$this, $branch_table[$next_tag]])
             : $this->_stmt();
-    }
-
-    public function _constStmt()
-    {
-        $this->reader->match(Tag::T_CONST);
-        $name = $this->name_parser->_identifier();
-        $type = null;
-
-        if ($this->reader->consumeIf('::')) {
-            $type = $this->type_parser->_type();
-        }
-
-        $this->reader->match(':-');
-        $value = $this->expr_parser->_expr();
-
-        return new ConstStmt($name, $type, $value);
     }
 
     public function _parameter()

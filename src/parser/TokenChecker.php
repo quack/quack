@@ -44,7 +44,6 @@ class TokenChecker
         static $possible_stmts = [
             Tag::T_IF,
             Tag::T_LET,
-            Tag::T_CONST,
             Tag::T_WHILE,
             Tag::T_DO,
             Tag::T_FOR,
