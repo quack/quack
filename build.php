@@ -77,11 +77,50 @@ function minify($source)
             continue;
         }
 
+        // Kill require and include
+        if (in_array($tag, [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE])) {
+            while (true) {
+                $token = $tokens[$index++];
+
+                if (';' === $token) {
+                    break;
+                }
+            }
+            continue;
+        }
+
+        // Heredoc to string
+        if (T_START_HEREDOC === $tag) {
+            $string = '';
+
+            while (true) {
+                $token = $tokens[$index++];
+
+                if (is_string($token)) {
+                    $string .= $token;
+                    continue;
+                }
+
+                list ($tag, $value) = $token;
+                if (T_END_HEREDOC === $tag) {
+                    break;
+                }
+
+                $string .= $value;
+            }
+
+            $result .= '"' . addslashes($string) . '"';
+            continue;
+        }
+
         $result .= $value;
     }
 
     if ($has_namespace) {
         $result .= '}';
+    } else {
+        // When source doesn't belong to a namespace, create entry point
+        $result = 'namespace Main { '. $result . '}';
     }
 
     return trim($result);
@@ -98,14 +137,14 @@ function bundle($config) {
     $bundle = $config['bundle'];
     $resources = $config['resources'];
 
-    $contents = [];
+    $contents = ['<?php'];
     foreach ($resources as $resource) {
         foreach ($resource->readFiles() as $source) {
-            $contents[] = minify($source) . PHP_EOL;
+            $contents[] = minify($source);
         }
     }
 
-    echo implode('', $contents);
+    file_put_contents($bundle, implode(PHP_EOL, $contents));
 }
 
 // Modeling resource types
@@ -126,6 +165,25 @@ class ResourceFile extends Resource
     public function readFiles()
     {
         return [file_get_contents($this->path)];
+    }
+}
+
+class ResourceDir extends Resource
+{
+    public function readFiles()
+    {
+        $contents = [];
+        $handle = opendir($this->path);
+        while (false !== ($file = readdir($handle))) {
+            if ('.' !== $file && '..' !== $file) {
+                $full_path = $this->path . '/' . $file;
+                if (file_exists($full_path)) {
+                    $contents[] = file_get_contents($full_path);
+                }
+            }
+        }
+        closedir($handle);
+        return $contents;
     }
 }
 
@@ -177,9 +235,25 @@ function getLocalesBuffer()
 $bundle_settings = [
     'bundle' => 'quack.php',
     'resources' => [
-        new ResourceBuffer(getLocalesBuffer())
+        new ResourceBuffer(getLocalesBuffer()),
+        new ResourceDir('src/lexer'),
+        new ResourceDir('src/parselets'),
+        new ResourceDir('src/parselets/expr'),
+        new ResourceDir('src/parselets/types'),
+        new ResourceDir('src/parser'),
+        new ResourceFile('src/ast/Node.php'),
+        new ResourceDir('src/ast/expr'),
+        new ResourceDir('src/ast/expr/jsx'),
+        new ResourceDir('src/ast/stmt'),
+        new ResourceDir('src/ast/types'),
+        new ResourceDir('src/scope'),
+        new ResourceDir('src/types'),
+        new ResourceFile('src/repl/QuackRepl.php')
     ]
 ];
+
+// TODO: Resolve conflicts on naming on namespace Main
+// TODO: Resolve order of parser resources
 
 bundle($bundle_settings);
 
