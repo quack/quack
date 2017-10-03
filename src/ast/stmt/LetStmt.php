@@ -81,16 +81,6 @@ class LetStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // TODO: Apply type rules here:
-        // - Kill consts
-        // Rule mut
-        // - When there is not "mut", it MUST have a value
-        // - When there is "mut", it MUST have either a value OR a type
-        // Otherwise it is a free variable. Error
-        // - Recursive functions MUST have a type signature because we don't have global inference
-        // TODO:
-        // - Rethink about the model of declarations. It is one of the most important parts of the language
-
         $type = null;
         // No type, no value. Free variable
         if (is_null($this->type) && is_null($this->value)) {
