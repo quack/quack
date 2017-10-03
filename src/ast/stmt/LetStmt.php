@@ -54,11 +54,11 @@ class LetStmt extends Stmt
 
         $source .= $this->name;
 
-        if (!is_null($this->type)) {
+        if (null !== $this->type) {
             $source .= ' :: ' . $this->type;
         }
 
-        if (!is_null($this->value)) {
+        if (null !== $this->value) {
             $source .= ' :- ' . $this->value->format($parser);
         }
 
@@ -71,7 +71,7 @@ class LetStmt extends Stmt
         $this->scope = $parent_scope;
         $mask = Kind::K_VARIABLE | ($this->mutable ? Kind::K_MUTABLE : 0x0);
 
-        if (is_null($this->value)) {
+        if (null === $this->value) {
             $this->scope->insert($this->name, $mask);
         } else {
             $this->scope->insert($this->name, $mask | Kind::K_INITIALIZED);
@@ -81,32 +81,69 @@ class LetStmt extends Stmt
 
     public function runTypeChecker()
     {
-        $type = null;
+        // TODO: Deal with variable referrencing itself, such as
+        // let x :- x. It is "valid" in the context of a function, but not
+        // in eager definition. D'oh!
+
         // No type, no value. Free variable
-        if (is_null($this->type) && is_null($this->value)) {
+        if (null === $this->type && null === $this->value) {
             throw new TypeError(Localization::message('TYP290', [$this->name]));
         }
 
-        // type ^ value | type & value
-        if (is_null($this->value)) {
-            // Has type, but not value
-            // Try to simplify the type to ensure that it is deducible
+        if ($this->mutable) {
+            $this->checkMutable();
+        } else {
+            $this->checkImmutable();
+        }
+    }
+
+    public function checkMutable()
+    {
+        // No value (but we still have type)
+        if (null === $this->value) {
+            // Force type reduction because we still have no value to match against
             $this->type->simplify();
             $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
-        } else if (is_null($this->type)) {
-            // Has value, but not type
-            $type = $this->value->getType();
-            // TODO: We need to bind some type for the variable to avoid null types
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
-        } else {
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
-            $value_type = $this->value->getType();
-            if (!$this->type->check($value_type)) {
-                throw new TypeError(Localization::message('TYP300', [$this->name, $this->type, $value_type]));
-            }
+            return;
+        }
 
-            // After processing type, update type of current variable to the inferred one
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $value_type);
+        // No type (but we still have the value)
+        if (null === $this->type) {
+            $inferred_type = $this->value->getType();
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $inferred_type);
+            return;
+        }
+
+        // Got type and value
+        $this->checkTypeAndValue();
+    }
+
+    public function checkImmutable()
+    {
+        // No value on immutable variable (error)
+        if (null === $this->value) {
+            throw new TypeError(Localization::message('TYP270', [$this->name . ' :: ' . $this->type]));
+        }
+
+        // No type declared. The compiler will infer
+        if (null === $this->type) {
+            $type = $this->value->getType();
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
+            return;
+        }
+
+        $this->checkTypeAndValue();
+    }
+
+    public function checkTypeAndValue()
+    {
+        // Type and value exist. Check them!
+        $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
+        $inferred_type = $this->value->getType();
+        if (!$this->type->check($inferred_type)) {
+            throw new TypeError(Localization::message('TYP300', [
+                $this->name, $this->type, $inferred_type
+            ]));
         }
     }
 }
