@@ -164,7 +164,12 @@ function bundle($config)
         }
     }
 
-    file_put_contents($bundle, implode(PHP_EOL, $contents));
+    if (!is_dir($bundle['directory'])) {
+        mkdir($bundle['directory']);
+    }
+
+    $output_path = $bundle['directory'] . '/' . $bundle['filename'];
+    file_put_contents($output_path, implode(PHP_EOL, $contents));
 }
 
 // Modeling resource types
@@ -243,8 +248,11 @@ function getLocalesBuffer()
     return '
         <?php
         namespace QuackCompiler\Intl;
+
         class Localization
         {
+            private static $messages = null;
+
             public static function message($key, $arguments)
             {
                 if (null === static::$messages) {
@@ -259,7 +267,10 @@ function getLocalesBuffer()
 
 // Here the usage starts :)
 $bundle_settings = [
-    'bundle' => 'quack.php',
+    'bundle' => [
+        'directory' => 'bin',
+        'filename' => 'quack.php'
+    ],
     'resources' => [
         new ResourceBuffer(getLocalesBuffer()),
         new ResourceDir('src/lexer'),

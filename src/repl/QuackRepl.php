@@ -22,6 +22,7 @@
 define('BASE_PATH', __DIR__ . '/..');
 require_once(BASE_PATH . '/toolkit/QuackToolkit.php');
 
+use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
