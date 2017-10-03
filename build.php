@@ -278,8 +278,5 @@ $bundle_settings = [
     ]
 ];
 
-// TODO: Resolve conflicts on naming on namespace Main
-// TODO: Resolve order of parser resources
-
 bundle($bundle_settings);
 
