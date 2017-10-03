@@ -269,7 +269,7 @@ function getLocalesBuffer()
 $bundle_settings = [
     'bundle' => [
         'directory' => 'bin',
-        'filename' => 'quack.php'
+        'filename' => 'quack'
     ],
     'resources' => [
         new ResourceBuffer(getLocalesBuffer()),
