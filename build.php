@@ -24,7 +24,17 @@
 # together in order to generate one single and small file with all
 # Quack compiler stuff. I'm sorry, this was written fastly, so the code
 # may not be the best. Take care, here be dragons!
-function minify($source) {
+
+/**
+ * Receives a source string and returns it minified. Converts
+ * namespaces to bundle-compatible ones, strips comments and
+ * converts whitespaces.
+ *
+ * @param string $source
+ * @return string
+ */
+function minify($source)
+{
     $index = 0;
     $tokens = token_get_all($source);
     $length = sizeof($tokens);
@@ -39,7 +49,6 @@ function minify($source) {
         }
 
         list ($tag, $value) = $token;
-
         // Strip comments and PHP tags
         if (in_array($tag, [T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG, T_CLOSE_TAG], true)) {
             continue;
@@ -78,5 +87,99 @@ function minify($source) {
     return trim($result);
 }
 
-$node = file_get_contents('./src/ast/Node.php');
-var_dump(minify($node));
+/**
+ * Bundles PHP sources to one single file.
+ *
+ * @param array $config
+ * @return void
+ */
+function bundle($config) {
+    // Configuration
+    $bundle = $config['bundle'];
+    $resources = $config['resources'];
+
+    $contents = [];
+    foreach ($resources as $resource) {
+        foreach ($resource->readFiles() as $source) {
+            $contents[] = minify($source) . PHP_EOL;
+        }
+    }
+
+    echo implode('', $contents);
+}
+
+// Modeling resource types
+abstract class Resource
+{
+    protected $path;
+
+    public function __construct($path)
+    {
+        $this->path = realpath($path);
+    }
+
+    abstract public function readFiles();
+}
+
+class ResourceFile extends Resource
+{
+    public function readFiles()
+    {
+        return [file_get_contents($this->path)];
+    }
+}
+
+class ResourceBuffer extends Resource
+{
+    private $buffer;
+
+    public function __construct($buffer)
+    {
+        $this->buffer = $buffer;
+    }
+
+    public function readFiles()
+    {
+        return [$this->buffer];
+    }
+}
+
+/**
+ * Returns the bundle for inline localization
+ */
+function getLocalesBuffer()
+{
+    $strings = json_decode(file_get_contents('src/intl/locales/en-US.json'));
+    $messages = [];
+
+    foreach ($strings as $key => $value) {
+        $messages[] = '\'' . $key . '\' => \'' . addslashes($value) . '\'';
+    }
+
+    return '
+        <?php
+        namespace QuackCompiler\Intl;
+        class Localization
+        {
+            public static function message($key, $arguments)
+            {
+                if (null === static::$messages) {
+                    static::$messages = [' . implode(', ', $messages) . '];
+                }
+
+                return sprintf(...array_merge([static::$messages[$key]], $arguments));
+            }
+        }
+    ';
+}
+
+// Here the usage starts :)
+$bundle_settings = [
+    'bundle' => 'quack.php',
+    'resources' => [
+        new ResourceBuffer(getLocalesBuffer())
+    ]
+];
+
+bundle($bundle_settings);
+
