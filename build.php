@@ -127,12 +127,32 @@ function minify($source)
 }
 
 /**
+ * Returns whether a PHP source has declared interfaces or
+ * abstract classes, in order to give priority on compilation
+ *
+ * @param string $source
+ * @return boolean
+ */
+function has_priority($source)
+{
+    $tokens = token_get_all($source);
+    foreach ($tokens as $token) {
+        if (is_array($token) && (T_INTERFACE === $token[0] || T_ABSTRACT === $token[0])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Bundles PHP sources to one single file.
  *
  * @param array $config
  * @return void
  */
-function bundle($config) {
+function bundle($config)
+{
     // Configuration
     $bundle = $config['bundle'];
     $resources = $config['resources'];
@@ -172,18 +192,24 @@ class ResourceDir extends Resource
 {
     public function readFiles()
     {
-        $contents = [];
+        $abstractions = [];
+        $classes = [];
         $handle = opendir($this->path);
         while (false !== ($file = readdir($handle))) {
             if ('.' !== $file && '..' !== $file) {
                 $full_path = $this->path . '/' . $file;
                 if (file_exists($full_path)) {
-                    $contents[] = file_get_contents($full_path);
+                    $file_content = file_get_contents($full_path);
+                    if (has_priority($file_content)) {
+                        $abstractions[] = $file_content;
+                    } else {
+                        $classes[] = $file_content;
+                    }
                 }
             }
         }
         closedir($handle);
-        return $contents;
+        return array_merge($abstractions, $classes);
     }
 }
 
