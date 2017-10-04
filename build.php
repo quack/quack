@@ -145,6 +145,10 @@ function has_priority($source)
     return false;
 }
 
+function console_log($message) {
+    echo "\033[01;34m{$message}", PHP_EOL;
+}
+
 /**
  * Bundles PHP sources to one single file.
  *
@@ -159,7 +163,8 @@ function bundle($config)
 
     $contents = ['<?php'];
     foreach ($resources as $resource) {
-        foreach ($resource->readFiles() as $source) {
+        foreach ($resource->readFiles() as $file => $source) {
+            console_log("bundling {$file}");
             $contents[] = minify($source);
         }
     }
@@ -189,7 +194,7 @@ class ResourceFile extends Resource
 {
     public function readFiles()
     {
-        return [file_get_contents($this->path)];
+        return [$this->path => file_get_contents($this->path)];
     }
 }
 
@@ -203,12 +208,12 @@ class ResourceDir extends Resource
         while (false !== ($file = readdir($handle))) {
             if ('.' !== $file && '..' !== $file) {
                 $full_path = $this->path . '/' . $file;
-                if (file_exists($full_path)) {
+                if (is_file($full_path)) {
                     $file_content = file_get_contents($full_path);
                     if (has_priority($file_content)) {
-                        $abstractions[] = $file_content;
+                        $abstractions[$full_path] = $file_content;
                     } else {
-                        $classes[] = $file_content;
+                        $classes[$full_path] = $file_content;
                     }
                 }
             }
@@ -229,7 +234,7 @@ class ResourceBuffer extends Resource
 
     public function readFiles()
     {
-        return [$this->buffer];
+        return ['anonymous buffer' => $this->buffer];
     }
 }
 
