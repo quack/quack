@@ -35,7 +35,7 @@ class Precedence
     const LOGICAL_AND        = 10;
     const BITWISE_OR         = 11;
     const BITWISE_XOR        = 12;
-    const BITWISE_AND_OR_REF = 13;
+    const BITWISE_AND        = 13;
     const VALUE_COMPARATOR   = 14;
     const SIZE_COMPARATOR    = 15;
     const BITWISE_SHIFT      = 16;
