@@ -45,6 +45,13 @@ function minify($source)
         $token = $tokens[$index++];
 
         if (is_string($token)) {
+            $no_space_problems = [';', '=', '{'];
+            $last = substr($result, -1, 1);
+            if ($last === ' ' && in_array($token, $no_space_problems, true)) {
+                $result[strlen($result) - 1] = $token;
+                continue;
+            }
+
             $result .= $token;
         }
 
@@ -56,7 +63,11 @@ function minify($source)
 
         // Convert multiple whitespaces and newlines to 1 space
         if (T_WHITESPACE === $tag) {
-            $result .= ' ';
+            $last_char = substr($result, -1, 1);
+
+            if (!in_array($last_char, [';', '{', '.', '=', ',', '?', ':'], true)) {
+                $result .= ' ';
+            }
             continue;
         }
 
@@ -68,7 +79,7 @@ function minify($source)
                 $token = $tokens[$index++];
 
                 if (';' === $token) {
-                    $result .= ' {';
+                    $result .= '{';
                     break;
                 }
 
@@ -109,7 +120,7 @@ function minify($source)
                 $string .= $value;
             }
 
-            $result .= '"' . addslashes($string) . '"';
+            $result .= '"' . $string . '"';
             continue;
         }
 
@@ -146,7 +157,7 @@ function has_priority($source)
 }
 
 function console_log($message) {
-    echo "\033[01;34m{$message}", PHP_EOL;
+    echo "\033[01;34m{$message}\033[0m", PHP_EOL;
 }
 
 /**
