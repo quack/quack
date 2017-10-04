@@ -45,7 +45,7 @@ function minify($source)
         $token = $tokens[$index++];
 
         if (is_string($token)) {
-            $no_space_problems = [';', '=', '{'];
+            $no_space_problems = [';', '=', '{', '(', '}'];
             $last = substr($result, -1, 1);
             if ($last === ' ' && in_array($token, $no_space_problems, true)) {
                 $result[strlen($result) - 1] = $token;
