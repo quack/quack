@@ -6,7 +6,7 @@ check="\u2714"
 
 bundle="https://raw.githubusercontent.com/quack/quack/jsx-parser/bin/quack"
 compiler_source=$(wget -qO- $bundle)
-shebang="#!$(which php5)"
+shebang="#!$(which php)"
 bin=/usr/bin/quack
 
 touch $bin
