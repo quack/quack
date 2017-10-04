@@ -22,11 +22,15 @@
 define('BASE_PATH', __DIR__ . '/..');
 require_once(BASE_PATH . '/toolkit/QuackToolkit.php');
 
-use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
+
+if (!extension_loaded('readline')) {
+    echo "Missing readline extension on PHP. Recompile with --with-readline";
+    exit;
+}
 
 function isPOSIX()
 {
@@ -164,7 +168,7 @@ function readline_callback($command)
         // if EOF is found, then the user has not finish a statement
         $session->command = $run_command;
         $session->complete_stmt = false;
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         $session->command = '';
         $session->complete_stmt = true;
         echo $e;
