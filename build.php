@@ -31,7 +31,7 @@
  * converts whitespaces.
  *
  * @param string $source
- * @return string
+ * @return string[]
  */
 function minify($source)
 {
@@ -39,7 +39,8 @@ function minify($source)
     $tokens = token_get_all($source);
     $length = sizeof($tokens);
     $result = '';
-    $has_namespace = false;
+    $namespace = '';
+    $use = [];
 
     while ($index < $length) {
         $token = $tokens[$index++];
@@ -73,18 +74,17 @@ function minify($source)
 
         // Transform namespace *; into namespace {
         if (T_NAMESPACE === $tag) {
-            $result .= $value;
-            $has_namespace = true;
+            $index++;
             while (true) {
                 $token = $tokens[$index++];
+                $namespace .= $token[1];
 
                 if (';' === $token) {
-                    $result .= '{';
                     break;
                 }
-
-                $result .= is_string($token) ? $token : $token[1];
             }
+
+            $namespace = trim($namespace);
             continue;
         }
 
@@ -124,17 +124,30 @@ function minify($source)
             continue;
         }
 
+        // Fetch "use" directives
+        if (T_USE === $tag && $tokens[$index + 1][1] === '\\') {
+            $name = '';
+            while (true) {
+                $token = $tokens[$index++];
+                $name .= $token[1];
+
+                if ($token === ';') {
+                    break;
+                }
+            }
+
+            $use[] = trim($name);
+            continue;
+        }
+
         $result .= $value;
     }
 
-    if ($has_namespace) {
-        $result .= '}';
-    } else {
-        // When source doesn't belong to a namespace, create entry point
-        $result = 'namespace Main { '. $result . '}';
+    if ($namespace === '') {
+        $namespace = 'Main';
     }
 
-    return trim($result);
+    return [$namespace, $use, trim($result)];
 }
 
 /**
@@ -173,11 +186,40 @@ function bundle($config)
     $resources = $config['resources'];
 
     $contents = ['<?php'];
+    $namespaces = [];
+    $using = [];
     foreach ($resources as $resource) {
         foreach ($resource->readFiles() as $file => $source) {
             console_log("bundling {$file}");
-            $contents[] = minify($source);
+            list($namespace, $use, $content) = minify($source);
+
+            if (!isset($namespaces[$namespace])) {
+                $namespaces[$namespace] = [];
+                $using[$namespace] = [];
+            }
+
+            $namespaces[$namespace][] = $content;
+
+            foreach ($use as $item) {
+                $using[$namespace][$item] = true;
+            }
         }
+    }
+
+    foreach ($namespaces as $namespace => $sources) {
+        $contents[]  = "namespace $namespace{";
+        $result = '';
+
+        foreach ($using[$namespace] as $item => $_) {
+            $result .= "use $item;";
+        }
+
+        foreach ($sources as $source) {
+            $result .= $source;
+        }
+
+        $result .= '}';
+        $contents[] = $result;
     }
 
     if (!is_dir($bundle['directory'])) {
@@ -185,7 +227,7 @@ function bundle($config)
     }
 
     $output_path = $bundle['directory'] . '/' . $bundle['filename'];
-    file_put_contents($output_path, implode(PHP_EOL, $contents));
+    file_put_contents($output_path, implode(' ', $contents));
 }
 
 // Modeling resource types
