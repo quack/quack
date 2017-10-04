@@ -1,5 +1,6 @@
-
 FROM php:7.1-alpine
+
+LABEL maintainer="paulo.cuchi@gmail.com"
 
 RUN apk add tini --update
 
