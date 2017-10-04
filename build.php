@@ -48,7 +48,7 @@ function minify($source)
             $result .= $token;
         }
 
-        list ($tag, $value) = $token;
+        @list ($tag, $value) = $token;
         // Strip comments and PHP tags
         if (in_array($tag, [T_COMMENT, T_DOC_COMMENT, T_OPEN_TAG, T_CLOSE_TAG], true)) {
             continue;
