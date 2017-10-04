@@ -74,7 +74,15 @@ function quack()
 {
     if (isPOSIX()) {
         $wav = realpath(dirname(__FILE__) . '/../../resource/quack.wav');
-        exec("aplay $wav 2> /dev/null &");
+        // Mac OS
+        $player = "afplay";
+
+        // Linux
+        if (`which aplay`) {
+          $player = "aplay";
+        }
+
+        exec("$player $wav > /dev/null 2> /dev/null &");
     }
 }
 

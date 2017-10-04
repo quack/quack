@@ -168,6 +168,9 @@
 
   - [x] Fix example on README file
   - [x] Change WhenExpr separators from `|` and `;` to `,`
-  - [ ] Create ImportStmt (like ES6)
-  - [ ] Make ModuleStmt the first statement of a file.
   - [x] Fix WhereExpr and change from `;` to `,`
+  - [ ] Implement scope of ReturnStmt
+
+# On hold
+  - [ ] Create ImportStmt (like ES6) - [PR #115](https://github.com/quack/quack/pull/115)
+  - [ ] Make ModuleStmt the first statement of a file. - [PR #115](https://github.com/quack/quack/pull/115)
