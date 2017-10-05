@@ -93,6 +93,11 @@ class Console
         $this->write(sprintf("%c[%dD", 0x1B, 0xFFFF));
     }
 
+    public function forwardCursor($n)
+    {
+        $this->write(sprintf("%c[%dC", 0x1B, $n));
+    }
+
     public function writeln($buffer)
     {
         return $this->write($buffer . PHP_EOL);

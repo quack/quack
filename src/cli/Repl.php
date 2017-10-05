@@ -46,6 +46,7 @@ class Repl
     private function getEvent($char_code)
     {
         $events = [
+            // Backspace
             0x7F => function ($input) {
                 $line = $this->state['line'];
                 $column = $this->state['column'];
@@ -55,8 +56,24 @@ class Repl
 
                 array_splice($line, $column - 1, 1);
                 $this->state['line'] = $line;
-                $this->state['column'] = $this->state['column'] - 1;
+                $this->state['column'] = $column- 1;
                 $this->render();
+            },
+            // Arrow indicator
+            0x5B => function ($input) {
+                $next = ord($this->console->getChar());
+                $column = $this->state['column'];
+                $line = $this->state['line'];
+
+                if (0x44 === $next) {
+                    // Left arrow
+                    $this->state['column'] = max(0, $column - 1);
+                    $this->render();
+                } elseif (0x43 === $next) {
+                    // Right arrow
+                    $this->state['column'] = min(sizeof($line), $column + 1);
+                    $this->render();
+                }
             }
         ];
 
@@ -71,7 +88,13 @@ class Repl
             return;
         }
 
-        $this->state['line'] = array_merge($this->state['line'], [$input]);
+        $column = $this->state['column'];
+        $line = $this->state['line'];
+        $next_buffer = [$input];
+        // Insert the new char in the column in the line buffer
+        array_splice($line, $column, 0, $next_buffer);
+
+        $this->state['line'] = $line;
         $this->state['column'] = $this->state['column'] + strlen($input);
         $this->render();
     }
@@ -114,11 +137,24 @@ class Repl
         return implode('', $this->state['line']);
     }
 
-    public function renderPrompt()
+    private function renderPrompt()
     {
         $this->console->setColor(Console::FG_YELLOW);
         $this->console->write('Quack> ');
         $this->console->resetColor();
+    }
+
+    private function renderLeftScroll()
+    {
+        $this->console->setColor(Console::BG_WHITE);
+        $this->console->setColor(Console::FG_BLACK);
+        $this->console->write(' < ');
+        $this->console->resetColor();
+        $this->console->write(' ');
+        $this->console->setColor(Console::FG_CYAN);
+        $this->console->write('...');
+        $this->console->resetColor();
+        $this->console->write(' ');
     }
 
     private function render()
@@ -129,25 +165,21 @@ class Repl
         $this->console->clearLine();
         $this->console->resetCursor();
 
-        $console_columns = $this->console->getWidth();
-        if (strlen($line) > $console_columns - 7) {
-            $this->renderPrompt();
-            $this->console->setColor(Console::BG_WHITE);
-            $this->console->setColor(Console::FG_BLACK);
-            $this->console->write(' < ');
-            $this->console->resetColor();
-            $this->console->write(' ');
-            $this->console->setColor(Console::FG_CYAN);
-            $this->console->write('...');
-            $this->console->resetColor();
-            $this->console->write(' ');
+        $workspace = $this->console->getWidth() - 7;
+        $this->renderPrompt();
+        $show_left_scroll = $column >= $workspace;
+        $text_size = $workspace;
 
-            $available_size = $console_columns - 15;
-            $this->console->write(substr($line, $column - $available_size, $available_size));
-        } else {
-            $this->renderPrompt();
-            $this->console->write($line);
+        if ($show_left_scroll) {
+            $this->renderLeftScroll();
+            $text_size -= 9;
         }
+
+        $from = $column - $text_size;
+        $cursor = 7 + ($workspace - ($text_size - $column));
+        $this->console->write(substr($line, max(0, $from), $text_size));
+        $this->console->resetCursor();
+        $this->console->forwardCursor($cursor);
     }
 
     public function loop()
