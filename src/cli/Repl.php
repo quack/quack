@@ -64,20 +64,18 @@ class Repl
                 $next = ord($this->console->getChar());
                 $column = $this->state['column'];
                 $line = $this->state['line'];
+                $arrow_events = [
+                    0x43 => min(sizeof($line), $column + 1),
+                    0x44 => max(0, $column - 1)
+                ];
 
-                if (0x44 === $next) {
-                    // Left arrow
-                    $this->state['column'] = max(0, $column - 1);
-                    $this->render();
-                } elseif (0x43 === $next) {
-                    // Right arrow
-                    $this->state['column'] = min(sizeof($line), $column + 1);
-                    $this->render();
-                } elseif (0x41 === $next) {
-                    // Up arrow
-                } elseif (0x42 === $next) {
-                    // Down arrow
+                if (isset($arrow_events[$next])) {
+                    $this->state['column'] = $arrow_events[$next];
                 }
+
+                // TODO: Implement history, DELETE and colors
+
+                $this->render();
             }
         ];
 
