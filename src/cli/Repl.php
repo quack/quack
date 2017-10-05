@@ -149,12 +149,9 @@ class Repl
         $this->console->setColor(Console::BG_WHITE);
         $this->console->setColor(Console::FG_BLACK);
         $this->console->write(' < ');
-        $this->console->resetColor();
-        $this->console->write(' ');
         $this->console->setColor(Console::FG_CYAN);
-        $this->console->write('...');
+        $this->console->write(' ... ');
         $this->console->resetColor();
-        $this->console->write(' ');
     }
 
     private function render()
