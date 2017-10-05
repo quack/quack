@@ -21,7 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Node;
 
 abstract class Expr extends Node
 {

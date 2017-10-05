@@ -31,20 +31,47 @@
  * converts whitespaces.
  *
  * @param string $source
- * @return string
+ * @return string[]
  */
-function minify($source)
+function minify($source, $pure_identifiers)
 {
+    static $name_map = [];
+    static $pointer = 0;
+
     $index = 0;
     $tokens = token_get_all($source);
     $length = sizeof($tokens);
     $result = '';
-    $has_namespace = false;
+    $namespace = '';
+    $use = [];
+
+    // Replace pure identifiers
+    array_walk($tokens, function (&$token) use ($pure_identifiers, &$name_map, &$pointer) {
+        if (is_array($token)
+            && T_STRING === $token[0]
+            && in_array($token[1], $pure_identifiers, true)) {
+
+            // Register identifier when not exists
+            if (!isset($name_map[$token[1]])) {
+                $name_map[$token[1]] = '_' . $pointer++;
+            }
+
+            // Assign identifier
+            $token[1] = $name_map[$token[1]];
+        }
+    });
 
     while ($index < $length) {
         $token = $tokens[$index++];
 
         if (is_string($token)) {
+            $no_space_problems = [';', '=', '{', '(', '}'];
+            $last = substr($result, -1, 1);
+            if ($last === ' ' && in_array($token, $no_space_problems, true)) {
+                $result[strlen($result) - 1] = $token;
+                continue;
+            }
+
             $result .= $token;
         }
 
@@ -56,24 +83,30 @@ function minify($source)
 
         // Convert multiple whitespaces and newlines to 1 space
         if (T_WHITESPACE === $tag) {
-            $result .= ' ';
+            $last_char = substr($result, -1, 1);
+
+            if (!in_array($last_char, [
+                ';', '{', '.', '=', ',', '?', ':', '<', '>', '<=', '>=', '.=', '+=',
+                '<<', '>>', '|'
+            ], true)) {
+                $result .= ' ';
+            }
             continue;
         }
 
         // Transform namespace *; into namespace {
         if (T_NAMESPACE === $tag) {
-            $result .= $value;
-            $has_namespace = true;
+            $index++;
             while (true) {
                 $token = $tokens[$index++];
+                $namespace .= $token[1];
 
                 if (';' === $token) {
-                    $result .= ' {';
                     break;
                 }
-
-                $result .= is_string($token) ? $token : $token[1];
             }
+
+            $namespace = trim($namespace);
             continue;
         }
 
@@ -109,21 +142,34 @@ function minify($source)
                 $string .= $value;
             }
 
-            $result .= '"' . addslashes($string) . '"';
+            $result .= '"' . $string . '"';
+            continue;
+        }
+
+        // Fetch "use" directives
+        if (T_USE === $tag && $tokens[$index + 1][1] === '\\') {
+            $name = '';
+            while (true) {
+                $token = $tokens[$index++];
+                $name .= $token[1];
+
+                if ($token === ';') {
+                    break;
+                }
+            }
+
+            $use[] = trim($name);
             continue;
         }
 
         $result .= $value;
     }
 
-    if ($has_namespace) {
-        $result .= '}';
-    } else {
-        // When source doesn't belong to a namespace, create entry point
-        $result = 'namespace Main { '. $result . '}';
+    if ($namespace === '') {
+        $namespace = 'Main';
     }
 
-    return trim($result);
+    return [$namespace, $use, trim($result)];
 }
 
 /**
@@ -145,6 +191,10 @@ function has_priority($source)
     return false;
 }
 
+function console_log($message) {
+    echo "\033[01;34m{$message}\033[0m", PHP_EOL;
+}
+
 /**
  * Bundles PHP sources to one single file.
  *
@@ -156,12 +206,44 @@ function bundle($config)
     // Configuration
     $bundle = $config['bundle'];
     $resources = $config['resources'];
+    $pure_identifiers = $config['pure_identifiers'];
+
 
     $contents = ['<?php'];
+    $namespaces = [];
+    $using = [];
     foreach ($resources as $resource) {
-        foreach ($resource->readFiles() as $source) {
-            $contents[] = minify($source);
+        foreach ($resource->readFiles() as $file => $source) {
+            console_log("bundling {$file}");
+            list($namespace, $use, $content) = minify($source, $pure_identifiers);
+
+            if (!isset($namespaces[$namespace])) {
+                $namespaces[$namespace] = [];
+                $using[$namespace] = [];
+            }
+
+            $namespaces[$namespace][] = $content;
+
+            foreach ($use as $item) {
+                $using[$namespace][$item] = true;
+            }
         }
+    }
+
+    foreach ($namespaces as $namespace => $sources) {
+        $contents[]  = "namespace $namespace{";
+        $result = '';
+
+        foreach ($using[$namespace] as $item => $_) {
+            $result .= "use $item;";
+        }
+
+        foreach ($sources as $source) {
+            $result .= $source;
+        }
+
+        $result .= '}';
+        $contents[] = $result;
     }
 
     if (!is_dir($bundle['directory'])) {
@@ -169,7 +251,7 @@ function bundle($config)
     }
 
     $output_path = $bundle['directory'] . '/' . $bundle['filename'];
-    file_put_contents($output_path, implode(PHP_EOL, $contents));
+    file_put_contents($output_path, implode(' ', $contents));
 }
 
 // Modeling resource types
@@ -189,7 +271,7 @@ class ResourceFile extends Resource
 {
     public function readFiles()
     {
-        return [file_get_contents($this->path)];
+        return [$this->path => file_get_contents($this->path)];
     }
 }
 
@@ -203,12 +285,12 @@ class ResourceDir extends Resource
         while (false !== ($file = readdir($handle))) {
             if ('.' !== $file && '..' !== $file) {
                 $full_path = $this->path . '/' . $file;
-                if (file_exists($full_path)) {
+                if (is_file($full_path)) {
                     $file_content = file_get_contents($full_path);
                     if (has_priority($file_content)) {
-                        $abstractions[] = $file_content;
+                        $abstractions[$full_path] = $file_content;
                     } else {
-                        $classes[] = $file_content;
+                        $classes[$full_path] = $file_content;
                     }
                 }
             }
@@ -229,7 +311,7 @@ class ResourceBuffer extends Resource
 
     public function readFiles()
     {
-        return [$this->buffer];
+        return ['anonymous buffer' => $this->buffer];
     }
 }
 
@@ -286,6 +368,111 @@ $bundle_settings = [
         new ResourceDir('src/scope'),
         new ResourceDir('src/types'),
         new ResourceFile('src/repl/QuackRepl.php')
+    ],
+    'pure_identifiers' => [
+        'QuackCompiler',
+        'Scope',
+        'Types',
+        'Ast',
+        'Localization',
+        'Parser',
+        'Tokenizer',
+        'TokenReader',
+        'NativeQuackType',
+        'parenthesize',
+        'Attachable',
+        'Parselet',
+        'GroupTypeParselet',
+        'LambdaParselet',
+        'Intl',
+        'StmtList',
+        'Token',
+        'Word',
+        'PostConditionalStmt',
+        'injectScope',
+        'Expr',
+        'getPrecedence',
+        'OperatorType',
+        'BinaryOperatorParselet',
+        'InfixParselet',
+        'PrefixParselet',
+        'reserve',
+        'Tag',
+        'Meta',
+        'Stmt',
+        'SyntaxError',
+        'TypeError',
+        'ScopeError',
+        'format',
+        'closeScope',
+        'openScope',
+        'LiteralType',
+        'Parselets',
+        'infixLeft',
+        'consume',
+        'indent',
+        'getMeta',
+        'setMeta',
+        'readChar',
+        'tryMatch',
+        'consumeIf',
+        '_expr',
+        'NumberExpr',
+        'Grammar',
+        'parse',
+        '_innerStmtList',
+        '_identifier',
+        'BinaryOperatorTypeParselet',
+        'ObjectType',
+        'getTag',
+        'FunctionType',
+        'getType',
+        'Lexer',
+        'isBoolean',
+        'Precedence',
+        'register',
+        'getContent',
+        'consumeAndFetch',
+        'StringExpr',
+        'isEnd',
+        'match',
+        'runTypeChecker',
+        'ArrayExpr',
+        'TYPE_EXPRESSION',
+        'TYPE_STATEMENT',
+        'ListType',
+        'isString',
+        'isNumber',
+        'getOperatorLexeme',
+        'Kind',
+        'GenericType',
+        'RegexExpr',
+        'ObjectParselet',
+        'WhenExpr',
+        'OperatorExpr',
+        'infixParseletForToken',
+        'LiteralParselet',
+        'EOFError',
+        'MapType',
+        'FunctionTypeParselet',
+        'LiteralTypeParselet',
+        'BlockParselet',
+        'AtomExpr',
+        'WhereExpr',
+        'PostfixOperatorParselet',
+        'MemberAccessParselet',
+        'FnSignatureStmt',
+        'NameParselet',
+        'CallExpr',
+        'BlockExpr',
+        'LetStmt',
+        'PrefixOperatorParselet',
+        'TernaryParselet',
+        'GroupParselet',
+        'RangeParselet',
+        'PartialFuncParselet',
+        'TupleType',
+        'TernaryExpr'
     ]
 ];
 
