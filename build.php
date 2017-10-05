@@ -33,14 +33,33 @@
  * @param string $source
  * @return string[]
  */
-function minify($source)
+function minify($source, $pure_identifiers)
 {
+    static $name_map = [];
+    static $pointer = 0;
+
     $index = 0;
     $tokens = token_get_all($source);
     $length = sizeof($tokens);
     $result = '';
     $namespace = '';
     $use = [];
+
+    // Replace pure identifiers
+    array_walk($tokens, function (&$token) use ($pure_identifiers, &$name_map, &$pointer) {
+        if (is_array($token)
+            && T_STRING === $token[0]
+            && in_array($token[1], $pure_identifiers, true)) {
+
+            // Register identifier when not exists
+            if (!isset($name_map[$token[1]])) {
+                $name_map[$token[1]] = '_' . $pointer++;
+            }
+
+            // Assign identifier
+            $token[1] = $name_map[$token[1]];
+        }
+    });
 
     while ($index < $length) {
         $token = $tokens[$index++];
@@ -66,7 +85,10 @@ function minify($source)
         if (T_WHITESPACE === $tag) {
             $last_char = substr($result, -1, 1);
 
-            if (!in_array($last_char, [';', '{', '.', '=', ',', '?', ':'], true)) {
+            if (!in_array($last_char, [
+                ';', '{', '.', '=', ',', '?', ':', '<', '>', '<=', '>=', '.=', '+=',
+                '<<', '>>', '|'
+            ], true)) {
                 $result .= ' ';
             }
             continue;
@@ -184,6 +206,8 @@ function bundle($config)
     // Configuration
     $bundle = $config['bundle'];
     $resources = $config['resources'];
+    $pure_identifiers = $config['pure_identifiers'];
+
 
     $contents = ['<?php'];
     $namespaces = [];
@@ -191,7 +215,7 @@ function bundle($config)
     foreach ($resources as $resource) {
         foreach ($resource->readFiles() as $file => $source) {
             console_log("bundling {$file}");
-            list($namespace, $use, $content) = minify($source);
+            list($namespace, $use, $content) = minify($source, $pure_identifiers);
 
             if (!isset($namespaces[$namespace])) {
                 $namespaces[$namespace] = [];
@@ -344,6 +368,27 @@ $bundle_settings = [
         new ResourceDir('src/scope'),
         new ResourceDir('src/types'),
         new ResourceFile('src/repl/QuackRepl.php')
+    ],
+    'pure_identifiers' => [
+        'QuackCompiler',
+        'Scope',
+        'Types',
+        'Ast',
+        'Localization',
+        'Parser',
+        'Tokenizer',
+        'TokenReader',
+        'NativeQuackType',
+        'parenthesize',
+        'Attachable',
+        'Parselet',
+        'GroupTypeParselet',
+        'LambdaParselet',
+        'Intl',
+        'StmtList',
+        'Token',
+        'Word',
+        'PostConditionalStmt'
     ]
 ];
 
