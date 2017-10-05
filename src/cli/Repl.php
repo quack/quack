@@ -31,16 +31,16 @@ class Repl
         $this->console = $console;
         $this->state = [
             'line' => [],
-            'column' => 0
+            'column' => 0,
+            'history' => [],
+            'history_index' => 0
         ];
     }
 
     private function resetState()
     {
-        $this->state = [
-            'line' => [],
-            'column' => 0
-        ];
+        $this->state['line'] = [];
+        $this->state['column'] = 0;
     }
 
     private function getEvent($char_code)
@@ -73,6 +73,10 @@ class Repl
                     // Right arrow
                     $this->state['column'] = min(sizeof($line), $column + 1);
                     $this->render();
+                } elseif (0x41 === $next) {
+                    // Up arrow
+                } elseif (0x42 === $next) {
+                    // Down arrow
                 }
             }
         ];
@@ -80,6 +84,17 @@ class Repl
         return isset($events[$char_code])
             ? $events[$char_code]
             : null;
+    }
+
+    private function handleEnter()
+    {
+        $line = implode('', $this->state['line']);
+
+        // Go the start of the line and set the command as done
+        $this->state['history'][] = $line;
+        $this->console->resetCursor();
+        $this->renderPrompt(Console::FG_CYAN);
+        $this->console->writeln('');
     }
 
     private function handleKeyPress($input)
@@ -116,7 +131,6 @@ class Repl
         }
     }
 
-
     public function read()
     {
         $this->console->sttySaveCheckpoint();
@@ -132,14 +146,15 @@ class Repl
 
             $this->handleKeyPress($char);
         } while (ord($char) !== 10);
+        $this->handleEnter();
 
         $this->console->sttyRestoreCheckpoint();
         return implode('', $this->state['line']);
     }
 
-    private function renderPrompt()
+    private function renderPrompt($color = Console::FG_YELLOW)
     {
-        $this->console->setColor(Console::FG_YELLOW);
+        $this->console->setColor($color);
         $this->console->write('Quack> ');
         $this->console->resetColor();
     }
