@@ -26,8 +26,14 @@ class Console
     private $stdin;
     private $stdout;
     private $stderr;
+    private $stty_settings;
+    private $columns;
 
-    const YELLOW = '1;33';
+    const FG_YELLOW = '1;33';
+    const FG_BLACK = '1;30';
+    const FG_CYAN = '0;36';
+
+    const BG_WHITE = '47';
 
     public function __construct($stdin, $stdout, $stderr)
     {
@@ -41,49 +47,50 @@ class Console
         return fwrite($this->stdout, $buffer);
     }
 
-    private static function stty($options)
+    public function getChar()
+    {
+        return fgetc($this->stdin);
+    }
+
+    public function getWidth()
+    {
+        if (null === $this->columns) {
+            $this->columns = (int) `tput cols`;
+        }
+
+        return $this->columns;
+    }
+
+    public function stty($options)
     {
         $output = [];
         exec("stty $options", $output);
         return implode(' ', $output);
     }
 
-    public function read()
+    public function sttySaveCheckpoint()
     {
-        $stty_settings = preg_replace('#.*; ?#s', '', self::stty('--all'));
-        self::stty('cbreak -echo');
-        self::stty('echoe');
+        $this->stty_settings = preg_replace('#.*; ?#s', '', $this->stty('--all'));
+    }
 
-        $stack = [];
-        $cursor = 0;
-        do {
-            $char = fgetc($this->stdin);
-            $char_code = ord($char);
+    public function sttyRestoreCheckpoint()
+    {
+        $this->stty($this->stty_settings);
+    }
 
-            if (27 === $char_code) {
-                if (127 === ord($char)) {
-                    if ($cursor > 0) {
-                        // Decrement cursor on backspace
-                        $cursor--;
-                        // Pop from stack
-                        array_pop($stack);
-                        printf("%c[1D", 27); // Move cursor 1 char to the left
-                        printf("%c[K", 27); // Clear garbage on right
-                    }
+    public function sttyEnableCharEvents()
+    {
+        $this->stty('cbreak -echo');
+    }
 
-                }
-            } elseif (ctype_print($char)) {
-                // Accumulate character to the stack
-                $stack[] = $char;
-                // Walk in tape
-                $cursor++;
-                $this->write($char);
-            }
-        } while (ord($char) !== 10);
+    public function clearLine()
+    {
+        $this->write(sprintf("%c[2K", 0x1B));
+    }
 
-        self::stty($stty_settings);
-        var_dump($stack);
-        exit;
+    public function resetCursor()
+    {
+        $this->write(sprintf("%c[%dD", 0x1B, 0xFFFF));
     }
 
     public function writeln($buffer)
@@ -100,12 +107,12 @@ class Console
         return $this->write("\x1b]2;{$title}\x07");
     }
 
-    public function setFontColor($color)
+    public function setColor($color)
     {
         return $this->write("\033[{$color}m");
     }
 
-    public function resetFontColor()
+    public function resetColor()
     {
         $this->write("\033[0m");
     }
