@@ -49,63 +49,62 @@ class Repl
     private function getEvent($char_code)
     {
         $events = [
-            // Backspace
-            0x7F => [$this, 'handleBackspace'],
-            // Generic characters
-            0x5B => function () {
-                $next = ord($this->console->getChar());
-                $column = $this->state['column'];
-                $line = $this->state['line'];
-                $arrow_events = [
-                    0x43 => min(sizeof($line), $column + 1),
-                    0x44 => max(0, $column - 1)
-                ];
-
-                if (isset($arrow_events[$next])) {
-                    $this->state['column'] = $arrow_events[$next];
-                }
-
-                if (0x41 === $next || 0x42 === $next) {
-                    $history = $this->state['history'];
-                    $history_size = sizeof($history);
-                    $index = $this->state['history_index'];
-
-                    // Handle key up and down
-                    $navigator = 0x41 === $next ? 1 : -1;
-                    $line = @$history[$history_size - ($index + $navigator)];
-                    if (null !== $line) {
-                        $this->state['line'] = str_split($line);
-                        $this->state['history_index'] += $navigator;
-                        $this->state['column'] = strlen($line);
-                    } elseif (0x42 === $next && $index <= 1) {
-                        $this->resetState();
-                    }
-                }
-
-                // Delete
-                if (0x33 === $next) {
-                    // Discard garbage escape
-                    $this->console->getChar();
-                    if ($column === sizeof($line)) {
-                        return;
-                    }
-
-                    array_splice($line, $column, 1);
-                    $this->state['line'] = $line;
-                    $this->state['column'] = $column;
-                }
-
-                $this->render();
-            },
-            // CTRL+L
-            0xC => [$this, 'handleClearScreen'],
-            // Home and end
-            0x4F => [$this, 'handleHomeAndEnd']
+            0x7F => 'handleBackspace',
+            0x5B => 'handleGenericEvent',
+            0xC => 'handleClearScreen',
+            0x4F => 'handleHomeAndEnd'
         ];
 
         return isset($events[$char_code])
-            ? $events[$char_code]
+            ? [$this, $events[$char_code]]
             : null;
+    }
+
+    private function handleGenericEvent()
+    {
+        $next = ord($this->console->getChar());
+        $column = $this->state['column'];
+        $line = $this->state['line'];
+        $arrow_events = [
+            0x43 => min(sizeof($line), $column + 1),
+            0x44 => max(0, $column - 1)
+        ];
+
+        if (isset($arrow_events[$next])) {
+            $this->state['column'] = $arrow_events[$next];
+        }
+
+        if (0x41 === $next || 0x42 === $next) {
+            $history = $this->state['history'];
+            $history_size = sizeof($history);
+            $index = $this->state['history_index'];
+
+            // Handle key up and down
+            $navigator = 0x41 === $next ? 1 : -1;
+            $line = @$history[$history_size - ($index + $navigator)];
+            if (null !== $line) {
+                $this->state['line'] = str_split($line);
+                $this->state['history_index'] += $navigator;
+                $this->state['column'] = strlen($line);
+            } elseif (0x42 === $next && $index <= 1) {
+                $this->resetState();
+            }
+        }
+
+        // Delete
+        if (0x33 === $next) {
+            // Discard garbage escape
+            $this->console->getChar();
+            if ($column === sizeof($line)) {
+                return;
+            }
+
+            array_splice($line, $column, 1);
+            $this->state['line'] = $line;
+            $this->state['column'] = $column;
+        }
+
+        $this->render();
     }
 
     private function handleBackspace()
