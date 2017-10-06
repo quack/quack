@@ -127,5 +127,10 @@ class Console
     {
         return $this->write(sprintf("%c[0m", 0x1B));
     }
+
+    public function scolor($color, $text)
+    {
+        return sprintf('%c[%sm%s%c[0m', 0x1B, $color, $text, 0x1B);
+    }
 }
 

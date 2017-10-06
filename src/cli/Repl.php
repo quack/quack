@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Cli;
 
+use \QuackCompiler\Lexer\Tokenizer;
+
 class Repl
 {
     private $console;
@@ -181,6 +183,15 @@ class Repl
         }
     }
 
+    private function paint(&$line)
+    {
+        $line = preg_replace(
+            ['/true|false/'],
+            [$this->console->scolor(Console::FG_CYAN, '$0')],
+            $line
+        );
+    }
+
     public function read()
     {
         $this->console->sttySaveCheckpoint();
@@ -222,6 +233,7 @@ class Repl
     private function render()
     {
         $line = implode('', $this->state['line']);
+        $this->paint($line);
         $column = $this->state['column'];
 
         $this->console->clearLine();
