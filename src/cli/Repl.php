@@ -147,12 +147,12 @@ class Repl
 
     private function handleEnter()
     {
-        $line = implode('', $this->state['line']);
-
+        $line = trim(implode('', $this->state['line']));
         // Push line to the history
-        if (trim($line) !== '') {
+        if ($line !== '') {
             $this->state['history'][] = $line;
         }
+
         // Go to the start of line and set the command as done
         $this->console->resetCursor();
         $this->renderPrompt(Console::FG_CYAN);
@@ -176,13 +176,31 @@ class Repl
         $this->render();
     }
 
+    public function handleQuit()
+    {
+        $this->console->setColor(Console::FG_BLUE);
+        $this->console->writeln(' > So long, and thanks for all the fish!');
+        $this->console->resetColor();
+        exit;
+    }
+
+    private function intercept($command)
+    {
+        switch ($command) {
+            case ':clear':
+                return $this->handleClearScreen();
+            case ':quit':
+                return $this->handleQuit();
+        }
+    }
+
     public function welcome()
     {
         $prelude = [
-            'Quack - Copyright (C) 2016 Marcelo Camargo',
+            'Quack - Copyright (C) 2017 Marcelo Camargo',
             'This program comes with ABSOLUTELY NO WARRANTY.',
             'This is free software, and you are welcome to redistribute it',
-            'under certain conditions; type \'show c\' for details.',
+            'under certain conditions.',
             'Use quack --help for more information',
             'Type ^C or :quit to leave'
         ];
@@ -216,7 +234,7 @@ class Repl
         $this->handleEnter();
 
         $this->console->sttyRestoreCheckpoint();
-        return implode('', $this->state['line']);
+        return trim(implode('', $this->state['line']));
     }
 
     private function renderPrompt($color = Console::FG_YELLOW)
@@ -268,6 +286,11 @@ class Repl
         while (true) {
             $this->render();
             $line = $this->read();
+
+            if (':' === substr($line, 0, 1)) {
+                $this->intercept($line);
+            }
+
             $this->resetState();
         }
     }
