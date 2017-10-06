@@ -185,11 +185,7 @@ class Repl
 
     private function paint(&$line)
     {
-        $line = preg_replace(
-            ['/true|false/'],
-            [$this->console->scolor(Console::FG_CYAN, '$0')],
-            $line
-        );
+        // TODO: We need to make the lexer reversible to allow complete analysis
     }
 
     public function read()
