@@ -50,18 +50,7 @@ class Repl
     {
         $events = [
             // Backspace
-            0x7F => function () {
-                $line = $this->state['line'];
-                $column = $this->state['column'];
-                if (0 === $column) {
-                    return;
-                }
-
-                array_splice($line, $column - 1, 1);
-                $this->state['line'] = $line;
-                $this->state['column'] = $column - 1;
-                $this->render();
-            },
+            0x7F => [$this, 'handleBackspace'],
             // Generic characters
             0x5B => function () {
                 $next = ord($this->console->getChar());
@@ -109,27 +98,9 @@ class Repl
                 $this->render();
             },
             // CTRL+L
-            0xC => function () {
-                $this->console->clear();
-                $this->console->moveCursorToHome();
-                $this->render();
-            },
+            0xC => [$this, 'handleClearScreen'],
             // Home and end
-            0x4F => function () {
-                $next = ord($this->console->getChar());
-
-                // End
-                if (0x46 === $next) {
-                    $this->state['column'] = sizeof($this->state['line']);
-                }
-
-                // Home
-                if (0x48 === $next) {
-                    $this->state['column'] = 0;
-                }
-
-                $this->render();
-            }
+            0x4F => [$this, 'handleHomeAndEnd']
         ];
 
         return isset($events[$char_code])
@@ -137,12 +108,52 @@ class Repl
             : null;
     }
 
+    private function handleBackspace()
+    {
+        $line = $this->state['line'];
+        $column = $this->state['column'];
+        if (0 === $column) {
+            return;
+        }
+
+        array_splice($line, $column - 1, 1);
+        $this->state['line'] = $line;
+        $this->state['column'] = $column - 1;
+        $this->render();
+    }
+
+    private function handleClearScreen()
+    {
+        $this->console->clear();
+        $this->console->moveCursorToHome();
+        $this->render();
+    }
+
+    private function handleHomeAndEnd()
+    {
+        $next = ord($this->console->getChar());
+
+        // End
+        if (0x46 === $next) {
+            $this->state['column'] = sizeof($this->state['line']);
+        }
+
+        // Home
+        if (0x48 === $next) {
+            $this->state['column'] = 0;
+        }
+
+        $this->render();
+    }
+
     private function handleEnter()
     {
         $line = implode('', $this->state['line']);
 
         // Push line to the history
-        $this->state['history'][] = $line;
+        if (trim($line) !== '') {
+            $this->state['history'][] = $line;
+        }
         // Go to the start of line and set the command as done
         $this->console->resetCursor();
         $this->renderPrompt(Console::FG_CYAN);
@@ -253,12 +264,13 @@ class Repl
         $this->console->forwardCursor($cursor);
     }
 
-    public function loop()
+    public function start()
     {
-        $this->render();
-        $line = $this->read();
-        $this->resetState();
-        $this->loop();
+        while (true) {
+            $this->render();
+            $line = $this->read();
+            $this->resetState();
+        }
     }
 }
 
@@ -266,4 +278,4 @@ require 'Console.php';
 
 $repl = new Repl(new Console(STDIN, STDOUT, STDERR));
 $repl->welcome();
-$repl->loop();
+$repl->start();
