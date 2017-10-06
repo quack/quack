@@ -21,8 +21,6 @@
  */
 namespace QuackCompiler\Cli;
 
-use \QuackCompiler\Lexer\Tokenizer;
-
 class Repl
 {
     private $console;
@@ -48,16 +46,27 @@ class Repl
 
     private function getEvent($char_code)
     {
-        $events = [
-            0x7F => 'handleBackspace',
-            0x5B => 'handleGenericEvent',
-            0xC => 'handleClearScreen',
-            0x4F => 'handleHomeAndEnd'
-        ];
+        switch ($char_code) {
+            case 0x7F:
+                return [$this, 'handleBackspace'];
+            case 0xC:
+                return [$this, 'handleClearScreen'];
+            case 0x1B:
+                return [$this, 'handleEscape'];
+            default:
+                return null;
+        }
+    }
 
-        return isset($events[$char_code])
-            ? [$this, $events[$char_code]]
-            : null;
+    private function handleEscape()
+    {
+        $next = ord($this->console->getChar());
+        switch ($next) {
+            case 0x4F:
+                return $this->handleHomeAndEnd();
+            case 0x5B:
+                return $this->handleGenericEvent();
+        }
     }
 
     private function handleGenericEvent()
@@ -211,11 +220,6 @@ class Repl
         }
     }
 
-    private function paint(&$line)
-    {
-        // TODO: We need to make the lexer reversible to allow complete analysis
-    }
-
     public function read()
     {
         $this->console->sttySaveCheckpoint();
@@ -257,7 +261,6 @@ class Repl
     private function render()
     {
         $line = implode('', $this->state['line']);
-        $this->paint($line);
         $column = $this->state['column'];
 
         $this->console->clearLine();
