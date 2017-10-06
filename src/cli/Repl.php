@@ -41,6 +41,7 @@ class Repl
     {
         $this->state['line'] = [];
         $this->state['column'] = 0;
+        $this->state['history_index'] = 0;
     }
 
     private function getEvent($char_code)
@@ -56,7 +57,7 @@ class Repl
 
                 array_splice($line, $column - 1, 1);
                 $this->state['line'] = $line;
-                $this->state['column'] = $column- 1;
+                $this->state['column'] = $column - 1;
                 $this->render();
             },
             // Arrow indicator
@@ -71,9 +72,22 @@ class Repl
 
                 if (isset($arrow_events[$next])) {
                     $this->state['column'] = $arrow_events[$next];
-                }
+                } else {
+                    $history = $this->state['history'];
+                    $history_size = sizeof($history);
+                    $index = $this->state['history_index'];
 
-                // TODO: Implement history, DELETE and colors
+                    // Handle key up and down
+                    $navigator = 0x41 === $next ? 1 : -1;
+                    $line = @$history[$history_size - ($index + $navigator)];
+                    if (null !== $line) {
+                        $this->state['line'] = str_split($line);
+                        $this->state['history_index'] += $navigator;
+                        $this->state['column'] = strlen($line);
+                    } elseif (0x42 === $next && $index <= 1) {
+                        $this->resetState();
+                    }
+                }
 
                 $this->render();
             }
@@ -88,8 +102,9 @@ class Repl
     {
         $line = implode('', $this->state['line']);
 
-        // Go the start of the line and set the command as done
+        // Push line to the history
         $this->state['history'][] = $line;
+        // Go to the start of line and set the command as done
         $this->console->resetCursor();
         $this->renderPrompt(Console::FG_CYAN);
         $this->console->writeln('');
