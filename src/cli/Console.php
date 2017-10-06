@@ -70,32 +70,42 @@ class Console
 
     public function sttySaveCheckpoint()
     {
-        $this->stty_settings = preg_replace('#.*; ?#s', '', $this->stty('--all'));
+        return $this->stty_settings = preg_replace('#.*; ?#s', '', $this->stty('--all'));
     }
 
     public function sttyRestoreCheckpoint()
     {
-        $this->stty($this->stty_settings);
+        return $this->stty($this->stty_settings);
     }
 
     public function sttyEnableCharEvents()
     {
-        $this->stty('cbreak -echo');
+        return $this->stty('cbreak -echo');
     }
 
     public function clearLine()
     {
-        $this->write(sprintf("%c[2K", 0x1B));
+        return $this->write(sprintf("%c[2K", 0x1B));
+    }
+
+    public function clear()
+    {
+        return $this->write(sprintf("%c[2J", 0x1B));
     }
 
     public function resetCursor()
     {
-        $this->write(sprintf("%c[%dD", 0x1B, 0xFFFF));
+        return $this->write(sprintf("%c[%dD", 0x1B, 0xFFFF));
     }
 
     public function forwardCursor($n)
     {
-        $this->write(sprintf("%c[%dC", 0x1B, $n));
+        return $this->write(sprintf("%c[%dC", 0x1B, $n));
+    }
+
+    public function moveCursorToHome()
+    {
+        return $this->write(sprintf("%c[H", 0x1B));
     }
 
     public function writeln($buffer)
@@ -105,26 +115,17 @@ class Console
 
     public function setTitle($title)
     {
-        if ($this->isWindows()) {
-            return `title {$title}`;
-        }
-
-        return $this->write("\x1b]2;{$title}\x07");
+        return $this->write(sprintf("%c]2;%s%c", 0x1B, $title, 0x7));
     }
 
     public function setColor($color)
     {
-        return $this->write("\033[{$color}m");
+        return $this->write(sprintf("%c[%sm", 0x1B, $color));
     }
 
     public function resetColor()
     {
-        $this->write("\033[0m");
-    }
-
-    private function isWindows()
-    {
-        return 'WIN' === strtoupper(substr(PHP_OS, 0, 3));
+        return $this->write(sprintf("%c[0m", 0x1B));
     }
 }
 

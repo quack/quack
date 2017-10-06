@@ -48,7 +48,7 @@ class Repl
     {
         $events = [
             // Backspace
-            0x7F => function ($input) {
+            0x7F => function () {
                 $line = $this->state['line'];
                 $column = $this->state['column'];
                 if (0 === $column) {
@@ -60,8 +60,8 @@ class Repl
                 $this->state['column'] = $column - 1;
                 $this->render();
             },
-            // Arrow indicator
-            0x5B => function ($input) {
+            // Generic characters
+            0x5B => function () {
                 $next = ord($this->console->getChar());
                 $column = $this->state['column'];
                 $line = $this->state['line'];
@@ -72,7 +72,9 @@ class Repl
 
                 if (isset($arrow_events[$next])) {
                     $this->state['column'] = $arrow_events[$next];
-                } else {
+                }
+
+                if (0x41 === $next || 0x42 === $next) {
                     $history = $this->state['history'];
                     $history_size = sizeof($history);
                     $index = $this->state['history_index'];
@@ -87,6 +89,41 @@ class Repl
                     } elseif (0x42 === $next && $index <= 1) {
                         $this->resetState();
                     }
+                }
+
+                // Delete
+                if (0x33 === $next) {
+                    // Discard garbage escape
+                    $this->console->getChar();
+                    if ($column === sizeof($line)) {
+                        return;
+                    }
+
+                    array_splice($line, $column, 1);
+                    $this->state['line'] = $line;
+                    $this->state['column'] = $column;
+                }
+
+                $this->render();
+            },
+            // CTRL+L
+            0xC => function () {
+                $this->console->clear();
+                $this->console->moveCursorToHome();
+                $this->render();
+            },
+            // Home and end
+            0x4F => function () {
+                $next = ord($this->console->getChar());
+
+                // End
+                if (0x46 === $next) {
+                    $this->state['column'] = sizeof($this->state['line']);
+                }
+
+                // Home
+                if (0x48 === $next) {
+                    $this->state['column'] = 0;
                 }
 
                 $this->render();
@@ -153,7 +190,7 @@ class Repl
             $char = $this->console->getChar();
             $event = $this->getEvent(ord($char));
             if (null !== $event) {
-                call_user_func_array($event, [$char]);
+                call_user_func($event);
                 continue;
             }
 
@@ -202,7 +239,8 @@ class Repl
 
         $from = $column - $text_size;
         $cursor = 7 + ($workspace - ($text_size - $column));
-        $this->console->write(substr($line, max(0, $from), $text_size));
+        $limit = $from <= 0 ? 1 : 0;
+        $this->console->write(substr($line, max(0, $from), $text_size - $limit));
         $this->console->resetCursor();
         $this->console->forwardCursor($cursor);
     }
