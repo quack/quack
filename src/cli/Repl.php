@@ -48,7 +48,7 @@ class Repl extends Component
         ]);
     }
 
-    private function handleEvent($char)
+    private function tick($char)
     {
         $event = $this->console->getEvent($char);
         if (null === $event) {
@@ -219,7 +219,7 @@ class Repl extends Component
 
         do {
             $char = $this->console->getChar();
-            $this->handleEvent($char);
+            $this->tick($char);
         } while (ord($char) !== 10);
 
         $this->handleEnter();
