@@ -113,7 +113,6 @@ import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
-import(AST, 'expr/NilExpr');
 import(AST, 'expr/BoolExpr');
 import(AST, 'expr/WhenExpr');
 import(AST, 'expr/StringExpr');

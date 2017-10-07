@@ -77,7 +77,6 @@ class ExprParser
         $this->register('.', new MemberAccessParselet);
         $this->register(Tag::T_TRUE, new LiteralParselet);
         $this->register(Tag::T_FALSE, new LiteralParselet);
-        $this->register(Tag::T_NIL, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHEN, new WhenParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);

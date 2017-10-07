@@ -36,5 +36,4 @@ class NativeQuackType
     const T_ENUM   = 13;
     const T_UNIT   = 14;
     const T_BYTE   = 15;
-    const T_NIL    = 16;
 }

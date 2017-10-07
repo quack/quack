@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \Exception;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
@@ -52,6 +53,7 @@ class PostfixExpr extends Expr
 
     public function getType()
     {
-        return new LiteralType(NativeQuackType::T_NIL);
+        // TODO: We still have no postfix operator to consider
+        throw new \Exception('NotImplemented');
     }
 }
