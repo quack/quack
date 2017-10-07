@@ -36,6 +36,7 @@ class Repl extends Component
             'history'       => [],
             'history_index' => 0
         ]);
+        $this->console = $console;
     }
 
     private function resetState()
@@ -47,75 +48,77 @@ class Repl extends Component
         ]);
     }
 
-    private function getEvent($char_code)
+    private function handleEvent($char)
     {
-        switch ($char_code) {
-            case 0x7F:
-                return [$this, 'handleBackspace'];
-            case 0xC:
-                return [$this, 'handleClearScreen'];
-            case 0x1B:
-                return [$this, 'handleEscape'];
-            default:
-                return null;
+        $event = $this->console->getEvent($char);
+        if (null === $event) {
+            $this->handleKeyPress($char);
+            return;
+        }
+
+        if (is_string($event)) {
+            return call_user_func([$this, $event]);
         }
     }
 
-    private function handleEscape()
+    private function handleHome()
     {
-        $next = ord($this->console->getChar());
-        switch ($next) {
-            case 0x4F:
-                return $this->handleHomeAndEnd();
-            case 0x5B:
-                return $this->handleGenericEvent();
-        }
+        $this->setState(['column' => 0]);
     }
 
-    private function handleGenericEvent()
+    private function handleEnd()
     {
-        $next = ord($this->console->getChar());
+        $this->setState(['column' => sizeof($this->state('line'))]);
+    }
+
+    private function handleDelete()
+    {
         list ($line, $column) = $this->state('line', 'column');
-        $arrow_events = [
-            0x43 => min(sizeof($line), $column + 1),
-            0x44 => max(0, $column - 1)
-        ];
-
-        if (isset($arrow_events[$next])) {
-            $this->setState(['column' => $arrow_events[$next]]);
+        if ($column === sizeof($line)) {
+            return;
         }
 
-        if (0x41 === $next || 0x42 === $next) {
-            list ($history, $index) = $this->state('history', 'history_index');
-            $history_size = sizeof($history);
+        array_splice($line, $column, 1);
+        $this->setState(['line' => $line, 'column' => $column]);
+    }
 
-            // Handle key up and down
-            $navigator = 0x41 === $next ? 1 : -1;
-            $line = @$history[$history_size - ($index + $navigator)];
-            if (null !== $line) {
-                $this->setState([
-                    'line'          => str_split($line),
-                    'history_index' => $index + $navigator,
-                    'column'        => strlen($line)
-                ]);
-            } elseif (0x42 === $next && $index <= 1) {
-                $this->resetState();
-            }
-        }
+    private function handleLeftArrow()
+    {
+        $column = $this->state('column');
+        $this->setState(['column' => max(0, $column - 1)]);
+    }
 
-        // Delete
-        if (0x33 === $next) {
-            // Discard garbage escape
-            $this->console->getChar();
-            if ($column === sizeof($line)) {
-                return;
-            }
+    private function handleRightArrow()
+    {
+        list ($line, $column) = $this->state('line', 'column');
+        $this->setState(['column' => min(sizeof($line), $column + 1)]);
+    }
 
-            array_splice($line, $column, 1);
+    private function handleUpArrow()
+    {
+        list ($history, $index) = $this->state('history', 'history_index');
+        $line = @$history[sizeof($history) - ($index + 1)];
+        if (null !== $line) {
             $this->setState([
-                'line'   => $line,
-                'column' => $column
+                'line'          => str_split($line),
+                'history_index' => $index + 1,
+                'column'        => strlen($line)
             ]);
+        }
+    }
+
+    private function handleDownArrow()
+    {
+        list ($history, $index) = $this->state('history', 'history_index');
+        $line = @$history[sizeof($history) - ($index - 1)];
+        if (null !== $line) {
+            $this->setState([
+                'line'          => str_split($line),
+                'history_index' => $index - 1,
+                'column'        => strlen($line)
+            ]);
+        } elseif ($index === 1) {
+            $this->resetState();
         }
     }
 
@@ -139,21 +142,6 @@ class Repl extends Component
         $this->console->clear();
         $this->console->moveCursorToHome();
         $this->setState([]);
-    }
-
-    private function handleHomeAndEnd()
-    {
-        $next = ord($this->console->getChar());
-
-        // End
-        if (0x46 === $next) {
-            $this->setState(['column' => sizeof($this->state('line'))]);
-        }
-
-        // Home
-        if (0x48 === $next) {
-            $this->setState(['column' => 0]);
-        }
     }
 
     private function handleEnter()
@@ -231,13 +219,7 @@ class Repl extends Component
 
         do {
             $char = $this->console->getChar();
-            $event = $this->getEvent(ord($char));
-            if (null !== $event) {
-                call_user_func($event);
-                continue;
-            }
-
-            $this->handleKeyPress($char);
+            $this->handleEvent($char);
         } while (ord($char) !== 10);
 
         $this->handleEnter();
@@ -305,6 +287,26 @@ class Repl extends Component
 
 require 'Console.php';
 
-$repl = new Repl(new Console(STDIN, STDOUT, STDERR));
+$console = new Console(STDIN, STDOUT, STDERR);
+$console->subscribe([
+    0x7F => 'handleBackspace',
+    0xC  => 'handleClearScreen',
+    0x1B => [
+        0x4F => [
+            0x46 => 'handleEnd',
+            0x48 => 'handleHome'
+        ],
+        0x5B => [
+            0x33 => [
+                0x7E => 'handleDelete'
+            ],
+            0x41 => 'handleUpArrow',
+            0x42 => 'handleDownArrow',
+            0x43 => 'handleRightArrow',
+            0x44 => 'handleLeftArrow'
+        ]
+    ]
+]);
+$repl = new Repl($console);
 $repl->welcome();
 $repl->start();

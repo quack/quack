@@ -28,6 +28,7 @@ class Console
     private $stderr;
     private $stty_settings;
     private $columns;
+    private $event_tree;
 
     const FG_YELLOW = '1;33';
     const FG_BLACK = '1;30';
@@ -45,6 +46,11 @@ class Console
         $this->stdin = $stdin;
         $this->stdout = $stdout;
         $this->stderr = $stderr;
+    }
+
+    public function subscribe($event_tree)
+    {
+        $this->event_tree = $event_tree;
     }
 
     public function write($buffer)
@@ -136,6 +142,23 @@ class Console
     public function scolor($color, $text)
     {
         return sprintf('%c[%sm%s%c[0m', 0x1B, $color, $text, 0x1B);
+    }
+
+    public function getEvent($char)
+    {
+        $event = @$this->event_tree[ord($char)];
+        if (null === $event) {
+            return null;
+        }
+
+        while (!is_string($event)) {
+            $next = ord($this->getChar());
+            if (isset($event[$next])) {
+                $event = $event[$next];
+            } else break;
+        }
+
+        return $event;
     }
 }
 
