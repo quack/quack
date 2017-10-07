@@ -21,27 +21,30 @@
  */
 namespace QuackCompiler\Cli;
 
-class Repl
+require 'Component.php';
+
+class Repl extends Component
 {
     private $console;
-    private $state;
 
     public function __construct(Console $console)
     {
         $this->console = $console;
-        $this->state = [
-            'line' => [],
-            'column' => 0,
-            'history' => [],
+        parent::__construct([
+            'line'          => [],
+            'column'        => 0,
+            'history'       => [],
             'history_index' => 0
-        ];
+        ]);
     }
 
     private function resetState()
     {
-        $this->state['line'] = [];
-        $this->state['column'] = 0;
-        $this->state['history_index'] = 0;
+        $this->setState([
+            'line'          => [],
+            'column'        => 0,
+            'history_index' => 0
+        ]);
     }
 
     private function getEvent($char_code)
@@ -72,29 +75,29 @@ class Repl
     private function handleGenericEvent()
     {
         $next = ord($this->console->getChar());
-        $column = $this->state['column'];
-        $line = $this->state['line'];
+        list ($line, $column) = $this->state('line', 'column');
         $arrow_events = [
             0x43 => min(sizeof($line), $column + 1),
             0x44 => max(0, $column - 1)
         ];
 
         if (isset($arrow_events[$next])) {
-            $this->state['column'] = $arrow_events[$next];
+            $this->setState(['column' => $arrow_events[$next]]);
         }
 
         if (0x41 === $next || 0x42 === $next) {
-            $history = $this->state['history'];
+            list ($history, $index) = $this->state('history', 'history_index');
             $history_size = sizeof($history);
-            $index = $this->state['history_index'];
 
             // Handle key up and down
             $navigator = 0x41 === $next ? 1 : -1;
             $line = @$history[$history_size - ($index + $navigator)];
             if (null !== $line) {
-                $this->state['line'] = str_split($line);
-                $this->state['history_index'] += $navigator;
-                $this->state['column'] = strlen($line);
+                $this->setState([
+                    'line'          => str_split($line),
+                    'history_index' => $index + $navigator,
+                    'column'        => strlen($line)
+                ]);
             } elseif (0x42 === $next && $index <= 1) {
                 $this->resetState();
             }
@@ -109,32 +112,33 @@ class Repl
             }
 
             array_splice($line, $column, 1);
-            $this->state['line'] = $line;
-            $this->state['column'] = $column;
+            $this->setState([
+                'line'   => $line,
+                'column' => $column
+            ]);
         }
-
-        $this->render();
     }
 
     private function handleBackspace()
     {
-        $line = $this->state['line'];
-        $column = $this->state['column'];
+        list ($line, $column) = $this->state('line', 'column');
+
         if (0 === $column) {
             return;
         }
 
         array_splice($line, $column - 1, 1);
-        $this->state['line'] = $line;
-        $this->state['column'] = $column - 1;
-        $this->render();
+        $this->setState([
+            'line'   => $line,
+            'column' => $column - 1
+        ]);
     }
 
     private function handleClearScreen()
     {
         $this->console->clear();
         $this->console->moveCursorToHome();
-        $this->render();
+        $this->setState([]);
     }
 
     private function handleHomeAndEnd()
@@ -143,23 +147,23 @@ class Repl
 
         // End
         if (0x46 === $next) {
-            $this->state['column'] = sizeof($this->state['line']);
+            $this->setState(['column' => sizeof($this->state('line'))]);
         }
 
         // Home
         if (0x48 === $next) {
-            $this->state['column'] = 0;
+            $this->setState(['column' => 0]);
         }
-
-        $this->render();
     }
 
     private function handleEnter()
     {
-        $line = trim(implode('', $this->state['line']));
+        $line = trim(implode('', $this->state('line')));
         // Push line to the history
         if ($line !== '') {
-            $this->state['history'][] = $line;
+            $this->setState([
+                'history' => array_merge($this->state('history'), [$line])
+            ]);
         }
 
         // Go to the start of line and set the command as done
@@ -174,15 +178,15 @@ class Repl
             return;
         }
 
-        $column = $this->state['column'];
-        $line = $this->state['line'];
+        list ($line, $column) = $this->state('line', 'column');
         $next_buffer = [$input];
         // Insert the new char in the column in the line buffer
         array_splice($line, $column, 0, $next_buffer);
 
-        $this->state['line'] = $line;
-        $this->state['column'] = $this->state['column'] + strlen($input);
-        $this->render();
+        $this->setState([
+            'line'   => $line,
+            'column' => $this->state('column') + strlen($input)
+        ]);
     }
 
     public function handleQuit()
@@ -220,7 +224,7 @@ class Repl
         }
     }
 
-    public function read()
+    public function handleRead()
     {
         $this->console->sttySaveCheckpoint();
         $this->console->sttyEnableCharEvents();
@@ -235,10 +239,9 @@ class Repl
 
             $this->handleKeyPress($char);
         } while (ord($char) !== 10);
-        $this->handleEnter();
 
+        $this->handleEnter();
         $this->console->sttyRestoreCheckpoint();
-        return trim(implode('', $this->state['line']));
     }
 
     private function renderPrompt($color = Console::FG_YELLOW)
@@ -258,10 +261,10 @@ class Repl
         $this->console->resetColor();
     }
 
-    private function render()
+    public function render()
     {
-        $line = implode('', $this->state['line']);
-        $column = $this->state['column'];
+        $line = implode('', $this->state('line'));
+        $column = $this->state('column');
 
         $this->console->clearLine();
         $this->console->resetCursor();
@@ -286,9 +289,10 @@ class Repl
 
     public function start()
     {
+        $this->render();
         while (true) {
-            $this->render();
-            $line = $this->read();
+            $this->handleRead();
+            $line = trim(implode('', $this->state('line')));
 
             if (':' === substr($line, 0, 1)) {
                 $this->intercept($line);
