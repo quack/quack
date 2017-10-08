@@ -94,6 +94,16 @@ class Repl extends Component
         $this->setState(['column' => min(sizeof($line), $column + 1)]);
     }
 
+    private function handleCtrlLeftArrow()
+    {
+        // TODO: Implement word group navigation
+    }
+
+    private function handleCtrlRightArrow()
+    {
+        // TODO: Implemet word group navigation
+    }
+
     private function handleUpArrow()
     {
         list ($history, $index) = $this->state('history', 'history_index');
@@ -304,6 +314,12 @@ $console->subscribe([
             0x42 => 'handleDownArrow',
             0x43 => 'handleRightArrow',
             0x44 => 'handleLeftArrow'
+        ]
+    ],
+    0x3B => [
+        0x35 => [
+            0x43 => 'handleCtrlRightArrow',
+            0x44 => 'handleCtrlLeftArrow'
         ]
     ]
 ]);
