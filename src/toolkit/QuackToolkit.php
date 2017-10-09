@@ -26,11 +26,17 @@ define('PARSER', 'parser');
 define('SCOPE', 'scope');
 define('TYPES', 'types');
 define('INTL', 'intl');
+define('CLI', 'cli');
 
 function import($module, $file)
 {
     require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
+
+/* Cli */
+import(CLI, 'Component');
+import(CLI, 'Console');
+import(CLI, 'Repl');
 
 /* Internationalization */
 
@@ -44,9 +50,6 @@ import(LEXER, 'Tag');
 import(LEXER, 'Token');
 import(LEXER, 'Tokenizer');
 import(LEXER, 'Word');
-
-// Scope base interface
-import(SCOPE, 'Membered');
 
 import(PARSELETS, 'Parselet');
 import(PARSELETS, 'InfixParselet');

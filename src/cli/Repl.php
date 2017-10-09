@@ -21,8 +21,6 @@
  */
 namespace QuackCompiler\Cli;
 
-require 'Component.php';
-
 class Repl extends Component
 {
     private $console;
@@ -297,35 +295,3 @@ class Repl extends Component
         }
     }
 }
-
-require 'Console.php';
-
-$console = new Console(STDIN, STDOUT, STDERR);
-$console->subscribe([
-    0x7F => 'handleBackspace',
-    0xC  => 'handleClearScreen',
-    0x1B => [
-        0x4F => [
-            0x46 => 'handleEnd',
-            0x48 => 'handleHome'
-        ],
-        0x5B => [
-            0x33 => [
-                0x7E => 'handleDelete'
-            ],
-            0x41 => 'handleUpArrow',
-            0x42 => 'handleDownArrow',
-            0x43 => 'handleRightArrow',
-            0x44 => 'handleLeftArrow'
-        ]
-    ],
-    0x3B => [
-        0x35 => [
-            0x43 => 'handleCtrlRightArrow',
-            0x44 => 'handleCtrlLeftArrow'
-        ]
-    ]
-]);
-$repl = new Repl($console);
-$repl->welcome();
-$repl->start();
