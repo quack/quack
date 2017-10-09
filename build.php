@@ -367,7 +367,8 @@ $bundle_settings = [
         new ResourceDir('src/ast/types'),
         new ResourceDir('src/scope'),
         new ResourceDir('src/types'),
-        new ResourceFile('src/repl/QuackRepl.php')
+        new ResourceDir('src/cli'),
+        new ResourceFile('src/Main.php')
     ],
     'pure_identifiers' => [
         'QuackCompiler',
