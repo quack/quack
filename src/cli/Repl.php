@@ -274,7 +274,10 @@ class Repl extends Component
         $from = $column - $text_size;
         $cursor = 7 + ($workspace - ($text_size - $column));
         $limit = $from <= 0 ? 1 : 0;
-        $this->console->write(substr($line, max(0, $from), $text_size - $limit));
+        // TODO: We can give color after embedding the tokenizer here
+        $colored_line = substr($line, max(0, $from), $text_size - $limit);
+
+        $this->console->write($colored_line);
         $this->console->resetCursor();
         $this->console->forwardCursor($cursor);
     }

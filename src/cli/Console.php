@@ -31,6 +31,7 @@ class Console
     private $event_tree;
 
     const FG_YELLOW = '1;33';
+    const FG_RED = '0;31';
     const FG_BLACK = '1;30';
     const FG_CYAN = '0;36';
     const FG_BOLD_GREEN = '1;32';
