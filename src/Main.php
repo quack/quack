@@ -25,6 +25,7 @@ require 'toolkit/QuackToolkit.php';
 
 use \Exception;
 use \QuackCompiler\Cli\Console;
+use \QuackCompiler\Cli\Croak;
 use \QuackCompiler\Cli\Repl;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\TokenReader;
@@ -95,6 +96,6 @@ $console->subscribe([
     ]
 ]);
 
-$repl = new Repl($console);
+$repl = new Repl($console, new Croak());
 $repl->welcome();
 $repl->start();

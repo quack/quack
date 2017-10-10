@@ -32,8 +32,9 @@ use \QuackCompiler\Scope\Scope;
 class Repl extends Component
 {
     private $console;
+    private $croak;
 
-    public function __construct(Console $console)
+    public function __construct(Console $console, Croak $croak = null)
     {
         $this->console = $console;
         parent::__construct([
@@ -47,6 +48,7 @@ class Repl extends Component
             'command'       => ''
         ]);
         $this->console = $console;
+        $this->croak = $croak;
     }
 
     private function resetState()
@@ -373,7 +375,8 @@ class Repl extends Component
         try {
             $parser->parse();
             if (null === $this->state('ast')) {
-                $parser->ast->injectScope($this->state('scope'));
+                $scope = $this->state('scope');
+                $parser->ast->injectScope($scope);
                 $parser->ast->runTypeChecker();
                 // Save AST in case of success
                 $this->console->write($parser->beautify());
@@ -394,6 +397,7 @@ class Repl extends Component
             $this->resetState();
             $this->setState(['line' => [' ', ' '], 'column' => 2]);
         } catch (Exception $error) {
+            $this->croak->play();
             $this->console->write($error);
             $this->setState(['complete' => true, 'command' => '']);
             $this->resetState();

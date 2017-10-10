@@ -35,6 +35,7 @@ function import($module, $file)
 
 /* Cli */
 import(CLI, 'Component');
+import(CLI, 'Croak');
 import(CLI, 'Console');
 import(CLI, 'Repl');
 
