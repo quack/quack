@@ -25,6 +25,8 @@ use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 
 class Repl extends Component
@@ -189,18 +191,56 @@ class Repl extends Component
         // Insert the new char in the column in the line buffer
         array_splice($line, $column, 0, $next_buffer);
 
-        $this->setState([
-            'line'   => $line,
-            'column' => $this->state('column') + strlen($input)
-        ]);
+        $column = $this->state('column') + strlen($input);
+        $line_string = implode('', $line);
+        if ('end' === trim($line_string)) {
+            $line = str_split('end');
+            $column = 3;
+        }
+
+        $this->setState(['line' => $line, 'column' => $column]);
     }
 
-    public function handleQuit()
+    private function handleQuit()
     {
         $this->console->setColor(Console::FG_BLUE);
         $this->console->writeln(' > So long, and thanks for all the fish!');
         $this->console->resetColor();
         exit;
+    }
+
+    private function handleListDefinitions()
+    {
+        $context = $this->state('scope')->child;
+
+        if (0 === sizeof($context->table)) {
+            return;
+        }
+
+        // Size of biggest variable name
+        $max = array_reduce(array_keys($context->table), function ($acc, $elem) {
+            return $acc > strlen($elem) ? $acc : strlen($elem);
+        });
+
+        foreach ($context->table as $name => $signature) {
+            $type = $context->meta[$name][Meta::M_TYPE];
+            $mutable = $signature & Kind::K_MUTABLE;
+            $this->console->setColor(Console::FG_BOLD_GREEN);
+            $this->console->write(str_pad($name, $max));
+            $this->console->resetColor();
+            $this->console->write(' :: ');
+            $this->console->setColor(Console::FG_BLUE);
+            $this->console->write($type);
+            $this->console->resetColor();
+
+            if ($mutable) {
+                $this->console->setColor(Console::FG_RED);
+                $this->console->write(' (MUTABLE)');
+                $this->console->resetColor();
+            }
+
+            $this->console->writeln('');
+        }
     }
 
     private function intercept($command)
@@ -210,6 +250,8 @@ class Repl extends Component
                 return $this->handleClearScreen();
             case ':quit':
                 return $this->handleQuit();
+            case ':what':
+                return $this->handleListDefinitions();
         }
     }
 
@@ -295,6 +337,7 @@ class Repl extends Component
     private function compile($source)
     {
         if ('' === $source) {
+            $this->resetState();
             return;
         }
 
@@ -318,12 +361,20 @@ class Repl extends Component
                 $this->state('ast')->attachValidAST($parser->ast);
                 $this->setState(['complete' => true]);
             }
+
+            $this->resetState();
         } catch (EOFError $error) {
             // If EOF, user didn't finish the statement
-            $this->setState(['complete' => false, 'command' => $command]);
+            $this->setState([
+                'complete' => false,
+                'command'  => $command
+            ]);
+            $this->resetState();
+            $this->setState(['line' => [' ', ' '], 'column' => 2]);
         } catch (Exception $error) {
             $this->console->write($error);
             $this->setState(['complete' => true, 'command' => '']);
+            $this->resetState();
         }
     }
 
@@ -336,11 +387,10 @@ class Repl extends Component
 
             if (':' === substr($line, 0, 1)) {
                 $this->intercept($line);
+                $this->resetState();
             } else {
                 $this->compile($line);
             }
-
-            $this->resetState();
         }
     }
 }
