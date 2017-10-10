@@ -208,6 +208,7 @@ class Repl extends Component
         $this->console->setColor(Console::FG_BLUE);
         $this->console->writeln(' > So long, and thanks for all the fish!');
         $this->console->resetColor();
+        $this->croak->free();
         exit;
     }
 

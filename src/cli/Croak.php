@@ -30,5 +30,10 @@ class Croak
         // Yes, this is async (in PHP without pthreads)!
         return `$player $wav > /dev/null 2> /dev/null &`;
     }
+
+    public function free()
+    {
+        // Nothing to be done!
+    }
 }
 

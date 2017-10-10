@@ -320,7 +320,7 @@ class ResourceBuffer extends Resource
  */
 function getLocalesBuffer()
 {
-    $strings = json_decode(file_get_contents('src/intl/locales/en-US.json'));
+    $strings = json_decode(file_get_contents('src/intl/locales/en_US.json'));
     $messages = [];
 
     foreach ($strings as $key => $value) {
@@ -347,6 +347,59 @@ function getLocalesBuffer()
     ';
 }
 
+/**
+ * Returns the bundle for quack.wav. Yes, this is meta-programming
+ * using PHP!
+ */
+function getCroakBuffer()
+{
+    $croak = realpath(dirname(__FILE__) . '/resource/quack.wav');
+    $handle = fopen($croak, 'rb');
+    $size = filesize($croak);
+    $byte_array = (array) array_values(unpack('N*', fread($handle, $size)));
+    fflush($handle);
+    fclose($handle);
+
+    $serialized_byte_array = json_encode($byte_array);
+
+    return '
+        <?php
+        namespace QuackCompiler\Cli;
+
+        class Croak
+        {
+            private $wav = null;
+
+            public function __construct()
+            {
+                $bytes = ' . $serialized_byte_array . ';
+                $filename = tempnam(sys_get_temp_dir(), "quack");
+                $handle = fopen($filename, "w");
+                foreach ($bytes as $byte) {
+                    fwrite($handle, pack("N", $byte));
+                }
+                fclose($handle);
+
+                $this->wav = $filename;
+                unset($size);
+                unset($bytes);
+            }
+
+            public function play()
+            {
+                $wav = $this->wav;
+                $player = `which aplay` ? "aplay" : "afplay";
+                return `$player $wav > /dev/null 2> /dev/null &`;
+            }
+
+            public function free()
+            {
+                unlink($this->wav);
+            }
+        }
+    ';
+}
+
 // Here the usage starts :)
 $bundle_settings = [
     'bundle' => [
@@ -355,6 +408,7 @@ $bundle_settings = [
     ],
     'resources' => [
         new ResourceBuffer(getLocalesBuffer()),
+        new ResourceBuffer(getCroakBuffer()),
         new ResourceDir('src/lexer'),
         new ResourceDir('src/parselets'),
         new ResourceDir('src/parselets/expr'),
@@ -367,7 +421,9 @@ $bundle_settings = [
         new ResourceDir('src/ast/types'),
         new ResourceDir('src/scope'),
         new ResourceDir('src/types'),
-        new ResourceDir('src/cli'),
+        new ResourceFile('src/cli/Component.php'),
+        new ResourceFile('src/cli/Console.php'),
+        new ResourceFile('src/cli/Repl.php'),
         new ResourceFile('src/Main.php')
     ],
     'pure_identifiers' => [
