@@ -243,6 +243,22 @@ class Repl extends Component
         }
     }
 
+    private function handleShowType($variable)
+    {
+        $context = $this->state('scope')->child;
+
+        if (isset($context->table[$variable])) {
+            $type = $context->meta[$variable][Meta::M_TYPE];
+            $this->console->setColor(Console::FG_BLUE);
+            $this->console->writeln($type);
+            $this->console->resetColor();
+        } else {
+            $this->console->setColor(Console::FG_RED);
+            $this->console->writeln("I don't know what `$variable' is. Sorry!");
+            $this->console->resetColor();
+        }
+    }
+
     private function intercept($command)
     {
         switch ($command) {
@@ -252,6 +268,12 @@ class Repl extends Component
                 return $this->handleQuit();
             case ':what':
                 return $this->handleListDefinitions();
+        }
+
+        $variable = null;
+        preg_match('/:t\s+(.+)/', $command, $variable);
+        if (isset($variable[1])) {
+            return $this->handleShowType($variable[1]);
         }
     }
 
