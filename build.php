@@ -353,14 +353,33 @@ function getLocalesBuffer()
  */
 function getCroakBuffer()
 {
+    $packing_method = 'S';
     $croak = realpath(dirname(__FILE__) . '/resource/quack.wav');
     $handle = fopen($croak, 'rb');
     $size = filesize($croak);
-    $byte_array = (array) array_values(unpack('N*', fread($handle, $size)));
+    $byte_array = (array) array_values(unpack("$packing_method*", fread($handle, $size)));
     fflush($handle);
     fclose($handle);
 
-    $serialized_byte_array = json_encode($byte_array);
+    // Binary optimization
+    $index = 0;
+    $length = sizeof($byte_array);
+    $compressed_byte_array = [];
+    while ($index < $length) {
+        if (0 === $byte_array[$index]) {
+            // Skip sets of null bytes, use only one
+            while (0 === $byte_array[$index]) {
+                $index++;
+            }
+
+            $compressed_byte_array[] = 0x0;
+        } else {
+            $compressed_byte_array[] = $byte_array[$index];
+            $index++;
+        }
+    }
+
+    $serialized_byte_array .= json_encode($compressed_byte_array);
 
     return '
         <?php
@@ -376,7 +395,7 @@ function getCroakBuffer()
                 $filename = tempnam(sys_get_temp_dir(), "quack");
                 $handle = fopen($filename, "w");
                 foreach ($bytes as $byte) {
-                    fwrite($handle, pack("N", $byte));
+                    fwrite($handle, pack("' . $packing_method . '", $byte));
                 }
                 fclose($handle);
 
