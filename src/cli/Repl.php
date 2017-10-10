@@ -21,6 +21,12 @@
  */
 namespace QuackCompiler\Cli;
 
+use \Exception;
+use \QuackCompiler\Lexer\Tokenizer;
+use \QuackCompiler\Parser\EOFError;
+use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Scope\Scope;
+
 class Repl extends Component
 {
     private $console;
@@ -32,7 +38,11 @@ class Repl extends Component
             'line'          => [],
             'column'        => 0,
             'history'       => [],
-            'history_index' => 0
+            'history_index' => 0,
+            'scope'         => new Scope(),
+            'ast'           => null,
+            'complete'      => true,
+            'command'       => ''
         ]);
         $this->console = $console;
     }
@@ -236,8 +246,10 @@ class Repl extends Component
 
     private function renderPrompt($color = Console::FG_YELLOW)
     {
-        $this->console->setColor($color);
-        $this->console->write('Quack> ');
+        $prompt = $this->state('complete') ? 'Quack> ' : '.....> ';
+        $prompt_color = $this->state('complete') ? $color : Console::FG_BOLD_GREEN;
+        $this->console->setColor($prompt_color);
+        $this->console->write($prompt);
         $this->console->resetColor();
     }
 
@@ -280,6 +292,41 @@ class Repl extends Component
         $this->console->forwardCursor($cursor);
     }
 
+    private function compile($source)
+    {
+        if ('' === $source) {
+            return;
+        }
+
+        $command = $this->state('complete')
+            ? $source
+            : $this->state('command') . ' ' . $source;
+
+        $lexer = new Tokenizer($command);
+        $parser = new TokenReader($lexer);
+
+        try {
+            $parser->parse();
+            if (null === $this->state('ast')) {
+                $parser->ast->injectScope($this->state('scope'));
+                $parser->ast->runTypeChecker();
+                // Save AST in case of success
+                $this->console->write($parser->beautify());
+                $this->setState(['ast' => $parser->ast, 'complete' => true]);
+            } else {
+                $this->console->write($parser->beautify());
+                $this->state('ast')->attachValidAST($parser->ast);
+                $this->setState(['complete' => true]);
+            }
+        } catch (EOFError $error) {
+            // If EOF, user didn't finish the statement
+            $this->setState(['complete' => false, 'command' => $command]);
+        } catch (Exception $error) {
+            $this->console->write($error);
+            $this->setState(['complete' => true, 'command' => '']);
+        }
+    }
+
     public function start()
     {
         $this->render();
@@ -289,6 +336,8 @@ class Repl extends Component
 
             if (':' === substr($line, 0, 1)) {
                 $this->intercept($line);
+            } else {
+                $this->compile($line);
             }
 
             $this->resetState();
