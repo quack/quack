@@ -106,14 +106,36 @@ class Repl extends Component
         $this->setState(['column' => min(sizeof($line), $column + 1)]);
     }
 
+    private function getBoundaries()
+    {
+        $line = implode('', $this->state('line'));
+        $boundaries = null;
+        preg_match_all('/\b./', $line, $boundaries, PREG_OFFSET_CAPTURE);
+        return $boundaries[0];
+    }
+
     private function handleCtrlLeftArrow()
     {
-        // TODO: Implement word group navigation
+        $boundaries = $this->getBoundaries();
+        $column = $this->state('column');
+        $previous_boundary = end(array_filter($boundaries, function ($boundary) use ($column) {
+            return $boundary[1] < $column;
+        }));
+
+        $column = $previous_boundary ? $previous_boundary[1] : 0;
+        $this->setState(['column' => $column]);
     }
 
     private function handleCtrlRightArrow()
     {
-        // TODO: Implemet word group navigation
+        $boundaries = $this->getBoundaries();
+        list ($line, $column) = $this->state('line', 'column');
+        $next_boundary = reset(array_filter($boundaries, function ($boundary) use ($column) {
+            return $boundary[1] > $column;
+        }));
+
+        $column = $next_boundary ? $next_boundary[1] : sizeof($line);
+        $this->setState(['column' => $column]);
     }
 
     private function handleUpArrow()
