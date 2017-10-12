@@ -1,12 +1,12 @@
-#Contributing
+# Contributing
 
-##Table of Contents
+## Table of Contents
 
 - [Reporting a bug](#reporting-a-bug)
 - [The 6 magic steps](#the-6-magic-steps)
 - [License](#license)
 
-##Reporting a bug
+## Reporting a bug
 
 1. Look for any related issues [here](https://github.com/haskellcamargo/quack/issues).
 2. If you find an issue that seems related, please comment there instead of creating a new issue. If it is determined to be a unique bug, we will let you know that a new issue can be created.
@@ -16,7 +16,7 @@ If we find an issue that's related, we will reference it and close your issue, s
 5. Include any errors that may be displayed.
 6. Update us if you have any new info, or if the problem resolves itself!
 
-##The 6 magic steps
+## The 6 magic steps
 
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
@@ -25,7 +25,7 @@ If we find an issue that's related, we will reference it and close your issue, s
 5. Push to the branch: `git push origin my-new-feature`
 6. Submit a pull request :)
 
-##License
+## License
 
 [Quack](https://github.com/haskellcamargo/quack) is distributed under the GNU General Public License, version 3, [available in this repository](master/LICENSE.md). All contributions are assumed to be also licensed under the GPLv3.
 
