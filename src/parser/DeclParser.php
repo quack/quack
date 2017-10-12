@@ -23,11 +23,9 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
-
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\ModuleStmt;
-use \QuackCompiler\Ast\Stmt\StmtList;
 
 class DeclParser
 {
@@ -63,14 +61,12 @@ class DeclParser
         return new FnSignatureStmt($name, $parameters, $type);
     }
 
-    public function _fnStmt($is_method = false)
+    public function _fnStmt()
     {
         $is_short = false;
         $body = null;
 
-        if (!$is_method) {
-            $this->reader->match(Tag::T_FN);
-        }
+        $this->reader->match(Tag::T_FN);
         $signature = $this->_fnSignature();
 
         // Is short method?
@@ -78,10 +74,10 @@ class DeclParser
             $this->reader->consume(); // :-
             $body = $this->expr_parser->_expr();
         } else {
-            $body = iterator_to_array($this->stmt_parser->_innerStmtList());
+            $body = $this->stmt_parser->_stmtList();
             $this->reader->match(Tag::T_END);
         }
 
-        return new FnStmt($signature, $body, $is_method, $is_short);
+        return new FnStmt($signature, $body, $is_short);
     }
 }

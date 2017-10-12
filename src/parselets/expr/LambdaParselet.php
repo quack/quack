@@ -66,7 +66,7 @@ class LambdaParselet implements PrefixParselet
         if ($grammar->reader->is(Tag::T_BEGIN)) {
             $kind = static::TYPE_STATEMENT;
             $grammar->reader->consume();
-            $body = iterator_to_array($grammar->stmt_parser->_innerStmtList());
+            $body = $grammar->stmt_parser->_stmtList();
             $grammar->reader->match(Tag::T_END);
         } else {
             $kind = static::TYPE_EXPRESSION;

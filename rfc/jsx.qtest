@@ -1,5 +1,5 @@
 %%command
-php ./src/Quack.php %s
+php ./src/Main.php %s
 %%describe
 JSX Parser
 %%source

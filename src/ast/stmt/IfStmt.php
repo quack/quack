@@ -49,7 +49,10 @@ class IfStmt extends Stmt
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
         $parser->openScope();
-        $source .= $this->body->format($parser);
+        foreach ($this->body as $stmt) {
+            $source .= $parser->indent();
+            $source .= $stmt->format($parser);
+        }
         $parser->closeScope();
 
         foreach ($this->elif as $elif) {
@@ -61,7 +64,10 @@ class IfStmt extends Stmt
             $source .= 'else';
             $source .= PHP_EOL;
             $parser->openScope();
-            $source .= $this->else->format($parser);
+            foreach ($this->else as $stmt) {
+                $source .= $parser->indent();
+                $source .= $stmt->format($parser);
+            }
             $parser->closeScope();
         }
 
@@ -74,12 +80,12 @@ class IfStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
-        // Bind scope in the body of if-statement
-        $this->body->scope = new Scope($parent_scope);
         $this->condition->injectScope($parent_scope);
 
-        foreach ($this->body->stmt_list as $node) {
-            $node->injectScope($this->body->scope);
+        // Bind scope for body of `if'
+        $body_scope = new Scope($parent_scope);
+        foreach ($this->body as $stmt) {
+            $stmt->injectScope($body_scope);
         }
 
         // Bind scope for every elif. This class is just a
@@ -90,10 +96,10 @@ class IfStmt extends Stmt
 
         // If we have `else', bind in depth
         if (null !== $this->else) {
-            $this->else->scope = new Scope($parent_scope);
+            $else_scope = new Scope($parent_scope);
 
-            foreach ($this->else->stmt_list as $node) {
-                $node->injectScope($this->else->scope);
+            foreach ($this->else as $stmt) {
+                $stmt->injectScope($else_scope);
             }
         }
     }
@@ -105,7 +111,9 @@ class IfStmt extends Stmt
             throw new TypeError(Localization::message('TYP140', [$condition_type]));
         }
 
-        $this->body->runTypeChecker();
+        foreach ($this->body as $stmt) {
+            $stmt->runTypeChecker();
+        }
 
         foreach ($this->elif as $elif) {
             $elif->runTypeChecker();

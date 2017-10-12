@@ -1,25 +1,25 @@
 %%describe
 Supports formatting break
 %%source
-[id] for i from 0 to 10
-  [another] for j from 0 to 10 by 2
+[id] foreach i in 0 .. 10
+  [another] foreach j in 0 .. 10 by 2
   if i = 2 break id end
   end
 end
 
-for j from -1 to 0
+foreach j in -1 .. 0
 break
 end
 %%expect
 [id]
-for i from 0 to 10
+foreach i in 0 .. 10
   [another]
-  for j from 0 to 10 by 2
+  foreach j in 0 .. 10 by 2
     if i = 2
       break id
     end
   end
 end
-for j from -1 to 0
+foreach j in -1 .. 0
   break
 end

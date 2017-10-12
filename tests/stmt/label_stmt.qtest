@@ -4,13 +4,13 @@ Supports formatting label statements
 [first]
 let x :- 10
 [second]
-for i from 1 to x
+while true
   continue second
 end
 %%expect
 [first]
 let x :- 10
 [second]
-for i from 1 to x
+while true
   continue second
 end

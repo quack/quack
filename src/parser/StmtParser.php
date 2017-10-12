@@ -24,54 +24,58 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
-use \QuackCompiler\Ast\Stmt\CaseStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
-use \QuackCompiler\Ast\Stmt\ForStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\PostConditionalStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
-use \QuackCompiler\Ast\Stmt\RaiseStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
-use \QuackCompiler\Ast\Stmt\SwitchStmt;
-use \QuackCompiler\Ast\Stmt\TryStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
-use \QuackCompiler\Ast\Stmt\StmtList;
 
 class StmtParser
 {
     use Attachable;
 
     public $reader;
-    public $checker;
 
     public function __construct($reader)
     {
         $this->reader = $reader;
-        $this->checker = new TokenChecker($reader);
+    }
+
+    public function startsStmt()
+    {
+        static $stmt_list = [
+            Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
+            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '['
+        ];
+
+        $peek = $this->reader->lookahead->getTag();
+        return in_array($peek, $stmt_list, true);
+    }
+
+    public function isEOF() {
+        return 0 === $this->reader->lookahead->getTag();
     }
 
     public function _program()
     {
-        return new ProgramStmt(iterator_to_array($this->_topStmtList()));
+        $body = $this->_stmtList();
+        return new ProgramStmt($body);
     }
 
-    public function _topStmtList()
+    public function _stmtList()
     {
-        while (!$this->checker->isEoF()) {
-            yield $this->_topStmt();
+        $stmt_list = [];
+        while ($this->startsStmt()) {
+            $stmt_list[] = $this->_stmt();
         }
-    }
 
-    public function _innerStmtList()
-    {
-        while ($this->checker->startsInnerStmt()) {
-            yield $this->_innerStmt();
-        }
+        return $stmt_list;
     }
 
     public function _stmt()
@@ -81,17 +85,17 @@ class StmtParser
             Tag::T_LET      => '_letStmt',
             Tag::T_WHILE    => '_whileStmt',
             Tag::T_DO       => '_exprStmt',
-            Tag::T_FOR      => '_forStmt',
             Tag::T_FOREACH  => '_foreachStmt',
-            Tag::T_SWITCH   => '_switchStmt',
-            Tag::T_TRY      => '_tryStmt',
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
-            Tag::T_RAISE    => '_raiseStmt',
             Tag::T_BEGIN    => '_blockStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
         ];
+
+        if ($this->reader->is(Tag::T_FN)) {
+            return $this->decl_parser->_fnStmt();
+        }
 
         foreach ($branch_table as $token => $action) {
             if ($this->reader->is($token)) {
@@ -132,7 +136,7 @@ class StmtParser
     public function _blockStmt()
     {
         $this->reader->match(Tag::T_BEGIN);
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = $this->_stmtList();
         $this->reader->match(Tag::T_END);
 
         return new BlockStmt($body);
@@ -142,8 +146,8 @@ class StmtParser
     {
         $this->reader->match(Tag::T_IF);
         $condition = $this->expr_parser->_expr();
-        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-        $elif = iterator_to_array($this->_elifList());
+        $body = $this->_stmtList();
+        $elif = $this->_elifList();
         $else = $this->_optElse();
         $this->reader->match(Tag::T_END);
 
@@ -168,30 +172,10 @@ class StmtParser
     {
         $this->reader->match(Tag::T_WHILE);
         $condition = $this->expr_parser->_expr();
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = $this->_stmtList();
         $this->reader->match(Tag::T_END);
 
         return new WhileStmt($condition, $body);
-    }
-
-    public function _forStmt()
-    {
-        $this->reader->match(Tag::T_FOR);
-        $variable = $this->name_parser->_identifier();
-        $this->reader->match(Tag::T_FROM);
-        $from = $this->expr_parser->_expr();
-        $this->reader->match(Tag::T_TO);
-        $to = $this->expr_parser->_expr();
-        $by = null;
-
-        if ($this->reader->consumeIf(Tag::T_BY)) {
-            $by = $this->expr_parser->_expr();
-        }
-
-        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-        $this->reader->match(Tag::T_END);
-
-        return new ForStmt($variable, $from, $to, $by, $body);
     }
 
     public function _foreachStmt()
@@ -212,31 +196,10 @@ class StmtParser
 
         $this->reader->match(Tag::T_IN);
         $iterable = $this->expr_parser->_expr();
-        $body = iterator_to_array($this->_innerStmtList());
+        $body = $this->_stmtList();
         $this->reader->match(Tag::T_END);
 
         return new ForeachStmt($key, $alias, $iterable, $body);
-    }
-
-    public function _switchStmt()
-    {
-        $this->reader->match(Tag::T_SWITCH);
-        $value = $this->expr_parser->_expr();
-        $cases = iterator_to_array($this->_caseStmtList());
-        $this->reader->match(Tag::T_END);
-
-        return new SwitchStmt($value, $cases);
-    }
-
-    public function _tryStmt()
-    {
-        $this->reader->match(Tag::T_TRY);
-        $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-        $rescues = iterator_to_array($this->_rescueStmtList());
-        $finally = $this->_optFinally();
-        $this->reader->match(Tag::T_END);
-
-        return new TryStmt($body, $rescues, $finally);
     }
 
     public function _breakStmt()
@@ -253,14 +216,6 @@ class StmtParser
         return new ContinueStmt($label);
     }
 
-    public function _raiseStmt()
-    {
-        $this->reader->match(Tag::T_RAISE);
-        $expression = $this->expr_parser->_expr();
-
-        return new RaiseStmt($expression);
-    }
-
     public function _returnStmt()
     {
         $this->reader->match('^');
@@ -274,56 +229,30 @@ class StmtParser
         $this->reader->match('[');
         $label_name = $this->name_parser->_identifier();
         $this->reader->match(']');
-        $stmt = $this->_innerStmt();
+        $stmt = $this->_stmt();
 
         return new LabelStmt($label_name, $stmt);
     }
 
     public function _elifList()
     {
+        $elifs = [];
         while ($this->reader->consumeIf(Tag::T_ELIF)) {
             $condition = $this->expr_parser->_expr();
-            $body = iterator_to_array($this->_innerStmtList());
-            yield new ElifStmt($condition, $body);
+            $body = $this->_stmtList();
+            $elifs[] = new ElifStmt($condition, $body);
         }
+
+        return $elifs;
     }
 
     public function _optElse()
     {
-        if (!$this->reader->is(Tag::T_ELSE)) {
-            return null;
+        if ($this->reader->consumeIf(Tag::T_ELSE)) {
+            return $this->_stmtList();
         }
 
-        $this->reader->consume();
-        return new StmtList(iterator_to_array($this->_innerStmtList()));
-    }
-
-    public function _topStmt()
-    {
-        $decl_table = [
-            Tag::T_FN        => '_fnStmt'
-        ];
-
-        $next_tag = $this->reader->lookahead->getTag();
-
-        if (array_key_exists($next_tag, $decl_table)) {
-            return call_user_func([$this->decl_parser, $decl_table[$next_tag]]);
-        }
-
-        return $this->_stmt();
-    }
-
-    public function _innerStmt()
-    {
-        $branch_table = [
-            Tag::T_FN        => '_fnStmt'
-        ];
-
-        $next_tag = $this->reader->lookahead->getTag();
-
-        return array_key_exists($next_tag, $branch_table)
-            ? call_user_func([$this, $branch_table[$next_tag]])
-            : $this->_stmt();
+        return null;
     }
 
     public function _parameter()
@@ -338,47 +267,6 @@ class StmtParser
             'name' => $name,
             'type' => $type
         ];
-    }
-
-    public function _caseStmtList()
-    {
-        $cases = [Tag::T_CASE, Tag::T_ELSE];
-
-        while (in_array($this->reader->lookahead->getTag(), $cases, true)) {
-            $is_else = $this->reader->is(Tag::T_ELSE);
-            $this->reader->consume();
-            $value = $is_else ? null : $this->expr_parser->_expr();
-            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-
-            yield new CaseStmt($value, $body, $is_else);
-        }
-    }
-
-    public function _rescueStmtList()
-    {
-        while ($this->reader->consumeIf(Tag::T_RESCUE)) {
-            $this->reader->match('(');
-            $exception_class = $this->name_parser->_qualifiedName();
-            $variable = $this->name_parser->_identifier();
-            $this->reader->match(')');
-            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-
-            yield [
-                "exception_class" => $exception_class,
-                "variable" => $variable,
-                "body" => $body
-            ];
-        }
-    }
-
-    public function _optFinally()
-    {
-        if ($this->reader->consumeIf(Tag::T_FINALLY)) {
-            $body = new StmtList(iterator_to_array($this->_innerStmtList()));
-            return $body;
-        }
-
-        return null;
     }
 
     public function _optLabel()

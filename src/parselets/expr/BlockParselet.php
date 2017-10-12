@@ -23,7 +23,6 @@ namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\BlockExpr;
-use \QuackCompiler\Ast\Stmt\StmtList;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
@@ -31,7 +30,7 @@ class BlockParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        $body = new StmtList(iterator_to_array($grammar->stmt_parser->_innerStmtList()));
+        $body = $grammar->stmt_parser->_stmtList();
         $grammar->reader->match('}');
         return new BlockExpr($body);
     }
