@@ -250,7 +250,8 @@ class Repl extends Component
         foreach ($context->table as $name => $signature) {
             $type = $context->meta[$name][Meta::M_TYPE];
             $mutable = $signature & Kind::K_MUTABLE;
-            $this->console->setColor(Console::FG_BOLD_GREEN);
+            $color = $signature & Kind::K_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
+            $this->console->setColor($color);
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
