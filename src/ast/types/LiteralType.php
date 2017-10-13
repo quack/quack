@@ -40,7 +40,6 @@ class LiteralType extends TypeNode
             NativeQuackType::T_BOOL   => 'boolean',
             NativeQuackType::T_REGEX  => 'regex',
             NativeQuackType::T_BLOCK  => 'block',
-            NativeQuackType::T_UNIT   => 'unit',
             NativeQuackType::T_BYTE   => 'byte',
             NativeQuackType::T_ATOM   => 'atom'
         ];

@@ -11,7 +11,7 @@ let hash :: #{byte: string}
 let celao :: %Person
 
 let f1 :: &string
-let f2 :: &[string] -> unit
+let f2 :: &[string] -> #()
 let f3 :: &[string, byte] -> &[@me | @you] -> number
 let id :: &a -> a
 
@@ -24,7 +24,7 @@ let talkable :: %Person & %{talks: boolean}
 let sig :: #(byte, byte, byte, byte)
 let hash :: #{byte: string}
 let celao :: %Person
-let f1 :: &[string] -> unit
-let f2 :: &[string] -> unit
+let f1 :: &[string] -> #()
+let f2 :: &[string] -> #()
 let f3 :: &[string, byte] -> &[@me | @you] -> number
 let id :: &[a] -> a

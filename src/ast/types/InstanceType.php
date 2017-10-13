@@ -23,16 +23,16 @@ namespace QuackCompiler\Ast\Types;
 
 class InstanceType extends TypeNode
 {
-    public $qualified_name;
+    public $name;
 
-    public function __construct($qualified_name)
+    public function __construct($name)
     {
-        $this->qualified_name = $qualified_name;
+        $this->name = $name;
     }
 
     public function __toString()
     {
-        return $this->parenthesize('%' . join('.', $this->qualified_name));
+        return $this->parenthesize('%' . $this->name);
     }
 
     public function check(TypeNode $other)

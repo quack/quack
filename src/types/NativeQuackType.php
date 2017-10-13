@@ -33,7 +33,5 @@ class NativeQuackType
     const T_REGEX  = 10;
     const T_LAZY   = 11;
     const T_BLOCK  = 12;
-    const T_ENUM   = 13;
-    const T_UNIT   = 14;
     const T_BYTE   = 15;
 }
