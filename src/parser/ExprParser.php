@@ -125,11 +125,17 @@ class ExprParser
 
         if (is_null($prefix)) {
             if (!$opt) {
-                throw new SyntaxError([
+                $error_params = [
                     'expected' => 'expression',
                     'found'    => $token,
                     'parser'   => $this->reader
-                ]);
+                ];
+
+                if ($this->reader->isEOF()) {
+                    throw new EOFError($error_params);
+                }
+
+                throw new SyntaxError($error_params);
             }
 
             return null;

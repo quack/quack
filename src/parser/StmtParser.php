@@ -57,14 +57,10 @@ class StmtParser
         return in_array($peek, $stmt_list, true);
     }
 
-    public function isEOF() {
-        return 0 === $this->reader->lookahead->getTag();
-    }
-
     public function _program()
     {
         $body = [];
-        while (!$this->isEOF()) {
+        while (!$this->reader->isEOF()) {
             $body[] = $this->_stmt();
         }
         return new ProgramStmt($body);
@@ -110,7 +106,7 @@ class StmtParser
             'parser'   => $this->reader
         ];
 
-        if ($this->isEOF()) {
+        if ($this->reader->isEOF()) {
             throw new EOFError($params);
         };
 

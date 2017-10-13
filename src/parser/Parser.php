@@ -91,6 +91,11 @@ abstract class Parser
         return $this->lookahead->getTag() === $tag;
     }
 
+    public function isEOF()
+    {
+        return 0 === $this->lookahead->getTag();
+    }
+
     public function consume()
     {
         $content = $this->lookahead === null ?: $this->lookahead->getContent();
