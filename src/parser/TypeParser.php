@@ -72,11 +72,17 @@ class TypeParser
         $prefix = $this->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
-            throw new SyntaxError([
+            $error_params = [
                 'expected' => 'type signature',
                 'found'    => $token,
                 'parser'   => $this->reader
-            ]);
+            ];
+
+            if ($this->reader->isEOF()) {
+                throw new EOFError($error_params);
+            }
+
+            throw new SyntaxError($error_params);
         }
 
         $this->reader->consume();
