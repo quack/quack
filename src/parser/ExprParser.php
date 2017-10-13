@@ -42,6 +42,7 @@ use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
 use \QuackCompiler\Parselets\Expr\JSXParselet;
+use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -72,6 +73,7 @@ class ExprParser
         $this->register('{', new AccessParselet);
         $this->register('%{', new ObjectParselet);
         $this->register('#{', new MapParselet);
+        $this->register('#(', new TupleParselet);
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('.', new MemberAccessParselet);

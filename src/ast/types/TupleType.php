@@ -21,6 +21,9 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
+
 class TupleType extends TypeNode
 {
     public $types;
@@ -39,7 +42,23 @@ class TupleType extends TypeNode
 
     public function check(TypeNode $other)
     {
-        // TODO
-        return false;
+        if (!($other instanceof TupleType)) {
+            return false;
+        }
+
+        if ($this->size !== $other->size) {
+            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
+        }
+
+        for ($i = 0; $i < $this->size; $i++) {
+            $me = $this->types[$i];
+            $you = $other->types[$i];
+
+            if (!$me->check($you)) {
+                throw new TypeError(Localization::message('TYP430', [$i + 1, $me, $you]));
+            }
+        }
+
+        return true;
     }
 }
