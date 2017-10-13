@@ -33,6 +33,10 @@ let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',
   age: 20
 } }
+type Person :- %{ name: string, age: number }
+let marcelo :: Person :- %{ name: 'Marcelo', age: 20 }
+let salete :- %{ name: 'Salete', age: 33 }
+let programmer :: Person :- salete
 %%expect
 string(6) "number"
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
@@ -65,3 +69,14 @@ let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',
   age: 20
 } }
+type Person :- %{name: string, age: number}
+let marcelo :: Person :- %{
+  name: 'Marcelo',
+  age: 20
+}
+let salete :- %{
+  name: 'Salete',
+  age: 33
+}
+let programmer :: Person :- salete
+
