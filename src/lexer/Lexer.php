@@ -72,6 +72,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_WHEN, 'when'));
         $this->reserve(new Word(Tag::T_UNLESS, 'unless'));
         $this->reserve(new Word(Tag::T_MUT, 'mut'));
+        $this->reserve(new Word(Tag::T_TYPE, 'type'));
     }
 
     private function reserve(Word $t)

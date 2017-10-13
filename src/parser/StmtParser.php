@@ -33,6 +33,7 @@ use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
+use \QuackCompiler\Ast\Stmt\TypeStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 
 class StmtParser
@@ -50,7 +51,8 @@ class StmtParser
     {
         static $stmt_list = [
             Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
-            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '['
+            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '[',
+            Tag::T_TYPE
         ];
 
         $peek = $this->reader->lookahead->getTag();
@@ -87,6 +89,7 @@ class StmtParser
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
             Tag::T_BEGIN    => '_blockStmt',
+            Tag::T_TYPE     => '_typeStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
         ];
@@ -118,6 +121,16 @@ class StmtParser
         $this->reader->match(Tag::T_DO);
         $expr = $this->expr_parser->_expr();
         return new ExprStmt($expr);
+    }
+
+    public function _typeStmt()
+    {
+        $this->reader->match(Tag::T_TYPE);
+        $name = $this->name_parser->_typename();
+        $this->reader->match(':-');
+        $value = $this->type_parser->_type();
+
+        return new TypeStmt($name, $value);
     }
 
     public function _blockStmt()
