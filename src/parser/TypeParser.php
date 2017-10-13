@@ -39,6 +39,7 @@ use \QuackCompiler\Parselets\Types\InstanceTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
+use \QuackCompiler\Parselets\Types\NameTypeParselet;
 use \QuackCompiler\Parselets\Types\ObjectTypeParselet;
 use \QuackCompiler\Parselets\Types\TupleTypeParselet;
 use \QuackCompiler\Types\NativeQuackType;
@@ -56,6 +57,7 @@ class TypeParser
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
+        $this->register(Tag::T_TYPENAME, new NameTypeParselet);
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);

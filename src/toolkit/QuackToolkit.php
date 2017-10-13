@@ -85,6 +85,7 @@ import(PARSELETS, 'types/InstanceTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
 import(PARSELETS, 'types/LiteralTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
+import(PARSELETS, 'types/NameTypeParselet');
 import(PARSELETS, 'types/ObjectTypeParselet');
 import(PARSELETS, 'types/TupleTypeParselet');
 
@@ -156,6 +157,7 @@ import(AST, 'types/InstanceType');
 import(AST, 'types/ListType');
 import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
+import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
 import(AST, 'types/OperatorType');
 import(AST, 'types/TupleType');
