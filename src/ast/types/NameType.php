@@ -49,7 +49,7 @@ class NameType extends TypeNode
     public function simplify()
     {
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type;
+        return $type->simplify();
     }
 
     public function check(TypeNode $other)

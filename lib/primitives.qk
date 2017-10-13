@@ -1,0 +1,32 @@
+-- TODO: these should become type classes for parametric polymorphism
+-- TODO: booleans should be ADTs
+
+type Show :- %{
+    to_string: &[] -> string
+}
+
+type Eq :- %{
+    eq: &a -> boolean,
+    diff: &a -> boolean,
+    max: &a -> a,
+    min: &a -> a
+}
+
+type Ord :- %{
+    lt: &a -> boolean,
+    gt: &a -> boolean,
+    lte: &a -> boolean,
+    gte: &a -> boolean
+}
+
+type Enum :- %{
+    succ: &[] -> a,
+    pred: &[] -> a
+}
+
+type Primitive :- Show & Eq & Ord
+
+type String :- Primitive
+type Number :- Primitive & Enum
+type Bool   :- Primitive
+type Unit   :- #()
