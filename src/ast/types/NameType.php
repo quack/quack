@@ -46,6 +46,12 @@ class NameType extends TypeNode
         $this->scope = $parent_scope;
     }
 
+    public function simplify()
+    {
+        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+        return $type;
+    }
+
     public function check(TypeNode $other)
     {
         // Try to find declared type in scope
