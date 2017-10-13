@@ -31,7 +31,6 @@ use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\LetStmt;
-use \QuackCompiler\Ast\Stmt\PostConditionalStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
@@ -64,7 +63,10 @@ class StmtParser
 
     public function _program()
     {
-        $body = $this->_stmtList();
+        $body = [];
+        while (!$this->isEOF()) {
+            $body[] = $this->_stmt();
+        }
         return new ProgramStmt($body);
     }
 
@@ -80,7 +82,7 @@ class StmtParser
 
     public function _stmt()
     {
-        $branch_table = [
+        $stmt_list = [
             Tag::T_IF       => '_ifStmt',
             Tag::T_LET      => '_letStmt',
             Tag::T_WHILE    => '_whileStmt',
@@ -97,20 +99,9 @@ class StmtParser
             return $this->decl_parser->_fnStmt();
         }
 
-        foreach ($branch_table as $token => $action) {
-            if ($this->reader->is($token)) {
-                $first_class_stmt = $this->{$action}();
-
-                // Optional postfix notation for statements
-                if ($this->reader->is(Tag::T_WHEN) || $this->reader->is(Tag::T_UNLESS)) {
-                    $tag = $this->reader->consumeAndFetch()->getTag();
-                    $predicate = $this->expr_parser->_expr();
-
-                    return new PostConditionalStmt($first_class_stmt, $predicate, $tag);
-                }
-
-                return $first_class_stmt;
-            }
+        if (isset($stmt_list[$this->reader->lookahead->getTag()])) {
+            $callee = $stmt_list[$this->reader->lookahead->getTag()];
+            return $this->{$callee}();
         }
 
         $params = [
@@ -119,7 +110,7 @@ class StmtParser
             'parser'   => $this->reader
         ];
 
-        if (0 === $this->reader->lookahead->getTag()) {
+        if ($this->isEOF()) {
             throw new EOFError($params);
         };
 
