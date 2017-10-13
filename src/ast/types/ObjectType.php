@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
+
 class ObjectType extends TypeNode
 {
     public $properties;
@@ -39,6 +41,13 @@ class ObjectType extends TypeNode
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        foreach ($this->properties as $property) {
+            $property->bindScope($parent_scope);
+        }
     }
 
     public function check(TypeNode $other)

@@ -56,6 +56,7 @@ class TypeStmt extends Stmt
     public function runTypeChecker()
     {
         // Try to simplify the type to ensure it is a valid declaration
+        $this->value->bindScope($this->scope);
         $this->value->simplify();
     }
 }

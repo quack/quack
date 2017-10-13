@@ -23,7 +23,6 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\GenericType;
-use \QuackCompiler\Ast\Types\InstanceType;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
@@ -35,7 +34,6 @@ use \QuackCompiler\Parselets\Types\AtomTypeParselet;
 use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
 use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
-use \QuackCompiler\Parselets\Types\InstanceTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
@@ -61,7 +59,6 @@ class TypeParser
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);
-        $this->register('%', new InstanceTypeParselet);
         $this->register('%{', new ObjectTypeParselet);
         $this->register('&', new FunctionTypeParselet);
         $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));

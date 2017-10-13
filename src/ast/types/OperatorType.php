@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorType extends TypeNode
@@ -76,6 +77,12 @@ class OperatorType extends TypeNode
         }
 
         throw new TypeError(Localization::message('TYP390', [$this->left, $this->right]));
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        $this->left->bindScope($parent_scope);
+        $this->right->bindScope($parent_scope);
     }
 
     public function check(TypeNode $other)

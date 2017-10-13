@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class MapType extends TypeNode
@@ -40,6 +41,12 @@ class MapType extends TypeNode
         return $this->parenthesize(
             '#{' . $this->key . ': ' . $this->value . '}'
         );
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        $this->key->bindScope($parent_scope);
+        $this->value->bindScope($parent_scope);
     }
 
     public function check(TypeNode $other)

@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
+
 class NameType extends TypeNode
 {
     public $name;
@@ -35,8 +37,13 @@ class NameType extends TypeNode
         return $this->name;
     }
 
-    public function check(TypeNode $other)
+    public function bindScope(Scope $parent_scope)
     {
         // TODO
+    }
+
+    public function check(TypeNode $other)
+    {
+        // TODO: The types must have scope information for this
     }
 }

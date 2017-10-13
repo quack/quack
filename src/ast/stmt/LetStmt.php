@@ -90,6 +90,10 @@ class LetStmt extends Stmt
             throw new TypeError(Localization::message('TYP290', [$this->name]));
         }
 
+        if (null !== $this->type) {
+            $this->type->bindScope($this->scope);
+        }
+
         if ($this->mutable) {
             $this->checkMutable();
         } else {

@@ -64,6 +64,7 @@ class FnSignatureStmt extends Stmt
 
     public function injectScope(&$parent_scope)
     {
+        $this->scope = $parent_scope;
         foreach ($this->parameters as $param) {
             if ($parent_scope->hasLocal($param->name)) {
                 throw new ScopeError(Localization::message('SCO060', [$param->name, $this->name]));
@@ -85,6 +86,12 @@ class FnSignatureStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // Pass :)
+        foreach ($this->parameters as $parameter) {
+            $parameter->type->bindScope($this->scope);
+        }
+
+        if (null !== $this->type) {
+            $this->type->bindScope($this->scope);
+        }
     }
 }

@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class TupleType extends TypeNode
@@ -38,6 +39,13 @@ class TupleType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        foreach ($this->types as $type) {
+            $type->bindScope($parent_scope);
+        }
     }
 
     public function check(TypeNode $other)

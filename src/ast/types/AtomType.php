@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
+
 class AtomType extends TypeNode
 {
     public $name;
@@ -33,6 +35,11 @@ class AtomType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize($this->name);
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        // Pass
     }
 
     public function check(TypeNode $other)
