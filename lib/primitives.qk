@@ -1,5 +1,6 @@
 -- TODO: these should become type classes for parametric polymorphism
 -- TODO: booleans should be ADTs
+-- TODO: Deal with type recursion, such as Id :- Id
 
 type Show :- %{
     to_string: &[] -> string
@@ -24,9 +25,14 @@ type Enum :- %{
     pred: &[] -> a
 }
 
+type Monoid :- %{
+    empty: &[] -> a,
+    concat: &a -> a
+}
+
 type Primitive :- Show & Eq & Ord
 
-type String :- Primitive
-type Number :- Primitive & Enum
+type String :- Primitive & Monoid
+type Number :- Primitive & Enum & Monoid
 type Bool   :- Primitive
 type Unit   :- #()

@@ -44,6 +44,10 @@ class NameType extends TypeNode
     public function bindScope(Scope $parent_scope)
     {
         $this->scope = $parent_scope;
+        $type_flags = $this->scope->lookup($this->name);
+        if (null === $type_flags) {
+            throw new TypeError(Localization::message('TYP440', [$this->name]));
+        }
     }
 
     public function simplify()
@@ -54,12 +58,6 @@ class NameType extends TypeNode
 
     public function check(TypeNode $other)
     {
-        // Try to find declared type in scope
-        $type_flags = $this->scope->lookup($this->name);
-        if (null === $type_flags) {
-            throw new TypeError(Localization::message('TYP440', [$this->name]));
-        }
-
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
         return $type->check($other);
     }
