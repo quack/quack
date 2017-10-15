@@ -2,6 +2,12 @@
 -- TODO: booleans should be ADTs
 -- TODO: Deal with type recursion, such as Id :- Id
 
+type Id :- &a -> a
+
+type Functor :- %{
+    fmap: &a -> b
+}
+
 type Show :- %{
     to_string: &[] -> string
 }
@@ -9,8 +15,8 @@ type Show :- %{
 type Eq :- %{
     eq: &a -> boolean,
     diff: &a -> boolean,
-    max: &a -> a,
-    min: &a -> a
+    max: Id,
+    min: Id
 }
 
 type Ord :- %{
@@ -27,12 +33,31 @@ type Enum :- %{
 
 type Monoid :- %{
     empty: &[] -> a,
-    concat: &a -> a
+    concat: Id
+}
+
+type Additive :- %{
+    plus: Id
+}
+
+type Subtractive :- %{
+    minus: Id
+}
+
+type Multiplicative :- %{
+    multiply: Id
+}
+
+type Divisible :- %{
+    divide: Id
 }
 
 type Primitive :- Show & Eq & Ord
 
-type String :- Primitive & Monoid
-type Number :- Primitive & Enum & Monoid
+type String :- Primitive & Monoid & Additive
+type Number :- Primitive & Enum & Monoid & Additive & Subtractive & Multiplicative & Divisible
 type Bool   :- Primitive
 type Unit   :- #()
+type List   :- Primitive & Monoid & Functor
+
+do 'vim: syntax=ocaml
