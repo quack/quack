@@ -53,6 +53,11 @@ class NameType extends TypeNode
     public function simplify()
     {
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+        // When the reference of the type is the same to this, it is a cyclic reference
+        if ($this === $type) {
+            throw new TypeError(Localization::message('TYP280', [$this->name]));
+        }
+
         return $type->simplify();
     }
 
