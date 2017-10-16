@@ -26,26 +26,15 @@ use \QuackCompiler\Scope\Scope;
 class ObjectType extends TypeNode
 {
     public $properties;
-    public $operators;
 
-    public function __construct($properties, $operators = [])
+    public function __construct($properties)
     {
         $this->properties = $properties;
-        $this->operators = $operators;
     }
 
     public function __toString()
     {
         $source = '%{';
-
-        $source .= implode(', ', array_map(function ($name) {
-            return "&({$name}): {$this->operators[$name]}";
-        }, array_keys($this->operators)));
-
-        if (sizeof($this->operators) > 0 && sizeof($this->properties) > 0) {
-            $source .= ', ';
-        }
-
         $source .= implode(', ', array_map(function($name) {
             return "{$name}: {$this->properties[$name]}";
         }, array_keys($this->properties)));

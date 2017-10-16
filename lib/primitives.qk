@@ -13,8 +13,8 @@ type Show :- %{
 }
 
 type Eq :- %{
-    eq: &a -> boolean,
-    diff: &a -> boolean,
+    &(=): &a -> boolean,
+    &(<>): &a -> boolean,
     max: Id,
     min: Id
 }

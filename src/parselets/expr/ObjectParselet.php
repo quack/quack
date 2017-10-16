@@ -42,8 +42,11 @@ class ObjectParselet implements PrefixParselet
                 // Support for operators as object keys
                 $next = $grammar->reader->lookahead;
                 $grammar->reader->consume();
-                $keys[] = $next;
+                $name = null === $next->getContent()
+                    ? $next->getTag()
+                    : $next->getContent();
                 $grammar->reader->match(')');
+                $keys[] = "&($name)";
             } else {
                 $keys[] = $grammar->name_parser->_identifier();
             }
