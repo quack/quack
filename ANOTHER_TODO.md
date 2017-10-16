@@ -45,3 +45,22 @@
 [ ] Support literals in pattern match
 [ ] Support placeholders on pattern match
 [ ] Define full grammar for pattern match, support list destructuring too
+
+
+## Examples
+
+```ebnf
+x
+1
+atom
+@post
+string
+number
+%{x: %{y: number}, y:number}
+obj: %{}
+Bool
+#(string, number)
+{x, ...xs}
+{}
+{a}
+```
