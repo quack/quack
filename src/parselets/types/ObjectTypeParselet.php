@@ -37,9 +37,9 @@ class ObjectTypeParselet implements PrefixParselet
                     $next = $grammar->reader->lookahead;
                     $grammar->reader->consume();
                     $grammar->reader->match(')');
-                    $name = null === $next->getContent()
-                        ? $next->getTag()
-                        : $next->getContent();
+                    $name = isset($next->lexeme)
+                        ? $next->lexeme
+                        : $next->getTag();
                     $key = "&($name)";
                 } else {
                     $key = $grammar->name_parser->_identifier();

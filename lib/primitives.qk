@@ -12,6 +12,10 @@ type Show :- %{
     to_string: &[] -> string
 }
 
+type Bool :- %{
+    &(and): &[Bool, Bool] -> Bool
+}
+
 type Eq :- %{
     &(=): &a -> boolean,
     &(<>): &a -> boolean,
@@ -20,10 +24,10 @@ type Eq :- %{
 }
 
 type Ord :- %{
-    lt: &a -> boolean,
-    gt: &a -> boolean,
-    lte: &a -> boolean,
-    gte: &a -> boolean
+    &(<): &a -> boolean,
+    &(>): &a -> boolean,
+    &(<=): &a -> boolean,
+    &(>=): &a -> boolean
 }
 
 type Enum :- %{
@@ -37,26 +41,25 @@ type Monoid :- %{
 }
 
 type Additive :- %{
-    plus: Id
+    &(+): Id
 }
 
 type Subtractive :- %{
-    minus: Id
+    &(-): Id
 }
 
 type Multiplicative :- %{
-    multiply: Id
+    &(*): Id
 }
 
 type Divisible :- %{
-    divide: Id
+    &(/): Id
 }
 
 type Primitive :- Show & Eq & Ord
 
 type String :- Primitive & Monoid & Additive
 type Number :- Primitive & Enum & Monoid & Additive & Subtractive & Multiplicative & Divisible
-type Bool   :- Primitive
 type Unit   :- #()
 type List   :- Primitive & Monoid & Functor
 
