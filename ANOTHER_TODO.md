@@ -41,4 +41,7 @@
 [ ] Implement algebraic data types
 [ ] Resolve transpilation of compile-time type declarations
 [x] Pattern match parsing
-
+[ ] Resolve type and scope for matching variables in pattern match
+[ ] Support literals in pattern match
+[ ] Support placeholders on pattern match
+[ ] Define full grammar for pattern match, support list destructuring too
