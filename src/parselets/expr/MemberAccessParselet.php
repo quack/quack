@@ -36,7 +36,18 @@ class MemberAccessParselet implements InfixParselet
 {
     public function parse($grammar, $left, Token $token)
     {
-        $right = $grammar->name_parser->_identifier();
+        $right = null;
+        if ($grammar->reader->consumeIf('&(')) {
+            $next = $grammar->reader->lookahead;
+            $grammar->reader->consume();
+            $name = isset($next->lexeme)
+                ? $next->lexeme
+                : $next->getTag();
+            $grammar->reader->match(')');
+            $right = "&($name)";
+        } else {
+            $right = $grammar->name_parser->_identifier();
+        }
         return new OperatorExpr($left, $token->getTag(), $right);
     }
 
