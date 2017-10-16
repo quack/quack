@@ -43,6 +43,7 @@ use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
 use \QuackCompiler\Parselets\Expr\JSXParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
+use \QuackCompiler\Parselets\Expr\MatchParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -82,6 +83,7 @@ class ExprParser
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHEN, new WhenParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
+        $this->register(Tag::T_MATCH, new MatchParselet);
 
         $this->prefix('+');
         $this->prefix('-');

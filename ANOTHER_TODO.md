@@ -32,13 +32,13 @@
 [x] Call simplification on checks
 [x] Analyse statements for type checkings and replace ->code for ->check()
 [x] Implement simplification on let, const, fn signature, lambda signature or a function to prove type paths
-[ ] Implement a "type getter" for statement blocks, where we can get the return path in all paths
-[ ] Implement ad-hoc polymorphism
 
-## Future work
+## Very important
 
-[ ] Implement runtime pattern matching (Haskell like)
-[ ] Type checking must display the stack of comparisons when find wrong types
-[ ] Add name property for function type for better error messages
-[ ] Support for algebraic data types and type constructors
-[ ] Implement parametric polymophism
+[x] Declare operators in objects in expressions
+[x] Declare operators in objects in types
+[x] Access operators by `.' from objects in expressions
+[ ] Implement algebraic data types
+[ ] Resolve transpilation of compile-time type declarations
+[x] Pattern match parsing
+

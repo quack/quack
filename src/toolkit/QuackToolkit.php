@@ -72,6 +72,7 @@ import(PARSELETS, 'expr/LiteralParselet');
 import(PARSELETS, 'expr/PartialFuncParselet');
 import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
+import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/JSXParselet');
@@ -129,6 +130,7 @@ import(AST, 'expr/RegexExpr');
 import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
 import(AST, 'expr/TupleExpr');
+import(AST, 'expr/MatchExpr');
 import(AST, 'expr/jsx/JSXElement');
 
 import(AST, 'stmt/Stmt');
