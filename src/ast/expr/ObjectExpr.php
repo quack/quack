@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
@@ -52,7 +53,16 @@ class ObjectExpr extends Expr
             // Iterate based on index
             $source .= implode(',' . PHP_EOL, array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $parser->indent();
-                $subsource .= $keys[$index];
+                $key = $keys[$index];
+
+                if ($key instanceof Token) {
+                    $subsource .= '&(';
+                    $subsource .= $this->getOperatorName($key);
+                    $subsource .= ')';
+                } else {
+                    $subsource .= $key;
+                }
+
                 $subsource .= ': ';
                 $subsource .= $values[$index]->format($parser);
 
@@ -70,20 +80,35 @@ class ObjectExpr extends Expr
         return $this->parenthesize($source);
     }
 
+    private function getOperatorName(Token $token) {
+        return null === $token->getContent()
+            ? $token->getTag()
+            : $token->getContent();
+    }
+
     public function injectScope(&$parent_scope)
     {
         $defined = [];
+        $operators = [];
         $index = 0;
         while ($index < sizeof($this->keys)) {
             $key = $this->keys[$index];
             $value = $this->values[$index];
 
-            if (array_key_exists($key, $defined)) {
-                throw new ScopeError(Localization::message('SCO050', [$key]));
+            if ($key instanceof Token) {
+                $name = $this->getOperatorName($key);
+                if (array_key_exists($name, $operators)) {
+                    throw new ScopeError(Localization::message('SCO050', ["&($name)"]));
+                }
+                $operators[$name] = true;
+            } else {
+                if (array_key_exists($key, $defined)) {
+                    throw new ScopeError(Localization::message('SCO050', [$key]));
+                }
+                $defined[$key] = true;
             }
 
             $value->injectScope($parent_scope);
-            $defined[$key] = true;
             $index++;
         }
     }
@@ -91,10 +116,17 @@ class ObjectExpr extends Expr
     public function getType()
     {
         $properties = [];
+        $operators = [];
         for ($i = 0, $size = sizeof($this->keys); $i < $size; $i++) {
-            $properties[$this->keys[$i]] = $this->values[$i]->getType();
+            $key = $this->keys[$i];
+            if ($key instanceof Token) {
+                $name = $this->getOperatorName($key);
+                $operators[$name] = $this->values[$i]->getType();
+            } else {
+                $properties[$key] = $this->values[$i]->getType();
+            }
         }
 
-        return new ObjectType($properties);
+        return new ObjectType($properties, $operators);
     }
 }
