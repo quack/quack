@@ -1,6 +1,6 @@
 -- TODO: these should become type classes for parametric polymorphism
 -- TODO: booleans should be ADTs
--- TODO: Deal with type recursion, such as Id :- Id
+-- TODO: tell prefix from postfix and infix operators on objects
 
 type Id :- &a -> a
 
@@ -12,8 +12,11 @@ type Show :- %{
     to_string: &[] -> string
 }
 
-type Bool :- %{
-    &(and): &[Bool, Bool] -> Bool
+type Bool:- %{
+    &(and): &[Bool, Bool] -> Bool,
+    &(or): &[Bool, Bool] -> Bool,
+    &(xor): &[Bool, Bool] -> Bool,
+    &(not): &[Bool] -> Bool
 }
 
 type Eq :- %{
