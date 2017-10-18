@@ -52,7 +52,7 @@ class StmtParser
         static $stmt_list = [
             Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
             Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '[',
-            Tag::T_TYPE
+            Tag::T_TYPE, Tag::T_DATA
         ];
 
         $peek = $this->reader->lookahead->getTag();
@@ -90,6 +90,7 @@ class StmtParser
             Tag::T_CONTINUE => '_continueStmt',
             Tag::T_BEGIN    => '_blockStmt',
             Tag::T_TYPE     => '_typeStmt',
+            Tag::T_DATA     => '_dataStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
         ];
@@ -131,6 +132,11 @@ class StmtParser
         $value = $this->type_parser->_type();
 
         return new TypeStmt($name, $value);
+    }
+
+    public function _dataStmt()
+    {
+        // TODO: Implement support for ADTs
     }
 
     public function _blockStmt()
