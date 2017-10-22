@@ -67,3 +67,4 @@ type Unit   :- #()
 type List   :- Primitive & Monoid & Functor
 
 do 'vim: syntax=ocaml
+
