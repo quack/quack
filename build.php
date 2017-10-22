@@ -435,7 +435,6 @@ $bundle_settings = [
         new ResourceDir('src/parser'),
         new ResourceFile('src/ast/Node.php'),
         new ResourceDir('src/ast/expr'),
-        new ResourceDir('src/ast/expr/jsx'),
         new ResourceDir('src/ast/stmt'),
         new ResourceDir('src/ast/types'),
         new ResourceDir('src/scope'),
