@@ -75,7 +75,6 @@ import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
-import(PARSELETS, 'expr/JSXParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
@@ -131,7 +130,6 @@ import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
 import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
-import(AST, 'expr/jsx/JSXElement');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
