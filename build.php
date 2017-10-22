@@ -381,7 +381,7 @@ function getCroakBuffer()
         }
     }
 
-    $serialized_byte_array .= json_encode($compressed_byte_array);
+    $serialized_byte_array = json_encode($compressed_byte_array);
 
     return '
         <?php
