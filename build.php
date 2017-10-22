@@ -25,6 +25,8 @@
 # Quack compiler stuff. I'm sorry, this was written fastly, so the code
 # may not be the best. Take care, here be dragons!
 
+ini_set('error_reporting', E_ALL);
+
 /**
  * Receives a source string and returns it minified. Converts
  * namespaces to bundle-compatible ones, strips comments and
@@ -99,7 +101,7 @@ function minify($source, $pure_identifiers)
             $index++;
             while (true) {
                 $token = $tokens[$index++];
-                $namespace .= $token[1];
+                $namespace .= @$token[1];
 
                 if (';' === $token) {
                     break;
@@ -147,11 +149,11 @@ function minify($source, $pure_identifiers)
         }
 
         // Fetch "use" directives
-        if (T_USE === $tag && $tokens[$index + 1][1] === '\\') {
+        if (T_USE === $tag && @$tokens[$index + 1][1] === '\\') {
             $name = '';
             while (true) {
                 $token = $tokens[$index++];
-                $name .= $token[1];
+                $name .= @$token[1];
 
                 if ($token === ';') {
                     break;
@@ -379,7 +381,7 @@ function getCroakBuffer()
         }
     }
 
-    $serialized_byte_array = json_encode($compressed_byte_array);
+    $serialized_byte_array .= json_encode($compressed_byte_array);
 
     return '
         <?php
