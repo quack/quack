@@ -1,19 +1,19 @@
 from console import {write}
 
 forall a, b
-fn map(f :: &a: b, list :: {a}): {b} :- match list {
+fn map(f :: &a: b, list :: {a}): {b} :- match list with
     {}         :- {}
     {x, ...xs} :- f(x) : map(f, xs)
-}
+end
 
 forall a
-fn filter(f :: &a -> Bool, list :: {a}): {a} :- match list {
+fn filter(f :: &a -> Bool, list :: {a}): {a} :- match list with
     {}         :- {},
-    {x, ...xs} :- match f(x) {
+    {x, ...xs} :- match f(x) with
         True  :- x : filter(f, xs),
         False :- filter(f, xs)
-    }
-}
+    end
+end
 
 fn double_me(n :: Number): Number :- n * 2
 fn divisible_by(m :: Number, n :: Number): Bool :- n mod m = 0
