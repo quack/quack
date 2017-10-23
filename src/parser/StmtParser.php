@@ -89,7 +89,6 @@ class StmtParser
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
             Tag::T_BEGIN    => '_blockStmt',
-            Tag::T_DATA     => '_dataStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
         ];
@@ -100,6 +99,10 @@ class StmtParser
 
         if ($this->reader->is(Tag::T_TYPE)) {
             return $this->decl_parser->_typeStmt();
+        }
+
+        if ($this->reader->is(Tag::T_DATA)) {
+            return $this->decl_parser->_dataStmt();
         }
 
         if (isset($stmt_list[$this->reader->lookahead->getTag()])) {
@@ -125,16 +128,6 @@ class StmtParser
         $this->reader->match(Tag::T_DO);
         $expr = $this->expr_parser->_expr();
         return new ExprStmt($expr);
-    }
-
-    public function _typeStmt()
-    {
-        $this->reader->match(Tag::T_TYPE);
-        $name = $this->name_parser->_typename();
-        $this->reader->match(':-');
-        $value = $this->type_parser->_type();
-
-        return new TypeStmt($name, $value);
     }
 
     public function _blockStmt()

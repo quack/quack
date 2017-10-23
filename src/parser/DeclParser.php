@@ -90,4 +90,9 @@ class DeclParser
 
         return new TypeStmt($name, $value);
     }
+
+    public function _dataStmt()
+    {
+        $this->reader->match(Tag::T_DATA);
+    }
 }
