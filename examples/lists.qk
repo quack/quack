@@ -1,0 +1,26 @@
+from console import {write}
+
+forall a, b
+fn map(f :: &a: b, list :: {a}): {b} :- match list {
+    {}         :- {}
+    {x, ...xs} :- f(x) : map(f, xs)
+}
+
+forall a
+fn filter(f :: &a -> Bool, list :: {a}): {a} :- match list {
+    {}         :- {},
+    {x, ...xs} :- match f(x) {
+        True  :- x : filter(f, xs),
+        False :- filter(f, xs)
+    }
+}
+
+fn double_me(n :: Number): Number :- n * 2
+fn divisible_by(m :: Number, n :: Number): Bool :- n mod m = 0
+
+effect main
+    do 1 .. 300
+    | map(double_me)
+    | filter(divisible_by(5))
+    | write
+end

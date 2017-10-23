@@ -1,4 +1,4 @@
-import from console
+from console
 
 fn fact(n :: number): number :- n = 1
     then 0

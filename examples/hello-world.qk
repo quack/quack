@@ -1,4 +1,4 @@
-import from console
+from console
 
 effect main
     do console.write('Hello world!')
