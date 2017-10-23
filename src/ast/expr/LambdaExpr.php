@@ -81,7 +81,7 @@ class LambdaExpr extends Expr
                 $source .= ']';
         }
 
-        $source .= ' -> ';
+        $source .= ': ';
 
         if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
             $source .= $this->body->format($parser);

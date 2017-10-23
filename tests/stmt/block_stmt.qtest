@@ -7,7 +7,7 @@ begin
 
 end
 begin let point :- %{ x: 0, y: 2 } end
-do &[serial] -> begin
+do &[serial] : begin
   do
   (serial).write( "Hello World" )
 end
@@ -22,6 +22,6 @@ begin
     y: 2
   }
 end
-do &[serial] -> begin
+do &[serial]: begin
   do (serial).write("Hello World")
 end

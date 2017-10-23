@@ -2,44 +2,44 @@
 -- TODO: booleans should be ADTs
 -- TODO: tell prefix from postfix and infix operators on objects
 
-type Id :- &a -> a
+type Id :- &a: a
 
 type Functor :- %{
-    fmap: &a -> b
+    fmap: &a: b
 }
 
 type Show :- %{
-    to_string: &[] -> string
+    to_string: &[]: string
 }
 
 type Bool:- %{
-    &(and): &[Bool, Bool] -> Bool,
-    &(or): &[Bool, Bool] -> Bool,
-    &(xor): &[Bool, Bool] -> Bool,
-    &(not): &[Bool] -> Bool
+    &(and): &[Bool, Bool]: Bool,
+    &(or): &[Bool, Bool]: Bool,
+    &(xor): &[Bool, Bool]: Bool,
+    &(not): &[Bool]: Bool
 }
 
 type Eq :- %{
-    &(=): &a -> boolean,
-    &(<>): &a -> boolean,
+    &(=): &a: boolean,
+    &(<>): &a: boolean,
     max: Id,
     min: Id
 }
 
 type Ord :- %{
-    &(<): &a -> boolean,
-    &(>): &a -> boolean,
-    &(<=): &a -> boolean,
-    &(>=): &a -> boolean
+    &(<): &a: boolean,
+    &(>): &a: boolean,
+    &(<=): &a: boolean,
+    &(>=): &a: boolean
 }
 
 type Enum :- %{
-    succ: &[] -> a,
-    pred: &[] -> a
+    succ: &[]: a,
+    pred: &[]: a
 }
 
 type Monoid :- %{
-    empty: &[] -> a,
+    empty: &[]: a,
     concat: Id
 }
 

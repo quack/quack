@@ -96,6 +96,6 @@ class ObjectExpr extends Expr
             $properties[$this->keys[$i]] = $this->values[$i]->getType();
         }
 
-        return new ObjectType($properties, $operators);
+        return new ObjectType($properties);
     }
 }

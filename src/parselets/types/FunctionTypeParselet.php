@@ -48,7 +48,7 @@ class FunctionTypeParselet implements PrefixParselet
             }
         }
 
-        if ($grammar->reader->consumeIf('->')) {
+        if ($grammar->reader->consumeIf(':')) {
             $return = $grammar->_type();
         }
 

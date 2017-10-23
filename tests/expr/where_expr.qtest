@@ -1,8 +1,8 @@
 %%describe
 Supports formatting where expressions
 %%source
-let add :- &[a, b] -> a + b where a :- 1, b :- 2
+let add :- &[a, b]: a + b where a :- 1, b :- 2
 %%expect
-let add :- &[a, b] -> a + b
+let add :- &[a, b]: a + b
   where a :- 1
       , b :- 2

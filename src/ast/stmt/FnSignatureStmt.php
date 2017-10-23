@@ -56,7 +56,7 @@ class FnSignatureStmt extends Stmt
         $source .= ')';
 
         if (!is_null($this->type)) {
-            $source .= ' -> ' . $this->type;
+            $source .= ': ' . $this->type;
         }
 
         return $source;

@@ -9,9 +9,9 @@ let sig :: #(byte, byte, byte, byte)
 let hash :: #{byte: string}
 
 let f1 :: &string
-let f2 :: &[string] -> #()
-let f3 :: &[string, byte] -> &[@me | @you] -> number
-let id :: &a -> a
+let f2 :: &[string]: #()
+let f3 :: &[string, byte]: &[@me | @you]: number
+let id :: &a: a
 
 %%expect
 let name :: string
@@ -20,7 +20,7 @@ let address :: byte
 let request :: @GET | @POST | @PUT | @DELETE
 let sig :: #(byte, byte, byte, byte)
 let hash :: #{byte: string}
-let f1 :: &[string] -> #()
-let f2 :: &[string] -> #()
-let f3 :: &[string, byte] -> &[@me | @you] -> number
-let id :: &[a] -> a
+let f1 :: &[string]: #()
+let f2 :: &[string]: #()
+let f3 :: &[string, byte]: &[@me | @you]: number
+let id :: &[a]: a

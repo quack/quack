@@ -3,7 +3,7 @@ Supports formatting objects
 %%source
 let person :-  %{name: 'Marcelo',surname:'Camargo'}
 let num :- %{
-    &(+): &[left, right] -> 1
+    &(+): &[left, right]: 1
 }
 do %{ }
 %%expect
@@ -12,6 +12,6 @@ let person :- %{
   surname: 'Camargo'
 }
 let num :- %{
-  &(+): &[left, right] -> 1
+  &(+): &[left, right]: 1
 }
 do %{}
