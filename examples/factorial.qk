@@ -1,0 +1,11 @@
+import from console
+
+fn fact(n :: number): number :- n = 1
+    then 0
+    else n * fact(n - 1)
+
+effect main
+    do 5
+    | fact
+    | console.write
+end
