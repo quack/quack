@@ -39,7 +39,7 @@ class FunctionType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize(
-            '&[' . join(', ', $this->parameters) . '] -> ' . $this->return
+            '&[' . join(', ', $this->parameters) . ']: ' . $this->return
         );
     }
 

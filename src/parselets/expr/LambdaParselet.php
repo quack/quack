@@ -58,7 +58,7 @@ class LambdaParselet implements PrefixParselet
             }
         }
 
-        $grammar->reader->match('->');
+        $grammar->reader->match(':');
 
         if ($grammar->reader->is(Tag::T_BEGIN)) {
             $kind = static::TYPE_STATEMENT;

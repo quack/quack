@@ -54,7 +54,7 @@ class DeclParser
             $this->reader->match(')');
         }
 
-        if ($this->reader->consumeIf('->')) {
+        if ($this->reader->consumeIf(':')) {
             $type = $this->type_parser->_type();
         }
 

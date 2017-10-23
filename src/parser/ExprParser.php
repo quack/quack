@@ -32,7 +32,6 @@ use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parselets\Expr\ArrayParselet;
 use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
-use \QuackCompiler\Parselets\Expr\WhenParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
 use \QuackCompiler\Parselets\Expr\AccessParselet;
 use \QuackCompiler\Parselets\Expr\RangeParselet;
@@ -80,7 +79,6 @@ class ExprParser
         $this->register(Tag::T_TRUE, new LiteralParselet);
         $this->register(Tag::T_FALSE, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
-        $this->register(Tag::T_WHEN, new WhenParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
         $this->register(Tag::T_MATCH, new MatchParselet);
 

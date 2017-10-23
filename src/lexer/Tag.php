@@ -62,7 +62,6 @@ class Tag
     const T_THEN = 300;
     const T_BEGIN = 301;
     const T_END = 302;
-    const T_WHEN = 306;
     const T_UNLESS = 307;
     const T_MUT = 308;
     const T_BY = 309;
