@@ -89,7 +89,6 @@ class StmtParser
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
             Tag::T_BEGIN    => '_blockStmt',
-            Tag::T_TYPE     => '_typeStmt',
             Tag::T_DATA     => '_dataStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
@@ -97,6 +96,10 @@ class StmtParser
 
         if ($this->reader->is(Tag::T_FN)) {
             return $this->decl_parser->_fnStmt();
+        }
+
+        if ($this->reader->is(Tag::T_TYPE)) {
+            return $this->decl_parser->_typeStmt();
         }
 
         if (isset($stmt_list[$this->reader->lookahead->getTag()])) {
@@ -132,11 +135,6 @@ class StmtParser
         $value = $this->type_parser->_type();
 
         return new TypeStmt($name, $value);
-    }
-
-    public function _dataStmt()
-    {
-        // TODO: Implement support for ADTs
     }
 
     public function _blockStmt()

@@ -25,7 +25,7 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
-use \QuackCompiler\Ast\Stmt\ModuleStmt;
+use \QuackCompiler\Ast\Stmt\TypeStmt;
 
 class DeclParser
 {
@@ -79,5 +79,15 @@ class DeclParser
         }
 
         return new FnStmt($signature, $body, $is_short);
+    }
+
+    public function _typeStmt()
+    {
+        $this->reader->match(Tag::T_TYPE);
+        $name = $this->name_parser->_typename();
+        $this->reader->match(':-');
+        $value = $this->type_parser->_type();
+
+        return new TypeStmt($name, $value);
     }
 }
