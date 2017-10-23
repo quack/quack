@@ -74,7 +74,7 @@ class FnStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $parent_scope->insert($this->signature->name, Kind::K_VARIABLE | Kind::K_FUNCTION);
         $this->scope = new Scope($parent_scope);

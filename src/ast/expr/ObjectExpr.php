@@ -72,7 +72,7 @@ class ObjectExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $defined = [];
         $operators = [];

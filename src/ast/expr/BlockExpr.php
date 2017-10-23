@@ -55,7 +55,7 @@ class BlockExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $scope = new Scope($parent_scope);
         foreach ($this->body as $stmt) {

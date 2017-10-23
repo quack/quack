@@ -62,9 +62,9 @@ class OperatorExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
-        $this->scope = &$parent_scope;
+        $this->scope = $parent_scope;
         $this->left->injectScope($parent_scope);
 
         if (!$this->isMemberAccess()) {

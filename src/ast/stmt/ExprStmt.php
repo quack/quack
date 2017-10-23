@@ -37,7 +37,7 @@ class ExprStmt extends Stmt
         return 'do ' . $this->expr->format($parser) . PHP_EOL;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->expr->injectScope($parent_scope);
     }

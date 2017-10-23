@@ -57,7 +57,7 @@ class ElifStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = new Scope($parent_scope);
         $this->condition->injectScope($parent_scope);

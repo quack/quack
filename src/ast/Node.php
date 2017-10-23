@@ -27,5 +27,5 @@ abstract class Node
 {
     abstract public function format(Parser $parser);
 
-    abstract public function injectScope(&$parent_scope);
+    abstract public function injectScope($parent_scope);
 }

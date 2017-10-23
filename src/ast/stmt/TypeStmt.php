@@ -46,7 +46,7 @@ class TypeStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
         $this->scope->insert($this->name, Kind::K_TYPE & Kind::K_ALIAS);

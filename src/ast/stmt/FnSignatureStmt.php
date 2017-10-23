@@ -62,7 +62,7 @@ class FnSignatureStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
         foreach ($this->parameters as $param) {
