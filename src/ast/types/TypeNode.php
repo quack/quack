@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 
 abstract class TypeNode
@@ -41,6 +42,11 @@ abstract class TypeNode
     {
         $level = $this->parentheses_level;
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
+    }
+
+    public function isAtom($atom)
+    {
+        return $this instanceof AtomType && $this->name === $atom;
     }
 
     public function isNumber()
@@ -79,4 +85,6 @@ abstract class TypeNode
     }
 
     abstract function check(TypeNode $other);
+
+    abstract function bindScope(Scope $parent_scope);
 }

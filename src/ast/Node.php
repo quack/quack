@@ -21,18 +21,11 @@
  */
 namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Ast\Stmt\ConstStmt;
-use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Scope\ScopeError;
-
-use \ReflectionClass;
 
 abstract class Node
 {
     abstract public function format(Parser $parser);
 
-    abstract public function injectScope(&$parent_scope);
+    abstract public function injectScope($parent_scope);
 }

@@ -21,7 +21,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Node;
 
 abstract class Stmt extends Node
 {

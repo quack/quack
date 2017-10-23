@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
+
 class ListType extends TypeNode
 {
     public $type;
@@ -33,6 +35,11 @@ class ListType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize('{' . $this->type . '}');
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        $this->type->bindScope($parent_scope);
     }
 
     public function check(TypeNode $other)

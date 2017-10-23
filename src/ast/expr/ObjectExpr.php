@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
@@ -41,8 +42,8 @@ class ObjectExpr extends Expr
     public function format(Parser $parser)
     {
         $source = '%{';
-        $keys = &$this->keys;
-        $values = &$this->values;
+        $keys = $this->keys;
+        $values = $this->values;
 
         if (sizeof($this->keys) > 0) {
             $source .= PHP_EOL;
@@ -52,7 +53,8 @@ class ObjectExpr extends Expr
             // Iterate based on index
             $source .= implode(',' . PHP_EOL, array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $parser->indent();
-                $subsource .= $keys[$index];
+                $key = $keys[$index];
+                $subsource .= $key;
                 $subsource .= ': ';
                 $subsource .= $values[$index]->format($parser);
 
@@ -70,18 +72,17 @@ class ObjectExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $defined = [];
+        $operators = [];
         $index = 0;
         while ($index < sizeof($this->keys)) {
             $key = $this->keys[$index];
             $value = $this->values[$index];
-
             if (array_key_exists($key, $defined)) {
                 throw new ScopeError(Localization::message('SCO050', [$key]));
             }
-
             $value->injectScope($parent_scope);
             $defined[$key] = true;
             $index++;

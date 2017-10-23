@@ -23,12 +23,9 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
-
-use \QuackCompiler\Ast\Stmt\EnumStmt;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
-use \QuackCompiler\Ast\Stmt\ModuleStmt;
-use \QuackCompiler\Ast\Stmt\StmtList;
+use \QuackCompiler\Ast\Stmt\TypeStmt;
 
 class DeclParser
 {
@@ -39,21 +36,6 @@ class DeclParser
     public function __construct($reader)
     {
         $this->reader = $reader;
-    }
-
-    public function _enumStmt()
-    {
-        $this->reader->match(Tag::T_ENUM);
-        $entries = [];
-        $name = $this->name_parser->_identifier();
-
-        while ($this->reader->is(Tag::T_IDENT)) {
-            $entries[] = $this->name_parser->_identifier();
-        }
-
-        $this->reader->match(Tag::T_END);
-
-        return new EnumStmt($name, $entries);
     }
 
     public function _fnSignature()
@@ -72,21 +54,19 @@ class DeclParser
             $this->reader->match(')');
         }
 
-        if ($this->reader->consumeIf('->')) {
+        if ($this->reader->consumeIf(':')) {
             $type = $this->type_parser->_type();
         }
 
         return new FnSignatureStmt($name, $parameters, $type);
     }
 
-    public function _fnStmt($is_method = false)
+    public function _fnStmt()
     {
         $is_short = false;
         $body = null;
 
-        if (!$is_method) {
-            $this->reader->match(Tag::T_FN);
-        }
+        $this->reader->match(Tag::T_FN);
         $signature = $this->_fnSignature();
 
         // Is short method?
@@ -94,10 +74,25 @@ class DeclParser
             $this->reader->consume(); // :-
             $body = $this->expr_parser->_expr();
         } else {
-            $body = iterator_to_array($this->stmt_parser->_innerStmtList());
+            $body = $this->stmt_parser->_stmtList();
             $this->reader->match(Tag::T_END);
         }
 
-        return new FnStmt($signature, $body, $is_method, $is_short);
+        return new FnStmt($signature, $body, $is_short);
+    }
+
+    public function _typeStmt()
+    {
+        $this->reader->match(Tag::T_TYPE);
+        $name = $this->name_parser->_typename();
+        $this->reader->match(':-');
+        $value = $this->type_parser->_type();
+
+        return new TypeStmt($name, $value);
+    }
+
+    public function _dataStmt()
+    {
+        $this->reader->match(Tag::T_DATA);
     }
 }

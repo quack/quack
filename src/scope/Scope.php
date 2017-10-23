@@ -29,10 +29,15 @@ class Scope
     public $table = [];
     public $parent;
     public $meta = [];
+    public $child;
 
     public function __construct(Scope $parent = null)
     {
         $this->parent = $parent;
+        // Keep reference to access scope from parent
+        if (null !== $this->parent) {
+            $this->parent->child = $this;
+        }
     }
 
     public function hasLocal($symbol)

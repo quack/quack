@@ -1,5 +1,5 @@
 %%command
-php ./src/Quack.php %s
+php ./src/Main.php %s
 %%describe
 Local type inference
 %%source
@@ -15,14 +15,10 @@ let people :: {%{name: string, age: number}} :- { %{
   name: 'Jaca',
   age: 99
 } }
-let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
+let add :: &[number, number]: number :- &[a :: number, b :: number]: a + b
 do add(10, age)
-let id :- &[x] -> x
-let fact :: &[number] -> number :- &[n :: number] -> n = 0 then 1 else n * fact(n - 1)
-fn f(n :: number) -> number :- when
-  n = 0 -> 1,
-  else n * f(n - 1)
-end
+let id :- &[x]: x
+let fact :: &[number]: number :- &[n :: number]: n = 0 then 1 else n * fact(n - 1)
 let request :: atom :- @POST
 let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
   x: 1,
@@ -33,11 +29,12 @@ let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',
   age: 20
 } }
+type Person :- %{ name: string, age: number }
+let marcelo :: Person :- %{ name: 'Marcelo', age: 20 }
+let salete :- %{ name: 'Salete', age: 33 }
+let programmer :: Person :- salete
 %%expect
-array(1) {
-  [0]=>
-  string(6) "number"
-}
+string(6) "number"
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
 let bool :: boolean :- true and false
@@ -50,14 +47,10 @@ let people :: {%{name: string, age: number}} :- { %{
   name: 'Jaca',
   age: 99
 } }
-let add :: &[number, number] -> number :- &[a :: number, b :: number] -> a + b
+let add :: &[number, number]: number :- &[a :: number, b :: number]: a + b
 do add(10, age)
-let id :- &[x] -> x
-let fact :: &[number] -> number :- &[n :: number] -> n = 0 then 1 else n * fact(n - 1)
-fn f(n :: number) -> number :- when
-  n = 0 -> 1,
-  else n * f(n - 1)
-end
+let id :- &[x]: x
+let fact :: &[number]: number :- &[n :: number]: n = 0 then 1 else n * fact(n - 1)
 let request :: atom :- @POST
 let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
   x: 1,
@@ -68,3 +61,14 @@ let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',
   age: 20
 } }
+type Person :- %{name: string, age: number}
+let marcelo :: Person :- %{
+  name: 'Marcelo',
+  age: 20
+}
+let salete :- %{
+  name: 'Salete',
+  age: 33
+}
+let programmer :: Person :- salete
+

@@ -54,8 +54,8 @@ class WhereExpr extends Expr
         $source .= 'where ';
 
         foreach ($this->clauses as $clause) {
-            $key = &$clause[0];
-            $value = &$clause[1];
+            $key = $clause[0];
+            $value = $clause[1];
 
             $processed++;
 
@@ -80,13 +80,12 @@ class WhereExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = new Scope($parent_scope);
         // Bind where-symbols
         foreach ($this->clauses as $clause) {
-            $key = &$clause[0];
-            $value = &$clause[1];
+            list ($key, $value) = $clause;
 
             if ($this->scope->hasLocal($key)) {
                 throw new ScopeError(Localization::message('SCO120', [$key]));

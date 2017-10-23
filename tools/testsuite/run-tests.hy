@@ -118,7 +118,7 @@
      :expect (joiner expect)
      :command
       (if (empty? command)
-        "php ./src/Quack.php %s --disable-typechecker --disable-scope"
+        "php ./src/Main.php %s --disable-typechecker --disable-scope"
         (joiner command)) }))
 
 (defn create-tmp-folder []
@@ -137,7 +137,7 @@
 
 ; Gets a grouped section and saves the input result to a temp file
 (defn persist-source [name source]
-  (with [[f (open (join **tmp-folder** (-> name (+ ".tmp"))) "w")]]
+  (with [[f (open (join **tmp-folder** (-> name (+ ".tmp.qk"))) "w")]]
     (-> f (.write source))))
 
 (defn run-tests [generator]
@@ -157,7 +157,7 @@
     (setv exe (:command section))
     ; Store the source for future queries
     (persist-source filename (:source section))
-    (setv command (-> exe (.replace "%s" (join **tmp-folder** (-> filename (+ ".tmp"))))))
+    (setv command (-> exe (.replace "%s" (join **tmp-folder** (-> filename (+ ".tmp.qk"))))))
     (setv output (-> (popen command) (.read) (.strip)))
     (setv stripped-to-compare (-> (:expect section) (.strip)))
     ; We have enough data to give the results

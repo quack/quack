@@ -43,7 +43,7 @@ class NameExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
         $symbol = $parent_scope->lookup($this->name);

@@ -1,15 +1,26 @@
-open fn prelude.{ filter; reduce; union }
+from console import {write}
 
-let map :- fn { f; xss |
-  { } when xs = { }
-      else f[ head[ xss ] ] ++ tail[ xss ]
-}
+forall a, b
+fn map(f :: &a: b, list :: {a}): {b} :- match list with
+    {}         :- {}
+    {x, ...xs} :- f(x) : map(f, xs)
+end
 
-let my_list :- 1 .. 100
+forall a
+fn filter(f :: &a -> Bool, list :: {a}): {a} :- match list with
+    {}         :- {},
+    {x, ...xs} :- match f(x) with
+        True  :- x : filter(f, xs),
+        False :- filter(f, xs)
+    end
+end
 
-do my_list
-|> map[ &(* 2 ) ]
-|> union[ { 10; 20; 30 } ]
-|> filter[ fn { x | x mod 2 = 0 } ]
-|> reduce[ &(+) ]
-|> write!
+fn double_me(n :: Number): Number :- n * 2
+fn divisible_by(m :: Number, n :: Number): Bool :- n mod m = 0
+
+effect main
+    do 1 .. 300
+    | map(double_me)
+    | filter(divisible_by(5))
+    | write
+end

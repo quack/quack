@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \Exception;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
@@ -45,13 +46,14 @@ class PostfixExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->left->injectScope($parent_scope);
     }
 
     public function getType()
     {
-        return new LiteralType(NativeQuackType::T_NIL);
+        // TODO: We still have no postfix operator to consider
+        throw new \Exception('NotImplemented');
     }
 }

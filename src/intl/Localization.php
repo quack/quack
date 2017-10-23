@@ -23,7 +23,6 @@ namespace QuackCompiler\Intl;
 
 class Localization
 {
-    const LOCALE = 'en-US';
     private static $messages = null;
 
     public static function message($key, $arguments)
@@ -37,7 +36,14 @@ class Localization
 
     private static function readJSON()
     {
-        $file = realpath(dirname(__FILE__) . '/locales/' . static::LOCALE . '.json');
-        return json_decode(file_get_contents($file), true);
+        list ($exists_locale, $file) = static::getFile(getenv('LANGUAGE'));
+        $locale = $exists_locale ? $file : static::getFile('en_US')[1];
+        return json_decode(file_get_contents($locale), true);
+    }
+
+    private static function getFile($locale)
+    {
+        $path = realpath(dirname(__FILE__) . '/locales/' . $locale . '.json');
+        return [file_exists($path), $path];
     }
 }

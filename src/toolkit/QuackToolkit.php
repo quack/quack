@@ -26,11 +26,18 @@ define('PARSER', 'parser');
 define('SCOPE', 'scope');
 define('TYPES', 'types');
 define('INTL', 'intl');
+define('CLI', 'cli');
 
 function import($module, $file)
 {
     require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
+
+/* Cli */
+import(CLI, 'Component');
+import(CLI, 'Croak');
+import(CLI, 'Console');
+import(CLI, 'Repl');
 
 /* Internationalization */
 
@@ -45,9 +52,6 @@ import(LEXER, 'Token');
 import(LEXER, 'Tokenizer');
 import(LEXER, 'Word');
 
-// Scope base interface
-import(SCOPE, 'Membered');
-
 import(PARSELETS, 'Parselet');
 import(PARSELETS, 'InfixParselet');
 import(PARSELETS, 'PrefixParselet');
@@ -60,7 +64,6 @@ import(PARSELETS, 'expr/LambdaParselet');
 import(PARSELETS, 'expr/ArrayParselet');
 import(PARSELETS, 'expr/NameParselet');
 import(PARSELETS, 'expr/MemberAccessParselet');
-import(PARSELETS, 'expr/WhenParselet');
 import(PARSELETS, 'expr/CallParselet');
 import(PARSELETS, 'expr/AccessParselet');
 import(PARSELETS, 'expr/RangeParselet');
@@ -68,17 +71,19 @@ import(PARSELETS, 'expr/LiteralParselet');
 import(PARSELETS, 'expr/PartialFuncParselet');
 import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
+import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
+import(PARSELETS, 'expr/TupleParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
 import(PARSELETS, 'types/FunctionTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
-import(PARSELETS, 'types/InstanceTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
 import(PARSELETS, 'types/LiteralTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
+import(PARSELETS, 'types/NameTypeParselet');
 import(PARSELETS, 'types/ObjectTypeParselet');
 import(PARSELETS, 'types/TupleTypeParselet');
 
@@ -91,7 +96,6 @@ import(PARSER, 'NameParser');
 import(PARSER, 'StmtParser');
 import(PARSER, 'TypeParser');
 import(PARSER, 'Parser');
-import(PARSER, 'TokenChecker');
 import(PARSER, 'SyntaxError');
 import(PARSER, 'EOFError');
 import(PARSER, 'TokenReader');
@@ -112,9 +116,7 @@ import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
-import(AST, 'expr/NilExpr');
 import(AST, 'expr/BoolExpr');
-import(AST, 'expr/WhenExpr');
 import(AST, 'expr/StringExpr');
 import(AST, 'expr/CallExpr');
 import(AST, 'expr/AccessExpr');
@@ -124,41 +126,34 @@ import(AST, 'expr/PartialFuncExpr');
 import(AST, 'expr/RegexExpr');
 import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
+import(AST, 'expr/TupleExpr');
+import(AST, 'expr/MatchExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
-import(AST, 'stmt/CaseStmt');
-import(AST, 'stmt/ConstStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/FnStmt');
-import(AST, 'stmt/ForStmt');
 import(AST, 'stmt/ElifStmt');
-import(AST, 'stmt/EnumStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/FnSignatureStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/LetStmt');
-import(AST, 'stmt/ModuleStmt');
-import(AST, 'stmt/PostConditionalStmt');
 import(AST, 'stmt/ProgramStmt');
-import(AST, 'stmt/RaiseStmt');
 import(AST, 'stmt/ReturnStmt');
-import(AST, 'stmt/SwitchStmt');
-import(AST, 'stmt/TryStmt');
+import(AST, 'stmt/TypeStmt');
 import(AST, 'stmt/WhileStmt');
-import(AST, 'stmt/StmtList');
 
 import(AST, 'types/TypeNode');
 import(AST, 'types/AtomType');
 import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
-import(AST, 'types/InstanceType');
 import(AST, 'types/ListType');
 import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
+import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
 import(AST, 'types/OperatorType');
 import(AST, 'types/TupleType');

@@ -23,7 +23,6 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\GenericType;
-use \QuackCompiler\Ast\Types\InstanceType;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
@@ -35,10 +34,10 @@ use \QuackCompiler\Parselets\Types\AtomTypeParselet;
 use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
 use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
-use \QuackCompiler\Parselets\Types\InstanceTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
+use \QuackCompiler\Parselets\Types\NameTypeParselet;
 use \QuackCompiler\Parselets\Types\ObjectTypeParselet;
 use \QuackCompiler\Parselets\Types\TupleTypeParselet;
 use \QuackCompiler\Types\NativeQuackType;
@@ -56,10 +55,10 @@ class TypeParser
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new LiteralTypeParselet);
+        $this->register(Tag::T_TYPENAME, new NameTypeParselet);
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);
-        $this->register('%', new InstanceTypeParselet);
         $this->register('%{', new ObjectTypeParselet);
         $this->register('&', new FunctionTypeParselet);
         $this->register('|', new BinaryOperatorTypeParselet(Precedence::UNION_TYPE, false));
@@ -72,11 +71,17 @@ class TypeParser
         $prefix = $this->prefixParseletForToken($token);
 
         if (is_null($prefix)) {
-            throw new SyntaxError([
+            $error_params = [
                 'expected' => 'type signature',
                 'found'    => $token,
                 'parser'   => $this->reader
-            ]);
+            ];
+
+            if ($this->reader->isEOF()) {
+                throw new EOFError($error_params);
+            }
+
+            throw new SyntaxError($error_params);
         }
 
         $this->reader->consume();

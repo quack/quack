@@ -1,20 +1,11 @@
-(** vim: syntax=Scala *)
+from console
 
--: imperative
-def fact [n] [
-  let i: int
-  let fact: int :- 1
-  for i :- 1 while i <= n do [
-    fact :- fact * i
-  ]
-  ^ fact
-]
+fn fact(n :: number): number :- n = 1
+    then 0
+    else n * fact(n - 1)
 
--: tail_call_recursion
-def fact [n] [
-  ^ if n = 0 then 1 else [n * fact[n - 1]]
-]
-
--: compressed
-def fact! if &(= 0) then 1 else &(* fact[&0 - 1])
-
+effect main
+    do 5
+    | fact
+    | console.write
+end

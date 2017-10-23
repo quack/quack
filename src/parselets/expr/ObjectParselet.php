@@ -33,20 +33,29 @@ class ObjectParselet implements PrefixParselet
         $keys = [];
         $values = [];
 
-        if (!$grammar->reader->consumeIf('}')) {
-            $keys[] = $grammar->name_parser->_identifier();
-            $grammar->reader->match(':');
-            $values[] = $grammar->_expr();
-
-            while ($grammar->reader->consumeIf(',')) {
-                $keys[] = $grammar->name_parser->_identifier();
-                $grammar->reader->match(':');
-                $values[] = $grammar->_expr();
-            }
-
-            $grammar->reader->match('}');
+        if ($grammar->reader->consumeIf('}')) {
+            return new ObjectExpr([], []);
         }
 
+        do {
+            if ($grammar->reader->consumeIf('&(')) {
+                // Support for operators as object keys
+                $next = $grammar->reader->lookahead;
+                $grammar->reader->consume();
+                $name = isset($next->lexeme)
+                    ? $next->lexeme
+                    : $next->getTag();
+                $grammar->reader->match(')');
+                $keys[] = "&($name)";
+            } else {
+                $keys[] = $grammar->name_parser->_identifier();
+            }
+
+            $grammar->reader->match(':');
+            $values[] = $grammar->_expr();
+        } while ($grammar->reader->consumeIf(','));
+
+        $grammar->reader->match('}');
         return new ObjectExpr($keys, $values);
     }
 }

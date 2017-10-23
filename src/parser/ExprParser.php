@@ -32,7 +32,6 @@ use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parselets\Expr\ArrayParselet;
 use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
-use \QuackCompiler\Parselets\Expr\WhenParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
 use \QuackCompiler\Parselets\Expr\AccessParselet;
 use \QuackCompiler\Parselets\Expr\RangeParselet;
@@ -41,6 +40,8 @@ use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
+use \QuackCompiler\Parselets\Expr\TupleParselet;
+use \QuackCompiler\Parselets\Expr\MatchParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -71,15 +72,15 @@ class ExprParser
         $this->register('{', new AccessParselet);
         $this->register('%{', new ObjectParselet);
         $this->register('#{', new MapParselet);
+        $this->register('#(', new TupleParselet);
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('.', new MemberAccessParselet);
         $this->register(Tag::T_TRUE, new LiteralParselet);
         $this->register(Tag::T_FALSE, new LiteralParselet);
-        $this->register(Tag::T_NIL, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
-        $this->register(Tag::T_WHEN, new WhenParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
+        $this->register(Tag::T_MATCH, new MatchParselet);
 
         $this->prefix('+');
         $this->prefix('-');
@@ -122,11 +123,17 @@ class ExprParser
 
         if (is_null($prefix)) {
             if (!$opt) {
-                throw new SyntaxError([
+                $error_params = [
                     'expected' => 'expression',
                     'found'    => $token,
                     'parser'   => $this->reader
-                ]);
+                ];
+
+                if ($this->reader->isEOF()) {
+                    throw new EOFError($error_params);
+                }
+
+                throw new SyntaxError($error_params);
             }
 
             return null;

@@ -34,6 +34,11 @@ class NameParser
         $this->reader = $reader;
     }
 
+    public function _typename()
+    {
+        return $this->reader->match(Tag::T_TYPENAME);
+    }
+
     public function _identifier()
     {
         return $this->reader->match(Tag::T_IDENT);

@@ -1,5 +1,8 @@
 HYPATH = ~/.local/bin/hy
 
+build:
+	php ./build.php
+
 test:
 	$(HYPATH) ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
 

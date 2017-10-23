@@ -22,7 +22,7 @@
 namespace QuackCompiler\Parselets\Types;
 
 use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
@@ -33,7 +33,7 @@ class FunctionTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $parameters = [];
-        $return = new LiteralType(NativeQuackType::T_UNIT);
+        $return = new TupleType();
 
         if ($grammar->reader->is(Tag::T_IDENT)) {
             $parameters[] = $grammar->_type();
@@ -48,7 +48,7 @@ class FunctionTypeParselet implements PrefixParselet
             }
         }
 
-        if ($grammar->reader->consumeIf('->')) {
+        if ($grammar->reader->consumeIf(':')) {
             $return = $grammar->_type();
         }
 

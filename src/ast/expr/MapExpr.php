@@ -43,13 +43,13 @@ class MapExpr extends Expr
     public function format(Parser $parser)
     {
         $source = '#{';
-        $keys = &$this->keys;
-        $values = &$this->values;
+        $keys = $this->keys;
+        $values = $this->values;
 
         if (sizeof($this->keys) > 0) {
             $source .= ' ';
             // Iterate based on index
-            $source .= implode(', ', array_map(function($index) use (&$keys, &$values, $parser) {
+            $source .= implode(', ', array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $keys[$index]->format($parser);
                 $subsource .= ': ';
                 $subsource .= $values[$index]->format($parser);
@@ -64,7 +64,7 @@ class MapExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         foreach ($this->keys as $key) {
             $key->injectScope($parent_scope);

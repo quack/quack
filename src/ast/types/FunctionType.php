@@ -22,6 +22,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class FunctionType extends TypeNode
@@ -38,8 +39,17 @@ class FunctionType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize(
-            '&[' . join(', ', $this->parameters) . '] -> ' . $this->return
+            '&[' . join(', ', $this->parameters) . ']: ' . $this->return
         );
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        foreach ($this->parameters as $parameter) {
+            $parameter->bindScope($parent_scope);
+        }
+
+        $this->return->bindScope($parent_scope);
     }
 
     public function check(TypeNode $other)

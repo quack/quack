@@ -38,6 +38,10 @@ class Tokenizer extends Lexer
                 return $this->digit();
             }
 
+            if (ctype_upper($this->peek)) {
+                return $this->identifier(Tag::T_TYPENAME);
+            }
+
             if ((ctype_alpha($this->peek) || $this->is('_'))
                 || ($this->is('_') && ctype_alnum((string) $this->preview()))) {
                     return $this->identifier();
@@ -99,7 +103,7 @@ class Tokenizer extends Lexer
                         $bits = 1;
                         $tag = Tag::T_INT_BIN;
                         $found = true;
-                    } else if ($this->peek === 'o') {
+                    } elseif ($this->peek === 'o') {
                         $bits = 3;
                         $tag = Tag::T_INT_OCT;
                         $found = true;
@@ -169,7 +173,7 @@ class Tokenizer extends Lexer
         return $arr;
     }
 
-    private function identifier()
+    private function identifier($token = Tag::T_IDENT)
     {
         $buffer = [];
 
@@ -186,7 +190,7 @@ class Tokenizer extends Lexer
             return $word;
         }
 
-        return new Token(Tag::T_IDENT, $string);
+        return new Token($token, $string);
     }
 
     private function space()

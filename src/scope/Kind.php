@@ -26,8 +26,7 @@ class Kind
     // Base flags
     const K_FUNCTION    = 1 << 0;
     const K_VARIABLE    = 1 << 1;
-    const K_CLASS       = 1 << 4;
-    const K_ENUM        = 1 << 5;
+    const K_TYPE        = 1 << 2;
 
     // Additional flags
     const K_MUTABLE     = 1 << 6;
@@ -36,4 +35,5 @@ class Kind
     const K_SPECIAL     = 1 << 9;
     const K_MEMBER      = 1 << 10;
     const K_INITIALIZED = 1 << 11;
+    const K_ALIAS       = 1 << 12;
 }

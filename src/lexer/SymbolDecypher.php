@@ -25,7 +25,7 @@ class SymbolDecypher
 {
     public static function __callStatic($method, $args)
     {
-        $context = &$args[0];
+        list ($context) = $args;
 
         switch ($method) {
             case '<':
@@ -34,16 +34,12 @@ class SymbolDecypher
                 return static::tryMatch($context, ['>>', '>=', '>>']);
             case ':':
                 return static::tryMatch($context, ['::', ':-']);
-            case '?':
-                return static::tryMatch($context, ['??']);
             case '*':
                 return static::tryMatch($context, ['**']);
             case '=':
                 return static::tryMatch($context, ['=~']);
             case '|':
                 return static::tryMatch($context, ['|>']);
-            case '-':
-                return static::tryMatch($context, ['->']);
             case '&':
                 return static::tryMatch($context, ['&{', '&(']);
             case '.':
@@ -57,7 +53,7 @@ class SymbolDecypher
         }
     }
 
-    private static function tryMatch(&$context, $operator_list)
+    private static function tryMatch($context, $operator_list)
     {
         foreach ($operator_list as $operator) {
             if ($context->matches($operator)) {

@@ -50,40 +50,31 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_FALSE, 'false'));
         $this->reserve(new Word(Tag::T_LET, 'let'));
         $this->reserve(new Word(Tag::T_IF, 'if'));
-        $this->reserve(new Word(Tag::T_FOR, 'for'));
         $this->reserve(new Word(Tag::T_WHILE, 'while'));
         $this->reserve(new Word(Tag::T_DO, 'do'));
-        $this->reserve(new Word(Tag::T_MODULE, 'module'));
         $this->reserve(new Word(Tag::T_FOREACH, 'foreach'));
         $this->reserve(new Word(Tag::T_IN, 'in'));
         $this->reserve(new Word(Tag::T_MOD, 'mod'));
         $this->reserve(new Word(Tag::T_WHERE, 'where'));
-        $this->reserve(new Word(Tag::T_CONST, 'const'));
-        $this->reserve(new Word(Tag::T_NIL, 'nil'));
-        $this->reserve(new Word(Tag::T_ENUM, 'enum'));
         $this->reserve(new Word(Tag::T_CONTINUE, 'continue'));
-        $this->reserve(new Word(Tag::T_SWITCH, 'switch'));
         $this->reserve(new Word(Tag::T_BREAK, 'break'));
         $this->reserve(new Word(Tag::T_AND, 'and'));
         $this->reserve(new Word(Tag::T_OR, 'or'));
         $this->reserve(new Word(Tag::T_XOR, 'xor'));
-        $this->reserve(new Word(Tag::T_TRY, 'try'));
-        $this->reserve(new Word(Tag::T_RESCUE, 'rescue'));
-        $this->reserve(new Word(Tag::T_FINALLY, 'finally'));
-        $this->reserve(new Word(Tag::T_RAISE, 'raise'));
         $this->reserve(new Word(Tag::T_ELIF, 'elif'));
         $this->reserve(new Word(Tag::T_ELSE, 'else'));
-        $this->reserve(new Word(Tag::T_CASE, 'case'));
         $this->reserve(new Word(Tag::T_NOT, 'not'));
         $this->reserve(new Word(Tag::T_FN, 'fn'));
         $this->reserve(new Word(Tag::T_THEN, 'then'));
         $this->reserve(new Word(Tag::T_BEGIN, 'begin'));
         $this->reserve(new Word(Tag::T_END, 'end'));
-        $this->reserve(new Word(Tag::T_FROM, 'from'));
-        $this->reserve(new Word(Tag::T_TO, 'to'));
         $this->reserve(new Word(Tag::T_BY, 'by'));
-        $this->reserve(new Word(Tag::T_WHEN, 'when'));
         $this->reserve(new Word(Tag::T_UNLESS, 'unless'));
+        $this->reserve(new Word(Tag::T_MUT, 'mut'));
+        $this->reserve(new Word(Tag::T_TYPE, 'type'));
+        $this->reserve(new Word(Tag::T_MATCH, 'match'));
+        $this->reserve(new Word(Tag::T_WITH, 'with'));
+        $this->reserve(new Word(Tag::T_DATA, 'data'));
     }
 
     private function reserve(Word $t)

@@ -11,4 +11,4 @@ install:
   - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
-script: hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./src/Quack.php %s"
+script: make && hy ./tools/testsuite/run-tests.hy --dir tests --exe "php ./bin/quack %s"

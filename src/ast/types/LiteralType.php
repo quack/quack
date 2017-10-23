@@ -21,6 +21,7 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 
 class LiteralType extends TypeNode
@@ -40,8 +41,6 @@ class LiteralType extends TypeNode
             NativeQuackType::T_BOOL   => 'boolean',
             NativeQuackType::T_REGEX  => 'regex',
             NativeQuackType::T_BLOCK  => 'block',
-            NativeQuackType::T_UNIT   => 'unit',
-            NativeQuackType::T_NIL    => 'nil',
             NativeQuackType::T_BYTE   => 'byte',
             NativeQuackType::T_ATOM   => 'atom'
         ];
@@ -51,6 +50,11 @@ class LiteralType extends TypeNode
                 ? $map[$this->code]
                 : 'unknown'
         );
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        // Pass
     }
 
     public function check(TypeNode $other)

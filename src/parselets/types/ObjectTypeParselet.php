@@ -32,7 +32,18 @@ class ObjectTypeParselet implements PrefixParselet
         $properties = [];
         if (!$grammar->reader->is('}')) {
             do {
-                $key = $grammar->name_parser->_identifier();
+                $key = null;
+                if ($grammar->reader->consumeIf('&(')) {
+                    $next = $grammar->reader->lookahead;
+                    $grammar->reader->consume();
+                    $grammar->reader->match(')');
+                    $name = isset($next->lexeme)
+                        ? $next->lexeme
+                        : $next->getTag();
+                    $key = "&($name)";
+                } else {
+                    $key = $grammar->name_parser->_identifier();
+                }
                 $grammar->reader->match(':');
                 $properties[$key] = $grammar->_type();
             } while ($grammar->reader->consumeIf(','));

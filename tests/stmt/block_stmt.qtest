@@ -6,10 +6,10 @@ begin
   end
 
 end
-begin let Point :- %{ x: 0, y: 2 } end
-do &[Serial] -> begin
+begin let point :- %{ x: 0, y: 2 } end
+do &[serial] : begin
   do
-  (Serial).write( "Hello World" )
+  (serial).write( "Hello World" )
 end
 %%expect
 begin
@@ -17,11 +17,11 @@ begin
   end
 end
 begin
-  let Point :- %{
+  let point :- %{
     x: 0,
     y: 2
   }
 end
-do &[Serial] -> begin
-  do (Serial).write("Hello World")
+do &[serial]: begin
+  do (serial).write("Hello World")
 end

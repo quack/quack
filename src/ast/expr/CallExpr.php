@@ -49,7 +49,7 @@ class CallExpr extends Expr
         return $this->parenthesize($source);
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->callee->injectScope($parent_scope);
 

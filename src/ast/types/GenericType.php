@@ -21,6 +21,8 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Scope\Scope;
+
 class GenericType extends TypeNode
 {
     public $name;
@@ -33,6 +35,11 @@ class GenericType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize($this->name);
+    }
+
+    public function bindScope(Scope $parent_scope)
+    {
+        // TODO
     }
 
     public function check(TypeNode $other)

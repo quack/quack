@@ -38,7 +38,6 @@ class LiteralTypeParselet implements PrefixParselet
             'boolean' => NativeQuackType::T_BOOL,
             'regex'   => NativeQuackType::T_REGEX,
             'block'   => NativeQuackType::T_BLOCK,
-            'unit'    => NativeQuackType::T_UNIT,
             'byte'    => NativeQuackType::T_BYTE,
             'atom'    => NativeQuackType::T_ATOM
         ];

@@ -52,7 +52,7 @@ class BlockStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         $this->scope = new Scope($parent_scope);
         foreach ($this->stmt_list as $node) {

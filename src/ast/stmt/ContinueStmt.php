@@ -51,7 +51,7 @@ class ContinueStmt extends Stmt
         return $source;
     }
 
-    public function injectScope(&$parent_scope)
+    public function injectScope($parent_scope)
     {
         if (!$this->is_explicit) {
             // Check if there is an implicit label
