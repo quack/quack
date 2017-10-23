@@ -94,5 +94,20 @@ class DeclParser
     public function _dataStmt()
     {
         $this->reader->match(Tag::T_DATA);
+        $name = $this->name_parser->_typename();
+        $parameters = [];
+
+        // Type parameters
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $parameters[] = $this->name_parser->_identifier();
+            } while ($this->reader->consumeIf(','));
+
+            $this->reader->match(')');
+        }
+
+        $this->reader->match(':-');
+
+        // TODO: Implement valid values for algebraic data types
     }
 }
