@@ -21,7 +21,9 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\TypeError;
 
 class UnionStmt
 {
@@ -66,7 +68,16 @@ class UnionStmt
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
+        $declared = [];
+        foreach ($this->values as $value) {
+            list ($name, $types) = $value;
+            if (isset($declared[$name])) {
+                throw new TypeError(Localization::message('SCO030', [$name, $this->name]));
+            }
 
+            $declared[$name] = true;
+        }
     }
 
     public function runTypeChecker()

@@ -1,7 +1,7 @@
 {
     "SCO010": "Duplicated parameter `%s' in anonymous function",
     "SCO020": "Use of undefined variable `%s'",
-    "SCO030": "===DELETED===",
+    "SCO030": "Multiple declarations of type `%s' for union `%s'",
     "SCO040": "===DELETED===",
     "SCO050": "Duplicated object property `%s'",
     "SCO060": "Duplicated parameter `%s' in function `%s'",
