@@ -40,7 +40,14 @@ class NameType extends TypeNode
 
     public function __toString()
     {
-        return $this->name;
+        $source = $this->name;
+        if (sizeof($this->values) > 0) {
+            $source .= '(';
+            $source .= implode(', ', $this->values);
+            $source .= ')';
+        }
+
+        return $source;
     }
 
     public function bindScope(Scope $parent_scope)

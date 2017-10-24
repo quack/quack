@@ -38,7 +38,30 @@ class UnionStmt
 
     public function format(Parser $parser)
     {
-        return '...';
+        $source = 'union ';
+        $source .= $this->name;
+
+        if (sizeof($this->parameters) > 0) {
+            $source .= '(';
+            $source .= implode(', ', $this->parameters);
+            $source .= ')';
+        }
+
+        $source .= ' :- ';
+        $source .= implode(' or ', array_map(function ($value) {
+            list ($name, $types) = $value;
+            $source = $name;
+
+            if (sizeof($types) > 0) {
+                $source .= '(';
+                $source .= implode(', ', $types);
+                $source .= ')';
+            }
+            return $source;
+        }, $this->values));
+
+        $source .= PHP_EOL;
+        return $source;
     }
 
     public function injectScope($parent_scope)
