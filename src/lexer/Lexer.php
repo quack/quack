@@ -74,7 +74,7 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_TYPE, 'type'));
         $this->reserve(new Word(Tag::T_MATCH, 'match'));
         $this->reserve(new Word(Tag::T_WITH, 'with'));
-        $this->reserve(new Word(Tag::T_DATA, 'data'));
+        $this->reserve(new Word(Tag::T_UNION, 'union'));
     }
 
     private function reserve(Word $t)

@@ -26,6 +26,7 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
+use \QuackCompiler\Ast\Stmt\UnionStmt;
 
 class DeclParser
 {
@@ -91,13 +92,31 @@ class DeclParser
         return new TypeStmt($name, $value);
     }
 
-    public function _dataStmt()
+    public function _sumType()
     {
-        $this->reader->match(Tag::T_DATA);
+        $name = $this->name_parser->_name();
+        $values = [];
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $values[] = $this->_sumType();
+            } while ($this->reader->consumeIf(','));
+            $this->reader->match(')');
+        }
+
+        // TODO: Deal with sub items. See how to name and organize them in the AST
+        return [
+            'name'   => $name,
+            'values' => $values
+        ];
+    }
+
+    public function _unionStmt()
+    {
+        $this->reader->match(Tag::T_UNION);
         $name = $this->name_parser->_typename();
         $parameters = [];
+        $values = [];
 
-        // Type parameters
         if ($this->reader->consumeIf('(')) {
             do {
                 $parameters[] = $this->name_parser->_identifier();
@@ -107,7 +126,10 @@ class DeclParser
         }
 
         $this->reader->match(':-');
+        do {
+            $values[] = $this->_sumType();
+        } while ($this->reader->consumeIf(Tag::T_OR));
 
-        // TODO: Implement valid values for algebraic data types
+        return new UnionStmt($name, $parameters, $values);
     }
 }

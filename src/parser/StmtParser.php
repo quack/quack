@@ -52,7 +52,7 @@ class StmtParser
         static $stmt_list = [
             Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
             Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '[',
-            Tag::T_TYPE, Tag::T_DATA
+            Tag::T_TYPE, Tag::T_UNION
         ];
 
         $peek = $this->reader->lookahead->getTag();
@@ -101,8 +101,8 @@ class StmtParser
             return $this->decl_parser->_typeStmt();
         }
 
-        if ($this->reader->is(Tag::T_DATA)) {
-            return $this->decl_parser->_dataStmt();
+        if ($this->reader->is(Tag::T_UNION)) {
+            return $this->decl_parser->_unionStmt();
         }
 
         if (isset($stmt_list[$this->reader->lookahead->getTag()])) {
