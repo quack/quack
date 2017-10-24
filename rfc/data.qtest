@@ -1,0 +1,9 @@
+%%command
+php ./src/Main.php %s
+%%describe
+Algebraic data types
+%%source
+data Maybe(a) :- Some(a) or None
+data List(a) :- Nil or Cons(a, List(a))
+data Tree :- Empty or Leaf(Number) or Node(Tree, Tree)
+%%expect
