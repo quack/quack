@@ -40,4 +40,14 @@ class UnionStmt
     {
         return '...';
     }
+
+    public function injectScope($parent_scope)
+    {
+
+    }
+
+    public function runTypeChecker()
+    {
+
+    }
 }
