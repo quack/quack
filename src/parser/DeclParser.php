@@ -92,22 +92,19 @@ class DeclParser
         return new TypeStmt($name, $value);
     }
 
-    public function _sumType()
+    public function _unionType()
     {
         $name = $this->name_parser->_name();
         $values = [];
         if ($this->reader->consumeIf('(')) {
             do {
-                $values[] = $this->_sumType();
-            } while ($this->reader->consumeIf(','));
+                $values[] = $this->type_parser->_type();
+            } while ($this->reader->consumeIf(Tag::T_OR));
+
             $this->reader->match(')');
         }
 
-        // TODO: Deal with sub items. See how to name and organize them in the AST
-        return [
-            'name'   => $name,
-            'values' => $values
-        ];
+        return [$name, $values];
     }
 
     public function _unionStmt()
@@ -127,7 +124,7 @@ class DeclParser
 
         $this->reader->match(':-');
         do {
-            $values[] = $this->_sumType();
+            $values[] = $this->_unionType();
         } while ($this->reader->consumeIf(Tag::T_OR));
 
         return new UnionStmt($name, $parameters, $values);

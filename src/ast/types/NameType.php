@@ -30,10 +30,12 @@ use \QuackCompiler\Types\TypeError;
 class NameType extends TypeNode
 {
     public $name;
+    public $values;
 
-    public function __construct($name)
+    public function __construct($name, $values)
     {
         $this->name = $name;
+        $this->values = $values;
     }
 
     public function __toString()

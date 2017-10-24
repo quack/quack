@@ -39,7 +39,7 @@ class NameTypeParselet implements PrefixParselet
             $grammar->reader->match(')');
         }
 
-        return new NameType($name);
+        return new NameType($name, $values);
     }
 }
 
