@@ -99,7 +99,7 @@ class DeclParser
         if ($this->reader->consumeIf('(')) {
             do {
                 $values[] = $this->type_parser->_type();
-            } while ($this->reader->consumeIf(Tag::T_OR));
+            } while ($this->reader->consumeIf(','));
 
             $this->reader->match(')');
         }
