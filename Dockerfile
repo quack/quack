@@ -1,13 +1,11 @@
-FROM php:7.1-alpine
+FROM hhvm/hhvm:3.22.1
 
 LABEL maintainer="paulo.cuchi@gmail.com"
 
-RUN apk add tini --update
-
 COPY src /usr/share/quack
 
-RUN echo "php /usr/share/quack/Quack.php \$@" > /bin/quack \
+RUN echo "hhvm /usr/share/quack/Main.php \$@" > /bin/quack \
     && chmod +x /bin/quack
 
-CMD ["tini", "--", "php", "/usr/share/quack/repl/QuackRepl.php"]
+CMD ["hhvm", "/usr/share/quack/Main.php"]
 
