@@ -30,6 +30,16 @@ class NameTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $name = $token->getContent();
+        $values = [];
+
+        if ($grammar->reader->consumeIf('(')) {
+            do {
+                $values[] = $grammar->_type();
+            } while ($grammar->reader->consumeIf(','));
+            $grammar->reader->match(')');
+        }
+
         return new NameType($name);
     }
 }
+
