@@ -80,6 +80,18 @@ class TypeExpr extends Expr
             throw new TypeError(Localization::message('TYP210', [$this->name, $expected, $received]));
         }
 
+        // Check types for each parameter
+        for ($index = 0; $index < $received; $index++) {
+            $param_type = $this->values[$index]->getType();
+            $cons_type = $cons[$index];
+
+            if (!$cons_type->check($param_type)) {
+                throw new TypeError(
+                    Localization::message('TYP450', [$index + 1, $this->name, $cons_type, $param_type])
+                );
+            }
+        }
+
         // Find the tagged union for what this type belongs
         $tagged_union = $this->scope->getMeta(Meta::M_TYPE, $this->name);
         return $tagged_union;

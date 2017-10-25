@@ -28,6 +28,7 @@ class Kind
     const K_TYPE         = 1 << 2;
     const K_UNION        = 1 << 3;
     const K_UNION_MEMBER = 1 << 4;
+    const K_UNION_PARAM  = 1 << 5;
 
     // Additional flags
     const K_MUTABLE     = 1 << 6;
