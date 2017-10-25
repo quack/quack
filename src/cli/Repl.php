@@ -350,7 +350,7 @@ class Repl extends Component
     public function welcome()
     {
         $prelude = [
-            'Quack - Copyright (C) 2017 Quack Compiler',
+            'Quack - Copyright (C) 2015-2017 Quack and CONTRIBUTORS',
             'This program comes with ABSOLUTELY NO WARRANTY.',
             'This is free software, and you are welcome to redistribute it',
             'under certain conditions.',
@@ -435,7 +435,7 @@ class Repl extends Component
         }
     }
 
-    private function compile($source)
+    private function compile($source, $silent = false)
     {
         if ('' === $source) {
             $this->resetState();
@@ -456,10 +456,14 @@ class Repl extends Component
                 $parser->ast->injectScope($scope);
                 $parser->ast->runTypeChecker();
                 // Save AST in case of success
-                $this->console->write($parser->beautify());
+                if (!$silent) {
+                    $this->console->write($parser->beautify());
+                }
                 $this->setState(['ast' => $parser->ast, 'complete' => true]);
             } else {
-                $this->console->write($parser->beautify());
+                if (!$silent) {
+                    $this->console->write($parser->beautify());
+                }
                 $this->state('ast')->attachValidAST($parser->ast);
                 $this->setState(['complete' => true]);
             }
@@ -485,7 +489,7 @@ class Repl extends Component
     {
         $location = realpath(dirname(__FILE__) . '/../../lib/' . $module . '.qk');
         $source = file_get_contents($location);
-        $this->compile($source);
+        $this->compile($source, true);
         $this->console->resetCursor();
         $this->console->setColor(Console::FG_WHITE);
         $this->console->setColor(Console::BG_BLUE);
