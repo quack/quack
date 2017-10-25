@@ -65,5 +65,6 @@
     "TYP420": "The tuples have different sizes, I want %d and you gave me %d",
     "TYP430": "The types of tuples don't match because element %d should be `%s', but it is `%s'",
     "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?",
-    "TYP450": "Argument number %d of constructor `%s' should be of type `%s', but it is `%s'"
+    "TYP450": "Argument number %d of constructor `%s' should be of type `%s', but it is `%s'",
+    "TYP460": "Please, stop trying to declare specialized union member `%s'. Use `%s' instead"
 }

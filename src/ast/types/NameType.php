@@ -56,6 +56,15 @@ class NameType extends TypeNode
         if (null === $type_flags) {
             throw new TypeError(Localization::message('TYP440', [$this->name]));
         }
+
+        // Disable union members in declaration context. This is necessary because
+        // you can do `:: Optional(string)', but not :: `Some(string)'
+        if ($this->isInDeclarationContext()) {
+            if ($type_flags & Kind::K_UNION_MEMBER) {
+                $parent_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+                throw new TypeError(Localization::message('TYP460', [$this->name, $parent_type]));
+            }
+        }
     }
 
     public function simplify()

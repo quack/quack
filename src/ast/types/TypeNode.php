@@ -26,6 +26,17 @@ use \QuackCompiler\Types\NativeQuackType;
 abstract class TypeNode
 {
     protected $parentheses_level = 0;
+    protected $declaration_context = false;
+
+    public function isInDeclarationContext()
+    {
+        return $this->declaration_context;
+    }
+
+    public function enableDeclarationContext()
+    {
+        $this->declaration_context = true;
+    }
 
     public function addParentheses()
     {
