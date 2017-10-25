@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
@@ -106,8 +107,11 @@ class IfStmt extends Stmt
 
     public function runTypeChecker()
     {
+        // TODO: Throw error when primitive type cannot be found. Use QUA010 for this
+        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
+
         $condition_type = $this->condition->getType();
-        if (!$condition_type->isBoolean()) {
+        if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP140', [$condition_type]));
         }
 
