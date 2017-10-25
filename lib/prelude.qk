@@ -1,6 +1,8 @@
-union Ordering :- LT
-               or GT
-               or EQ
+union Ordering
+    :- LT
+    or GT
+    or EQ
 
-union Bool :- True
-           or False
+union Bool
+    :- True
+    or False
