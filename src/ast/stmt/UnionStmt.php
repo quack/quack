@@ -98,6 +98,8 @@ class UnionStmt
             $parent_scope->setMeta(Meta::M_TYPE, $name, $tagged_union);
             $parent_scope->setMeta(Meta::M_CONS, $name, $types);
         }
+
+        $tagged_union->bindScope($this->scope);
     }
 
     public function runTypeChecker()

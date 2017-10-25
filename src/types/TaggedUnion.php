@@ -44,7 +44,12 @@ class TaggedUnion extends TypeNode
 
     public function bindScope(Scope $scope)
     {
-        // TODO
+        // TODO Bind generic parameters (if still unbound in UnionStmt)
+        foreach ($this->values as $value) {
+            foreach ($value[1] as $type) {
+                $type->bindScope($scope);
+            }
+        }
     }
 
     public function check(TypeNode $other)
