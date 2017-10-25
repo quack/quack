@@ -41,7 +41,7 @@
     "TYP180": "Condition passed to elif statement should be a `boolean', not a `%s'",
     "TYP190": "Cannot infer type of non-variable `%s'",
     "TYP200": "Ok, you declared `%s', but it is not member of a tagged union",
-    "TYP210": "===DELETED===",
+    "TYP210": "The type constructor `%s' receives %d parameters, but you gave %d",
     "TYP220": "Expected a `number' on operand `%s' of range expression. Got `%s'",
     "TYP230": "No type overload for operator `%s' on type `%s'",
     "TYP240": "Condition of ternary operator should de `boolean'. Got `%s'",

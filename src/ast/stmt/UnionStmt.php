@@ -82,15 +82,15 @@ class UnionStmt
         $this->scope->setMeta(Meta::M_TYPE, $this->name, $tagged_union);
 
         foreach ($this->values as $value) {
-            list ($name) = $value;
+            list ($name, $types) = $value;
             if (isset($declared[$name])) {
                 throw new TypeError(Localization::message('SCO030', [$name, $this->name]));
             }
 
             $declared[$name] = true;
             $this->scope->insert($name, Kind::K_TYPE | Kind::K_UNION_MEMBER);
-            $this->scope->setMeta(Meta::M_TYPE, $name, $this->name);
-            $this->scope->setMeta(Meta::M_PARENT, $name, $tagged_union);
+            $this->scope->setMeta(Meta::M_TYPE, $name, $tagged_union);
+            $this->scope->setMeta(Meta::M_CONS, $name, $types);
         }
     }
 

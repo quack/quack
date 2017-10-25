@@ -27,7 +27,6 @@ class Meta
     const M_TYPE      = 'type';
     const M_LABEL     = 'label';        // Implicit meta labels
     const M_CONS      = 'construction'; // Possible constructions for a tagged union
-    const M_PARENT    = 'parent';       // Parent reference for union members
 
     private static $label_num = 0;
     private static $generic_num = 0;

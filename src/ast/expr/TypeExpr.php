@@ -74,11 +74,14 @@ class TypeExpr extends Expr
             throw new TypeError(Localization::message('TYP200', [$this->name]));
         }
 
+        // Ensure type constructor matches the provided parameters size
+        $cons = $this->scope->getMeta(Meta::M_CONS, $this->name);
+        if (($received = count($this->values)) !== ($expected = count($cons))) {
+            throw new TypeError(Localization::message('TYP210', [$this->name, $expected, $received]));
+        }
+
         // Find the tagged union for what this type belongs
-        $tagged_union = $this->scope->getMeta(Meta::M_PARENT, $this->name);
-
-        // TODO: Check if the parameters match the type constructor
-
+        $tagged_union = $this->scope->getMeta(Meta::M_TYPE, $this->name);
         return $tagged_union;
     }
 }
