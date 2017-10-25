@@ -162,4 +162,3 @@ class Console
         return $event;
     }
 }
-
