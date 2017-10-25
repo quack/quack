@@ -66,8 +66,8 @@ class CallExpr extends Expr
         }
 
         // Check parameters length
-        $expected_arguments = sizeof($callee_type->parameters);
-        $received_arguments = sizeof($this->arguments);
+        $expected_arguments = count($callee_type->parameters);
+        $received_arguments = count($this->arguments);
 
         if ($received_arguments !== $expected_arguments) {
             throw new TypeError(Localization::message('TYP320',

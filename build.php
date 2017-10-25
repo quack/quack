@@ -42,7 +42,7 @@ function minify($source, $pure_identifiers)
 
     $index = 0;
     $tokens = token_get_all($source);
-    $length = sizeof($tokens);
+    $length = count($tokens);
     $result = '';
     $namespace = '';
     $use = [];
@@ -365,7 +365,7 @@ function getCroakBuffer()
 
     // Binary optimization
     $index = 0;
-    $length = sizeof($byte_array);
+    $length = count($byte_array);
     $compressed_byte_array = [];
     while ($index < $length) {
         if (0 === $byte_array[$index]) {

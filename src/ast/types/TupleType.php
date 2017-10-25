@@ -33,7 +33,7 @@ class TupleType extends TypeNode
     public function __construct(...$types)
     {
         $this->types = $types;
-        $this->size = sizeof($types);
+        $this->size = count($types);
     }
 
     public function __toString()

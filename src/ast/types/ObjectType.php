@@ -58,7 +58,7 @@ class ObjectType extends TypeNode
 
         // Get all properties that are in this object but not in the other
         $different_properties = array_diff_key($this->properties, $other->properties);
-        if (sizeof($different_properties) > 0) {
+        if (count($different_properties) > 0) {
             // If there is something like %{a:1}, %{}, so, we are missing `a'
             return false;
         }

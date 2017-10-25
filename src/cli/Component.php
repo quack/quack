@@ -47,7 +47,7 @@ abstract class Component
             $result[] = $this->state[$prop];
         }
 
-        return 1 === sizeof($result)
+        return 1 === count($result)
             ? $result[0]
             : $result;
     }
