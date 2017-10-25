@@ -49,6 +49,11 @@ class TaggedUnion extends TypeNode
 
     public function check(TypeNode $other)
     {
-        // TODO
+        if (!($other instanceof TaggedUnion)) {
+            return false;
+        }
+
+        // Success when both are references to the same tagged union
+        return $other === $this;
     }
 }
