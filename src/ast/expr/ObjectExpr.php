@@ -45,7 +45,7 @@ class ObjectExpr extends Expr
         $keys = $this->keys;
         $values = $this->values;
 
-        if (sizeof($this->keys) > 0) {
+        if (count($this->keys) > 0) {
             $source .= PHP_EOL;
 
             $parser->openScope();
@@ -59,7 +59,7 @@ class ObjectExpr extends Expr
                 $subsource .= $values[$index]->format($parser);
 
                 return $subsource;
-            }, range(0, sizeof($keys) - 1)));
+            }, range(0, count($keys) - 1)));
 
             $parser->closeScope();
 
@@ -77,7 +77,7 @@ class ObjectExpr extends Expr
         $defined = [];
         $operators = [];
         $index = 0;
-        while ($index < sizeof($this->keys)) {
+        while ($index < count($this->keys)) {
             $key = $this->keys[$index];
             $value = $this->values[$index];
             if (array_key_exists($key, $defined)) {
@@ -92,7 +92,7 @@ class ObjectExpr extends Expr
     public function getType()
     {
         $properties = [];
-        for ($i = 0, $size = sizeof($this->keys); $i < $size; $i++) {
+        for ($i = 0, $size = count($this->keys); $i < $size; $i++) {
             $properties[$this->keys[$i]] = $this->values[$i]->getType();
         }
 

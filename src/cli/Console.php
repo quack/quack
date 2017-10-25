@@ -83,7 +83,7 @@ class Console
 
     public function sttySaveCheckpoint()
     {
-        return $this->stty_settings = preg_replace('#.*; ?#s', '', $this->stty('--all'));
+        return $this->stty_settings = preg_replace('#.*; ?#s', '', $this->stty('-a'));
     }
 
     public function sttyRestoreCheckpoint()

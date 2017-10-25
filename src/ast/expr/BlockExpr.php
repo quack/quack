@@ -39,7 +39,7 @@ class BlockExpr extends Expr
     {
         $source = '&{';
 
-        if (sizeof($this->body) > 0) {
+        if (count($this->body) > 0) {
             $source .= PHP_EOL;
             $parser->openScope();
             foreach ($this->body as $stmt) {

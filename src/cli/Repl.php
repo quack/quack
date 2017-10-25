@@ -81,13 +81,13 @@ class Repl extends Component
 
     private function handleEnd()
     {
-        $this->setState(['column' => sizeof($this->state('line'))]);
+        $this->setState(['column' => count($this->state('line'))]);
     }
 
     private function handleDelete()
     {
         list ($line, $column) = $this->state('line', 'column');
-        if ($column === sizeof($line)) {
+        if ($column === count($line)) {
             return;
         }
 
@@ -104,7 +104,7 @@ class Repl extends Component
     private function handleRightArrow()
     {
         list ($line, $column) = $this->state('line', 'column');
-        $this->setState(['column' => min(sizeof($line), $column + 1)]);
+        $this->setState(['column' => min(count($line), $column + 1)]);
     }
 
     private function getBoundaries()
@@ -140,14 +140,14 @@ class Repl extends Component
             return $boundary[1] > $column;
         }));
 
-        $column = $next_boundary ? $next_boundary[1] : sizeof($line);
+        $column = $next_boundary ? $next_boundary[1] : count($line);
         $this->setState(['column' => $column]);
     }
 
     private function handleUpArrow()
     {
         list ($history, $index) = $this->state('history', 'history_index');
-        $line = @$history[sizeof($history) - ($index + 1)];
+        $line = @$history[count($history) - ($index + 1)];
         if (null !== $line) {
             $this->setState([
                 'line'          => str_split($line),
@@ -160,7 +160,7 @@ class Repl extends Component
     private function handleDownArrow()
     {
         list ($history, $index) = $this->state('history', 'history_index');
-        $line = @$history[sizeof($history) - ($index - 1)];
+        $line = @$history[count($history) - ($index - 1)];
         if (null !== $line) {
             $this->setState([
                 'line'          => str_split($line),
@@ -268,7 +268,7 @@ class Repl extends Component
     {
         $context = $this->state('scope')->child;
 
-        if (0 === sizeof($context->table)) {
+        if (0 === count($context->table)) {
             return;
         }
 

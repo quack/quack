@@ -127,7 +127,7 @@ class Tokenizer extends Lexer
 
             if ($found) {
                 $value = implode($buffer);
-                $this->column += sizeof($buffer);
+                $this->column += count($buffer);
                 return new Token($tag, $value);
             }
         }
@@ -159,7 +159,7 @@ class Tokenizer extends Lexer
         }
 
         $value = implode($buffer);
-        $this->column += sizeof($buffer);
+        $this->column += count($buffer);
         return new Token($tag, $value);
     }
 
@@ -184,7 +184,7 @@ class Tokenizer extends Lexer
         $string = implode($buffer);
 
         $word = $this->getWord($string);
-        $this->column += sizeof($buffer);
+        $this->column += count($buffer);
 
         if ($word !== null) {
             return $word;

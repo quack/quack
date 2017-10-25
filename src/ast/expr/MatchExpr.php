@@ -52,7 +52,7 @@ class MatchExpr extends Expr
             return $subsource;
         }, $this->cases));
 
-        if (sizeof($this->cases) > 0 && null !== $this->else) {
+        if (count($this->cases) > 0 && null !== $this->else) {
             $source .= ',';
         }
 
