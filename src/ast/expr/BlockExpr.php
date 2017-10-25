@@ -1,8 +1,7 @@
 <?php
 /**
  * Quack Compiler and toolkit
- * Copyright (C) 2016 Marcelo Camargo <marcelocamargo@linuxmail.org> and
- * CONTRIBUTORS.
+ * Copyright (C) 2015-2017 Quack and CONTRIBUTORS
  *
  * This file is part of Quack.
  *
