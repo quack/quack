@@ -42,7 +42,7 @@ class WhereExpr extends Expr
     public function format(Parser $parser)
     {
         $first = true;
-        $size = sizeof($this->clauses);
+        $size = count($this->clauses);
         $processed = 0;
 
         $source = $this->expr->format($parser);

@@ -52,7 +52,7 @@ class LambdaExpr extends Expr
     {
         $source = '&';
 
-        switch (sizeof($this->parameters)) {
+        switch (count($this->parameters)) {
             case 0:
                 $source .= '[]';
                 break;

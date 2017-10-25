@@ -46,7 +46,7 @@ class MapExpr extends Expr
         $keys = $this->keys;
         $values = $this->values;
 
-        if (sizeof($this->keys) > 0) {
+        if (count($this->keys) > 0) {
             $source .= ' ';
             // Iterate based on index
             $source .= implode(', ', array_map(function($index) use ($keys, $values, $parser) {
@@ -55,7 +55,7 @@ class MapExpr extends Expr
                 $subsource .= $values[$index]->format($parser);
 
                 return $subsource;
-            }, range(0, sizeof($keys) - 1)));
+            }, range(0, count($keys) - 1)));
             $source .= ' ';
         }
 
@@ -77,7 +77,7 @@ class MapExpr extends Expr
 
     public function getType()
     {
-        $size = sizeof($this->keys);
+        $size = count($this->keys);
 
         // Generic type when no initializer provided
         if (0 === $size) {

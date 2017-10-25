@@ -80,8 +80,8 @@ class SyntaxError extends Exception
         $out_buffer[] = $line_indicator;
         $out_buffer[] = BEGIN_GREEN . implode($correct_piece) . END_GREEN;
         $out_buffer[] = BEGIN_BG_RED . implode($error_piece) . END_BG_RED;
-        $out_buffer[] = PHP_EOL . str_repeat(' ', strlen($line_indicator) + sizeof($correct_piece));
-        $out_buffer[] = BEGIN_BOLD . str_repeat('^', sizeof($error_piece)) . END_BOLD;
+        $out_buffer[] = PHP_EOL . str_repeat(' ', strlen($line_indicator) + count($correct_piece));
+        $out_buffer[] = BEGIN_BOLD . str_repeat('^', count($error_piece)) . END_BOLD;
 
         return implode($out_buffer);
     }

@@ -41,7 +41,7 @@ class ArrayExpr extends Expr
     public function format(Parser $parser)
     {
         $source = '{';
-        if (sizeof($this->items) > 0) {
+        if (count($this->items) > 0) {
             $source .= ' ';
             $source .= implode(', ', array_map(function($item) use ($parser) {
                 return $item->format($parser);
@@ -63,7 +63,7 @@ class ArrayExpr extends Expr
     public function getType()
     {
         // Empty array, generic type
-        if (0 === sizeof($this->items)) {
+        if (0 === count($this->items)) {
             return new ListType(new GenericType(Meta::nextGenericVarName()));
         }
 

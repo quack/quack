@@ -32,7 +32,7 @@ use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
 
 // Compile file instead of opening interactive mode
-if (sizeof($argv) > 1) {
+if (count($argv) > 1) {
     $disable_typechecker = in_array('--disable-typechecker', $argv, true);
     $disable_scope = in_array('--disable-scope', $argv, true);
 

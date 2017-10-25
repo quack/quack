@@ -119,7 +119,7 @@ class FnStmt extends Stmt
 
     private function injectParametersTypes($parameters_types)
     {
-        $size = sizeof($parameters_types);
+        $size = count($parameters_types);
         for ($i = 0; $i < $size; $i++) {
             $parameter = $this->signature->parameters[$i]->name;
             $type = $parameters_types[$i];

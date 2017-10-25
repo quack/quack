@@ -60,8 +60,8 @@ class FunctionType extends TypeNode
         }
 
         // Functions with different number of arguments
-        $self_arity = sizeof($this->parameters);
-        $other_arity = sizeof($other->parameters);
+        $self_arity = count($this->parameters);
+        $other_arity = count($other->parameters);
         if ($self_arity !== $other_arity) {
             $message .= '     > ' . Localization::message('TYP360', [$self_arity, $other_arity]);
             throw new TypeError($message);
