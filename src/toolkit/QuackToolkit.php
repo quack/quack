@@ -74,6 +74,7 @@ import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
+import(PARSELETS, 'expr/TypeParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
@@ -127,6 +128,7 @@ import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
 import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
+import(AST, 'expr/TypeExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
@@ -143,6 +145,7 @@ import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/TypeStmt');
+import(AST, 'stmt/UnionStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
@@ -166,5 +169,6 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
+import(TYPES, 'TaggedUnion');
 import(TYPES, 'NativeQuackType');
 import(TYPES, 'TypeError');

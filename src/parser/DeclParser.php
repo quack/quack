@@ -25,6 +25,7 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
+use \QuackCompiler\Ast\Stmt\UnionStmt;
 
 class DeclParser
 {
@@ -90,8 +91,41 @@ class DeclParser
         return new TypeStmt($name, $value);
     }
 
-    public function _dataStmt()
+    public function _unionType()
     {
-        $this->reader->match(Tag::T_DATA);
+        $name = $this->name_parser->_name();
+        $values = [];
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $values[] = $this->type_parser->_type();
+            } while ($this->reader->consumeIf(','));
+
+            $this->reader->match(')');
+        }
+
+        return [$name, $values];
+    }
+
+    public function _unionStmt()
+    {
+        $this->reader->match(Tag::T_UNION);
+        $name = $this->name_parser->_typename();
+        $parameters = [];
+        $values = [];
+
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $parameters[] = $this->name_parser->_identifier();
+            } while ($this->reader->consumeIf(','));
+
+            $this->reader->match(')');
+        }
+
+        $this->reader->match(':-');
+        do {
+            $values[] = $this->_unionType();
+        } while ($this->reader->consumeIf(Tag::T_OR));
+
+        return new UnionStmt($name, $parameters, $values);
     }
 }

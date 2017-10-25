@@ -70,6 +70,8 @@ if (count($argv) > 1) {
 
 $console = new Console(STDIN, STDOUT, STDERR);
 $console->subscribe([
+    0x0  => 'handleListDefinitionsKey',
+    0x1  => 'handleCtrlA',
     0x7F => 'handleBackspace',
     0xC  => 'handleClearScreen',
     0x1B => [
@@ -78,6 +80,9 @@ $console->subscribe([
             0x48 => 'handleHome'
         ],
         0x5B => [
+            0x32 => [
+                0x7E => 'handleInsert'
+            ],
             0x33 => [
                 0x7E => 'handleDelete'
             ],

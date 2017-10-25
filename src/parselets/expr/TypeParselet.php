@@ -1,7 +1,8 @@
 <?php
 /**
  * Quack Compiler and toolkit
- * Copyright (C) 2015-2017 Quack and CONTRIBUTORS
+ * Copyright (C) 2016 Marcelo Camargo <marcelocamargo@linuxmail.org> and
+ * CONTRIBUTORS.
  *
  * This file is part of Quack.
  *
@@ -18,13 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Types;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\Ast\Expr\TypeExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class NameTypeParselet implements PrefixParselet
+class TypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
@@ -33,12 +34,11 @@ class NameTypeParselet implements PrefixParselet
 
         if ($grammar->reader->consumeIf('(')) {
             do {
-                $values[] = $grammar->_type();
+                $values[] = $grammar->_expr();
             } while ($grammar->reader->consumeIf(','));
             $grammar->reader->match(')');
         }
 
-        return new NameType($name, $values);
+        return new TypeExpr($name, $values);
     }
 }
-

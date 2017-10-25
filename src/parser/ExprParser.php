@@ -41,6 +41,7 @@ use \QuackCompiler\Parselets\Expr\ObjectParselet;
 use \QuackCompiler\Parselets\Expr\BlockParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\MatchParselet;
+use \QuackCompiler\Parselets\Expr\TypeParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -63,6 +64,7 @@ class ExprParser
         $this->register(Tag::T_STRING, new LiteralParselet);
         $this->register(Tag::T_REGEX, new LiteralParselet);
         $this->register(Tag::T_IDENT, new NameParselet);
+        $this->register(Tag::T_TYPENAME, new TypeParselet);
         $this->register(Tag::T_THEN, new TernaryParselet);
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);

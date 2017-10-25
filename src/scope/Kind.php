@@ -23,9 +23,11 @@ namespace QuackCompiler\Scope;
 class Kind
 {
     // Base flags
-    const K_FUNCTION    = 1 << 0;
-    const K_VARIABLE    = 1 << 1;
-    const K_TYPE        = 1 << 2;
+    const K_FUNCTION     = 1 << 0;
+    const K_VARIABLE     = 1 << 1;
+    const K_TYPE         = 1 << 2;
+    const K_UNION        = 1 << 3;
+    const K_UNION_MEMBER = 1 << 4;
 
     // Additional flags
     const K_MUTABLE     = 1 << 6;

@@ -43,6 +43,15 @@ class NameParser
         return $this->reader->match(Tag::T_IDENT);
     }
 
+    public function _name()
+    {
+        if ($this->reader->is(Tag::T_TYPENAME) || $this->reader->is(Tag::T_IDENT)) {
+            return $this->reader->match($this->reader->lookahead->getTag());
+        }
+
+        $this->reader->match('identifier or typename');
+    }
+
     public function _qualifiedName()
     {
         $names = [];

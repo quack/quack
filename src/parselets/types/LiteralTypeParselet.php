@@ -21,7 +21,7 @@
 namespace QuackCompiler\Parselets\Types;
 
 use \QuackCompiler\Ast\Types\LiteralType;
-use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
@@ -42,8 +42,10 @@ class LiteralTypeParselet implements PrefixParselet
         ];
         $name = $token->getContent();
 
-        return array_key_exists($name, $names)
-            ? new LiteralType($names[$name])
-            : new GenericType($name);
+        if (array_key_exists($name, $names)) {
+            return new LiteralType($names[$name]);
+        }
+
+        return (new NameTypeParselet())->parse($grammar, $token);
     }
 }

@@ -1,7 +1,8 @@
 <?php
 /**
  * Quack Compiler and toolkit
- * Copyright (C) 2015-2017 Quack and CONTRIBUTORS
+ * Copyright (C) 2016 Marcelo Camargo <marcelocamargo@linuxmail.org> and
+ * CONTRIBUTORS.
  *
  * This file is part of Quack.
  *
@@ -18,27 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Types;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\Types\NameType;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Scope\Scope;
 
-class NameTypeParselet implements PrefixParselet
+class TaggedUnion extends TypeNode
 {
-    public function parse($grammar, Token $token)
+    private $name;
+    private $parameters;
+    private $values;
+
+    public function __construct($name, $parameters, $values)
     {
-        $name = $token->getContent();
-        $values = [];
+        $this->name = $name;
+        $this->parameters = $parameters;
+        $this->values = $values;
+    }
 
-        if ($grammar->reader->consumeIf('(')) {
-            do {
-                $values[] = $grammar->_type();
-            } while ($grammar->reader->consumeIf(','));
-            $grammar->reader->match(')');
-        }
+    public function __toString()
+    {
+        return $this->name;
+    }
 
-        return new NameType($name, $values);
+    public function bindScope(Scope $scope)
+    {
+        // TODO
+    }
+
+    public function check(TypeNode $other)
+    {
+        // TODO
     }
 }
-
