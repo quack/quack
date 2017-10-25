@@ -40,6 +40,7 @@ class Console
     const FG_BLUE       = '0;34';
     const BG_WHITE      = '47';
     const BG_GREEN      = '42';
+    const BG_RED        = '41';
     const BOLD          = '1';
 
     public function __construct($stdin, $stdout, $stderr)
@@ -113,6 +114,11 @@ class Console
     public function forwardCursor($n)
     {
         return $this->write(sprintf("%c[%dC", 0x1B, $n));
+    }
+
+    public function backwardCursor($n)
+    {
+        return $this->write(sprintf("%c[%dD", 0x1B, $n));
     }
 
     public function moveCursorToHome()

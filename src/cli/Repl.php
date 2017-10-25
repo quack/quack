@@ -45,7 +45,8 @@ class Repl extends Component
             'scope'         => new Scope(),
             'ast'           => null,
             'complete'      => true,
-            'command'       => ''
+            'command'       => '',
+            'insert'        => false
         ]);
         $this->console = $console;
         $this->croak = $croak;
@@ -215,7 +216,15 @@ class Repl extends Component
             return;
         }
 
-        list ($line, $column) = $this->state('line', 'column');
+        list ($line, $column, $insert) = $this->state('line', 'column', 'insert');
+
+        // In insert mode, just replace the char in string index and move pointer
+        if ($insert && $column < count($line)) {
+            $line[$column] = $input;
+            $this->setState(['line' => $line, 'column' => $column + 1]);
+            return;
+        }
+
         $next_buffer = [$input];
         // Insert the new char in the column in the line buffer
         array_splice($line, $column, 0, $next_buffer);
@@ -228,6 +237,12 @@ class Repl extends Component
         }
 
         $this->setState(['line' => $line, 'column' => $column]);
+    }
+
+    private function handleInsert()
+    {
+        $insert = $this->state('insert');
+        $this->setState(['insert' => !$insert]);
     }
 
     private function handleQuit()
@@ -334,7 +349,7 @@ class Repl extends Component
     public function welcome()
     {
         $prelude = [
-            'Quack - Copyright (C) 2017 Marcelo Camargo',
+            'Quack - Copyright (C) 2017 Quack Compiler',
             'This program comes with ABSOLUTELY NO WARRANTY.',
             'This is free software, and you are welcome to redistribute it',
             'under certain conditions.',
@@ -408,6 +423,15 @@ class Repl extends Component
         $this->console->write($colored_line);
         $this->console->resetCursor();
         $this->console->forwardCursor($cursor);
+
+        if ($this->state('insert') && $column < strlen($line)) {
+            $this->console->setColor(Console::BG_RED);
+            $this->console->setColor(Console::FG_WHITE);
+            $next_char = $line[$column];
+            $this->console->write($next_char);
+            $this->console->resetColor();
+            $this->console->backwardCursor(1);
+        }
     }
 
     private function compile($source)

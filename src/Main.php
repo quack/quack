@@ -81,6 +81,9 @@ $console->subscribe([
             0x48 => 'handleHome'
         ],
         0x5B => [
+            0x32 => [
+                0x7E => 'handleInsert'
+            ],
             0x33 => [
                 0x7E => 'handleDelete'
             ],
