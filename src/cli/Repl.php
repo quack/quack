@@ -248,6 +248,7 @@ class Repl extends Component
         });
 
         foreach ($context->table as $name => $signature) {
+
             $type = $context->meta[$name][Meta::M_TYPE];
             $mutable = $signature & Kind::K_MUTABLE;
             $color = $signature & Kind::K_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
@@ -255,8 +256,20 @@ class Repl extends Component
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
-            $this->console->setColor(Console::FG_BLUE);
-            $this->console->write($type);
+
+            if ($signature & Kind::K_UNION) {
+                $this->console->setColor(Console::FG_WHITE);
+                $this->console->setColor(Console::BG_GREEN);
+                $this->console->write('[union]');
+                $this->console->resetColor();
+                $this->console->write(' ');
+                $this->console->setColor(Console::FG_BLUE);
+                $this->console->write(implode(' or ', array_column($context->meta[$name][Meta::M_CONS], 0)));
+            } else {
+                $this->console->setColor(Console::FG_BLUE);
+                $this->console->write($type);
+            }
+
             $this->console->resetColor();
 
             if ($mutable) {

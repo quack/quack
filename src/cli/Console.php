@@ -30,17 +30,17 @@ class Console
     private $columns;
     private $event_tree;
 
-    const FG_YELLOW = '1;33';
-    const FG_RED = '0;31';
-    const FG_BLACK = '1;30';
-    const FG_CYAN = '0;36';
+    const FG_WHITE      = '1;37';
+    const FG_YELLOW     = '1;33';
+    const FG_RED        = '0;31';
+    const FG_BLACK      = '1;30';
+    const FG_CYAN       = '0;36';
     const FG_BOLD_GREEN = '1;32';
-    const FG_MAGENTA = '0;35';
-    const FG_BLUE = '0;34';
-
-    const BG_WHITE = '47';
-
-    const BOLD = '1';
+    const FG_MAGENTA    = '0;35';
+    const FG_BLUE       = '0;34';
+    const BG_WHITE      = '47';
+    const BG_GREEN      = '42';
+    const BOLD          = '1';
 
     public function __construct($stdin, $stdout, $stderr)
     {

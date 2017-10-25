@@ -23,6 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
 class UnionStmt
@@ -70,13 +72,20 @@ class UnionStmt
     {
         $this->scope = $parent_scope;
         $declared = [];
+
+        // Declare union type
+        $this->scope->insert($this->name, Kind::K_TYPE | Kind::K_UNION);
+        $this->scope->setMeta(Meta::M_CONS, $this->name, $this->values);
+
         foreach ($this->values as $value) {
-            list ($name, $types) = $value;
+            list ($name) = $value;
             if (isset($declared[$name])) {
                 throw new TypeError(Localization::message('SCO030', [$name, $this->name]));
             }
 
             $declared[$name] = true;
+            $this->scope->insert($name, Kind::K_TYPE | Kind::K_UNION_MEMBER);
+            $this->scope->setMeta(Meta::M_TYPE, $name, $this->name);
         }
     }
 
