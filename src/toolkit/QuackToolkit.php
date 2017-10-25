@@ -168,5 +168,6 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
+import(TYPES, 'TaggedUnion');
 import(TYPES, 'NativeQuackType');
 import(TYPES, 'TypeError');

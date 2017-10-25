@@ -25,6 +25,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
 class UnionStmt
@@ -70,12 +71,16 @@ class UnionStmt
 
     public function injectScope($parent_scope)
     {
+        // TODO: bind parameters (parametric polymorphism)
         $this->scope = $parent_scope;
         $declared = [];
 
         // Declare union type
         $this->scope->insert($this->name, Kind::K_TYPE | Kind::K_UNION);
         $this->scope->setMeta(Meta::M_CONS, $this->name, $this->values);
+        $this->scope->setMeta(Meta::M_TYPE, $this->name,
+            new TaggedUnion($this->name, $this->parameters, $this->values)
+        );
 
         foreach ($this->values as $value) {
             list ($name) = $value;
@@ -91,6 +96,6 @@ class UnionStmt
 
     public function runTypeChecker()
     {
-
+        // TODO: Run typechecker for subnodes
     }
 }
