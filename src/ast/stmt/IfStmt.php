@@ -79,6 +79,7 @@ class IfStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->condition->injectScope($parent_scope);
 
         // Bind scope for body of `if'

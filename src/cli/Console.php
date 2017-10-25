@@ -36,10 +36,12 @@ class Console
     const FG_CYAN       = '0;36';
     const FG_BOLD_GREEN = '1;32';
     const FG_MAGENTA    = '0;35';
+    const FG_GREEN      = '0;32';
     const FG_BLUE       = '0;34';
     const BG_WHITE      = '47';
     const BG_GREEN      = '42';
     const BG_RED        = '41';
+    const BG_BLUE       = '44';
     const BOLD          = '1';
 
     public function __construct($stdin, $stdout, $stderr)

@@ -102,4 +102,4 @@ $console->subscribe([
 
 $repl = new Repl($console, new Croak());
 $repl->welcome();
-$repl->start();
+$repl->start(['prelude']);

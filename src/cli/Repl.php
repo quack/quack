@@ -32,6 +32,7 @@ class Repl extends Component
 {
     private $console;
     private $croak;
+    private $modules = [];
 
     public function __construct(Console $console, Croak $croak = null)
     {
@@ -480,8 +481,28 @@ class Repl extends Component
         }
     }
 
-    public function start()
+    public function load($module)
     {
+        $location = realpath(dirname(__FILE__) . '/../../lib/' . $module . '.qk');
+        $source = file_get_contents($location);
+        $this->compile($source);
+        $this->console->resetCursor();
+        $this->console->setColor(Console::FG_WHITE);
+        $this->console->setColor(Console::BG_BLUE);
+        $this->console->write("[$module]");
+        $this->console->resetColor();
+        $this->console->setColor(Console::FG_GREEN);
+        $this->console->writeln(' successfully compiled!');
+        $this->console->resetColor();
+    }
+
+    public function start($modules = [])
+    {
+        $this->modules = $modules;
+        foreach ($modules as $module) {
+            $this->load($module);
+        }
+
         $this->render();
         while (true) {
             $this->handleRead();
