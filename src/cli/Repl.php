@@ -259,6 +259,7 @@ class Repl extends Component
         $context = $this->state('scope')->child;
 
         if (0 !== sizeof($context->table)) {
+            $this->console->writeln('');
             $this->handleListDefinitions();
             $this->resetState();
         }
