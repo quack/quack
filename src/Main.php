@@ -71,6 +71,7 @@ if (sizeof($argv) > 1) {
 
 $console = new Console(STDIN, STDOUT, STDERR);
 $console->subscribe([
+    0x1  => 'handleCtrlA',
     0x7F => 'handleBackspace',
     0xC  => 'handleClearScreen',
     0x1B => [

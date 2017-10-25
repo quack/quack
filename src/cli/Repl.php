@@ -114,6 +114,11 @@ class Repl extends Component
         return $boundaries[0];
     }
 
+    private function handleCtrlA()
+    {
+        $this->setState(['column' => 0]);
+    }
+
     private function handleCtrlLeftArrow()
     {
         $boundaries = $this->getBoundaries();
