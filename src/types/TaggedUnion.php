@@ -37,11 +37,18 @@ class TaggedUnion extends TypeNode
         $this->values = $values;
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function bindScope(Scope $scope)
     {
+        // TODO
     }
 
     public function check(TypeNode $other)
     {
+        // TODO
     }
 }

@@ -21,14 +21,24 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\NameExpr;
+use \QuackCompiler\Ast\Expr\TypeExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class NameParselet implements PrefixParselet
+class TypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        return new NameExpr($token->getContent());
+        $name = $token->getContent();
+        $values = [];
+
+        if ($grammar->reader->consumeIf('(')) {
+            do {
+                $values[] = $grammar->_expr();
+            } while ($grammar->reader->consumeIf(','));
+            $grammar->reader->match(')');
+        }
+
+        return new TypeExpr($name, $values);
     }
 }

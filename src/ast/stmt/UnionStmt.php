@@ -76,11 +76,10 @@ class UnionStmt
         $declared = [];
 
         // Declare union type
+        $tagged_union = new TaggedUnion($this->name, $this->parameters, $this->values);
         $this->scope->insert($this->name, Kind::K_TYPE | Kind::K_UNION);
         $this->scope->setMeta(Meta::M_CONS, $this->name, $this->values);
-        $this->scope->setMeta(Meta::M_TYPE, $this->name,
-            new TaggedUnion($this->name, $this->parameters, $this->values)
-        );
+        $this->scope->setMeta(Meta::M_TYPE, $this->name, $tagged_union);
 
         foreach ($this->values as $value) {
             list ($name) = $value;
@@ -91,6 +90,7 @@ class UnionStmt
             $declared[$name] = true;
             $this->scope->insert($name, Kind::K_TYPE | Kind::K_UNION_MEMBER);
             $this->scope->setMeta(Meta::M_TYPE, $name, $this->name);
+            $this->scope->setMeta(Meta::M_PARENT, $name, $tagged_union);
         }
     }
 
