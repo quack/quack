@@ -1,3 +1,5 @@
+-- Everything that is new to the type checker I'll put here as a test
+
 union Number
     :- One
     or Two
@@ -36,3 +38,6 @@ let one_____  :: Number   :- One__
 -- Aliases can also be used as expressions
 do One_
 do One__
+
+-- Generic types
+union Maybe(a) :- Just(a) or Nothing
