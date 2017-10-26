@@ -1,6 +1,0 @@
-%%describe
-Supports nil as expression
-%%source
-  do    nil
-%%expect
-do nil
