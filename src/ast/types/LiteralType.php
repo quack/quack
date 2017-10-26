@@ -37,18 +37,13 @@ class LiteralType extends TypeNode
         $map = [
             NativeQuackType::T_STR    => 'string',
             NativeQuackType::T_NUMBER => 'number',
-            NativeQuackType::T_BOOL   => 'boolean',
             NativeQuackType::T_REGEX  => 'regex',
             NativeQuackType::T_BLOCK  => 'block',
             NativeQuackType::T_BYTE   => 'byte',
             NativeQuackType::T_ATOM   => 'atom'
         ];
 
-        return $this->parenthesize(
-            array_key_exists($this->code, $map)
-                ? $map[$this->code]
-                : 'unknown'
-        );
+        return $map[$this->code];
     }
 
     public function bindScope(Scope $parent_scope)

@@ -26,6 +26,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
@@ -107,6 +108,7 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
+        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
         $type = (object) [
             'left'  => $this->left->getType(),
             'right' => 'string' === gettype($this->right) ? $this->right : $this->right->getType()
@@ -152,14 +154,14 @@ class OperatorExpr extends Expr
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
         }
 
-        // Type checking for equality operators and coalescence
+        // Type checking for equality operators
         $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
             if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
             }
 
-            return new LiteralType(NativeQuackType::T_BOOL);
+            return $bool;
         }
 
         // Type checking for string matched by regex
@@ -168,14 +170,14 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
-            return new LiteralType(NativeQuackType::T_BOOL);
+            return $bool;
         }
 
         // Boolean algebra and bitwise operations
         $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
         if (in_array($this->operator, $bool_op, true)) {
-            if ($type->left->isBoolean() && $type->right->isBoolean()) {
-                return new LiteralType(NativeQuackType::T_BOOL);
+            if ($bool->check($type->left) && $bool->check($type->right)) {
+                return $bool;
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {

@@ -5,7 +5,7 @@ Local type inference
 %%source
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
-let bool :: boolean :- true and false
+let bool :: Bool :- True and False
 let email :: regex :- &/.@./
 let atom :: @GET :- @GET
 let people :: {%{name: string, age: number}} :- { %{
@@ -20,10 +20,10 @@ do add(10, age)
 let id :- &[x]: x
 let fact :: &[number]: number :- &[n :: number]: n = 0 then 1 else n * fact(n - 1)
 let request :: atom :- @POST
-let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
+let intersect :: %{x: number} & %{y: string} & %{z: Bool} :- %{
   x: 1,
   y: 'foo',
-  z: true
+  z: True
 }
 let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',
@@ -37,7 +37,7 @@ let programmer :: Person :- salete
 string(6) "number"
 let name :: string :- 'lorem ipsum dolor sit' + 'l'
 let age :: number :- 10
-let bool :: boolean :- true and false
+let bool :: Bool :- True and False
 let email :: regex :- &/.@./
 let atom :: @GET :- @GET
 let people :: {%{name: string, age: number}} :- { %{
@@ -52,10 +52,10 @@ do add(10, age)
 let id :- &[x]: x
 let fact :: &[number]: number :- &[n :: number]: n = 0 then 1 else n * fact(n - 1)
 let request :: atom :- @POST
-let intersect :: %{x: number} & %{y: string} & %{z: boolean} :- %{
+let intersect :: %{x: number} & %{y: string} & %{z: Bool} :- %{
   x: 1,
   y: 'foo',
-  z: true
+  z: True
 }
 let my_list :: {%{name: string} & %{age: number}} :- { %{
   name: 'Celao',

@@ -77,8 +77,6 @@ class ExprParser
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('.', new MemberAccessParselet);
-        $this->register(Tag::T_TRUE, new LiteralParselet);
-        $this->register(Tag::T_FALSE, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
         $this->register(Tag::T_MATCH, new MatchParselet);
@@ -100,7 +98,6 @@ class ExprParser
         $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
         $this->infixLeft('|', Precedence::BITWISE_OR);
         $this->infixLeft('&', Precedence::BITWISE_AND);
-        $this->infixLeft('^', Precedence::BITWISE_XOR);
         $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
         $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
         $this->infixLeft('=', Precedence::VALUE_COMPARATOR);

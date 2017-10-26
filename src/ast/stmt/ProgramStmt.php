@@ -73,7 +73,7 @@ class ProgramStmt extends Stmt
             }
 
             $this->stmt_list = array_merge($this->stmt_list, $ast->stmt_list);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->scope = $safe_scope;
             throw $e;
         }

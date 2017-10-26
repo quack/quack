@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -68,8 +69,9 @@ class ElifStmt extends Stmt
 
     public function runTypeChecker()
     {
+        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
         $condition_type = $this->condition->getType();
-        if (!$condition_type->isBoolean()) {
+        if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP180', [$condition_type]));
         }
 

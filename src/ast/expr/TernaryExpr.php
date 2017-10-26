@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
@@ -51,6 +52,7 @@ class TernaryExpr extends Expr
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->condition->injectScope($parent_scope);
         $this->then->injectScope($parent_scope);
         $this->else->injectScope($parent_scope);
@@ -58,9 +60,10 @@ class TernaryExpr extends Expr
 
     public function getType()
     {
+        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
         $condition = $this->condition->getType();
-        if (!$condition->isBoolean()) {
-            throw new TypeError(Localization::message('TYP240', [$condition_type]));
+        if (!$bool->check($condition)) {
+            throw new TypeError(Localization::message('TYP240', [$condition]));
         }
 
         $truthy = $this->then->getType();

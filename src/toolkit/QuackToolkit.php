@@ -116,7 +116,6 @@ import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
-import(AST, 'expr/BoolExpr');
 import(AST, 'expr/StringExpr');
 import(AST, 'expr/CallExpr');
 import(AST, 'expr/AccessExpr');

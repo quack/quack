@@ -34,7 +34,6 @@ class LiteralTypeParselet implements PrefixParselet
         $names = [
             'string'  => NativeQuackType::T_STR,
             'number'  => NativeQuackType::T_NUMBER,
-            'boolean' => NativeQuackType::T_BOOL,
             'regex'   => NativeQuackType::T_REGEX,
             'block'   => NativeQuackType::T_BLOCK,
             'byte'    => NativeQuackType::T_BYTE,

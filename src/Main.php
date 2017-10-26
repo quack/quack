@@ -39,26 +39,40 @@ if (count($argv) > 1) {
         return preg_match('/\.qk$/', $file);
     });
 
+    function compile($source, $scope) {
+        global $disable_scope, $disable_typechecker;
+
+        $lexer = new Tokenizer($source);
+        $parser = new TokenReader($lexer);
+        $parser->parse();
+
+        if (!$disable_scope) {
+            $parser->ast->injectScope($scope);
+        }
+
+        if (!$disable_typechecker) {
+            $parser->ast->runTypeChecker();
+        }
+
+        return $parser;
+    }
+
     foreach ($compilation_list as $file) {
         try {
             if (!file_exists($file)) {
-                throw new \Exception("File [$file] not found");
+                throw new Exception("File [$file] not found");
             }
 
             $scope = new Scope();
-            $lexer = new Tokenizer(file_get_contents($file));
-            $parser = new TokenReader($lexer);
-            $parser->parse();
-
-            if (!$disable_scope) {
-                $parser->ast->injectScope($scope);
-            }
-
-            if (!$disable_typechecker) {
-                $parser->ast->runTypeChecker();
-            }
-
-            echo $parser->format();
+            // Prepend Prelude
+            $prelude = file_get_contents(realpath(dirname(__FILE__) . '/../lib/prelude.qk'));
+            $source = $prelude . PHP_EOL . file_get_contents($file);
+            $script = compile($source, $scope);
+            // Output only provided source instead of all prelude
+            // TODO: This is very ugly. We need to start thinking about modules and export
+            unset($script->ast->stmt_list[0]);
+            unset($script->ast->stmt_list[1]);
+            echo $script->format();
         } catch (Exception $e) {
             echo $e;
             exit(1);
