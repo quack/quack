@@ -83,6 +83,16 @@ class Scope
         $this->meta[$property] = $value;
     }
 
+    public function getMetaTable($symbol)
+    {
+        $scope = $this->getSymbolScope($symbol);
+        if (null === $scope) {
+            return null;
+        }
+
+        return $scope->meta[$symbol];
+    }
+
     public function getMeta($property, $symbol)
     {
         $scope = $this->getSymbolScope($symbol);

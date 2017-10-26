@@ -83,4 +83,15 @@ class NameType extends TypeNode
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
         return $type->check($other);
     }
+
+    public function getReference()
+    {
+        $flags = $this->scope->lookup($this->name);
+        $meta = $this->scope->getMetaTable($this->name);
+        if (null === $flags) {
+            return null;
+        }
+
+        return [$flags, $meta];
+    }
 }

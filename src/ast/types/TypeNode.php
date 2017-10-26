@@ -38,6 +38,11 @@ abstract class TypeNode
         $this->declaration_context = true;
     }
 
+    public function getReference()
+    {
+        return null;
+    }
+
     public function addParentheses()
     {
         $this->parentheses_level++;

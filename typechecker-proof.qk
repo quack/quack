@@ -1,0 +1,34 @@
+union Number
+    :- One
+    or Two
+
+-- Tagged union members
+do One
+do Two
+
+-- Tagged unions
+let one :: Number :- One
+let two :: Number :- Two
+
+-- Alias for Number, One and Two
+type Number_ :- Number
+type One_ :- One
+type Two_ :- Two
+
+-- Records should still work
+type Person           :- %{ name: string }
+let person            :- %{ name: 'John' }
+let person_ :: Person :- person
+
+-- Proving (ref(*), *) commutativity
+let one_     :: Number_ :- One
+let two_     :: Number_ :- Two
+let one__    :: Number  :- One_
+let two__    :: Number  :- Two_
+
+-- Proving (ref(ref(*)), ref(*)) commutativity
+type Number__ :- Number_
+type One__    :- One_
+let one___    :: Number__ :- One_
+let one____   :: Number__ :- One
+let one_____  :: Number   :- One__
