@@ -32,3 +32,7 @@ type One__    :- One_
 let one___    :: Number__ :- One_
 let one____   :: Number__ :- One
 let one_____  :: Number   :- One__
+
+-- Aliases can also be used as expressions
+do One_
+do One__
