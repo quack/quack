@@ -163,7 +163,7 @@ import(AST, 'types/TupleType');
 
 import(SCOPE, 'Scope');
 import(SCOPE, 'ScopeError');
-import(SCOPE, 'Kind');
+import(SCOPE, 'Symbol');
 import(SCOPE, 'Meta');
 
 /* Type inference and checking */

@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
@@ -69,7 +69,7 @@ class TypeExpr extends Expr
         }
 
         // Ensure the type is member of a tagged union
-        if (~$myself & Kind::K_UNION_MEMBER) {
+        if (~$myself & Symbol::S_UNION_MEMBER) {
             throw new TypeError(Localization::message('TYP200', [$this->name]));
         }
 

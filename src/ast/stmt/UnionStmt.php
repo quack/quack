@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TaggedUnion;
@@ -75,14 +75,14 @@ class UnionStmt
         // Bind input parameters
         $this->scope = new Scope($parent_scope);
         foreach ($this->parameters as $parameter) {
-            $this->scope->insert($parameter, Kind::K_TYPE | Kind::K_UNION_PARAM);
+            $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_UNION_PARAM);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new NameType($parameter, []));
         }
 
         $declared = [];
         // Declare union type
         $tagged_union = new TaggedUnion($this->name, $this->parameters, $this->values);
-        $parent_scope->insert($this->name, Kind::K_TYPE | Kind::K_UNION);
+        $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_UNION);
         $parent_scope->setMeta(Meta::M_CONS, $this->name, $this->values);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $tagged_union);
 
@@ -93,7 +93,7 @@ class UnionStmt
             }
 
             $declared[$name] = true;
-            $parent_scope->insert($name, Kind::K_TYPE | Kind::K_UNION_MEMBER);
+            $parent_scope->insert($name, Symbol::S_TYPE | Symbol::S_UNION_MEMBER);
             $parent_scope->setMeta(Meta::M_TYPE, $name, $tagged_union);
             $parent_scope->setMeta(Meta::M_CONS, $name, $types);
         }

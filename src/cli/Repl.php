@@ -24,7 +24,7 @@ use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 
@@ -280,15 +280,15 @@ class Repl extends Component
 
         foreach ($context->table as $name => $signature) {
             $type = $context->meta[$name][Meta::M_TYPE];
-            $mutable = $signature & Kind::K_MUTABLE;
-            $color = $signature & Kind::K_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
+            $mutable = $signature & Symbol::S_MUTABLE;
+            $color = $signature & Symbol::S_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
             $this->console->setColor($color);
             $this->console->write(' - ');
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
 
-            if ($signature & Kind::K_UNION) {
+            if ($signature & Symbol::S_UNION) {
                 $this->console->setColor(Console::FG_WHITE);
                 $this->console->setColor(Console::BG_GREEN);
                 $this->console->write('[union]');

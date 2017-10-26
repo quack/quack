@@ -21,7 +21,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
@@ -60,7 +60,7 @@ class NameType extends TypeNode
         // Disable union members in declaration context. This is necessary because
         // you can do `:: Optional(string)', but not :: `Some(string)'
         if ($this->isInDeclarationContext()) {
-            if ($type_flags & Kind::K_UNION_MEMBER) {
+            if ($type_flags & Symbol::S_UNION_MEMBER) {
                 $parent_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
                 throw new TypeError(Localization::message('TYP460', [$this->name, $parent_type]));
             }

@@ -25,7 +25,7 @@ use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\NativeQuackType;
@@ -76,12 +76,12 @@ class OperatorExpr extends Expr
                 $symbol = $parent_scope->lookup($this->left->name);
 
                 // When symbol is not a variable
-                if (~$symbol & Kind::K_VARIABLE) {
+                if (~$symbol & Symbol::S_VARIABLE) {
                     throw new ScopeError(Localization::message('SCO070', [$this->left->name]));
                 }
 
                 // When symbol is not mutable
-                if (~$symbol & Kind::K_MUTABLE) {
+                if (~$symbol & Symbol::S_MUTABLE) {
                     throw new ScopeError(Localization::message('SCO080', [$this->left->name]));
                 }
             } else {

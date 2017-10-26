@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
@@ -75,7 +75,7 @@ class FnStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
-        $parent_scope->insert($this->signature->name, Kind::K_VARIABLE | Kind::K_FUNCTION);
+        $parent_scope->insert($this->signature->name, Symbol::S_VARIABLE);
         $this->scope = new Scope($parent_scope);
 
         // Pre-inject parameters

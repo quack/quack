@@ -520,7 +520,7 @@ $bundle_settings = [
         'isString',
         'isNumber',
         'getOperatorLexeme',
-        'Kind',
+        'Symbol',
         'GenericType',
         'RegexExpr',
         'ObjectParselet',

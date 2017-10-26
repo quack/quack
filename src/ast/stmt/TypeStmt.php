@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 
 class TypeStmt extends Stmt
@@ -50,7 +50,7 @@ class TypeStmt extends Stmt
     public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
-        $flags = Kind::K_TYPE | Kind::K_ALIAS;
+        $flags = Symbol::S_TYPE | Symbol::S_ALIAS;
         $meta = [Meta::M_TYPE => $this->value];
         $this->value->bindScope($this->scope);
 

@@ -20,22 +20,19 @@
  */
 namespace QuackCompiler\Scope;
 
-class Kind
+class Symbol
 {
     // Base flags
-    const K_FUNCTION     = 1 << 0;
-    const K_VARIABLE     = 1 << 1;
-    const K_TYPE         = 1 << 2;
-    const K_UNION        = 1 << 3;
-    const K_UNION_MEMBER = 1 << 4;
-    const K_UNION_PARAM  = 1 << 5;
+    const S_VARIABLE = 1 << 1;
+    const S_TYPE     = 1 << 2;
+    const S_LABEL    = 1 << 3;
 
     // Additional flags
-    const K_MUTABLE     = 1 << 6;
-    const K_PARAMETER   = 1 << 7;
-    const K_LABEL       = 1 << 8;
-    const K_SPECIAL     = 1 << 9;
-    const K_MEMBER      = 1 << 10;
-    const K_INITIALIZED = 1 << 11;
-    const K_ALIAS       = 1 << 12;
+    const S_UNION        = 1 << 4;
+    const S_UNION_MEMBER = 1 << 5;
+    const S_UNION_PARAM  = 1 << 6;
+    const S_MUTABLE      = 1 << 6;
+    const S_PARAMETER    = 1 << 7;
+    const S_INITIALIZED  = 1 << 11;
+    const S_ALIAS        = 1 << 12;
 }

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
@@ -70,7 +70,7 @@ class FnSignatureStmt extends Stmt
             }
 
             // TODO: inject type too?
-            $parent_scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_MUTABLE | Kind::K_VARIABLE | Kind::K_PARAMETER);
+            $parent_scope->insert($param->name, Symbol::S_INITIALIZED | Symbol::S_MUTABLE | Symbol::S_VARIABLE | Symbol::S_PARAMETER);
         }
     }
 

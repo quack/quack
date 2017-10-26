@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
@@ -68,7 +68,7 @@ class NameExpr extends Expr
     {
         $symbol = $this->scope->lookup($this->name);
 
-        if ($symbol & Kind::K_VARIABLE) {
+        if ($symbol & Symbol::S_VARIABLE) {
             $variable_scope = $this->scope->getSymbolScope($this->name);
             return $variable_scope->getMeta(Meta::M_TYPE, $this->name);
         }

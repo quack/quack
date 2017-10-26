@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
@@ -77,7 +77,7 @@ class BreakStmt extends Stmt
             }
 
             // When the symbol exist, but it's not a label
-            if (~$label & Kind::K_LABEL) {
+            if (~$label & Symbol::S_LABEL) {
                 throw new ScopeError(Localization::message('SCO160', ['break', $this->label]));
             }
 
