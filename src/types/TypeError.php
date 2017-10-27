@@ -35,9 +35,9 @@ class TypeError extends Exception
     {
         return join([
             BEGIN_RED,
-            '**** Quack, I\'ve found a ',
+            '**** Oops! I\'ve found a ',
             BEGIN_GREEN, 'type error', END_GREEN,
-            BEGIN_RED, ', my dear!', PHP_EOL,
+            BEGIN_RED, '!', PHP_EOL,
             '     ', $this->message, PHP_EOL, END_RED
         ]);
     }
