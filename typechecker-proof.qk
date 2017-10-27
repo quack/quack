@@ -39,5 +39,5 @@ let one_____  :: Number   :- One__
 do One_
 do One__
 
--- Generic types
-union Maybe(a) :- Just(a) or Nothing
+-- This should fail
+union PolyKind(a) :- Self(a(a))

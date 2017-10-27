@@ -22,10 +22,11 @@ namespace QuackCompiler\Scope;
 
 class Meta
 {
-    const M_REF_COUNT = 'refcount';
-    const M_TYPE      = 'type';
-    const M_LABEL     = 'label';        // Implicit meta labels
-    const M_CONS      = 'construction'; // Possible constructions for a tagged union
+    const M_REF_COUNT        = 'refcount';
+    const M_TYPE             = 'type';
+    const M_LABEL            = 'label';             // Implicit meta labels
+    const M_CONS             = 'construction';      // Possible constructions for a tagged union
+    const M_KIND_CONSTRAINTS = 'kind_constraints';  // Constraints of a specific kind for unification
 
     private static $label_num = 0;
     private static $generic_num = 0;

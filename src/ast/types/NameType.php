@@ -65,6 +65,19 @@ class NameType extends TypeNode
                 throw new TypeError(Localization::message('TYP460', [$this->name, $parent_type]));
             }
         }
+
+        // Bind scope for each children
+        foreach ($this->values as $type) {
+            $type->bindScope($this->scope);
+        }
+
+        // Attach kind constraints according to arity and constructor type
+        if ($type_flags & Symbol::S_UNION_PARAM) {
+            $constraints = $this->scope->getMeta(Meta::M_KIND_CONSTRAINTS, $this->name);
+            // Append new size constraint
+            $constraints[] = ['size' => count($this->values)];
+            $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $this->name, $constraints);
+        }
     }
 
     public function simplify()

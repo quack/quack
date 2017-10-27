@@ -77,6 +77,8 @@ class UnionStmt
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_UNION_PARAM);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new NameType($parameter, []));
+            // Initialize with no constraints
+            $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
         }
 
         $declared = [];
@@ -103,6 +105,22 @@ class UnionStmt
 
     public function runTypeChecker()
     {
-        // TODO: Run typechecker for subnodes
+        // Check constraints that came from bindScope for parameter kinds
+        foreach ($this->parameters as $parameter) {
+            $constraints = $this->scope->getMeta(Meta::M_KIND_CONSTRAINTS, $parameter);
+            $arity = null;
+            foreach ($constraints as $constraint) {
+                if (null === $arity) {
+                    $arity = $constraint['size'];
+                    continue;
+                }
+
+                if ($constraint['size'] !== $arity) {
+                    throw new TypeError(
+                        Localization::message('TYP470', [$parameter, $this->name, $arity, $constraint['size']])
+                    );
+                }
+            }
+        }
     }
 }
