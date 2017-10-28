@@ -28,7 +28,6 @@ class TaggedUnion extends TypeNode
     private $name;
     private $parameters;
     private $values;
-    private $parameter_values;
 
     public function __construct($name, $parameters, $values)
     {
@@ -37,21 +36,12 @@ class TaggedUnion extends TypeNode
         $this->values = $values;
     }
 
-    public function bindParameters($parameter_values)
-    {
-        $this->parameter_values = $parameter_values;
-    }
-
     public function __toString()
     {
         $source = $this->name;
         if (count($this->parameters) > 0) {
             $source .= '(';
-            $source .= implode(', ', array_map(function ($parameter) {
-                return isset($this->parameter_values[$parameter])
-                    ? $this->parameter_values[$parameter]
-                    : $parameter;
-            }, $this->parameters));
+            $source .= implode(', ', $this->parameters);
             $source .= ')';
         }
 

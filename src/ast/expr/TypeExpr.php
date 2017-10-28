@@ -24,6 +24,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
 class TypeExpr extends Expr
@@ -93,7 +94,6 @@ class TypeExpr extends Expr
             $index++;
         }
 
-        $kind->bindParameters($arguments);
         // TODO: Fill the parameters and auto-curry
         return $kind;
     }
