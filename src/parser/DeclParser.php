@@ -91,9 +91,9 @@ class DeclParser
         return new TypeStmt($name, $value);
     }
 
-    public function _unionType()
+    public function _typeConstructorDecl()
     {
-        $name = $this->name_parser->_name();
+        $name = $this->name_parser->_typename();
         $values = [];
         if ($this->reader->consumeIf('(')) {
             do {
@@ -123,7 +123,7 @@ class DeclParser
 
         $this->reader->match(':-');
         do {
-            $values[] = $this->_unionType();
+            $values[] = $this->_typeConstructorDecl();
         } while ($this->reader->consumeIf(Tag::T_OR));
 
         return new UnionStmt($name, $parameters, $values);
