@@ -78,6 +78,22 @@ class TypeExpr extends Expr
         $parameters = $kind->getParameters();
         $constraint = $kind->getConstraint($this->name);
 
+        // Throw error when too much parameters
+        if (count($this->values) > count($constraint)) {
+            throw new TypeError(Localization::message('TYP210', [$this->name]));
+        }
+
+        $arguments = [];
+        $index = 0;
+        // Collect type for each argument
+        foreach ($parameters as $parameter) {
+            $arguments[$parameter] = isset($this->values[$index])
+                ? $this->values[$index]->getType()
+                : null;
+            $index++;
+        }
+
+        $kind->bindParameters($arguments);
         // TODO: Fill the parameters and auto-curry
         return $kind;
     }
