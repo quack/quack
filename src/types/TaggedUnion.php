@@ -38,7 +38,14 @@ class TaggedUnion extends TypeNode
 
     public function __toString()
     {
-        return $this->name;
+        $source = $this->name;
+        if (count($this->parameters) > 0) {
+            $source .= '(';
+            $source .= implode(', ', $this->parameters);
+            $source .= ')';
+        }
+
+        return $source;
     }
 
     public function bindScope(Scope $scope)
