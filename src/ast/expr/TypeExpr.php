@@ -84,16 +84,6 @@ class TypeExpr extends Expr
             throw new TypeError(Localization::message('TYP210', [$this->name]));
         }
 
-        $arguments = [];
-        $index = 0;
-        // Collect type for each argument
-        foreach ($parameters as $parameter) {
-            $arguments[$parameter] = isset($this->values[$index])
-                ? $this->values[$index]->getType()
-                : null;
-            $index++;
-        }
-
         // TODO: Fill the parameters and auto-curry
         return $kind;
     }
