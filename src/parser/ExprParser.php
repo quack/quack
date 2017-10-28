@@ -107,8 +107,7 @@ class ExprParser
         $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('|>', Precedence::PIPELINE);
-        $this->infixLeft('??', Precedence::COALESCENCE);
+        $this->infixLeft('|', Precedence::PIPELINE);
 
         $this->infixRight('**', Precedence::EXPONENT);
         $this->infixRight(':-', Precedence::ASSIGNMENT);

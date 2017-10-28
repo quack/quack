@@ -46,10 +46,6 @@ class OperatorType extends TypeNode
 
     public function simplify()
     {
-        if ('&' !== $this->operator) {
-            return $this;
-        }
-
         $simple_left = $this->left->simplify();
         $simple_right = $this->right->simplify();
 

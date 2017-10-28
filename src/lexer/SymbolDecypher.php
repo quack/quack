@@ -37,8 +37,6 @@ class SymbolDecypher
                 return static::tryMatch($context, ['**']);
             case '=':
                 return static::tryMatch($context, ['=~']);
-            case '|':
-                return static::tryMatch($context, ['|>']);
             case '&':
                 return static::tryMatch($context, ['&{', '&(']);
             case '.':
