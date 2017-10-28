@@ -41,7 +41,7 @@
     "TYP180": "Condition passed to elif statement should be a `Bool', not a `%s'",
     "TYP190": "Cannot infer type of non-variable `%s'",
     "TYP200": "Ok, you declared `%s', but it is not member of a tagged union",
-    "TYP210": "The type constructor `%s' receives %d parameters, but you gave %d",
+    "TYP210": "===DELETED===",
     "TYP220": "Expected a `number' on operand `%s' of range expression. Got `%s'",
     "TYP230": "No type overload for operator `%s' on type `%s'",
     "TYP240": "Condition of ternary operator should de `Bool'. Got `%s'",
@@ -65,7 +65,7 @@
     "TYP420": "The tuples have different sizes, I want %d and you gave me %d",
     "TYP430": "The types of tuples don't match because element %d should be `%s', but it is `%s'",
     "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?",
-    "TYP450": "Argument number %d of constructor `%s' should be of type `%s', but it is `%s'",
+    "TYP450": "===DELETED===",
     "TYP460": "Please, stop trying to declare specialized union member `%s'. Use `%s' instead",
     "TYP470": "Generic type `%s' for union `%s' is ambiguous. Does it have %d or %d parameters?"
 }

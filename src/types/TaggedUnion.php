@@ -60,4 +60,21 @@ class TaggedUnion extends TypeNode
         // Success when both are references to the same tagged union
         return $other === $this;
     }
+
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    public function getConstraint($name_to_find)
+    {
+        foreach ($this->values as $value) {
+            list ($name, $types) = $value;
+            if ($name_to_find === $name) {
+                return $types;
+            }
+        }
+
+        return null;
+    }
 }

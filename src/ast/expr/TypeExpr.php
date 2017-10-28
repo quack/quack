@@ -61,40 +61,24 @@ class TypeExpr extends Expr
 
     public function getType()
     {
-        $myself = $this->scope->lookup($this->name);
-
+        $cons = $this->scope->lookup($this->name);
         // Ensure the type is declared
-        if (null === $myself) {
+        if (null === $cons) {
             throw new TypeError(Localization::message('TYP120', [$this->name]));
         }
 
-        // Ensure the type is member of a tagged union
-        if (~$myself & Symbol::S_UNION_MEMBER) {
+        // Ensure it is member of a tagged union
+        if (~$cons & Symbol::S_UNION_MEMBER) {
             throw new TypeError(Localization::message('TYP200', [$this->name]));
         }
 
-        // Ensure type constructor matches the provided parameters size
-        $cons = $this->scope->getMeta(Meta::M_CONS, $this->name);
-        if (($received = count($this->values)) !== ($expected = count($cons))) {
-            throw new TypeError(Localization::message('TYP210', [$this->name, $expected, $received]));
-        }
+        // Get kind of this type, parameters to bind and the constraint
+        // to satisfy
+        $kind = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+        $parameters = $kind->getParameters();
+        $constraint = $kind->getConstraint($this->name);
 
-        // Check types for each parameter
-        for ($index = 0; $index < $received; $index++) {
-            $param_type = $this->values[$index]->getType();
-            $cons_type = $cons[$index];
-            // Bind scope because inferred type is not scoped
-            $cons_type->bindScope($this->scope);
-
-            if (!$cons_type->check($param_type)) {
-                throw new TypeError(
-                    Localization::message('TYP450', [$index + 1, $this->name, $cons_type, $param_type])
-                );
-            }
-        }
-
-        // Find the tagged union for what this type belongs
-        $tagged_union = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $tagged_union;
+        // TODO: Fill the parameters and auto-curry
+        return $kind;
     }
 }
