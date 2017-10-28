@@ -30,11 +30,13 @@ class NameType extends TypeNode
 {
     public $name;
     public $values;
+    public $is_generic;
 
-    public function __construct($name, $values)
+    public function __construct($name, $values, $is_generic = false)
     {
         $this->name = $name;
         $this->values = $values;
+        $this->is_generic = $is_generic;
     }
 
     public function __toString()

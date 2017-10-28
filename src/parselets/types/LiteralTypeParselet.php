@@ -45,6 +45,6 @@ class LiteralTypeParselet implements PrefixParselet
             return new LiteralType($names[$name]);
         }
 
-        return (new NameTypeParselet())->parse($grammar, $token);
+        return (new NameTypeParselet(true))->parse($grammar, $token);
     }
 }
