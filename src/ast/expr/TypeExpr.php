@@ -83,6 +83,8 @@ class TypeExpr extends Expr
         for ($index = 0; $index < $received; $index++) {
             $param_type = $this->values[$index]->getType();
             $cons_type = $cons[$index];
+            // Bind scope because inferred type is not scoped
+            $cons_type->bindScope($this->scope);
 
             if (!$cons_type->check($param_type)) {
                 throw new TypeError(

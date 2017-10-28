@@ -94,6 +94,8 @@ class NameType extends TypeNode
     public function check(TypeNode $other)
     {
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+
+
         return $type->check($other);
     }
 
