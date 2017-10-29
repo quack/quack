@@ -74,7 +74,6 @@ import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
-import(PARSELETS, 'expr/TypeParselet');
 
 import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');

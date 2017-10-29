@@ -68,9 +68,11 @@ class NameExpr extends Expr
     {
         $symbol = $this->scope->lookup($this->name);
 
-        if ($symbol & Symbol::S_VARIABLE) {
-            $variable_scope = $this->scope->getSymbolScope($this->name);
-            return $variable_scope->getMeta(Meta::M_TYPE, $this->name);
+        if ($symbol & Symbol::S_VARIABLE || $symbol & Symbol::S_TYPE) {
+            $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+            // TODO list:
+            // - Isolate declarations of kinds and variables
+            return $type;
         }
 
         throw new TypeError(Localization::message('TYP190', [$this->name]));
