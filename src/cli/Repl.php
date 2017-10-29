@@ -288,10 +288,10 @@ class Repl extends Component
             $this->console->resetColor();
             $this->console->write(' :: ');
 
-            if ($signature & Symbol::S_UNION) {
+            if ($signature & Symbol::S_DATA) {
                 $this->console->setColor(Console::FG_WHITE);
                 $this->console->setColor(Console::BG_GREEN);
-                $this->console->write('[union]');
+                $this->console->write('[data]');
                 $this->console->resetColor();
                 $this->console->write(' ');
                 $this->console->setColor(Console::FG_BLUE);

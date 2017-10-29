@@ -29,7 +29,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
-class UnionStmt
+class DataStmt
 {
     public $name;
     public $parameters;
@@ -44,7 +44,7 @@ class UnionStmt
 
     public function format(Parser $parser)
     {
-        $source = 'union ';
+        $source = 'data ';
         $source .= $this->name;
 
         if (sizeof($this->parameters) > 0) {
@@ -75,7 +75,7 @@ class UnionStmt
         // Bind input parameters
         $this->scope = new Scope($parent_scope);
         foreach ($this->parameters as $parameter) {
-            $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_UNION_PARAM);
+            $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_DATA_PARAM);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new NameType($parameter, []));
             // Initialize with no constraints
             $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
@@ -84,7 +84,7 @@ class UnionStmt
         $declared = [];
         // Declare union type
         $tagged_union = new TaggedUnion($this->name, $this->parameters, $this->values);
-        $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_UNION);
+        $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_CONS, $this->name, $this->values);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $tagged_union);
 
@@ -95,7 +95,7 @@ class UnionStmt
             }
 
             $declared[$name] = true;
-            $parent_scope->insert($name, Symbol::S_TYPE | Symbol::S_UNION_MEMBER);
+            $parent_scope->insert($name, Symbol::S_TYPE | Symbol::S_DATA_MEMBER);
             $parent_scope->setMeta(Meta::M_TYPE, $name, $tagged_union);
             $parent_scope->setMeta(Meta::M_CONS, $name, $types);
         }

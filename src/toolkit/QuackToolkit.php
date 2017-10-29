@@ -144,7 +144,7 @@ import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/TypeStmt');
-import(AST, 'stmt/UnionStmt');
+import(AST, 'stmt/DataStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');

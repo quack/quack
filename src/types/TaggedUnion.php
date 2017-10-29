@@ -50,7 +50,7 @@ class TaggedUnion extends TypeNode
 
     public function bindScope(Scope $scope)
     {
-        // TODO Bind generic parameters (if still unbound in UnionStmt)
+        // TODO Bind generic parameters (if still unbound in DataStmt)
         foreach ($this->values as $value) {
             foreach ($value[1] as $type) {
                 $type->bindScope($scope);
@@ -64,7 +64,7 @@ class TaggedUnion extends TypeNode
             return false;
         }
 
-        // Success when both are references to the same tagged union
+        // Success when both are references to the same data
         return $other === $this;
     }
 

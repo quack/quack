@@ -59,10 +59,10 @@ class NameType extends TypeNode
             throw new TypeError(Localization::message('TYP440', [$this->name]));
         }
 
-        // Disable union members in declaration context. This is necessary because
+        // Disable data members in declaration context. This is necessary because
         // you can do `:: Optional(string)', but not :: `Some(string)'
         if ($this->isInDeclarationContext()) {
-            if ($type_flags & Symbol::S_UNION_MEMBER) {
+            if ($type_flags & Symbol::S_DATA_MEMBER) {
                 $parent_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
                 throw new TypeError(Localization::message('TYP460', [$this->name, $parent_type]));
             }
@@ -74,7 +74,7 @@ class NameType extends TypeNode
         }
 
         // Attach kind constraints according to arity and constructor type
-        if ($type_flags & Symbol::S_UNION_PARAM) {
+        if ($type_flags & Symbol::S_DATA_PARAM) {
             $constraints = $this->scope->getMeta(Meta::M_KIND_CONSTRAINTS, $this->name);
             // Append new size constraint
             $constraints[] = ['size' => count($this->values)];

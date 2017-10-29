@@ -28,9 +28,9 @@ class Symbol
     const S_LABEL    = 1 << 3;
 
     // Additional flags
-    const S_UNION        = 1 << 4;
-    const S_UNION_MEMBER = 1 << 5;
-    const S_UNION_PARAM  = 1 << 6;
+    const S_DATA         = 1 << 4;
+    const S_DATA_MEMBER  = 1 << 5;
+    const S_DATA_PARAM   = 1 << 6;
     const S_MUTABLE      = 1 << 6;
     const S_PARAMETER    = 1 << 7;
     const S_INITIALIZED  = 1 << 11;

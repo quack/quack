@@ -68,8 +68,8 @@ class TypeExpr extends Expr
             throw new TypeError(Localization::message('TYP120', [$this->name]));
         }
 
-        // Ensure it is member of a tagged union
-        if (~$cons & Symbol::S_UNION_MEMBER) {
+        // Ensure it is member of a data
+        if (~$cons & Symbol::S_DATA_MEMBER) {
             throw new TypeError(Localization::message('TYP200', [$this->name]));
         }
 

@@ -1,14 +1,14 @@
 -- Everything that is new to the type checker I'll put here as a test
 
-union Number
+data Number
     :- One
     or Two
 
--- Tagged union members
+-- Data members
 do One
 do Two
 
--- Tagged unions
+-- Data instances
 let one :: Number :- One
 let two :: Number :- Two
 
@@ -40,4 +40,4 @@ do One_
 do One__
 
 -- This should fail
-union PolyKind(a) :- Self(a(a))
+data PolyKind(a) :- Self(a(a))

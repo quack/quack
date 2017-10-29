@@ -3,14 +3,14 @@ php ./src/Main.php %s
 %%describe
 Algebraic data types
 %%source
-union Maybe(a) :- Some(a) or None
-union List(a) :- Nil or Cons(a, List(a))
-union Tree :- Empty or Leaf(number) or Node(Tree, Tree)
+data Maybe(a) :- Some(a) or None
+data List(a) :- Nil or Cons(a, List(a))
+data Tree :- Empty or Leaf(number) or Node(Tree, Tree)
 
-union Effect :- Mut(string, number)
-             or Log(string)
+data Effect :- Mut(string, number)
+            or Log(string)
 %%expect
-union Maybe(a) :- Some(a) or None
-union List(a) :- Nil or Cons(a, List(a))
-union Tree :- Empty or Leaf(number) or Node(Tree, Tree)
-union Effect :- Mut(string, number) or Log(string)
+data Maybe(a) :- Some(a) or None
+data List(a) :- Nil or Cons(a, List(a))
+data Tree :- Empty or Leaf(number) or Node(Tree, Tree)
+data Effect :- Mut(string, number) or Log(string)
