@@ -28,7 +28,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
-class ArrayExpr extends Expr
+class ListExpr extends Expr
 {
     public $items;
 

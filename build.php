@@ -513,7 +513,6 @@ $bundle_settings = [
         'isEnd',
         'match',
         'runTypeChecker',
-        'ArrayExpr',
         'TYPE_EXPRESSION',
         'TYPE_STATEMENT',
         'ListType',

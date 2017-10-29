@@ -87,7 +87,7 @@ class OperatorExpr extends Expr
             } else {
                 // We have a range of specific nodes that are allowed
                 $valid_assignment = $this->left instanceof AccessExpr ||
-                    $this->left instanceof ArrayExpr; // Array destructuring
+                    $this->left instanceof ListExpr; // List destructuring
 
                 if (!$valid_assignment) {
                     throw new ScopeError(Localization::message('SCO090', []));
@@ -95,7 +95,7 @@ class OperatorExpr extends Expr
 
                 // When it is array destructuring, ensure all the subnodes are names
                 // TODO: Implement destructuring on let, because this is currently useless
-                if ($this->left instanceof ArrayExpr) {
+                if ($this->left instanceof ListExpr) {
                     foreach ($this->left->items as $item) {
                         if (!($item instanceof NameExpr)) {
                             throw new ScopeError(Localization::message('SCO100', []));

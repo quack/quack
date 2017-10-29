@@ -60,7 +60,7 @@ import(PARSELETS, 'expr/PostfixOperatorParselet');
 import(PARSELETS, 'expr/TernaryParselet');
 import(PARSELETS, 'expr/GroupParselet');
 import(PARSELETS, 'expr/LambdaParselet');
-import(PARSELETS, 'expr/ArrayParselet');
+import(PARSELETS, 'expr/ListParselet');
 import(PARSELETS, 'expr/NameParselet');
 import(PARSELETS, 'expr/MemberAccessParselet');
 import(PARSELETS, 'expr/CallParselet');
@@ -106,7 +106,7 @@ import(PARSER, 'Precedence');
 import(AST, 'Node');
 
 import(AST, 'expr/Expr');
-import(AST, 'expr/ArrayExpr');
+import(AST, 'expr/ListExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/MapExpr');
 import(AST, 'expr/ObjectExpr');

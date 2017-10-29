@@ -21,11 +21,11 @@
 namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ArrayExpr;
+use \QuackCompiler\Ast\Expr\ListExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class ArrayParselet implements PrefixParselet
+class ListParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
@@ -44,6 +44,6 @@ class ArrayParselet implements PrefixParselet
             $grammar->reader->match('}');
         }
 
-        return new ArrayExpr($items);
+        return new ListExpr($items);
     }
 }

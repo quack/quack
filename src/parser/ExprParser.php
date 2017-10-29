@@ -29,7 +29,7 @@ use \QuackCompiler\Parselets\Expr\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\TernaryParselet;
 use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
-use \QuackCompiler\Parselets\Expr\ArrayParselet;
+use \QuackCompiler\Parselets\Expr\ListParselet;
 use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
 use \QuackCompiler\Parselets\Expr\AccessParselet;
@@ -69,7 +69,7 @@ class ExprParser
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
         $this->register('(', new CallParselet);
-        $this->register('{', new ArrayParselet);
+        $this->register('{', new ListParselet);
         $this->register('{', new AccessParselet);
         $this->register('%{', new ObjectParselet);
         $this->register('#{', new MapParselet);
