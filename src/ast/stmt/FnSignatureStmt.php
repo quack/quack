@@ -78,7 +78,7 @@ class FnSignatureStmt extends Stmt
     {
         return array_map(function($parameter) {
             return null === $parameter->type
-                ? new GenericType(Meta::nextGenericVarName())
+                ? new GenericType()
                 : $parameter->type;
         }, $this->parameters);
     }

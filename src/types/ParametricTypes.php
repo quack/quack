@@ -18,34 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\ParametricTypes;
+use \QuackCompiler\Ast\Types\GenericType;
 
-class ExprStmt extends Stmt
+class ParametricTypes
 {
-    public $expr;
+    private static $instances = [];
 
-    public function __construct($expr)
+    public static function reset()
     {
-        ParametricTypes::reset();
-        $this->expr = $expr;
+        static::$instances = [];
     }
 
-    public function format(Parser $parser)
+    public static function push(GenericType $generic)
     {
-        return 'do ' . $this->expr->format($parser) . PHP_EOL;
+        static::$instances[] = $generic;
     }
 
-    public function injectScope($parent_scope)
+    public static function name(GenericType $generic)
     {
-        $this->expr->injectScope($parent_scope);
-    }
+        $index = ord(a);
+        foreach (static::$instances as $instance) {
+            if ($instance === $generic) {
+                return chr($index);
+            }
 
-    public function runTypeChecker()
-    {
-        $type = $this->expr->getType();
-        var_dump((string) $type);
+            $index++;
+        }
+
+        return '?';
     }
 }

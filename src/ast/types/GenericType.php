@@ -21,29 +21,26 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\ParametricTypes;
 
 class GenericType extends TypeNode
 {
-    public $name;
-
-    public function __construct($name)
+    public function __construct()
     {
-        $this->name = $name;
+        ParametricTypes::push($this);
     }
 
     public function __toString()
     {
-        return $this->parenthesize($this->name);
+        return $this->parenthesize(ParametricTypes::name($this));
     }
 
     public function bindScope(Scope $parent_scope)
     {
-        // TODO
     }
 
     public function check(TypeNode $other)
     {
-        // TODO: Implement generic types
         return false;
     }
 }

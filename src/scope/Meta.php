@@ -34,9 +34,4 @@ class Meta
     {
         return  'LB' . static::$label_num++;
     }
-
-    public static function nextGenericVarName()
-    {
-        return 'A' . static::$generic_num++;
-    }
 }

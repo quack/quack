@@ -115,7 +115,7 @@ class LambdaExpr extends Expr
             // Use or infer type for parameter and store it
             $param_type = isset($param->type)
                 ? $param->type
-                : new GenericType(Meta::nextGenericVarName());
+                : new GenericType();
 
             $this->argument_types[$param->name] = $param_type;
             $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);

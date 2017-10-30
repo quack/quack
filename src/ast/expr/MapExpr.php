@@ -81,8 +81,8 @@ class MapExpr extends Expr
         // Generic type when no initializer provided
         if (0 === $size) {
             return new MapType(
-                new GenericType(Meta::nextGenericVarName()),
-                new GenericType(Meta::nextGenericVarName()));
+                new GenericType(),
+                new GenericType());
         }
 
         $original_key_type = $this->keys[0]->getType();

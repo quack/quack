@@ -63,7 +63,7 @@ class ListExpr extends Expr
     {
         // Empty array, generic type
         if (0 === count($this->items)) {
-            return new ListType(new GenericType(Meta::nextGenericVarName()));
+            return new ListType(new GenericType());
         }
 
         // Decidable type
