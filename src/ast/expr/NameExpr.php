@@ -20,6 +20,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
@@ -68,13 +69,11 @@ class NameExpr extends Expr
     {
         $symbol = $this->scope->lookup($this->name);
 
-        if ($symbol & Symbol::S_VARIABLE || $symbol & Symbol::S_TYPE) {
-            $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-            // TODO list:
-            // - Isolate declarations of kinds and variables
-            return $type;
+        if ($symbol & Symbol::S_VARIABLE || $symbol & Symbol::S_DATA_MEMBER) {
+            return $this->scope->getMeta(Meta::M_TYPE, $this->name);
         }
 
         throw new TypeError(Localization::message('TYP190', [$this->name]));
     }
 }
+

@@ -111,7 +111,7 @@ class LambdaExpr extends Expr
                 throw new ScopeError(Localization::message('SCO010', [$param->name]));
             }
 
-            $this->scope->insert($param->name, Symbol::S_INITIALIZED | Symbol::S_VARIABLE | Symbol::S_PARAMETER | Symbol::S_MUTABLE);
+            $this->scope->insert($param->name, Symbol::S_INITIALIZED | Symbol::S_VARIABLE | Symbol::S_PARAMETER);
             // Use or infer type for parameter and store it
             $param_type = isset($param->type)
                 ? $param->type

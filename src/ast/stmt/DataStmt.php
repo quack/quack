@@ -29,7 +29,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
-class DataStmt
+class DataStmt extends Stmt
 {
     public $name;
     public $parameters;
@@ -54,16 +54,8 @@ class DataStmt
         }
 
         $source .= ' :- ';
-        $source .= implode(' or ', array_map(function ($value) {
-            list ($name, $types) = $value;
-            $source = $name;
-
-            if (sizeof($types) > 0) {
-                $source .= '(';
-                $source .= implode(', ', $types);
-                $source .= ')';
-            }
-            return $source;
+        $source .= implode(' or ', array_map(function ($value) use ($parser) {
+            return $value->format($parser);
         }, $this->values));
 
         $source .= PHP_EOL;
@@ -77,30 +69,24 @@ class DataStmt
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_DATA_PARAM);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new NameType($parameter, []));
-            // Initialize with no constraints
+            // Initialize parameter with no constraints
             $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
         }
 
-        $declared = [];
-        // Declare union type
-        $tagged_union = new TaggedUnion($this->name, $this->parameters, $this->values);
+        // Store union declaration in the current scope
+        // TODO: Use secondary scope for union declaration
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
-        $parent_scope->setMeta(Meta::M_CONS, $this->name, $this->values);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $tagged_union);
 
+        $declared = [];
         foreach ($this->values as $value) {
-            list ($name, $types) = $value;
-            if (isset($declared[$name])) {
-                throw new TypeError(Localization::message('SCO030', [$name, $this->name]));
+            if (isset($declared[$value->name])) {
+                throw new TypeError(Localization::message('SCO030', [$value->name, $this->name]));
             }
 
-            $declared[$name] = true;
-            $parent_scope->insert($name, Symbol::S_TYPE | Symbol::S_DATA_MEMBER);
-            $parent_scope->setMeta(Meta::M_TYPE, $name, $tagged_union);
-            $parent_scope->setMeta(Meta::M_CONS, $name, $types);
+            $value->bindDataStmt($this);
+            $value->injectScope($parent_scope, $this->scope);
+            $declared[$value->name] = true;
         }
-
-        $tagged_union->bindScope($this->scope);
     }
 
     public function runTypeChecker()

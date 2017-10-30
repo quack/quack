@@ -279,6 +279,11 @@ class Repl extends Component
         });
 
         foreach ($context->table as $name => $signature) {
+            // Skip union declarations because they shouldn't be exposed
+            if ($signature & Symbol::S_DATA) {
+                continue;
+            }
+
             $type = $context->meta[$name][Meta::M_TYPE];
             $mutable = $signature & Symbol::S_MUTABLE;
             $color = $signature & Symbol::S_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
@@ -287,20 +292,8 @@ class Repl extends Component
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
-
-            if ($signature & Symbol::S_DATA) {
-                $this->console->setColor(Console::FG_WHITE);
-                $this->console->setColor(Console::BG_GREEN);
-                $this->console->write('[data]');
-                $this->console->resetColor();
-                $this->console->write(' ');
-                $this->console->setColor(Console::FG_BLUE);
-                $this->console->write(implode(' or ', array_column($context->meta[$name][Meta::M_CONS], 0)));
-            } else {
-                $this->console->setColor(Console::FG_BLUE);
-                $this->console->write($type);
-            }
-
+            $this->console->setColor(Console::FG_BLUE);
+            $this->console->write($type);
             $this->console->resetColor();
 
             if ($mutable) {

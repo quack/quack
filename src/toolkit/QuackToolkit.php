@@ -144,6 +144,7 @@ import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/TypeStmt');
 import(AST, 'stmt/DataStmt');
+import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
@@ -167,6 +168,5 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
-import(TYPES, 'TaggedUnion');
 import(TYPES, 'NativeQuackType');
 import(TYPES, 'TypeError');

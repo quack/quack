@@ -57,12 +57,25 @@ class CallExpr extends Expr
         }
     }
 
+    private function callWithArguments($callee)
+    {
+        $called_with_argc = count($this->arguments);
+        if ($called_with_argc > count($callee->parameters)) {
+            throw new TypeError(Localization::message('TYP450', [$callee]));
+        }
+
+        var_dump((string) $callee);
+        exit;
+    }
+
     public function getType()
     {
         $callee_type = $this->callee->getType();
         if (!($callee_type instanceof FunctionType)) {
             throw new TypeError(Localization::message('TYP310', [$callee_type]));
         }
+
+        $result = $this->callWithArguments($callee_type);
 
         // Check parameters length
         $expected_arguments = count($callee_type->parameters);
