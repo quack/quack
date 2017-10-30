@@ -23,6 +23,9 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
 
 class CallExpr extends Expr
@@ -50,6 +53,7 @@ class CallExpr extends Expr
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->callee->injectScope($parent_scope);
 
         foreach ($this->arguments as $arg) {
@@ -59,13 +63,42 @@ class CallExpr extends Expr
 
     private function callWithArguments($callee)
     {
-        $called_with_argc = count($this->arguments);
         if ($called_with_argc > count($callee->parameters)) {
+            // Too many parameters provided to the function. Stop.
             throw new TypeError(Localization::message('TYP450', [$callee]));
         }
 
-        var_dump((string) $callee);
-        exit;
+        $scope = new Scope($this->scope);
+
+        $index = 0;
+        $result_type = $callee;
+        foreach ($this->arguments as $argument) {
+            $expected = $callee->parameters[$index];
+            $got = $argument->getType();
+            if ($expected->is_generic) {
+                // Bind to function scope when generic
+                $scope->insert($expected->name, Symbol::S_VARIABLE);
+                $scope->setMeta(Meta::M_TYPE, $expected->name, $got);
+            }
+
+            $expected->bindScope($scope);
+            if (!$expected->check($got)) {
+                // When this parameter doesn't match the expected by the function
+                throw new TypeError(Localization::message('TYP330', [$index + 1, $expected, $got]));
+            }
+            $index++;
+            $parameters = array_slice($callee->parameters, $index, $called_with_argc);
+            $return_type = $callee->return->fill($scope);
+
+            if (count($parameters) === 0) {
+                // When no more parameters to reduce, compute return
+                $result_type = $return_type;
+            } else {
+                $result_type = new FunctionType($parameters, $return_type);
+            }
+        }
+
+        return $result_type;
     }
 
     public function getType()
@@ -75,28 +108,6 @@ class CallExpr extends Expr
             throw new TypeError(Localization::message('TYP310', [$callee_type]));
         }
 
-        $result = $this->callWithArguments($callee_type);
-
-        // Check parameters length
-        $expected_arguments = count($callee_type->parameters);
-        $received_arguments = count($this->arguments);
-
-        if ($received_arguments !== $expected_arguments) {
-            throw new TypeError(Localization::message('TYP320',
-                [$callee_type, $expected_arguments, $received_arguments]));
-        }
-
-        // Check for each parameter type based on index
-        for ($i = 0; $i < $expected_arguments; $i++) {
-            $expected_type = $callee_type->parameters[$i];
-            $received_type = $this->arguments[$i]->getType();
-
-            if (!$expected_type->check($received_type)) {
-                throw new TypeError(Localization::message('TYP330',
-                    [$i + 1, $expected_type, $received_type]));
-            }
-        }
-
-        return $callee_type->return;
+        return $this->callWithArguments($callee_type);
     }
 }
