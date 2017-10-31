@@ -69,7 +69,7 @@ class DataStmt extends Stmt
         $this->scope = new Scope($parent_scope);
         $kind_parameters = [];
         foreach ($this->parameters as $parameter) {
-            $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_DATA_PARAM);
+            $this->scope->insert($parameter, Symbol::S_DATA_PARAM);
             $type = new NameType($parameter, [], true);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
             // Initialize parameter with no constraints

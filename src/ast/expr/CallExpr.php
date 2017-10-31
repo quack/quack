@@ -80,7 +80,7 @@ class CallExpr extends Expr
             $received = $argument->getType();
             if ($expected->is_generic) {
                 // Bind to function scope when generic
-                $this->scope->insert($expected->name, Symbol::S_VARIABLE);
+                $this->scope->insert($expected->name, Symbol::S_VARIABLE | Symbol::S_DATA_PARAM);
                 $this->scope->setMeta(Meta::M_TYPE, $expected->name, $received);
             }
 

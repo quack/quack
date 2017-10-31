@@ -66,6 +66,6 @@
     "TYP430": "The types of tuples don't match because element %d should be `%s', but it is `%s'",
     "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?",
     "TYP450": "Too many parameters passed on call of `%s'",
-    "TYP460": "Please, stop trying to declare specialized data member `%s'. Use `%s' instead",
+    "TYP460": "===DELETED===",
     "TYP470": "Generic type `%s' for data `%s' is ambiguous. Does it have %d or %d parameters?"
 }

@@ -162,12 +162,7 @@ class StmtParser
             ? $this->expr_parser->_expr()
             : null;
 
-        // Enable declaration context when type exists
-        if (null !== $type) {
-            $type->enableDeclarationContext();
-        }
-
-        return new LetStmt($name, $type, $value, $mutable);
+       return new LetStmt($name, $type, $value, $mutable);
     }
 
     public function _whileStmt()

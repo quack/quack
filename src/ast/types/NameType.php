@@ -21,9 +21,9 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
 
 class NameType extends TypeNode
@@ -55,17 +55,8 @@ class NameType extends TypeNode
     {
         $this->scope = $parent_scope;
         $type_flags = $this->scope->lookup($this->name);
-        if (null === $type_flags) {
+        if (null === $type_flags || ((~$type_flags & Symbol::S_DATA) && (~$type_flags & Symbol::S_DATA_PARAM))) {
             throw new TypeError(Localization::message('TYP440', [$this->name]));
-        }
-
-        // Disable data members in declaration context. This is necessary because
-        // you can do `:: Optional(string)', but not :: `Some(string)'
-        if ($this->isInDeclarationContext()) {
-            if ($type_flags & Symbol::S_DATA_MEMBER) {
-                $parent_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-                throw new TypeError(Localization::message('TYP460', [$this->name, $parent_type]));
-            }
         }
 
         // Bind scope for each children
