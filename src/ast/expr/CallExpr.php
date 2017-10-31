@@ -77,17 +77,17 @@ class CallExpr extends Expr
         $result_type = $callee;
         foreach ($this->arguments as $argument) {
             $expected = $callee->parameters[$index];
-            $got = $argument->getType();
+            $received = $argument->getType();
             if ($expected->is_generic) {
                 // Bind to function scope when generic
                 $this->scope->insert($expected->name, Symbol::S_VARIABLE);
-                $this->scope->setMeta(Meta::M_TYPE, $expected->name, $got);
+                $this->scope->setMeta(Meta::M_TYPE, $expected->name, $received);
             }
 
             $expected->bindScope($this->scope);
-            if (!$expected->check($got)) {
+            if (!$expected->check($received)) {
                 // When this parameter doesn't match the expected by the function
-                throw new TypeError(Localization::message('TYP330', [$index + 1, $expected, $got]));
+                throw new TypeError(Localization::message('TYP330', [$index + 1, $expected, $received]));
             }
             $index++;
             $parameters = array_slice($callee->parameters, $index, $called_with_argc);
