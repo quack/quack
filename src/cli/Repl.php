@@ -300,6 +300,11 @@ class Repl extends Component
         if (isset($variable[1])) {
             return $this->handleShowType($variable[1]);
         }
+
+        $this->console->setColor(Console::FG_RED);
+        $this->console->writeln("I don't know the command `$command'. Sorry!");
+        $this->console->writeln("Available commands: :clear, :quit, :what and :t `symbol`");
+        $this->console->resetColor();
     }
 
     public function welcome()
