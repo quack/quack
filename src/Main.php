@@ -72,7 +72,6 @@ if (count($argv) > 1) {
             // TODO: This is very ugly. We need to start thinking about modules and export
             unset($script->ast->stmt_list[0]);
             unset($script->ast->stmt_list[1]);
-            unset($script->ast->stmt_list[2]);
             echo $script->format();
         } catch (Exception $e) {
             echo $e;
