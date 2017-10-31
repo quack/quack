@@ -25,8 +25,8 @@ use \QuackCompiler\Scope\Scope;
 
 class Kind extends TypeNode
 {
-    private $name;
-    private $parameters;
+    public $name;
+    public $parameters;
 
     public function __construct($name, $parameters)
     {

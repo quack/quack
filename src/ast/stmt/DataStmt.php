@@ -67,17 +67,16 @@ class DataStmt extends Stmt
     {
         // Bind input parameters
         $this->scope = new Scope($parent_scope);
+        $kind_parameters = [];
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_TYPE | Symbol::S_DATA_PARAM);
-            $this->scope->setMeta(Meta::M_TYPE, $parameter, new NameType($parameter, []));
+            $type = new NameType($parameter, [], true);
+            $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
             // Initialize parameter with no constraints
             $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
+            $kind_parameters[] = $type;
         }
 
-        // TODO: Use secondary scope for union declaration
-        $kind_parameters = array_map(function ($parameter) {
-            return new NameType($parameter, [], true);
-        }, $this->parameters);
         $kind = new Kind($this->name, $kind_parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $kind);
