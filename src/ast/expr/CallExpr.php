@@ -79,7 +79,7 @@ class CallExpr extends Expr
         foreach ($this->arguments as $argument) {
             $expected = $callee->parameters[$index];
             $received = $argument->getType();
-            if ($expected->is_generic) {
+            if ($expected->isGeneric()) {
                 // Bind to function scope when generic
                 $this->scope->insert($expected->name, Symbol::S_VARIABLE | Symbol::S_DATA_PARAM);
                 $this->scope->setMeta(Meta::M_TYPE, $expected->name, $received);

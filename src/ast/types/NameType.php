@@ -116,4 +116,9 @@ class NameType extends TypeNode
 
         return new NameType($this->name, $values);
     }
+
+    public function isGeneric()
+    {
+        return $this->is_generic;
+    }
 }
