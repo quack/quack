@@ -18,21 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\NameType;
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Types\Kind;
 
-class TypeConsStmt
+class Kind extends TypeNode
 {
-    public $name;
-    public $parameters;
-    public $kind;
+    private $name;
+    private $parameters;
 
     public function __construct($name, $parameters)
     {
@@ -40,15 +34,9 @@ class TypeConsStmt
         $this->parameters = $parameters;
     }
 
-    public function bindKind(Kind $kind)
-    {
-        $this->kind = $kind;
-    }
-
-    public function format(Parser $parser)
+    public function __toString()
     {
         $source = $this->name;
-
         if (count($this->parameters) > 0) {
             $source .= '(';
             $source .= implode(', ', $this->parameters);
@@ -58,21 +46,13 @@ class TypeConsStmt
         return $source;
     }
 
-    private function getKind()
+    public function check(TypeNode $other)
     {
-        if (count($this->parameters) === 0) {
-            return $this->kind;
-        }
-
-        return new FunctionType($this->parameters, $this->kind);
+        // TODO
     }
 
-    public function injectScope($parent_scope, $data_scope)
+    public function bindScope(Scope $scope)
     {
-        $parent_scope->insert($this->name, Symbol::S_DATA_MEMBER);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getKind());
-        foreach ($this->parameters as $parameter) {
-            $parameter->bindScope($data_scope);
-        }
+        // Pass
     }
 }

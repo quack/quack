@@ -26,6 +26,7 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\Kind;
 use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
@@ -73,9 +74,13 @@ class DataStmt extends Stmt
             $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
         }
 
-        // Store union declaration in the current scope
         // TODO: Use secondary scope for union declaration
+        $kind_parameters = array_map(function ($parameter) {
+            return new NameType($parameter, [], true);
+        }, $this->parameters);
+        $kind = new Kind($this->name, $kind_parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
+        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $kind);
 
         $declared = [];
         foreach ($this->values as $value) {
@@ -83,7 +88,7 @@ class DataStmt extends Stmt
                 throw new TypeError(Localization::message('SCO030', [$value->name, $this->name]));
             }
 
-            $value->bindDataStmt($this);
+            $value->bindKind($kind);
             $value->injectScope($parent_scope, $this->scope);
             $declared[$value->name] = true;
         }
