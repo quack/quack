@@ -53,22 +53,25 @@ class CallExpr extends Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = $parent_scope;
-        $this->callee->injectScope($parent_scope);
+        $this->scope = new Scope($parent_scope);
+        $this->callee->injectScope($this->scope);
 
-        foreach ($this->arguments as $arg) {
-            $arg->injectScope($parent_scope);
+        foreach ($this->arguments as $argument) {
+            $argument->injectScope($this->scope);
         }
     }
 
-    private function callWithArguments($callee)
+    public function getType()
     {
+        $callee = $this->callee->getType();
+        if (!($callee instanceof FunctionType)) {
+            throw new TypeError(Localization::message('TYP310', [$callee_type]));
+        }
+
         if ($called_with_argc > count($callee->parameters)) {
             // Too many parameters provided to the function. Stop.
             throw new TypeError(Localization::message('TYP450', [$callee]));
         }
-
-        $scope = new Scope($this->scope);
 
         $index = 0;
         $result_type = $callee;
@@ -77,18 +80,18 @@ class CallExpr extends Expr
             $got = $argument->getType();
             if ($expected->is_generic) {
                 // Bind to function scope when generic
-                $scope->insert($expected->name, Symbol::S_VARIABLE);
-                $scope->setMeta(Meta::M_TYPE, $expected->name, $got);
+                $this->scope->insert($expected->name, Symbol::S_VARIABLE);
+                $this->scope->setMeta(Meta::M_TYPE, $expected->name, $got);
             }
 
-            $expected->bindScope($scope);
+            $expected->bindScope($this->scope);
             if (!$expected->check($got)) {
                 // When this parameter doesn't match the expected by the function
                 throw new TypeError(Localization::message('TYP330', [$index + 1, $expected, $got]));
             }
             $index++;
             $parameters = array_slice($callee->parameters, $index, $called_with_argc);
-            $return_type = $callee->return->fill($scope);
+            $return_type = $callee->return->fill($this->scope);
 
             if (count($parameters) === 0) {
                 // When no more parameters to reduce, compute return
@@ -99,15 +102,5 @@ class CallExpr extends Expr
         }
 
         return $result_type;
-    }
-
-    public function getType()
-    {
-        $callee_type = $this->callee->getType();
-        if (!($callee_type instanceof FunctionType)) {
-            throw new TypeError(Localization::message('TYP310', [$callee_type]));
-        }
-
-        return $this->callWithArguments($callee_type);
     }
 }
