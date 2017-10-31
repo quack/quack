@@ -63,6 +63,7 @@ class CallExpr extends Expr
 
     public function getType()
     {
+        $called_with_argc = count($this->arguments);
         $callee = $this->callee->getType();
         if (!($callee instanceof FunctionType)) {
             throw new TypeError(Localization::message('TYP310', [$callee_type]));
