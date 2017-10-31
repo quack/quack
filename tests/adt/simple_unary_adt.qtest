@@ -1,0 +1,24 @@
+%%command
+php ./src/Main.php %s
+%%describe
+Simple ADT declaration
+%%source
+data Maybe(a)
+    :- Just(a)
+    or Nothing
+do Just
+do Nothing
+do Just(1)
+do Just(%{ content: '' })
+%%expect
+string(14) "&[a]: Maybe(a)"
+string(8) "Maybe(a)"
+string(13) "Maybe(number)"
+string(25) "Maybe(%{content: string})"
+data Maybe(a) :- Just(a) or Nothing
+do Just
+do Nothing
+do Just(1)
+do Just(%{
+  content: ''
+})
