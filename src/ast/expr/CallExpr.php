@@ -75,6 +75,8 @@ class CallExpr extends Expr
             throw new TypeError(Localization::message('TYP450', [$callee]));
         }
 
+        // TODO: Reflect types!!! Deprecate almost everything below
+
         $index = 0;
         $result_type = $callee;
         foreach ($this->arguments as $argument) {
@@ -93,7 +95,7 @@ class CallExpr extends Expr
             }
             $index++;
             $parameters = array_slice($callee->parameters, $index, $called_with_argc);
-            $return_type = $callee->return->fill($this->scope);
+            $return_type = $callee->return;
 
             if (count($parameters) === 0) {
                 // When no more parameters to reduce, compute return

@@ -82,16 +82,6 @@ abstract class TypeNode
         return $this;
     }
 
-    public function isGeneric()
-    {
-        return false;
-    }
-
-    public function fill(Scope $scope)
-    {
-        return $this;
-    }
-
     abstract function check(TypeNode $other);
 
     abstract function bindScope(Scope $parent_scope);

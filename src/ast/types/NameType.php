@@ -100,25 +100,4 @@ class NameType extends TypeNode
 
         return [$flags, $meta];
     }
-
-    public function fill(Scope $scope)
-    {
-        // TODO: Deal with a(*)
-        if ($this->is_generic) {
-            $type = $scope->getMeta(Meta::M_TYPE, $this->name);
-            return $type === null ? $this : $type;
-        }
-
-        $values = [];
-        foreach ($this->values as $value) {
-            $values[] = $value->fill($scope);
-        }
-
-        return new NameType($this->name, $values);
-    }
-
-    public function isGeneric()
-    {
-        return $this->is_generic;
-    }
 }
