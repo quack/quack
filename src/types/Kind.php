@@ -51,6 +51,16 @@ class Kind extends TypeNode
         // TODO
     }
 
+    public function fill(Scope $scope)
+    {
+        $parameters = [];
+        foreach ($this->parameters as $parameter) {
+            $parameters[] = $parameter->fill($scope);
+        }
+
+        return new Kind($this->name, $parameters);
+    }
+
     public function bindScope(Scope $scope)
     {
         // Pass
