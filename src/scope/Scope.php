@@ -127,4 +127,9 @@ class Scope
             ? $this->parent->getSymbolScope($symbol)
             : null;
     }
+
+    public function debug()
+    {
+        var_dump($this->table);
+    }
 }

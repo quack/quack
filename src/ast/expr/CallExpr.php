@@ -66,6 +66,7 @@ class CallExpr extends Expr
         $called_with_argc = count($this->arguments);
         $callee = $this->callee->getType();
         if (!($callee instanceof FunctionType)) {
+            // Element is not callable
             throw new TypeError(Localization::message('TYP310', [$callee_type]));
         }
 

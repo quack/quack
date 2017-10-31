@@ -28,18 +28,29 @@ class FunctionType extends TypeNode
 {
     public $parameters;
     public $return;
+    public $generics;
 
-    public function __construct($parameters, $return)
+    public function __construct($parameters, $return, $generics = [])
     {
         $this->parameters = $parameters;
         $this->return = $return;
+        $this->generics = $generics;
+    }
+
+    private function fromUnicode($char)
+    {
+        return json_decode('"' . $char . '"');
     }
 
     public function __toString()
     {
-        return $this->parenthesize(
-            '&[' . join(', ', $this->parameters) . ']: ' . $this->return
-        );
+        $source = '';
+        if (count($this->generics) > 0) {
+            $source .= $this->fromUnicode('\u2200') . ' ' . implode (', ', $this->generics ) . ' ';
+        }
+        $source .= '&[' . join(', ', $this->parameters) . ']: ' . $this->return;
+
+        return $this->parenthesize($source);
     }
 
     public function bindScope(Scope $parent_scope)

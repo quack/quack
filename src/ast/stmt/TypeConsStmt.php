@@ -61,10 +61,11 @@ class TypeConsStmt
     private function getKind()
     {
         if (count($this->parameters) === 0) {
+            // All constraints have been satisfied
             return $this->kind;
         }
 
-        return new FunctionType($this->parameters, $this->kind);
+        return new FunctionType($this->parameters, $this->kind, $this->kind->parameters);
     }
 
     public function injectScope($parent_scope, $data_scope)

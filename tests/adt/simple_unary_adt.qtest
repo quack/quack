@@ -11,7 +11,7 @@ do Nothing
 do Just(1)
 do Just(%{ content: '' })
 %%expect
-string(14) "&[a]: Maybe(a)"
+string(20) "∀ a &[a]: Maybe(a)"
 string(8) "Maybe(a)"
 string(13) "Maybe(number)"
 string(25) "Maybe(%{content: string})"

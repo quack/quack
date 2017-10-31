@@ -9,8 +9,8 @@ do T
 do List
 do List({1})
 %%expect
-string(31) "&[b(a)]: BinaryCombinator(a, b)"
-string(15) "&[{a}]: Prim(a)"
+string(40) "∀ a, b &[b(a)]: BinaryCombinator(a, b)"
+string(21) "∀ a &[{a}]: Prim(a)"
 data BinaryCombinator(a, b) :- T(b(a))
 data Prim(a) :- List({a})
 do T
