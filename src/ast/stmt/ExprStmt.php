@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\CliColorizer;
 use \QuackCompiler\Types\ParametricTypes;
 
 class ExprStmt extends Stmt
@@ -46,6 +47,10 @@ class ExprStmt extends Stmt
     public function runTypeChecker()
     {
         $type = $this->expr->getType();
-        var_dump((string) $type);
+        if ('1' === getenv('QUACK_DEV')) {
+            echo $type->render(new CliColorizer()), PHP_EOL;
+        } else {
+            var_dump((string) $type);
+        }
     }
 }
