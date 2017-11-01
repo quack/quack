@@ -6,3 +6,6 @@ data Ordering
 data Bool
     :- True
     or False
+
+data Mutability(a)
+    :- Mutability_(a)
