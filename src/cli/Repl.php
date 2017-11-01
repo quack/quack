@@ -27,6 +27,7 @@ use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Intl\Localization;
 
 class Repl extends Component
 {
@@ -300,6 +301,11 @@ class Repl extends Component
         if (isset($variable[1])) {
             return $this->handleShowType($variable[1]);
         }
+
+        $this->console->setColor(Console::FG_RED);
+        $this->console->writeln(Localization::message('QUA010', [$command]));
+        $this->console->writeln(Localization::message('QUA020', []));
+        $this->console->resetColor();
     }
 
     public function welcome()
