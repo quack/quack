@@ -237,7 +237,7 @@ class Repl extends Component
     {
         $context = $this->state('scope')->child;
 
-        if ($context == null || 0 === count($context->table)) {
+        if (0 === count($context->table)) {
             return;
         }
 
