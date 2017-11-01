@@ -1,3 +1,7 @@
+data Morphism(a, b)
+
+data Mutability(a)
+
 data Ordering
     :- LT
     or GT
@@ -6,5 +10,3 @@ data Ordering
 data Bool
     :- True
     or False
-
-data Mutability(a)

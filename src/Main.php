@@ -73,6 +73,7 @@ if (count($argv) > 1) {
             unset($script->ast->stmt_list[0]);
             unset($script->ast->stmt_list[1]);
             unset($script->ast->stmt_list[2]);
+            unset($script->ast->stmt_list[3]);
             echo $script->format();
         } catch (Exception $e) {
             echo $e;
