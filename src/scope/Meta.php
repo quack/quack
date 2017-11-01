@@ -25,7 +25,7 @@ class Meta
     const M_REF_COUNT        = 'refcount';
     const M_TYPE             = 'type';
     const M_LABEL            = 'label';             // Implicit meta labels
-    const M_KIND_CONSTRAINTS = 'kind_constraints';  // Constraints of a specific kind for unification
+    const M_DATA_CONSTRAINTS = 'data_constraints';  // Constraints of a specific data for unification
 
     private static $label_num = 0;
     private static $generic_num = 0;

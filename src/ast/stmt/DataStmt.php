@@ -24,9 +24,9 @@ use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\Data;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\Kind;
 use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
@@ -67,19 +67,19 @@ class DataStmt extends Stmt
     {
         // Bind input parameters
         $this->scope = new Scope($parent_scope);
-        $kind_parameters = [];
+        $data_parameters = [];
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_DATA_PARAM);
             $type = new NameType($parameter, [], true);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
             // Initialize parameter with no constraints
-            $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $parameter, []);
-            $kind_parameters[] = $type;
+            $this->scope->setMeta(Meta::M_DATA_CONSTRAINTS, $parameter, []);
+            $data_parameters[] = $type;
         }
 
-        $kind = new Kind($this->name, $kind_parameters);
+        $data = new Data($this->name, $data_parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $kind);
+        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $data);
 
         $declared = [];
         foreach ($this->values as $value) {
@@ -87,7 +87,7 @@ class DataStmt extends Stmt
                 throw new TypeError(Localization::message('SCO030', [$value->name, $this->name]));
             }
 
-            $value->bindKind($kind);
+            $value->bindData($data);
             $value->injectScope($parent_scope, $this->scope);
             $declared[$value->name] = true;
         }
@@ -95,9 +95,9 @@ class DataStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // Check constraints that came from bindScope for parameter kinds
+        // Check constraints that came from bindScope for parameters of data
         foreach ($this->parameters as $parameter) {
-            $constraints = $this->scope->getMeta(Meta::M_KIND_CONSTRAINTS, $parameter);
+            $constraints = $this->scope->getMeta(Meta::M_DATA_CONSTRAINTS, $parameter);
             $arity = null;
             foreach ($constraints as $constraint) {
                 if (null === $arity) {

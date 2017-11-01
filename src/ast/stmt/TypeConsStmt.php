@@ -23,16 +23,16 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Types\Data;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Types\Kind;
 
 class TypeConsStmt
 {
     public $name;
     public $parameters;
-    public $kind;
+    public $data;
 
     public function __construct($name, $parameters)
     {
@@ -40,9 +40,9 @@ class TypeConsStmt
         $this->parameters = $parameters;
     }
 
-    public function bindKind(Kind $kind)
+    public function bindData(Data $data)
     {
-        $this->kind = $kind;
+        $this->data = $data;
     }
 
     public function format(Parser $parser)
@@ -58,20 +58,20 @@ class TypeConsStmt
         return $source;
     }
 
-    private function getKind()
+    private function getData()
     {
         if (count($this->parameters) === 0) {
             // All constraints have been satisfied
-            return $this->kind;
+            return $this->data;
         }
 
-        return new FunctionType($this->parameters, $this->kind, $this->kind->parameters);
+        return new FunctionType($this->parameters, $this->data, $this->data>parameters);
     }
 
     public function injectScope($parent_scope, $data_scope)
     {
         $parent_scope->insert($this->name, Symbol::S_DATA_MEMBER);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getKind());
+        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getData());
         foreach ($this->parameters as $parameter) {
             $parameter->bindScope($data_scope);
         }

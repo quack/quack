@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;

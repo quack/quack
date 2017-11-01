@@ -64,12 +64,12 @@ class NameType extends TypeNode
             $type->bindScope($this->scope);
         }
 
-        // Attach kind constraints according to arity and constructor type
+        // Attach data constraints according to arity and constructor type
         if ($type_flags & Symbol::S_DATA_PARAM) {
-            $constraints = $this->scope->getMeta(Meta::M_KIND_CONSTRAINTS, $this->name);
+            $constraints = $this->scope->getMeta(Meta::M_DATA_CONSTRAINTS, $this->name);
             // Append new size constraint
             $constraints[] = ['size' => count($this->values)];
-            $this->scope->setMeta(Meta::M_KIND_CONSTRAINTS, $this->name, $constraints);
+            $this->scope->setMeta(Meta::M_DATA_CONSTRAINTS, $this->name, $constraints);
         }
     }
 

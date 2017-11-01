@@ -168,7 +168,7 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
-import(TYPES, 'Kind');
+import(TYPES, 'Data');
 import(TYPES, 'ParametricTypes');
 import(TYPES, 'NativeQuackType');
 import(TYPES, 'TypeError');

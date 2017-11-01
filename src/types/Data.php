@@ -23,7 +23,7 @@ namespace QuackCompiler\Types;
 use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Scope\Scope;
 
-class Kind extends TypeNode
+class Data extends TypeNode
 {
     public $name;
     public $parameters;

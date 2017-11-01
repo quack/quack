@@ -73,11 +73,11 @@ class TypeExpr extends Expr
             throw new TypeError(Localization::message('TYP200', [$this->name]));
         }
 
-        // Get kind of this type, parameters to bind and the constraint
+        // Get data of this type, parameters to bind and the constraint
         // to satisfy
-        $kind = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        $parameters = $kind->getParameters();
-        $constraint = $kind->getConstraint($this->name);
+        $data = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+        $parameters = $data->getParameters();
+        $constraint = $data->getConstraint($this->name);
 
         // Throw error when too much parameters
         if (count($this->values) > count($constraint)) {
@@ -85,6 +85,6 @@ class TypeExpr extends Expr
         }
 
         // TODO: Fill the parameters and auto-curry
-        return $kind;
+        return $data;
     }
 }
