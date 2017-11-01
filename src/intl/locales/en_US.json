@@ -64,5 +64,7 @@
     "TYP410": "A JSX child should be a component or a string, but you gave me `%s' and I'm very sad about that",
     "TYP420": "The tuples have different sizes, I want %d and you gave me %d",
     "TYP430": "The types of tuples don't match because element %d should be `%s', but it is `%s'",
-    "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?"
+    "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?",
+    "QUA010": "I don't know the command `%s'. Sorry!",
+    "QUA020": "Available commands: :clear, :quit, :what and :t `symbol'"
 }

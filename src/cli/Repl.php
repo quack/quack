@@ -27,6 +27,7 @@ use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Kind;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Intl\Localization;
 
 class Repl extends Component
 {
@@ -302,8 +303,8 @@ class Repl extends Component
         }
 
         $this->console->setColor(Console::FG_RED);
-        $this->console->writeln("I don't know the command `$command'. Sorry!");
-        $this->console->writeln("Available commands: :clear, :quit, :what and :t `symbol`");
+        $this->console->writeln(Localization::message('QUA010', [$command]));
+        $this->console->writeln(Localization::message('QUA020', []));
         $this->console->resetColor();
     }
 
