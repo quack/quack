@@ -122,10 +122,11 @@ class DeclParser
             $this->reader->match(')');
         }
 
-        $this->reader->match(':-');
-        do {
-            $values[] = $this->_typeConsStmt();
-        } while ($this->reader->consumeIf(Tag::T_OR));
+        if ($this->reader->consumeIf(':-')) {
+            do {
+                $values[] = $this->_typeConsStmt();
+            } while ($this->reader->consumeIf(Tag::T_OR));
+        }
 
         return new DataStmt($name, $parameters, $values);
     }

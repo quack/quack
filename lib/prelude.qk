@@ -8,4 +8,3 @@ data Bool
     or False
 
 data Mutability(a)
-    :- Mutability_(a)
