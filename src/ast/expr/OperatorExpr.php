@@ -137,7 +137,10 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP100', [$type->right, $target]));
             }
 
-            return $type->left;
+            // The return type is an effect informing about the mutability
+            $mutability = $this->scope->getMeta(Meta::M_TYPE, 'Mutability');
+            $mutability->parameters = [$type->left];
+            return $mutability;
         }
 
         // Type checking for numeric and string concat operations
