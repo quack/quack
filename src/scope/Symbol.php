@@ -35,5 +35,5 @@ class Symbol
     const S_PARAMETER    = 1 << 7;
     const S_INITIALIZED  = 1 << 11;
     const S_ALIAS        = 1 << 12;
-    const S_GENERIC      = 1 << 13;
+    const S_GENERIC_VAR  = 1 << 13;
 }

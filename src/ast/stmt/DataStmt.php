@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
@@ -67,17 +67,13 @@ class DataStmt extends Stmt
     {
         // Bind input parameters
         $this->scope = new Scope($parent_scope);
-        $data_parameters = [];
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_DATA_PARAM);
-            $type = new NameType($parameter, [], true);
-            $this->scope->setMeta(Meta::M_TYPE, $parameter, $type);
-            // Initialize parameter with no constraints
             $this->scope->setMeta(Meta::M_DATA_CONSTRAINTS, $parameter, []);
-            $data_parameters[] = $type;
+            $this->scope->setMeta(Meta::M_TYPE, $parameter, new GenericType());
         }
 
-        $data = new Data($this->name, $data_parameters);
+        $data = new Data($this->name, $this->parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $data);
 

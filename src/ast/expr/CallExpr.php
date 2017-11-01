@@ -76,6 +76,15 @@ class CallExpr extends Expr
             throw new TypeError(Localization::message('TYP450', [$callee]));
         }
 
+        // Insert generic parameters to the scope with unbound types
+        foreach ($callee->generics as $generic) {
+            $this->scope->insert($generic, Symbol::S_VARIABLE | Symbol::S_GENERIC_VAR);
+            $this->scope->setMeta(Meta::M_TYPE, $generic, new GenericType());
+        }
+
+        $this->scope->debug();
+        exit;
+
         // TODO: Reflect types!!! Deprecate almost everything below
 
         $index = 0;

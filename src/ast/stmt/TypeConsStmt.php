@@ -65,7 +65,7 @@ class TypeConsStmt
             return $this->data;
         }
 
-        return new FunctionType($this->parameters, $this->data, $this->data>parameters);
+        return new FunctionType($this->parameters, $this->data, $this->data->parameters);
     }
 
     public function injectScope($parent_scope, $data_scope)
