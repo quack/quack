@@ -18,32 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Pretty;
 
-use \QuackCompiler\Pretty\Types\GenericTypeRenderer;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\ParametricTypes;
-
-class GenericType extends TypeNode
+interface Colorizer
 {
-    use GenericTypeRenderer;
-
-    public function __construct()
-    {
-        ParametricTypes::push($this);
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize(ParametricTypes::name($this));
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-    }
-
-    public function check(TypeNode $other)
-    {
-        return false;
-    }
+    public function bold($value);
+    public function red($value);
+    public function green($value);
+    public function yellow($value);
+    public function blue($value);
+    public function magenta($value);
+    public function cyan($value);
 }

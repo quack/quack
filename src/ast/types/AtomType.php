@@ -20,10 +20,13 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\AtomTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 
 class AtomType extends TypeNode
 {
+    use AtomTypeRenderer;
+
     public $name;
 
     public function __construct($name)

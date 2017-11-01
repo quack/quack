@@ -20,10 +20,13 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\ListTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 
 class ListType extends TypeNode
 {
+    use ListTypeRenderer;
+
     public $type;
 
     public function __construct(TypeNode $type)

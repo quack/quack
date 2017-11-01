@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\FunctionTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class FunctionType extends TypeNode
 {
+    use FunctionTypeRenderer;
+
     public $parameters;
     public $return;
     public $generics;

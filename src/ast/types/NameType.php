@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
@@ -28,6 +29,8 @@ use \QuackCompiler\Types\TypeError;
 
 class NameType extends TypeNode
 {
+    use NameTypeRenderer;
+
     public $name;
     public $values;
     public $is_generic;

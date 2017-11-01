@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\OperatorTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorType extends TypeNode
 {
+    use OperatorTypeRenderer;
+
     public $operator;
     public $left;
     public $right;

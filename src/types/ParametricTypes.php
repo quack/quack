@@ -38,7 +38,7 @@ class ParametricTypes
 
     public static function name(GenericType $generic)
     {
-        $index = ord(a);
+        $index = ord('a');
         foreach (static::$instances as $instance) {
             if ($instance === $generic) {
                 return chr($index);

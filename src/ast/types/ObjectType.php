@@ -20,10 +20,13 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\ObjectTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 
 class ObjectType extends TypeNode
 {
+    use ObjectTypeRenderer;
+
     public $properties;
 
     public function __construct($properties)

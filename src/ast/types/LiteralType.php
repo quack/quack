@@ -20,11 +20,14 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\LiteralTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 
 class LiteralType extends TypeNode
 {
+    use LiteralTypeRenderer;
+
     public $code;
 
     public function __construct($code)

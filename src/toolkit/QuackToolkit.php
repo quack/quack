@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
+define('PRETTY', 'pretty');
 define('AST', 'ast');
 define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
@@ -31,6 +32,21 @@ function import($module, $file)
 {
     require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
+
+/* Pretty */
+import(PRETTY, 'Colorizer');
+import(PRETTY, 'CliColorizer');
+import(PRETTY, 'types/DataRenderer');
+import(PRETTY, 'types/FunctionTypeRenderer');
+import(PRETTY, 'types/NameTypeRenderer');
+import(PRETTY, 'types/AtomTypeRenderer');
+import(PRETTY, 'types/GenericTypeRenderer');
+import(PRETTY, 'types/LiteralTypeRenderer');
+import(PRETTY, 'types/ListTypeRenderer');
+import(PRETTY, 'types/MapTypeRenderer');
+import(PRETTY, 'types/ObjectTypeRenderer');
+import(PRETTY, 'types/OperatorTypeRenderer');
+import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Cli */
 import(CLI, 'Component');

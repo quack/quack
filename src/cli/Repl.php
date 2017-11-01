@@ -24,6 +24,7 @@ use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
+use \QuackCompiler\Pretty\CliColorizer;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
@@ -267,6 +268,7 @@ class Repl extends Component
 
     private function handleListDefinitions()
     {
+        $renderer = new CliColorizer();
         $context = $this->state('scope')->child;
 
         if (0 === count($context->table)) {
@@ -292,9 +294,7 @@ class Repl extends Component
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
-            $this->console->setColor(Console::FG_BLUE);
-            $this->console->write($type);
-            $this->console->resetColor();
+            $this->console->write($type->render($renderer));
 
             if ($mutable) {
                 $this->console->setColor(Console::FG_RED);

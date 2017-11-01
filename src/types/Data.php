@@ -21,10 +21,13 @@
 namespace QuackCompiler\Types;
 
 use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Pretty\Types\DataRenderer;
 use \QuackCompiler\Scope\Scope;
 
 class Data extends TypeNode
 {
+    use DataRenderer;
+
     public $name;
     public $parameters;
 

@@ -18,32 +18,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Pretty;
 
-use \QuackCompiler\Pretty\Types\GenericTypeRenderer;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\ParametricTypes;
-
-class GenericType extends TypeNode
+class CliColorizer implements Colorizer
 {
-    use GenericTypeRenderer;
-
-    public function __construct()
+    public function bold($value)
     {
-        ParametricTypes::push($this);
+        return sprintf('%c[1m%s%c[21m', 0x1B, $value, 0x1B);
     }
 
-    public function __toString()
+    public function red($value)
     {
-        return $this->parenthesize(ParametricTypes::name($this));
+        return sprintf('%c[31m%s%c[0m', 0x1B, $value, 0x1B);
     }
 
-    public function bindScope(Scope $parent_scope)
+    public function green($value)
     {
+        return sprintf('%c[32m%s%c[0m', 0x1B, $value, 0x1B);
     }
 
-    public function check(TypeNode $other)
+    public function yellow($value)
     {
-        return false;
+        return sprintf('%c[33m%s%c[0m', 0x1B, $value, 0x1B);
+    }
+
+    public function blue($value)
+    {
+        return sprintf('%c[34m%s%c[0m', 0x1B, $value, 0x1B);
+    }
+
+    public function magenta($value)
+    {
+        return sprintf('%c[35m%s%c[0m', 0x1B, $value, 0x1B);
+    }
+
+    public function cyan($value)
+    {
+        return sprintf('%c[36m%s%c[0m', 0x1B, $value, 0x1B);
     }
 }

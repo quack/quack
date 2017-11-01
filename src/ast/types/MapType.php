@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\MapTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class MapType extends TypeNode
 {
+    use MapTypeRenderer;
+
     public $key;
     public $value;
 

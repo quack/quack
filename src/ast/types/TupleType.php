@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
 class TupleType extends TypeNode
 {
+    use TupleTypeRenderer;
+
     public $types;
     public $size;
 
