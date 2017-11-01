@@ -406,7 +406,6 @@ class Repl extends Component
                 $this->setState(['ast' => $parser->ast, 'complete' => true]);
             } else {
                 $this->console->write($parser->beautify());
-                $this->state('ast')->attachValidAST($parser->ast);
                 $this->setState(['complete' => true]);
             }
 
