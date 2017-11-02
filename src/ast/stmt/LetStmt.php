@@ -22,7 +22,6 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;

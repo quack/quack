@@ -21,10 +21,8 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \Exception;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 
 class PostfixExpr extends Expr
 {

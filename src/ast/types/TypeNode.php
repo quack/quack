@@ -21,7 +21,6 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
 
 abstract class TypeNode
 {
@@ -55,26 +54,22 @@ abstract class TypeNode
 
     public function isNumber()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_NUMBER === $this->code;
+        return $this->name === 'Number';
     }
 
     public function isString()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_STR === $this->code;
+        return $this->name === 'String';
     }
 
     public function isRegex()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_REGEX === $this->code;
+        return $this->name === 'Regex';
     }
 
     public function isIterable()
     {
-        return $this instanceof MapType
-            || $this instanceof ListType;
+        return $this instanceof MapType || $this instanceof ListType;
     }
 
     public function simplify()

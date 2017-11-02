@@ -20,9 +20,8 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Scope\Meta;
 
 class RegexExpr extends Expr
 {
@@ -41,11 +40,11 @@ class RegexExpr extends Expr
 
     public function injectScope($parent_scope)
     {
-        // Pass
+        $this->scope = $parent_scope;
     }
 
     public function getType()
     {
-        return new LiteralType(NativeQuackType::T_REGEX);
+        return $this->scope->getMeta(Meta::M_TYPE, 'Regex');
     }
 }

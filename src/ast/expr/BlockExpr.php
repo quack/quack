@@ -21,11 +21,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
 
 class BlockExpr extends Expr
 {

@@ -25,7 +25,6 @@ use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class MapExpr extends Expr
@@ -80,9 +79,7 @@ class MapExpr extends Expr
 
         // Generic type when no initializer provided
         if (0 === $size) {
-            return new MapType(
-                new GenericType(),
-                new GenericType());
+            return new MapType(new GenericType(), new GenericType());
         }
 
         $original_key_type = $this->keys[0]->getType();

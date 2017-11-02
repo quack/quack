@@ -20,7 +20,6 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
@@ -28,7 +27,6 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorExpr extends Expr
@@ -147,11 +145,11 @@ class OperatorExpr extends Expr
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return new LiteralType(NativeQuackType::T_STR);
+                return $this->scope->getMeta(Meta::M_TYPE, 'String');
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new LiteralType(NativeQuackType::T_NUMBER);
+                return $this->scope->getMeta(Meta::M_TYPE, 'Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
@@ -184,7 +182,7 @@ class OperatorExpr extends Expr
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new LiteralType(NativeQuackType::T_NUMBER);
+                return $this->scope->getMeta(Meta::M_TYPE, 'Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
