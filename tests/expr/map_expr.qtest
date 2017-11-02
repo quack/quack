@@ -4,4 +4,4 @@ Supports formatting maps (with pairs)
 let map :- #{} let sub_map :- #{"key": value}
 %%expect
 let map :- #{}
-let sub_map :- #{ "key": value }
+let sub_map :- #{"key": value}

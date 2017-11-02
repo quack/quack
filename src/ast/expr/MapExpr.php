@@ -45,7 +45,6 @@ class MapExpr extends Expr
         $values = $this->values;
 
         if (count($this->keys) > 0) {
-            $source .= ' ';
             // Iterate based on index
             $source .= implode(', ', array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $keys[$index]->format($parser);
@@ -54,7 +53,6 @@ class MapExpr extends Expr
 
                 return $subsource;
             }, range(0, count($keys) - 1)));
-            $source .= ' ';
         }
 
         $source .= '}';
