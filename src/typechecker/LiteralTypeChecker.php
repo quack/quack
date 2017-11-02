@@ -18,36 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Pretty\Types\MapTypeRenderer;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\TypeChecker\MapTypeChecker;
+use \QuackCompiler\Ast\Types\LiteralType;
+use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Types\NativeQuackType;
 
-class MapType extends TypeNode
+trait LiteralTypeChecker
 {
-    use MapTypeChecker;
-    use MapTypeRenderer;
-
-    public $key;
-    public $value;
-
-    public function __construct(TypeNode $key, TypeNode $value)
+    public function check(TypeNode $other)
     {
-        $this->key = $key;
-        $this->value = $value;
-    }
+        if (!($other instanceof LiteralType)) {
+            // Fallback for atom check
+            return $other instanceof AtomType && NativeQuackType::T_ATOM === $this->code;
+        }
 
-    public function __toString()
-    {
-        return $this->parenthesize(
-            '#{' . $this->key . ': ' . $this->value . '}'
-        );
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->key->bindScope($parent_scope);
-        $this->value->bindScope($parent_scope);
+        return $this->code === $other->code;
     }
 }

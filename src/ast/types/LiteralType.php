@@ -22,10 +22,12 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Pretty\Types\LiteralTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\LiteralTypeChecker;
 use \QuackCompiler\Types\NativeQuackType;
 
 class LiteralType extends TypeNode
 {
+    use LiteralTypeChecker;
     use LiteralTypeRenderer;
 
     public $code;
@@ -52,15 +54,5 @@ class LiteralType extends TypeNode
     public function bindScope(Scope $parent_scope)
     {
         // Pass
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof LiteralType)) {
-            // Fallback for atom check
-            return $other instanceof AtomType && NativeQuackType::T_ATOM === $this->code;
-        }
-
-        return $this->code === $other->code;
     }
 }

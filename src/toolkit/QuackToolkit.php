@@ -19,6 +19,7 @@
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('PRETTY', 'pretty');
+define('TYPECHECKER', 'typechecker');
 define('AST', 'ast');
 define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
@@ -47,6 +48,19 @@ import(PRETTY, 'types/MapTypeRenderer');
 import(PRETTY, 'types/ObjectTypeRenderer');
 import(PRETTY, 'types/OperatorTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
+
+/* Type checker */
+import(TYPECHECKER, 'AtomTypeChecker');
+import(TYPECHECKER, 'FunctionTypeChecker');
+import(TYPECHECKER, 'GenericTypeChecker');
+import(TYPECHECKER, 'ListTypeChecker');
+import(TYPECHECKER, 'LiteralTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'NameTypeChecker');
+import(TYPECHECKER, 'ObjectTypeChecker');
+import(TYPECHECKER, 'OperatorTypeChecker');
+import(TYPECHECKER, 'TupleTypeChecker');
 
 /* Cli */
 import(CLI, 'Component');

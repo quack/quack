@@ -22,10 +22,12 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Pretty\Types\GenericTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\GenericTypeChecker;
 use \QuackCompiler\Types\ParametricTypes;
 
 class GenericType extends TypeNode
 {
+    use GenericTypeChecker;
     use GenericTypeRenderer;
 
     public function __construct()
@@ -40,10 +42,5 @@ class GenericType extends TypeNode
 
     public function bindScope(Scope $parent_scope)
     {
-    }
-
-    public function check(TypeNode $other)
-    {
-        return false;
     }
 }

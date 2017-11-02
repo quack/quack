@@ -25,10 +25,12 @@ use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\TypeChecker\NameTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
 class NameType extends TypeNode
 {
+    use NameTypeChecker;
     use NameTypeRenderer;
 
     public $name;
@@ -85,12 +87,6 @@ class NameType extends TypeNode
         }
 
         return $type->simplify();
-    }
-
-    public function check(TypeNode $other)
-    {
-        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type->check($other);
     }
 
     public function getReference()

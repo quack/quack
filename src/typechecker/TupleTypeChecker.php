@@ -18,35 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\TypeChecker\TupleTypeChecker;
+use \QuackCompiler\Ast\Types\TupleType;
+use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
 
-class TupleType extends TypeNode
+trait TupleTypeChecker
 {
-    use TupleTypeChecker;
-    use TupleTypeRenderer;
-
-    public $types;
-    public $size;
-
-    public function __construct(...$types)
+    public function check(TypeNode $other)
     {
-        $this->types = $types;
-        $this->size = count($types);
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->types as $type) {
-            $type->bindScope($parent_scope);
+        if (!($other instanceof TupleType)) {
+            return false;
         }
+
+        if ($this->size !== $other->size) {
+            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
+        }
+
+        for ($i = 0; $i < $this->size; $i++) {
+            $me = $this->types[$i];
+            $you = $other->types[$i];
+
+            if (!$me->check($you)) {
+                throw new TypeError(Localization::message('TYP430', [$i + 1, $me, $you]));
+            }
+        }
+
+        return true;
     }
 }
