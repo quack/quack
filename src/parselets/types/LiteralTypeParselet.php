@@ -21,8 +21,6 @@
 namespace QuackCompiler\Parselets\Types;
 
 use \QuackCompiler\Ast\Types\LiteralType;
-use \QuackCompiler\Ast\Types\NameType;
-use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 use \QuackCompiler\Types\NativeQuackType;
@@ -35,7 +33,6 @@ class LiteralTypeParselet implements PrefixParselet
             'string'  => NativeQuackType::T_STR,
             'number'  => NativeQuackType::T_NUMBER,
             'regex'   => NativeQuackType::T_REGEX,
-            'block'   => NativeQuackType::T_BLOCK,
             'byte'    => NativeQuackType::T_BYTE,
             'atom'    => NativeQuackType::T_ATOM
         ];

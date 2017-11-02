@@ -24,9 +24,7 @@ class NativeQuackType
 {
     const T_STR    = 0;
     const T_NUMBER = 2;
-    const T_OBJ    = 4;
     const T_ATOM   = 9;
     const T_REGEX  = 10;
-    const T_BLOCK  = 12;
     const T_BYTE   = 15;
 }

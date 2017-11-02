@@ -20,8 +20,10 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\NativeQuackType;
 
@@ -56,14 +58,15 @@ class BlockExpr extends Expr
 
     public function injectScope($parent_scope)
     {
-        $scope = new Scope($parent_scope);
+        $this->scope = new Scope($parent_scope);
         foreach ($this->body as $stmt) {
-            $stmt->injectScope($scope);
+            $stmt->injectScope($this->scope);
         }
     }
 
     public function getType()
     {
-        return new LiteralType(NativeQuackType::T_BLOCK);
+        $empty_return = $this->scope->getMeta(Meta::M_TYPE, 'Empty');
+        return new FunctionType([], $empty_return, []);
     }
 }
