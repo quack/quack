@@ -20,14 +20,18 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Types\Data;
 
-trait NameTypeChecker
+trait DataChecker
 {
     public function check(TypeNode $other)
     {
-        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type->check($other);
+        if (!($other instanceof Data)) {
+            return $false;
+        }
+
+        return $this->name === $other->name;
+        // TODO: Check bound properties
     }
 }

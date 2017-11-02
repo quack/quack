@@ -51,6 +51,7 @@ import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
 import(TYPECHECKER, 'AtomTypeChecker');
+import(TYPECHECKER, 'DataChecker');
 import(TYPECHECKER, 'FunctionTypeChecker');
 import(TYPECHECKER, 'GenericTypeChecker');
 import(TYPECHECKER, 'ListTypeChecker');

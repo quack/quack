@@ -23,9 +23,11 @@ namespace QuackCompiler\Types;
 use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Pretty\Types\DataRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\DataChecker;
 
 class Data extends TypeNode
 {
+    use DataChecker;
     use DataRenderer;
 
     public $name;
@@ -47,11 +49,6 @@ class Data extends TypeNode
         }
 
         return $source;
-    }
-
-    public function check(TypeNode $other)
-    {
-        // TODO
     }
 
     public function bindScope(Scope $scope)
