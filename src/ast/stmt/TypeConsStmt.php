@@ -23,7 +23,6 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\Data;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
@@ -40,7 +39,7 @@ class TypeConsStmt
         $this->parameters = $parameters;
     }
 
-    public function bindData(Data $data)
+    public function bindData(NameType $data)
     {
         $this->data = $data;
     }
@@ -58,7 +57,7 @@ class TypeConsStmt
         return $source;
     }
 
-    private function getData()
+    private function getType()
     {
         if (count($this->parameters) === 0) {
             // All constraints have been satisfied
@@ -71,7 +70,7 @@ class TypeConsStmt
     public function injectScope($parent_scope, $data_scope)
     {
         $parent_scope->insert($this->name, Symbol::S_DATA_MEMBER);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getData());
+        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getType());
         foreach ($this->parameters as $parameter) {
             $parameter->bindScope($data_scope);
         }

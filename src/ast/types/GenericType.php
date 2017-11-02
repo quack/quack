@@ -30,9 +30,12 @@ class GenericType extends TypeNode
     use GenericTypeChecker;
     use GenericTypeRenderer;
 
-    public function __construct()
+    public $kind;
+
+    public function __construct($kind = null)
     {
         ParametricTypes::push($this);
+        $this->kind = $kind;
     }
 
     public function __toString()
