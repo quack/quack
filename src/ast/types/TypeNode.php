@@ -47,11 +47,6 @@ abstract class TypeNode
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
     }
 
-    public function isAtom($atom)
-    {
-        return $this instanceof AtomType && $this->name === $atom;
-    }
-
     public function isNumber()
     {
         return $this->name === 'Number';

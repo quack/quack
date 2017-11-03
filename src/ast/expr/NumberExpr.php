@@ -21,7 +21,6 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Meta;
 
 class NumberExpr extends Expr
 {
@@ -49,6 +48,6 @@ class NumberExpr extends Expr
 
     public function getType()
     {
-        return $this->scope->getMeta(Meta::M_TYPE, 'Number');
+        return $this->scope->getPrimitiveType('Number');
     }
 }

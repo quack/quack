@@ -39,7 +39,6 @@ import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
 import(PRETTY, 'types/FunctionTypeRenderer');
 import(PRETTY, 'types/NameTypeRenderer');
-import(PRETTY, 'types/AtomTypeRenderer');
 import(PRETTY, 'types/GenericTypeRenderer');
 import(PRETTY, 'types/ListTypeRenderer');
 import(PRETTY, 'types/MapTypeRenderer');
@@ -48,7 +47,6 @@ import(PRETTY, 'types/OperatorTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
-import(TYPECHECKER, 'AtomTypeChecker');
 import(TYPECHECKER, 'FunctionTypeChecker');
 import(TYPECHECKER, 'GenericTypeChecker');
 import(TYPECHECKER, 'ListTypeChecker');
@@ -102,7 +100,6 @@ import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
-import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
 import(PARSELETS, 'types/FunctionTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
@@ -174,7 +171,6 @@ import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
-import(AST, 'types/AtomType');
 import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
 import(AST, 'types/ListType');

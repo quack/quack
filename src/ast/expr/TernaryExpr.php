@@ -59,7 +59,7 @@ class TernaryExpr extends Expr
 
     public function getType()
     {
-        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
+        $bool = $this->scope->getPrimitiveType('Bool');
         $condition = $this->condition->getType();
         if (!$bool->check($condition)) {
             throw new TypeError(Localization::message('TYP240', [$condition]));

@@ -27,7 +27,6 @@ use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
-use \QuackCompiler\Parselets\Types\AtomTypeParselet;
 use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
 use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
@@ -48,7 +47,6 @@ class TypeParser
     {
         $this->reader = $parser;
         $this->register('(', new GroupTypeParselet);
-        $this->register(Tag::T_ATOM, new AtomTypeParselet);
         $this->register(Tag::T_IDENT, new NameTypeParselet(true));
         $this->register(Tag::T_TYPENAME, new NameTypeParselet);
         $this->register('{', new ListTypeParselet);

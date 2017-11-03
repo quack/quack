@@ -72,7 +72,7 @@ class WhileStmt extends Stmt
 
     public function runTypeChecker()
     {
-        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
+        $bool = $this->scope->getPrimitiveType('Bool');
         $condition_type = $this->condition->getType();
         if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP010', [$condition_type]));

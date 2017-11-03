@@ -112,7 +112,7 @@ class ForeachStmt extends Stmt
 
         if (null !== $this->key) {
             $key_type = $generator_type instanceof ListType
-                ? $this->scope->getMeta(Meta::M_TYPE, 'Number')
+                ? $this->scope->getPrimitiveType('Number')
                 : $generator_type->key;
             $this->scope->setMeta(Meta::M_TYPE, $this->key, $key_type);
         }

@@ -71,7 +71,7 @@ class PrefixExpr extends Expr
 
                 throw $type_error;
             case Tag::T_NOT:
-                $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
+                $bool = $this->scope->getPrimitiveType('Bool');
                 if ($bool->check($right_type)) {
                     return $right_type;
                 }

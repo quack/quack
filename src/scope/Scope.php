@@ -49,6 +49,14 @@ class Scope
         }
     }
 
+    public function getPrimitiveType($name)
+    {
+        $this->switchToSecondary();
+        $type = $this->getMeta(Meta::M_TYPE, $name);
+        $this->switchToPrimary();
+        return $type;
+    }
+
     public function switchToPrimary()
     {
         $this->table = &$this->primary_table;

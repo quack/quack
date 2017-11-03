@@ -88,6 +88,6 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        return $this->scope->getMeta(Meta::M_TYPE, 'Number');
+        return $this->scope->getPrimitiveType('Number');
     }
 }

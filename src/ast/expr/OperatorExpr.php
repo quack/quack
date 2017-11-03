@@ -25,7 +25,6 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
@@ -106,7 +105,7 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
-        $bool = $this->scope->getMeta(Meta::M_TYPE, 'Bool');
+        $bool = $this->scope->getPrimitiveType('Bool');
         $type = (object) [
             'left'  => $this->left->getType(),
             'right' => 'string' === gettype($this->right) ? $this->right : $this->right->getType()
@@ -136,7 +135,7 @@ class OperatorExpr extends Expr
             }
 
             // The return type is an effect informing about the mutability
-            $mutability = $this->scope->getMeta(Meta::M_TYPE, 'Mutability');
+            $mutability = $this->scope->getPrimitiveType('Mutability');
             $mutability->parameters = [$type->left];
             return $mutability;
         }
@@ -145,11 +144,11 @@ class OperatorExpr extends Expr
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return $this->scope->getMeta(Meta::M_TYPE, 'String');
+                return $this->scope->getPrimitiveType('String');
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return $this->scope->getMeta(Meta::M_TYPE, 'Number');
+                return $this->scope->getPrimitiveType('Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
@@ -182,7 +181,7 @@ class OperatorExpr extends Expr
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return $this->scope->getMeta(Meta::M_TYPE, 'Number');
+                return $this->scope->getPrimitiveType('Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));

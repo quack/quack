@@ -64,7 +64,7 @@ class BlockExpr extends Expr
 
     public function getType()
     {
-        $empty_return = $this->scope->getMeta(Meta::M_TYPE, 'Empty');
+        $empty_return = $this->scope->getPrimitiveType('Empty');
         return new FunctionType([], $empty_return, []);
     }
 }

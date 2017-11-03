@@ -21,7 +21,6 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Meta;
 
 class RegexExpr extends Expr
 {
@@ -45,6 +44,6 @@ class RegexExpr extends Expr
 
     public function getType()
     {
-        return $this->scope->getMeta(Meta::M_TYPE, 'Regex');
+        return $this->scope->getPrimitiveType('Regex');
     }
 }
