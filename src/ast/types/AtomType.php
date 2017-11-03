@@ -22,9 +22,11 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Pretty\Types\AtomTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\AtomTypeChecker;
 
 class AtomType extends TypeNode
 {
+    use AtomTypeChecker;
     use AtomTypeRenderer;
 
     public $name;
@@ -42,14 +44,5 @@ class AtomType extends TypeNode
     public function bindScope(Scope $parent_scope)
     {
         // Pass
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof AtomType)) {
-            return false;
-        }
-
-        return $this->name === $other->name;
     }
 }

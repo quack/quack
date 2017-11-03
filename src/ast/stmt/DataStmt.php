@@ -21,13 +21,12 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Types\GenericType;
+use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Types\Data;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
 class DataStmt extends Stmt
@@ -69,11 +68,12 @@ class DataStmt extends Stmt
         $this->scope = new Scope($parent_scope);
         foreach ($this->parameters as $parameter) {
             $this->scope->insert($parameter, Symbol::S_DATA_PARAM);
-            $this->scope->setMeta(Meta::M_DATA_CONSTRAINTS, $parameter, []);
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new GenericType());
         }
 
-        $data = new Data($this->name, $this->parameters);
+        $data = new NameType($this->name, array_map(function ($parameter) {
+            return new NameType($parameter, [], true);
+        }, $this->parameters));
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $data);
 
@@ -91,22 +91,6 @@ class DataStmt extends Stmt
 
     public function runTypeChecker()
     {
-        // Check constraints that came from bindScope for parameters of data
-        foreach ($this->parameters as $parameter) {
-            $constraints = $this->scope->getMeta(Meta::M_DATA_CONSTRAINTS, $parameter);
-            $arity = null;
-            foreach ($constraints as $constraint) {
-                if (null === $arity) {
-                    $arity = $constraint['size'];
-                    continue;
-                }
-
-                if ($constraint['size'] !== $arity) {
-                    throw new TypeError(
-                        Localization::message('TYP470', [$parameter, $this->name, $arity, $constraint['size']])
-                    );
-                }
-            }
-        }
+        // Pass
     }
 }

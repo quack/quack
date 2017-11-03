@@ -24,7 +24,6 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class ElifStmt extends Stmt

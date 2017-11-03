@@ -18,44 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Types;
+namespace QuackCompiler\TypeChecker;
 
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Ast\Types\TypeNode;
-use \QuackCompiler\Pretty\Types\DataRenderer;
-use \QuackCompiler\Scope\Scope;
 
-class Data extends TypeNode
+trait NameTypeChecker
 {
-    use DataRenderer;
-
-    public $name;
-    public $parameters;
-
-    public function __construct($name, $parameters)
-    {
-        $this->name = $name;
-        $this->parameters = $parameters;
-    }
-
-    public function __toString()
-    {
-        $source = $this->name;
-        if (count($this->parameters) > 0) {
-            $source .= '(';
-            $source .= implode(', ', $this->parameters);
-            $source .= ')';
-        }
-
-        return $source;
-    }
-
     public function check(TypeNode $other)
     {
-        // TODO
-    }
-
-    public function bindScope(Scope $scope)
-    {
-        // Pass
+        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+        return $type->check($other);
     }
 }

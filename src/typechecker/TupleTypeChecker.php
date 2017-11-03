@@ -18,23 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Pretty\Types;
+namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Pretty\Colorizer;
+use \QuackCompiler\Ast\Types\TupleType;
+use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
 
-trait DataRenderer
+trait TupleTypeChecker
 {
-    public function render(Colorizer $renderer)
+    public function check(TypeNode $other)
     {
-        $result = $renderer->green($this->name);
-        if (count($this->parameters) > 0) {
-            $result .= '(';
-            $result .= implode(', ', array_map(function ($parameter) use ($renderer) {
-                return $renderer->blue($parameter);
-            }, $this->parameters));
-            $result .= ')';
+        if (!($other instanceof TupleType)) {
+            return false;
         }
 
-        return $result;
+        if ($this->size !== $other->size) {
+            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
+        }
+
+        for ($i = 0; $i < $this->size; $i++) {
+            $me = $this->types[$i];
+            $you = $other->types[$i];
+
+            if (!$me->check($you)) {
+                throw new TypeError(Localization::message('TYP430', [$i + 1, $me, $you]));
+            }
+        }
+
+        return true;
     }
 }

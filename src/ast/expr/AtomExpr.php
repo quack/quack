@@ -22,7 +22,6 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\AtomType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 
 class AtomExpr extends Expr
 {

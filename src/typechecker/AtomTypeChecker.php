@@ -18,14 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Pretty\Types;
+namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Pretty\Colorizer;
+use \QuackCompiler\Ast\Types\AtomType;
+use \QuackCompiler\Ast\Types\TypeNode;
 
-trait LiteralTypeRenderer
+trait AtomTypeChecker
 {
-    public function render(Colorizer $renderer)
+    public function check(TypeNode $other)
     {
-        return $renderer->bold($renderer->red($this));
+        if (!($other instanceof AtomType)) {
+            return false;
+        }
+
+        return $this->name === $other->name;
     }
 }

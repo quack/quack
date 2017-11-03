@@ -22,7 +22,6 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
@@ -33,12 +32,10 @@ use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
 use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
-use \QuackCompiler\Parselets\Types\LiteralTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
 use \QuackCompiler\Parselets\Types\NameTypeParselet;
 use \QuackCompiler\Parselets\Types\ObjectTypeParselet;
 use \QuackCompiler\Parselets\Types\TupleTypeParselet;
-use \QuackCompiler\Types\NativeQuackType;
 
 class TypeParser
 {
@@ -52,7 +49,7 @@ class TypeParser
         $this->reader = $parser;
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_ATOM, new AtomTypeParselet);
-        $this->register(Tag::T_IDENT, new LiteralTypeParselet);
+        $this->register(Tag::T_IDENT, new NameTypeParselet(true));
         $this->register(Tag::T_TYPENAME, new NameTypeParselet);
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);

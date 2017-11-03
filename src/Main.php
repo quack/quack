@@ -70,10 +70,10 @@ if (count($argv) > 1) {
             $script = compile($source, $scope);
             // Output only provided source instead of all prelude
             // TODO: This is very ugly. We need to start thinking about modules and export
-            unset($script->ast->stmt_list[0]);
-            unset($script->ast->stmt_list[1]);
-            unset($script->ast->stmt_list[2]);
-            unset($script->ast->stmt_list[3]);
+            $nodes_to_skip = preg_match_all('/^data/m', $prelude) - 1;
+            foreach (range(0, $nodes_to_skip) as $index) {
+                unset($script->ast->stmt_list[$index]);
+            }
             echo $script->format();
         } catch (Exception $e) {
             echo $e;

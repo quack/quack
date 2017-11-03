@@ -19,6 +19,7 @@
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
 define('PRETTY', 'pretty');
+define('TYPECHECKER', 'typechecker');
 define('AST', 'ast');
 define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
@@ -36,17 +37,27 @@ function import($module, $file)
 /* Pretty */
 import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
-import(PRETTY, 'types/DataRenderer');
 import(PRETTY, 'types/FunctionTypeRenderer');
 import(PRETTY, 'types/NameTypeRenderer');
 import(PRETTY, 'types/AtomTypeRenderer');
 import(PRETTY, 'types/GenericTypeRenderer');
-import(PRETTY, 'types/LiteralTypeRenderer');
 import(PRETTY, 'types/ListTypeRenderer');
 import(PRETTY, 'types/MapTypeRenderer');
 import(PRETTY, 'types/ObjectTypeRenderer');
 import(PRETTY, 'types/OperatorTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
+
+/* Type checker */
+import(TYPECHECKER, 'AtomTypeChecker');
+import(TYPECHECKER, 'FunctionTypeChecker');
+import(TYPECHECKER, 'GenericTypeChecker');
+import(TYPECHECKER, 'ListTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'NameTypeChecker');
+import(TYPECHECKER, 'ObjectTypeChecker');
+import(TYPECHECKER, 'OperatorTypeChecker');
+import(TYPECHECKER, 'TupleTypeChecker');
 
 /* Cli */
 import(CLI, 'Component');
@@ -96,7 +107,6 @@ import(PARSELETS, 'types/BinaryOperatorTypeParselet');
 import(PARSELETS, 'types/FunctionTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
-import(PARSELETS, 'types/LiteralTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
 import(PARSELETS, 'types/NameTypeParselet');
 import(PARSELETS, 'types/ObjectTypeParselet');
@@ -168,7 +178,6 @@ import(AST, 'types/AtomType');
 import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
 import(AST, 'types/ListType');
-import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
@@ -184,7 +193,5 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
-import(TYPES, 'Data');
 import(TYPES, 'ParametricTypes');
-import(TYPES, 'NativeQuackType');
 import(TYPES, 'TypeError');

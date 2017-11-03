@@ -18,15 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Types;
+namespace QuackCompiler\TypeChecker;
 
-class NativeQuackType
+use \QuackCompiler\Ast\Types\ListType;
+use \QuackCompiler\Ast\Types\TypeNode;
+
+trait ListTypeChecker
 {
-    const T_STR    = 0;
-    const T_NUMBER = 2;
-    const T_OBJ    = 4;
-    const T_ATOM   = 9;
-    const T_REGEX  = 10;
-    const T_BLOCK  = 12;
-    const T_BYTE   = 15;
+    public function check(TypeNode $other)
+    {
+        if (!($other instanceof ListType)) {
+            return false;
+        }
+
+        return $this->type->check($other->type);
+    }
 }

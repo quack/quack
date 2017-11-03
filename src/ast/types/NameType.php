@@ -25,10 +25,12 @@ use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\TypeChecker\NameTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
 class NameType extends TypeNode
 {
+    use NameTypeChecker;
     use NameTypeRenderer;
 
     public $name;
@@ -69,10 +71,15 @@ class NameType extends TypeNode
 
         // Attach data constraints according to arity and constructor type
         if ($type_flags & Symbol::S_DATA_PARAM) {
-            $constraints = $this->scope->getMeta(Meta::M_DATA_CONSTRAINTS, $this->name);
-            // Append new size constraint
-            $constraints[] = ['size' => count($this->values)];
-            $this->scope->setMeta(Meta::M_DATA_CONSTRAINTS, $this->name, $constraints);
+            $previous_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
+            $my_kind = implode(' -> ', array_fill(0, count($this->values) + 1, '*'));
+
+            // Initialize kind when it is the first usage
+            if (null === $previous_type->kind) {
+                $previous_type->kind = $my_kind;
+            } elseif ($previous_type->kind !== $my_kind) {
+                throw new TypeError(Localization::message('TYP470', [$this->name, $previous_type->kind, $my_kind]));
+            }
         }
     }
 
@@ -85,12 +92,6 @@ class NameType extends TypeNode
         }
 
         return $type->simplify();
-    }
-
-    public function check(TypeNode $other)
-    {
-        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type->check($other);
     }
 
     public function getReference()

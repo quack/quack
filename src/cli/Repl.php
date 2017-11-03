@@ -328,6 +328,7 @@ class Repl extends Component
             case ':clear':
                 return $this->handleClearScreen();
             case ':quit':
+            case ':q':
                 return $this->handleQuit();
             case ':what':
                 return $this->handleListDefinitions();

@@ -24,8 +24,7 @@ class Meta
 {
     const M_REF_COUNT        = 'refcount';
     const M_TYPE             = 'type';
-    const M_LABEL            = 'label';             // Implicit meta labels
-    const M_DATA_CONSTRAINTS = 'data_constraints';  // Constraints of a specific data for unification
+    const M_LABEL            = 'label'; // Implicit meta labels
 
     private static $label_num = 0;
     private static $generic_num = 0;
