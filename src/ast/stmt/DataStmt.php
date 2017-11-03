@@ -74,8 +74,10 @@ class DataStmt extends Stmt
         $data = new NameType($this->name, array_map(function ($parameter) {
             return new NameType($parameter, [], true);
         }, $this->parameters));
+        $parent_scope->switchToSecondary();
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $data);
+        $parent_scope->switchToPrimary();
 
         $declared = [];
         foreach ($this->values as $value) {

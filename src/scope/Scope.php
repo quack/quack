@@ -52,7 +52,7 @@ class Scope
     public function switchToPrimary()
     {
         $this->table = &$this->primary_table;
-        $this->meta = &$this_>primary_meta;
+        $this->meta = &$this->primary_meta;
     }
 
     public function switchToSecondary()
