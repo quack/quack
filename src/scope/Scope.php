@@ -25,23 +25,13 @@ use \QuackCompiler\Scope\Meta;
 
 class Scope
 {
-    public $table = null;
-    public $meta = null;
+    public $table = [];
+    public $meta = [];
     public $parent;
     public $child;
-    public $primary_table;
-    public $secondary_table;
-    public $primary_meta;
-    public $secondary_meta;
 
     public function __construct(Scope $parent = null)
     {
-        $this->primary_table = [];
-        $this->secondary_table = [];
-        $this->primary_meta = [];
-        $this->secondary_meta = [];
-        $this->table = &$this->primary_table;
-        $this->meta = &$this->primary_meta;
         $this->parent = $parent;
         // Keep reference to access scope from parent
         if (null !== $this->parent) {
@@ -51,22 +41,8 @@ class Scope
 
     public function getPrimitiveType($name)
     {
-        $this->switchToSecondary();
         $type = $this->getMeta(Meta::M_TYPE, $name);
-        $this->switchToPrimary();
         return $type;
-    }
-
-    public function switchToPrimary()
-    {
-        $this->table = &$this->primary_table;
-        $this->meta = &$this->primary_meta;
-    }
-
-    public function switchToSecondary()
-    {
-        $this->table = &$this->secondary_table;
-        $this->meta = &$this->secondary_meta;
     }
 
     public function hasLocal($symbol)
