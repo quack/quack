@@ -21,11 +21,4 @@ data Bool
     :- True
     or False
 
-data Maybe(a)
-    :- Just(a)
-    or Nothing
-
-data Function(a, b, c)
-    :- Call(b(a), c)
-
-do Call(Just)
+let id :- &x: x

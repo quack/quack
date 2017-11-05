@@ -49,6 +49,9 @@ trait NameTypeChecker
         }
 
         for ($index = 0; $index < count($this->values); $index++) {
+            $my_baby = $this->values[$index];
+            $your_baby = $other->parameters[$index];
+            $my_baby->unify($your_baby, $context);
         }
     }
 }

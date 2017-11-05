@@ -81,8 +81,6 @@ class FunctionType extends TypeNode
 
             $context = [];
             $expected->unify($received, $context);
-            var_dump($context);
-            exit;
         }
     }
 }
