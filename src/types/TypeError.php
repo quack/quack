@@ -37,9 +37,9 @@ class TypeError extends Exception
             '----- ', BEGIN_BLUE, BEGIN_BOLD, 'TYPE MISMATCH', END_BLUE, ' ',
             str_repeat('-', 80), PHP_EOL,
             BEGIN_RED,
-            '**** Quack, I\'ve found a ',
+            '**** Oops! I\'ve found a ',
             BEGIN_GREEN, 'type error', END_GREEN,
-            BEGIN_RED, ', my dear!', PHP_EOL,
+            BEGIN_RED, '!', PHP_EOL,
             '     ', $this->message, END_RED, PHP_EOL,
             str_repeat('-', 100), PHP_EOL
         ]);

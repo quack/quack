@@ -68,5 +68,7 @@
     "TYP450": "Too many parameters passed on call of `%s'",
     "TYP460": "===DELETED===",
     "TYP470": "Generic type `%s' has ambiguous kinds `%s' and `%s'",
-    "TYP480": "Cannot unify types `%s' and `%s' because they have different kinds, `%s' and `%s', respectively"
+    "TYP480": "Cannot unify types `%s' and `%s' because they have different kinds, `%s' and `%s', respectively",
+    "QUA010": "I don't know the command `%s'. Sorry!",
+    "QUA020": "Available commands: :clear, :quit, :what and :t `symbol'"
 }
