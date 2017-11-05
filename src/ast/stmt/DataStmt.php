@@ -83,7 +83,7 @@ class DataStmt extends Stmt
                 throw new TypeError(Localization::message('SCO030', [$value->name, $this->name]));
             }
 
-            $value->bindData($data);
+            $value->attachTo($data, $this->parameters);
             $value->injectScope($parent_scope, $this->scope);
             $declared[$value->name] = true;
         }

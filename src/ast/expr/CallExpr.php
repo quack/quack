@@ -64,6 +64,7 @@ class CallExpr extends Expr
 
     public function getType()
     {
+        // TODO: TYP330 for parameter error
         $called_with_argc = count($this->arguments);
         $callee = $this->callee->getType();
         if (!($callee instanceof FunctionType)) {
@@ -74,45 +75,6 @@ class CallExpr extends Expr
         if ($called_with_argc > count($callee->parameters)) {
             // Too many parameters provided to the function. Stop.
             throw new TypeError(Localization::message('TYP450', [$callee]));
-        }
-
-        // Insert generic parameters to the scope with unbound types
-        foreach ($callee->generics as $generic) {
-            $this->scope->insert($generic, Symbol::S_VARIABLE | Symbol::S_GENERIC_VAR);
-            $this->scope->setMeta(Meta::M_TYPE, $generic, new GenericType());
-        }
-
-        $this->scope->debug();
-        exit;
-
-        // TODO: Reflect types!!! Deprecate almost everything below
-
-        $index = 0;
-        $result_type = $callee;
-        foreach ($this->arguments as $argument) {
-            $expected = $callee->parameters[$index];
-            $received = $argument->getType();
-            if ($expected->isGeneric()) {
-                // Bind to function scope when generic
-                $this->scope->insert($expected->name, Symbol::S_VARIABLE | Symbol::S_DATA_PARAM);
-                $this->scope->setMeta(Meta::M_TYPE, $expected->name, $received);
-            }
-
-            $expected->bindScope($this->scope);
-            if (!$expected->check($received)) {
-                // When this parameter doesn't match the expected by the function
-                throw new TypeError(Localization::message('TYP330', [$index + 1, $expected, $received]));
-            }
-            $index++;
-            $parameters = array_slice($callee->parameters, $index, $called_with_argc);
-            $return_type = $callee->return;
-
-            if (count($parameters) === 0) {
-                // When no more parameters to reduce, compute return
-                $result_type = $return_type;
-            } else {
-                $result_type = new FunctionType($parameters, $return_type);
-            }
         }
 
         return $result_type;

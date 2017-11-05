@@ -32,6 +32,7 @@ class TypeConsStmt
     public $name;
     public $parameters;
     public $data;
+    public $data_parameters;
 
     public function __construct($name, $parameters)
     {
@@ -39,9 +40,10 @@ class TypeConsStmt
         $this->parameters = $parameters;
     }
 
-    public function bindData(NameType $data)
+    public function attachTo(NameType $data, $data_parameters)
     {
         $this->data = $data;
+        $this->data_parameters = $data_parameters;
     }
 
     public function format(Parser $parser)
@@ -64,7 +66,7 @@ class TypeConsStmt
             return $this->data;
         }
 
-        return new FunctionType($this->parameters, $this->data, $this->data->parameters);
+        return new FunctionType($this->parameters, $this->data, $this->data_parameters);
     }
 
     public function injectScope($parent_scope, $data_scope)

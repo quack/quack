@@ -20,3 +20,7 @@ data Ordering
 data Bool
     :- True
     or False
+
+data Maybe(a)
+    :- Just(a)
+    or Nothing
