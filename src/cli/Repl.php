@@ -312,8 +312,7 @@ class Repl extends Component
 
         if (isset($context->table[$variable])) {
             $type = $context->meta[$variable][Meta::M_TYPE];
-            $this->console->setColor(Console::FG_BLUE);
-            $this->console->writeln($type);
+            $this->console->writeln($type->render(new CliColorizer()));
             $this->console->resetColor();
         } else {
             $this->console->setColor(Console::FG_RED);

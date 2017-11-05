@@ -34,7 +34,7 @@ trait FunctionTypeRenderer
         $result = '';
         if (count($this->generics) > 0) {
             $result .= $renderer->bold($this->fromUnicode('\u2200')) . ' ';
-            $result .= implode(', ', array_map([$renderer, 'blue'], $this->generics));
+            $result .= implode(', ', array_map([$renderer, 'red'], $this->generics));
             $result .= ' ';
         }
 

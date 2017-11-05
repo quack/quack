@@ -26,7 +26,9 @@ trait NameTypeRenderer
 {
     public function render(Colorizer $renderer)
     {
-        $result = $renderer->blue($this->name);
+        $result = $this->is_generic
+            ? $renderer->red($this->name)
+            : $renderer->blue($this->name);
         if (count($this->values) > 0) {
             $result .= '(';
             $result .= implode(', ', array_map(function ($value) use ($renderer) {
