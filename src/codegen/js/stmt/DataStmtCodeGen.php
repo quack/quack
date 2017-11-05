@@ -26,6 +26,15 @@ trait DataStmtCodeGen
 {
     public function compile(CodeGenContext $context)
     {
-        return 'MARCELO TODO';
+        if (0 === count($this->values)) {
+            return '';
+        }
+
+        $source = '';
+        foreach ($this->values as $value) {
+            $source .= $value->compile($context);
+        }
+
+        return $source;
     }
 }

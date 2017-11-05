@@ -20,6 +20,7 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\CodeGen\JS\Stmt\LetStmtCodeGen;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\TypeError;
@@ -28,6 +29,8 @@ use \QuackCompiler\Scope\Meta;
 
 class LetStmt extends Stmt
 {
+    use LetStmtCodeGen;
+
     public $name;
     public $type;
     public $value;

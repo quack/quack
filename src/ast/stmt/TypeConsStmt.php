@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\CodeGen\JS\Stmt\TypeConsStmtCodeGen;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
@@ -29,6 +30,8 @@ use \QuackCompiler\Scope\Symbol;
 
 class TypeConsStmt
 {
+    use TypeConsStmtCodeGen;
+
     public $name;
     public $parameters;
     public $data;

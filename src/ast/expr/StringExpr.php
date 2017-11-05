@@ -20,10 +20,13 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\CodeGen\JS\Expr\StringExprCodeGen;
 use \QuackCompiler\Parser\Parser;
 
 class StringExpr extends Expr
 {
+    use StringExprCodeGen;
+
     public $value;
     public $delimiter;
 

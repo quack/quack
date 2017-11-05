@@ -26,6 +26,7 @@ trait ExprStmtCodeGen
 {
     public function compile(CodeGenContext $context)
     {
-        return 'void ' . $this->expr->compile($context);
+        return $context->indent() . 'void ' .
+            $this->expr->compile($context) . ';' . PHP_EOL;
     }
 }

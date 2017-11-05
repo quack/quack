@@ -26,6 +26,6 @@ trait StringExprCodeGen
 {
     public function compile(CodeGenContext $context)
     {
-        return 'MARCELO TODO';
+        return $this->delimiter . $this->value . $this->delimiter;
     }
 }

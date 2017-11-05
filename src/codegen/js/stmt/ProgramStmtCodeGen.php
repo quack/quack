@@ -29,12 +29,10 @@ trait ProgramStmtCodeGen
         $source = '(function () {' . PHP_EOL;
         $context->open();
         foreach ($this->stmt_list as $stmt) {
-            $source .= $context->indent();
             $source .= $stmt->compile($context);
-            $source .= ';' . PHP_EOL;
         }
         $context->close();
-        $source .= '})()';
+        $source .= '})();';
         return $source;
     }
 }

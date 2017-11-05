@@ -26,6 +26,20 @@ trait TypeConsStmtCodeGen
 {
     public function compile(CodeGenContext $context)
     {
-        return 'MARCELO TODO';
+        $source = $context->indent() . 'var ' . $this->name . ' = ';
+
+        if (0 === count($this->parameters)) {
+            $source .= "'" . $this->name . "'";
+        } else {
+            $returns = '{ ' . implode(', ', array_map(function ($name) {
+                return $name . ': ' . $name;
+            }, $this->parameters)) . ' }';
+            $source .= array_reduce(array_reverse($this->parameters), function ($base, $name) {
+                return 'function (' . $name . ') { return ' . $base . '; }';
+            }, $returns);
+        }
+
+        $source .= ';' . PHP_EOL;
+        return $source;
     }
 }

@@ -26,6 +26,7 @@ use \Exception;
 use \QuackCompiler\Cli\Console;
 use \QuackCompiler\Cli\Croak;
 use \QuackCompiler\Cli\Repl;
+use \QuackCompiler\CodeGen\JS\JSCodeGen;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\TokenReader;
 use \QuackCompiler\Scope\Scope;
@@ -68,13 +69,20 @@ if (count($argv) > 1) {
             $prelude = file_get_contents(realpath(dirname(__FILE__) . '/../lib/prelude.qk'));
             $source = $prelude . PHP_EOL . file_get_contents($file);
             $script = compile($source, $scope);
-            // Output only provided source instead of all prelude
-            // TODO: This is very ugly. We need to start thinking about modules and export
-            $nodes_to_skip = preg_match_all('/^data/m', $prelude) - 1;
-            foreach (range(0, $nodes_to_skip) as $index) {
-                unset($script->ast->stmt_list[$index]);
+
+            if (getenv('QUACK_DEV') === '1') {
+                $codegen = new JSCodeGen($script->ast);
+                echo $codegen->compile();
+            } else {
+                // Just to keep the output tests working for now
+                // Output only provided source instead of all prelude
+                // TODO: This is very ugly. We need to start thinking about modules and export
+                $nodes_to_skip = preg_match_all('/^data/m', $prelude) - 1;
+                foreach (range(0, $nodes_to_skip) as $index) {
+                    unset($script->ast->stmt_list[$index]);
+                }
+                echo $script->format();
             }
-            echo $script->format();
         } catch (Exception $e) {
             echo $e;
             exit(1);

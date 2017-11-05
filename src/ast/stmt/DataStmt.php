@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\CodeGen\JS\Stmt\DataStmtCodeGen;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
@@ -31,6 +32,8 @@ use \QuackCompiler\Types\TypeError;
 
 class DataStmt extends Stmt
 {
+    use DataStmtCodeGen;
+
     public $name;
     public $parameters;
     public $values;

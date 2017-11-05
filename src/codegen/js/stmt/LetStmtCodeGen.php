@@ -26,6 +26,14 @@ trait LetStmtCodeGen
 {
     public function compile(CodeGenContext $context)
     {
-        return 'MARCELO TODO';
+        $source = $context->indent() . 'var ' . $this->name;
+
+        if (null !== $this->value) {
+            $source .= ' = ' . $this->value->compile($context);
+        }
+
+        $source .= ';' . PHP_EOL;
+
+        return $source;
     }
 }
