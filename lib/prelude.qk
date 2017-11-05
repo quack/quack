@@ -21,4 +21,3 @@ data Bool
     :- True
     or False
 
-let id :- &x: x
