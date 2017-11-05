@@ -28,11 +28,16 @@ define('SCOPE', 'scope');
 define('TYPES', 'types');
 define('INTL', 'intl');
 define('CLI', 'cli');
+define('CODEGEN', 'codegen');
 
 function import($module, $file)
 {
     require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
+
+/* CodeGen */
+import(CODEGEN, 'CodeGen');
+import(CODEGEN, 'js/JSCodeGen');
 
 /* Pretty */
 import(PRETTY, 'Colorizer');

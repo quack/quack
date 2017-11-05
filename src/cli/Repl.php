@@ -21,6 +21,8 @@
 namespace QuackCompiler\Cli;
 
 use \Exception;
+use \QuackCompiler\CodeGen\JS\JSCodeGen;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
@@ -28,7 +30,6 @@ use \QuackCompiler\Pretty\CliColorizer;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Intl\Localization;
 
 class Repl extends Component
 {
@@ -434,6 +435,13 @@ class Repl extends Component
         }
     }
 
+    private function compileToJS($ast)
+    {
+        $codegen = new JSCodeGen($ast);
+        $this->console->write($codegen->compile());
+        $this->console->write(PHP_EOL);
+    }
+
     private function compile($source, $silent = false)
     {
         if ('' === $source) {
@@ -456,12 +464,12 @@ class Repl extends Component
                 $parser->ast->runTypeChecker();
                 // Save AST in case of success
                 if (!$silent) {
-                    $this->console->write($parser->beautify());
+                    $this->compileToJS($parser->ast);
                 }
                 $this->setState(['ast' => $parser->ast, 'complete' => true]);
             } else {
                 if (!$silent) {
-                    $this->console->write($parser->beautify());
+                    $this->compileToJS($parser->ast);
                 }
                 $this->state('ast')->attachValidAST($parser->ast);
                 $this->setState(['complete' => true]);
