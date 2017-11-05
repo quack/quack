@@ -72,6 +72,11 @@ abstract class TypeNode
         return $this;
     }
 
+    public function getKind()
+    {
+        return '*';
+    }
+
     abstract function check(TypeNode $other);
 
     abstract function bindScope(Scope $parent_scope);

@@ -77,6 +77,6 @@ class CallExpr extends Expr
             throw new TypeError(Localization::message('TYP450', [$callee]));
         }
 
-        return $result_type;
+        return $callee->computeCall($this->arguments);
     }
 }

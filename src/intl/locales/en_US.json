@@ -67,5 +67,6 @@
     "TYP440": "I didn't find any type named `%s'. Are you sure you declared it?",
     "TYP450": "Too many parameters passed on call of `%s'",
     "TYP460": "===DELETED===",
-    "TYP470": "Generic type `%s' has ambiguous kinds `%s' and `%s'"
+    "TYP470": "Generic type `%s' has ambiguous kinds `%s' and `%s'",
+    "TYP480": "Cannot unify types `%s' and `%s' because they have different kinds, `%s' and `%s', respectively"
 }

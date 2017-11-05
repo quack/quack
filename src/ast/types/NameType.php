@@ -72,7 +72,7 @@ class NameType extends TypeNode
         // Attach data constraints according to arity and constructor type
         if ($type_flags & Symbol::S_DATA_PARAM) {
             $previous_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-            $my_kind = implode(' -> ', array_fill(0, count($this->values) + 1, '*'));
+            $my_kind = $this->getKind();
 
             // Initialize kind when it is the first usage
             if (null === $previous_type->kind) {
@@ -103,5 +103,10 @@ class NameType extends TypeNode
         }
 
         return [$flags, $meta];
+    }
+
+    public function getKind()
+    {
+        return implode(' -> ', array_fill(0, count($this->values) + 1, '*'));
     }
 }
