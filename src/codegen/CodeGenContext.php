@@ -18,24 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\CodeGen\JS;
+namespace QuackCompiler\CodeGen;
 
-use \QuackCompiler\Ast\Stmt\ProgramStmt;
-use \QuackCompiler\CodeGen\CodeGen;
-use \QuackCompiler\CodeGen\CodeGenContext;
-
-class JSCodeGen implements CodeGen
+class CodeGenContext
 {
-    private $program;
+    private $indent = 0;
 
-    public function __construct(ProgramStmt $program)
+    public function open()
     {
-        $this->program = $program;
+        $this->indent++;
     }
 
-    public function compile()
+    public function close()
     {
-        $context = new CodeGenContext();
-        return $this->program->compile($context);
+        $this->indent--;
+    }
+
+    public function indent()
+    {
+        return str_repeat('  ', $this->indent);
     }
 }

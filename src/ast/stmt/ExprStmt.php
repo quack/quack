@@ -20,12 +20,15 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\CodeGen\JS\Stmt\ExprStmtCodeGen;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\CliColorizer;
 use \QuackCompiler\Types\ParametricTypes;
 
 class ExprStmt extends Stmt
 {
+    use ExprStmtCodeGen;
+
     public $expr;
 
     public function __construct($expr)

@@ -37,7 +37,11 @@ function import($module, $file)
 
 /* CodeGen */
 import(CODEGEN, 'CodeGen');
+import(CODEGEN, 'CodeGenContext');
 import(CODEGEN, 'js/JSCodeGen');
+import(CODEGEN, 'js/stmt/ProgramStmtCodeGen');
+import(CODEGEN, 'js/stmt/ExprStmtCodeGen');
+import(CODEGEN, 'js/expr/NumberExprCodeGen');
 
 /* Pretty */
 import(PRETTY, 'Colorizer');

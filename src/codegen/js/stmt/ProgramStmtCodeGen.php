@@ -18,24 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\CodeGen\JS;
+namespace QuackCompiler\CodeGen\JS\Stmt;
 
-use \QuackCompiler\Ast\Stmt\ProgramStmt;
-use \QuackCompiler\CodeGen\CodeGen;
 use \QuackCompiler\CodeGen\CodeGenContext;
 
-class JSCodeGen implements CodeGen
+trait ProgramStmtCodeGen
 {
-    private $program;
-
-    public function __construct(ProgramStmt $program)
+    public function compile(CodeGenContext $context)
     {
-        $this->program = $program;
-    }
-
-    public function compile()
-    {
-        $context = new CodeGenContext();
-        return $this->program->compile($context);
+        $source = '(function () {' . PHP_EOL;
+        $context->open();
+        foreach ($this->stmt_list as $stmt) {
+            $source .= $context->indent();
+            $source .= $stmt->compile($context);
+            $source .= ';' . PHP_EOL;
+        }
+        $context->close();
+        $source .= '})()';
+        return $source;
     }
 }

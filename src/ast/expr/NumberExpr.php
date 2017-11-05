@@ -20,10 +20,13 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\CodeGen\JS\Expr\NumberExprCodeGen;
 use \QuackCompiler\Parser\Parser;
 
 class NumberExpr extends Expr
 {
+    use NumberExprCodeGen;
+
     public $value;
     public $type;
     public $notation;

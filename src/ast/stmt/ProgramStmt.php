@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \Exception;
+use \QuackCompiler\CodeGen\JS\Stmt\ProgramStmtCodeGen;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
 class ProgramStmt extends Stmt
 {
+    use ProgramStmtCodeGen;
+
     public $stmt_list;
 
     public function __construct($stmt_list)

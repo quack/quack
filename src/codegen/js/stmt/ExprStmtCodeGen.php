@@ -18,24 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\CodeGen\JS;
+namespace QuackCompiler\CodeGen\JS\Stmt;
 
-use \QuackCompiler\Ast\Stmt\ProgramStmt;
-use \QuackCompiler\CodeGen\CodeGen;
 use \QuackCompiler\CodeGen\CodeGenContext;
 
-class JSCodeGen implements CodeGen
+trait ExprStmtCodeGen
 {
-    private $program;
-
-    public function __construct(ProgramStmt $program)
+    public function compile(CodeGenContext $context)
     {
-        $this->program = $program;
-    }
-
-    public function compile()
-    {
-        $context = new CodeGenContext();
-        return $this->program->compile($context);
+        return 'void ' . $this->expr->compile($context);
     }
 }
