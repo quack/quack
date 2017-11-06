@@ -47,7 +47,7 @@ class Body
 
     public function injectScope($outer)
     {
-        $this->scope = new Scope($outer);
+        $this->scope = $outer;
         foreach ($this->body as $stmt) {
             $stmt->injectScope($this->scope);
         }

@@ -46,7 +46,8 @@ class BlockStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
-        return $this->body->injectScope($parent_scope);
+        $this->scope = new Scope($parent_scope);
+        return $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
