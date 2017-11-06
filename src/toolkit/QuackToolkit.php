@@ -126,6 +126,7 @@ import(PARSER, 'Precedence');
 /* Ast */
 
 import(AST, 'Node');
+import(AST, 'Body');
 
 import(AST, 'expr/Expr');
 import(AST, 'expr/ListExpr');

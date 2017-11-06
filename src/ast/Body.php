@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast;
 
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
-class BlockStmt extends Stmt
+class Body
 {
     public $body;
 
@@ -34,23 +34,29 @@ class BlockStmt extends Stmt
 
     public function format(Parser $parser)
     {
-        $source = 'begin';
-        $source .= PHP_EOL;
-        $source .= $this->body->format($parser);
-        $source .= $parser->indent();
-        $source .= 'end';
-        $source .= PHP_EOL;
+        $result = '';
+        $parser->openScope();
 
-        return $source;
+        foreach ($this->body as $stmt) {
+            $result .= $parser->indent() . $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+        return $result;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope($outer)
     {
-        return $this->body->injectScope($parent_scope);
+        $this->scope = new Scope($outer);
+        foreach ($this->body as $stmt) {
+            $stmt->injectScope($this->scope);
+        }
     }
 
     public function runTypeChecker()
     {
-        $this->body->runTypeChecker();
+        foreach ($this->body as $stmt) {
+            $stmt->runTypeChecker();
+        }
     }
 }
