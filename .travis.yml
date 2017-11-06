@@ -7,7 +7,7 @@ php:
   - hhvm
 
 install:
-  - pip install --user hy==0.11.1
+  - pip install --user hy==0.12.1
   - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
