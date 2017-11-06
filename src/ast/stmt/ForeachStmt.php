@@ -59,16 +59,7 @@ class ForeachStmt extends Stmt
         $source .= ' in ';
         $source .= $this->generator->format($parser);
         $source .= PHP_EOL;
-
-        $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
-        $parser->closeScope();
-
+        $source .= $this->body->format($parser);
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
@@ -92,10 +83,7 @@ class ForeachStmt extends Stmt
 
         $this->scope->insert($this->alias, Symbol::S_VARIABLE | Symbol::S_INITIALIZED | Symbol::S_MUTABLE);
         $this->generator->injectScope($parent_scope);
-
-        foreach ($this->body as $node) {
-            $node->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
@@ -121,8 +109,6 @@ class ForeachStmt extends Stmt
             ? $generator_type->type
             : $generator_type->key;
 
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
     }
 }

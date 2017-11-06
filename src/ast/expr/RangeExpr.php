@@ -88,6 +88,7 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        return $this->scope->getPrimitiveType('Number');
+        $number = $this->scope->getPrimitiveType('Number');
+        return new ListType($number);
     }
 }
