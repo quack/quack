@@ -20,8 +20,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\GenericType;
-use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
@@ -34,6 +34,7 @@ class DataStmt extends Stmt
     public $name;
     public $parameters;
     public $values;
+    public $type;
 
     public function __construct($name, $parameters, $values)
     {
@@ -71,26 +72,19 @@ class DataStmt extends Stmt
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new GenericType());
         }
 
-        $data = new NameType($this->name, array_map(function ($parameter) {
-            return new NameType($parameter, [], true);
-        }, $this->parameters));
+        $this->type = new DataType($this->name, $this->parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $data);
+        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
 
-        $declared = [];
         foreach ($this->values as $value) {
-            if (isset($declared[$value->name])) {
-                throw new TypeError(Localization::message('SCO030', [$value->name, $this->name]));
-            }
-
-            $value->attachTo($data, $this->parameters);
-            $value->injectScope($parent_scope, $this->scope);
-            $declared[$value->name] = true;
+            $value->injectScope($parent_scope);
         }
     }
 
     public function runTypeChecker()
     {
-        // Pass
+        foreach ($this->values as $value) {
+            $value->runTypeChecker($this->type);
+        }
     }
 }

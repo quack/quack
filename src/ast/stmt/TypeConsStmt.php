@@ -20,8 +20,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
@@ -31,19 +31,11 @@ class TypeConsStmt
 {
     public $name;
     public $parameters;
-    public $data;
-    public $data_parameters;
 
     public function __construct($name, $parameters)
     {
         $this->name = $name;
         $this->parameters = $parameters;
-    }
-
-    public function attachTo(NameType $data, $data_parameters)
-    {
-        $this->data = $data;
-        $this->data_parameters = $data_parameters;
     }
 
     public function format(Parser $parser)
@@ -69,12 +61,19 @@ class TypeConsStmt
         return new FunctionType($this->parameters, $this->data, $this->data_parameters);
     }
 
-    public function injectScope($parent_scope, $data_scope)
+    public function injectScope(Scope $outer)
     {
-        $parent_scope->insert($this->name, Symbol::S_DATA_MEMBER);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->getType());
-        foreach ($this->parameters as $parameter) {
-            $parameter->bindScope($data_scope);
-        }
+        $this->scope = $outer;
+        $this->scope->insert($this->name, Symbol::S_VARIABLE | Symbol::S_DATA_MEMBER);
+    }
+
+    public function runTypeChecker(DataType $data)
+    {
+        $type = 0 === count($this->parameters)
+            ? $data
+            : new FunctionType([], $this->data, $this->data->parameters);
+            // TODO: Collect constraints HERE
+
+        $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }
