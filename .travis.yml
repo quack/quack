@@ -8,7 +8,7 @@ php:
 
 install:
   - pip install --user hy==0.12.1
-  - pip install --user astor=0.5
+  - pip install --user astor==0.5
   - pip install --user termcolor
   - export PATH=$PATH:$HOME/.local/bin
 
