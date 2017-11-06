@@ -30,7 +30,7 @@ trait DataTypeRenderer
 
         if (count($this->parameters) > 0) {
             $result .= '(';
-            $result .= implode(', ', array_map([$colorizer, 'green'], $this->parameters));
+            $result .= implode(', ', array_map([$renderer, 'green'], $this->parameters));
             $result .= ')';
         }
 

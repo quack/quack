@@ -69,11 +69,12 @@ class TypeConsStmt
 
     public function runTypeChecker(DataType $data)
     {
-        $type = 0 === count($this->parameters)
-            ? $data
-            : new FunctionType([], $this->data, $this->data->parameters);
-            // TODO: Collect constraints HERE
+        if (0 === count($this->parameters)) {
+            $this->scope->setMeta(Meta::M_TYPE, $this->name, $data);
+            return;
+        }
 
-        $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
+        // TODO: Collect constraints and deal with types with parameters
+        // TODO: Create a ->collectConstraints($context)
     }
 }
