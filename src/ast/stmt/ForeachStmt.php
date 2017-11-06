@@ -107,8 +107,8 @@ class ForeachStmt extends Stmt
 
         $value_type = $generator_type instanceof ListType
             ? $generator_type->type
-            : $generator_type->key;
-
+            : $generator_type->value;
+        $this->scope->setMeta(Meta::M_TYPE, $this->alias, $value_type);
         $this->body->runTypeChecker();
     }
 }
