@@ -47,12 +47,7 @@ class IfStmt extends Stmt
         $source = 'if ';
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
-        $parser->openScope();
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-        $parser->closeScope();
+        $source .= $this->body->format($parser);
 
         foreach ($this->elif as $elif) {
             $source .= $elif->format($parser);
@@ -84,9 +79,7 @@ class IfStmt extends Stmt
 
         // Bind scope for body of `if'
         $body_scope = new Scope($parent_scope);
-        foreach ($this->body as $stmt) {
-            $stmt->injectScope($body_scope);
-        }
+        $this->body->injectScope($body_scope);
 
         // Bind scope for every elif. This class is just a
         // bridge for that
@@ -112,9 +105,7 @@ class IfStmt extends Stmt
             throw new TypeError(Localization::message('TYP140', [$condition_type]));
         }
 
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
 
         foreach ($this->elif as $elif) {
             $elif->runTypeChecker();
