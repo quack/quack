@@ -51,16 +51,6 @@ class TypeConsStmt
         return $source;
     }
 
-    private function getType()
-    {
-        if (count($this->parameters) === 0) {
-            // All constraints have been satisfied
-            return $this->data;
-        }
-
-        return new FunctionType($this->parameters, $this->data, $this->data_parameters);
-    }
-
     public function injectScope(Scope $outer)
     {
         $this->scope = $outer;
