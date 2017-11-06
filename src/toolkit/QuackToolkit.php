@@ -37,6 +37,7 @@ function import($module, $file)
 /* Pretty */
 import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
+import(PRETTY, 'types/DataTypeRenderer');
 import(PRETTY, 'types/FunctionTypeRenderer');
 import(PRETTY, 'types/NameTypeRenderer');
 import(PRETTY, 'types/GenericTypeRenderer');
@@ -47,6 +48,7 @@ import(PRETTY, 'types/OperatorTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
+import(TYPECHECKER, 'DataTypeChecker');
 import(TYPECHECKER, 'FunctionTypeChecker');
 import(TYPECHECKER, 'GenericTypeChecker');
 import(TYPECHECKER, 'ListTypeChecker');
@@ -172,6 +174,7 @@ import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
+import(AST, 'types/DataType');
 import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
 import(AST, 'types/ListType');
