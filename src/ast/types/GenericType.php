@@ -42,8 +42,4 @@ class GenericType extends TypeNode
     {
         return $this->parenthesize(ParametricTypes::name($this));
     }
-
-    public function bindScope(Scope $parent_scope)
-    {
-    }
 }

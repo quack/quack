@@ -58,15 +58,6 @@ class FunctionType extends TypeNode
         return $this->parenthesize($source);
     }
 
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->parameters as $parameter) {
-            $parameter->bindScope($parent_scope);
-        }
-
-        $this->return->bindScope($parent_scope);
-    }
-
     public function getKind()
     {
         return implode(' -> ', array_fill(0, count($this->parameters) + 1, '*'));

@@ -46,11 +46,4 @@ class ObjectType extends TypeNode
 
         return $this->parenthesize($source);
     }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->properties as $property) {
-            $property->bindScope($parent_scope);
-        }
-    }
 }

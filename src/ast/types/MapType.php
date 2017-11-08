@@ -44,10 +44,4 @@ class MapType extends TypeNode
             '#{' . $this->key . ': ' . $this->value . '}'
         );
     }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->key->bindScope($parent_scope);
-        $this->value->bindScope($parent_scope);
-    }
 }

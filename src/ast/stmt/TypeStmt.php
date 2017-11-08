@@ -52,7 +52,6 @@ class TypeStmt extends Stmt
         $this->scope = $parent_scope;
         $flags = Symbol::S_TYPE | Symbol::S_ALIAS;
         $meta = [Meta::M_TYPE => $this->value];
-        $this->value->bindScope($this->scope);
 
         // Clone signature and meta properties when it is a named reference
         $reference = $this->value->getReference();

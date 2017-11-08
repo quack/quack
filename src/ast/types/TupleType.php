@@ -42,11 +42,4 @@ class TupleType extends TypeNode
     {
         return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
     }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->types as $type) {
-            $type->bindScope($parent_scope);
-        }
-    }
 }

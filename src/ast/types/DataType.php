@@ -50,10 +50,4 @@ class DataType extends TypeNode
 
         return $source;
     }
-
-    public function bindScope(Scope $scope)
-    {
-        // TODO: Kill bindScope please
-        $this->scope = $scope;
-    }
 }

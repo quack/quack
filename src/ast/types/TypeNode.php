@@ -78,6 +78,4 @@ abstract class TypeNode
     }
 
     abstract function check(TypeNode $other);
-
-    abstract function bindScope(Scope $parent_scope);
 }

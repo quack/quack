@@ -85,12 +85,6 @@ class FnSignatureStmt extends Stmt
 
     public function runTypeChecker()
     {
-        foreach ($this->parameters as $parameter) {
-            $parameter->type->bindScope($this->scope);
-        }
-
-        if (null !== $this->type) {
-            $this->type->bindScope($this->scope);
-        }
+        // Pass
     }
 }

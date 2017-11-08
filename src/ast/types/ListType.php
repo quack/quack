@@ -40,9 +40,4 @@ class ListType extends TypeNode
     {
         return $this->parenthesize('{' . $this->type . '}');
     }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->type->bindScope($parent_scope);
-    }
 }

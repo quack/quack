@@ -56,33 +56,6 @@ class NameType extends TypeNode
         return $source;
     }
 
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->scope = $parent_scope;
-        $type_flags = $this->scope->lookup($this->name);
-        if (null === $type_flags || ((~$type_flags & Symbol::S_DATA) && (~$type_flags & Symbol::S_DATA_PARAM))) {
-            throw new TypeError(Localization::message('TYP440', [$this->name]));
-        }
-
-        // Bind scope for each children
-        foreach ($this->values as $type) {
-            $type->bindScope($this->scope);
-        }
-
-        // Attach data constraints according to arity and constructor type
-        if ($type_flags & Symbol::S_DATA_PARAM) {
-            $previous_type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-            $my_kind = $this->getKind();
-
-            // Initialize kind when it is the first usage
-            if (null === $previous_type->kind) {
-                $previous_type->kind = $my_kind;
-            } elseif ($previous_type->kind !== $my_kind) {
-                throw new TypeError(Localization::message('TYP470', [$this->name, $previous_type->kind, $my_kind]));
-            }
-        }
-    }
-
     public function simplify()
     {
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
