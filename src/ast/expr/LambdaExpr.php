@@ -86,15 +86,7 @@ class LambdaExpr extends Expr
             $source .= $this->body->format($parser);
         } else {
             $source .= 'begin' . PHP_EOL;
-
-            $parser->openScope();
-
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
-            $parser->closeScope();
+            $source .= $this->body->format($parser);
             $source .= $parser->indent();
             $source .= 'end';
             $source .= PHP_EOL;
@@ -121,13 +113,7 @@ class LambdaExpr extends Expr
             $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);
         }
 
-        if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
-            foreach ($this->body as $node) {
-                $node->injectScope($this->scope);
-            }
-        } else {
-            $this->body->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function getType()
