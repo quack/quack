@@ -8,6 +8,5 @@ php:
 
 install:
   - pip install --user termcolor
-  - export PATH=$PATH:$HOME/.local/bin
 
 script: make && python ./tools/testsuite/run-tests.py --dir tests --exe "php ./bin/quack %s"
