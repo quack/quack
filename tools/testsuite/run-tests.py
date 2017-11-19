@@ -39,9 +39,9 @@ from ntpath import basename
 from termcolor import colored, cprint
 import difflib
 
-version = 'Quack test toolkit v0.0.1-alpha-compat'
-file_pattern = '*.qtest'
-tmp_folder = 'tmp'
+__version__ = 'Quack test toolkit v0.0.1-alpha-compat'
+__file_pattern__ = '*.qtest'
+__tmp_folder__ = 'tmp'
 
 def get_params(args):
     """
@@ -53,7 +53,7 @@ def version():
     """
     Test suite version
     """
-    print(version)
+    print(__version__)
 
 def throw_error(message):
     """
@@ -61,6 +61,146 @@ def throw_error(message):
     """
     print(message)
     exit(666)
+
+def get_all_test_files(dir):
+    """
+    Lists the path + filename of all the files in the directory, but
+    recursively
+    """
+    if not isdir(dir):
+        throw_error('Directory not found')
+    matches = []
+    for (root, dirname, filenames) in walk(dir):
+        for filename in fnmatch.filter(filenames, __file_pattern__):
+            matches.append(join(root, filename))
+    return matches
+
+def file_get_contents(file):
+    """
+    Returns the clean content of a file
+    """
+    with open(file) as f:
+        return f.read()
+
+def group_sections(input):
+    """
+    Receives an input and groups the sections
+    """
+    tok = 'none'
+    describe = [] # File description
+    source = []   # Source code
+    expect = []   # Expected output
+    command = []  # Command to run
+    lines = input.split(linesep)
+    # Parser is cumulative. You can have multiple and isolated sections
+    for line in lines:
+        if line == '%%command':
+            tok = 'command'
+        elif line == '%%source':
+            tok = 'source'
+        elif line == '%%comments':
+            tok = 'none'
+        elif line == '%%describe':
+            tok = 'describe'
+        elif line == '%%expect':
+            tok = 'expect'
+        else:
+            if tok == 'command':
+                command.append(line)
+                tok = 'none'
+            elif tok == 'describe':
+                describe.append(line)
+            elif tok == 'source':
+                source.append(line)
+            elif tok == 'expect':
+                expect.append(line)
+    joiner = lambda lst: linesep.join(lst)
+    return {
+        'describe': joiner(describe),
+        'source': joiner(source),
+        'expect': joiner(expect),
+        'command': joiner(command) if command else "php ./src/Main.php %s --disable-typechecker --disable-scope"
+    }
+
+def create_tmp_folder():
+    """
+    Creates the temp folder for the tests
+    """
+    if not exists(__tmp_folder__):
+        makedirs(__tmp_folder__)
+
+def delete_tmp_files():
+    """
+    Deletes the test folder and its contents recursively
+    """
+    if exists(__tmp_folder__):
+        rmtree(__tmp_folder__)
+
+# Gets a grouped section and saes the input result to a temp file
+def persist_source(name, source):
+    with open(join(__tmp_folder__, name + '.tmp.qk'), 'w') as f:
+        f.write(source)
+
+def run_tests(generator):
+    """
+    The test suite!
+    """
+    tests = 0
+    failed = 0
+    passed = 0
+
+    # start by creating the folder to store our tests and then feed the compiler
+    create_tmp_folder()
+
+    for file in generator:
+        filename = basename(file)
+        section = group_sections(file_get_contents(file))
+        exe = section['command']
+        # Store the source for future queries
+        persist_source(filename, section['source'])
+        command = exe.replace('%s', join(__tmp_folder__, filename + '.tmp.qk'))
+        output = popen(command).read().strip()
+        stripped_to_compare = section['expect'].strip()
+        # We have enough data to give the results
+
+        tests = tests + 1
+        if output == stripped_to_compare:
+            passed = passed + 1
+            cprint('PASS', 'white', 'on_green', attrs=['bold'], end=' ')
+            print(file + ' - ' + section['describe'])
+        else:
+            failed = failed + 1
+            cprint('FAIL', 'white', 'on_red', attrs=['bold'], end=' ')
+            print(file + ' - ' + section['describe'])
+            print('Difference:')
+            output_list = output.split(linesep)
+            expected_list = stripped_to_compare.split(linesep)
+            d = difflib.Differ()
+            diff = d.compare(output_list, expected_list)
+            print(linesep.join(diff))
+
+    print(colored('\nResults: ', attrs=['bold', 'underline']))
+    print(colored('Run:  ' + str(tests), attrs=['bold']))
+    print(colored('Pass: ' + str(passed), attrs=['bold']))
+    print(colored('Fail: ' + str(failed), attrs=['bold']))
+
+    # Dump garbage
+    delete_tmp_files()
+    return failed
+
+def tuple_contains_key(needle, haystack):
+    """
+    Tells if a tuple contains a key. Returns (False, None) if not.
+    Returns (True, value) if it does
+    """
+    fst = False
+    snd = None
+    for key, value in haystack:
+        if key == needle:
+            fst = True
+            snd = value
+            break
+    return fst, snd
 
 def main(args):
     """
@@ -71,7 +211,16 @@ def main(args):
     except GetoptError as e:
         throw_error(e)
     else:
-        print(params)
+        if tuple_contains_key('-v', params)[0]:
+            version()
+        dir_tuple = tuple_contains_key('--dir', params)
+        if dir_tuple[0]:
+            dir = dir_tuple[1]
+            result = run_tests(get_all_test_files(dir))
+            if result > 0:
+                exit(666)
+        else:
+            throw_error('--dir is obligatory')
 
 if __name__ == '__main__':
     main(argv[1:])
