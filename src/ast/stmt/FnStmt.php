@@ -54,16 +54,7 @@ class FnStmt extends Stmt
             $source .= $this->body->format($parser);
         } else {
             $source .= PHP_EOL;
-
-            $parser->openScope();
-
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
-            $parser->closeScope();
-
+            $source .= $this->body->format($parser);
             $source .= $parser->indent();
             $source .= 'end';
         }
@@ -80,14 +71,7 @@ class FnStmt extends Stmt
 
         // Pre-inject parameters
         $this->signature->injectScope($this->scope);
-
-        if ($this->is_short) {
-            $this->body->injectScope($this->scope);
-        } else {
-            foreach ($this->body as $node) {
-                $node->injectScope($this->scope);
-            }
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
