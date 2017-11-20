@@ -39,26 +39,42 @@ if (count($argv) > 1) {
         return preg_match('/\.qk$/', $file);
     });
 
+    function compile($source, $scope) {
+        global $disable_scope, $disable_typechecker;
+
+        $lexer = new Tokenizer($source);
+        $parser = new TokenReader($lexer);
+        $parser->parse();
+
+        if (!$disable_scope) {
+            $parser->ast->injectScope($scope);
+        }
+
+        if (!$disable_typechecker) {
+            $parser->ast->runTypeChecker();
+        }
+
+        return $parser;
+    }
+
     foreach ($compilation_list as $file) {
         try {
             if (!file_exists($file)) {
-                throw new \Exception("File [$file] not found");
+                throw new Exception("File [$file] not found");
             }
 
             $scope = new Scope();
-            $lexer = new Tokenizer(file_get_contents($file));
-            $parser = new TokenReader($lexer);
-            $parser->parse();
-
-            if (!$disable_scope) {
-                $parser->ast->injectScope($scope);
+            // Prepend Prelude
+            $prelude = file_get_contents(realpath(dirname(__FILE__) . '/../lib/prelude.qk'));
+            $source = $prelude . PHP_EOL . file_get_contents($file);
+            $script = compile($source, $scope);
+            // Output only provided source instead of all prelude
+            // TODO: This is very ugly. We need to start thinking about modules and export
+            $nodes_to_skip = preg_match_all('/^data/m', $prelude) - 1;
+            foreach (range(0, $nodes_to_skip) as $index) {
+                unset($script->ast->stmt_list[$index]);
             }
-
-            if (!$disable_typechecker) {
-                $parser->ast->runTypeChecker();
-            }
-
-            echo $parser->format();
+            echo $script->format();
         } catch (Exception $e) {
             echo $e;
             exit(1);
@@ -70,6 +86,8 @@ if (count($argv) > 1) {
 
 $console = new Console(STDIN, STDOUT, STDERR);
 $console->subscribe([
+    0x0  => 'handleListDefinitionsKey',
+    0x1  => 'handleCtrlA',
     0x7F => 'handleBackspace',
     0xC  => 'handleClearScreen',
     0x1B => [
@@ -78,6 +96,9 @@ $console->subscribe([
             0x48 => 'handleHome'
         ],
         0x5B => [
+            0x32 => [
+                0x7E => 'handleInsert'
+            ],
             0x33 => [
                 0x7E => 'handleDelete'
             ],
@@ -97,4 +118,4 @@ $console->subscribe([
 
 $repl = new Repl($console, new Croak());
 $repl->welcome();
-$repl->start();
+$repl->start(['prelude']);

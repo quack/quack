@@ -20,8 +20,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 
 class TypeStmt extends Stmt
@@ -29,7 +31,7 @@ class TypeStmt extends Stmt
     public $name;
     public $value;
 
-    public function __construct($name, $value)
+    public function __construct($name, TypeNode $value)
     {
         $this->name = $name;
         $this->value = $value;
@@ -48,14 +50,27 @@ class TypeStmt extends Stmt
     public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
-        $this->scope->insert($this->name, Kind::K_TYPE & Kind::K_ALIAS);
-        $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->value);
+        $flags = Symbol::S_TYPE | Symbol::S_ALIAS;
+        $meta = [Meta::M_TYPE => $this->value];
+
+        // Clone signature and meta properties when it is a named reference
+        $reference = $this->value->getReference();
+        if (null !== $reference) {
+            list ($ref_flags, $ref_meta) = $reference;
+            // Bind reference flags to type alias
+            $flags |= $ref_flags;
+            // Bind reference meta table to type alias
+            $meta = $ref_meta;
+        }
+
+        $this->scope->insert($this->name, $flags);
+        foreach ($meta as $key => $value) {
+            $this->scope->setMeta($key, $this->name, $value);
+        }
     }
 
     public function runTypeChecker()
     {
-        // Try to simplify the type to ensure it is a valid declaration
-        $this->value->bindScope($this->scope);
-        $this->value->simplify();
+        // Pass
     }
 }

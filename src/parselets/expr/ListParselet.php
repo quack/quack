@@ -18,32 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Types;
+namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Types\LiteralType;
-use \QuackCompiler\Ast\Types\GenericType;
-use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Ast\Expr\ListExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
-use \QuackCompiler\Types\NativeQuackType;
 
-class LiteralTypeParselet implements PrefixParselet
+class ListParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
-        $names = [
-            'string'  => NativeQuackType::T_STR,
-            'number'  => NativeQuackType::T_NUMBER,
-            'boolean' => NativeQuackType::T_BOOL,
-            'regex'   => NativeQuackType::T_REGEX,
-            'block'   => NativeQuackType::T_BLOCK,
-            'byte'    => NativeQuackType::T_BYTE,
-            'atom'    => NativeQuackType::T_ATOM
-        ];
-        $name = $token->getContent();
+        $items = [];
 
-        return array_key_exists($name, $names)
-            ? new LiteralType($names[$name])
-            : new GenericType($name);
+        if ($grammar->reader->is('}')) {
+            $grammar->reader->consume();
+        } else {
+            $items[] = $grammar->_expr();
+
+            while ($grammar->reader->is(',')) {
+                $grammar->reader->consume();
+                $items[] = $grammar->_expr();
+            }
+
+            $grammar->reader->match('}');
+        }
+
+        return new ListExpr($items);
     }
 }

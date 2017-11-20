@@ -22,9 +22,8 @@ namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 
 class LetStmt extends Stmt
@@ -68,12 +67,12 @@ class LetStmt extends Stmt
     public function injectScope($parent_scope)
     {
         $this->scope = $parent_scope;
-        $mask = Kind::K_VARIABLE | ($this->mutable ? Kind::K_MUTABLE : 0x0);
+        $mask = Symbol::S_VARIABLE | ($this->mutable ? Symbol::S_MUTABLE : 0x0);
 
         if (null === $this->value) {
             $this->scope->insert($this->name, $mask);
         } else {
-            $this->scope->insert($this->name, $mask | Kind::K_INITIALIZED);
+            $this->scope->insert($this->name, $mask | Symbol::S_INITIALIZED);
             $this->value->injectScope($parent_scope);
         }
     }
@@ -87,10 +86,6 @@ class LetStmt extends Stmt
         // No type, no value. Free variable
         if (null === $this->type && null === $this->value) {
             throw new TypeError(Localization::message('TYP290', [$this->name]));
-        }
-
-        if (null !== $this->type) {
-            $this->type->bindScope($this->scope);
         }
 
         if ($this->mutable) {

@@ -45,8 +45,6 @@ abstract class Lexer
         $this->peek  = $input[0];
 
         // Reserve keywords
-        $this->reserve(new Word(Tag::T_TRUE, 'true'));
-        $this->reserve(new Word(Tag::T_FALSE, 'false'));
         $this->reserve(new Word(Tag::T_LET, 'let'));
         $this->reserve(new Word(Tag::T_IF, 'if'));
         $this->reserve(new Word(Tag::T_WHILE, 'while'));

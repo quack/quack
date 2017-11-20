@@ -7,10 +7,10 @@ foreach key:value in dict
   do console.write("Key: " + key + " Value: " + value)
 end
 %%expect
-foreach item in { 1, 2, 3 }
+foreach item in {1, 2, 3}
   do console.write("Number: " + item)
 end
-let dict :- #{ "key1": "String 1", "key2": "String 2" }
+let dict :- #{"key1": "String 1", "key2": "String 2"}
 foreach key: value in dict
   do console.write("Key: " + key + " Value: " + value)
 end

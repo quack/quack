@@ -24,7 +24,8 @@ use \Exception;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Pretty\CliColorizer;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Intl\Localization;
@@ -33,6 +34,7 @@ class Repl extends Component
 {
     private $console;
     private $croak;
+    private $modules = [];
 
     public function __construct(Console $console, Croak $croak = null)
     {
@@ -45,7 +47,8 @@ class Repl extends Component
             'scope'         => new Scope(),
             'ast'           => null,
             'complete'      => true,
-            'command'       => ''
+            'command'       => '',
+            'insert'        => false
         ]);
         $this->console = $console;
         $this->croak = $croak;
@@ -112,6 +115,11 @@ class Repl extends Component
         $boundaries = null;
         preg_match_all('/\b./', $line, $boundaries, PREG_OFFSET_CAPTURE);
         return $boundaries[0];
+    }
+
+    private function handleCtrlA()
+    {
+        $this->setState(['column' => 0]);
     }
 
     private function handleCtrlLeftArrow()
@@ -210,7 +218,15 @@ class Repl extends Component
             return;
         }
 
-        list ($line, $column) = $this->state('line', 'column');
+        list ($line, $column, $insert) = $this->state('line', 'column', 'insert');
+
+        // In insert mode, just replace the char in string index and move pointer
+        if ($insert && $column < count($line)) {
+            $line[$column] = $input;
+            $this->setState(['line' => $line, 'column' => $column + 1]);
+            return;
+        }
+
         $next_buffer = [$input];
         // Insert the new char in the column in the line buffer
         array_splice($line, $column, 0, $next_buffer);
@@ -225,6 +241,12 @@ class Repl extends Component
         $this->setState(['line' => $line, 'column' => $column]);
     }
 
+    private function handleInsert()
+    {
+        $insert = $this->state('insert');
+        $this->setState(['insert' => !$insert]);
+    }
+
     private function handleQuit()
     {
         $this->console->setColor(Console::FG_BLUE);
@@ -234,8 +256,20 @@ class Repl extends Component
         exit;
     }
 
+    private function handleListDefinitionsKey()
+    {
+        $context = $this->state('scope')->child;
+
+        if (0 !== sizeof($context->table)) {
+            $this->console->writeln('');
+            $this->handleListDefinitions();
+            $this->resetState();
+        }
+    }
+
     private function handleListDefinitions()
     {
+        $renderer = new CliColorizer();
         $context = $this->state('scope')->child;
 
         if (0 === count($context->table)) {
@@ -248,16 +282,20 @@ class Repl extends Component
         });
 
         foreach ($context->table as $name => $signature) {
+            // Skip union declarations because they shouldn't be exposed
+            if ($signature & Symbol::S_DATA) {
+                continue;
+            }
+
             $type = $context->meta[$name][Meta::M_TYPE];
-            $mutable = $signature & Kind::K_MUTABLE;
-            $color = $signature & Kind::K_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
+            $mutable = $signature & Symbol::S_MUTABLE;
+            $color = $signature & Symbol::S_VARIABLE ? Console::FG_BOLD_GREEN : Console::BOLD;
             $this->console->setColor($color);
+            $this->console->write(' - ');
             $this->console->write(str_pad($name, $max));
             $this->console->resetColor();
             $this->console->write(' :: ');
-            $this->console->setColor(Console::FG_BLUE);
-            $this->console->write($type);
-            $this->console->resetColor();
+            $this->console->write($type->render($renderer));
 
             if ($mutable) {
                 $this->console->setColor(Console::FG_RED);
@@ -275,8 +313,7 @@ class Repl extends Component
 
         if (isset($context->table[$variable])) {
             $type = $context->meta[$variable][Meta::M_TYPE];
-            $this->console->setColor(Console::FG_BLUE);
-            $this->console->writeln($type);
+            $this->console->writeln($type->render(new CliColorizer()));
             $this->console->resetColor();
         } else {
             $this->console->setColor(Console::FG_RED);
@@ -291,6 +328,7 @@ class Repl extends Component
             case ':clear':
                 return $this->handleClearScreen();
             case ':quit':
+            case ':q':
                 return $this->handleQuit();
             case ':what':
                 return $this->handleListDefinitions();
@@ -311,7 +349,7 @@ class Repl extends Component
     public function welcome()
     {
         $prelude = [
-            'Quack - Copyright (C) 2017 Marcelo Camargo',
+            'Quack - Copyright (C) 2015-2017 Quack and CONTRIBUTORS',
             'This program comes with ABSOLUTELY NO WARRANTY.',
             'This is free software, and you are welcome to redistribute it',
             'under certain conditions.',
@@ -385,9 +423,18 @@ class Repl extends Component
         $this->console->write($colored_line);
         $this->console->resetCursor();
         $this->console->forwardCursor($cursor);
+
+        if ($this->state('insert') && $column < strlen($line)) {
+            $this->console->setColor(Console::BG_RED);
+            $this->console->setColor(Console::FG_WHITE);
+            $next_char = $line[$column];
+            $this->console->write($next_char);
+            $this->console->resetColor();
+            $this->console->backwardCursor(1);
+        }
     }
 
-    private function compile($source)
+    private function compile($source, $silent = false)
     {
         if ('' === $source) {
             $this->resetState();
@@ -408,10 +455,14 @@ class Repl extends Component
                 $parser->ast->injectScope($scope);
                 $parser->ast->runTypeChecker();
                 // Save AST in case of success
-                $this->console->write($parser->beautify());
+                if (!$silent) {
+                    $this->console->write($parser->beautify());
+                }
                 $this->setState(['ast' => $parser->ast, 'complete' => true]);
             } else {
-                $this->console->write($parser->beautify());
+                if (!$silent) {
+                    $this->console->write($parser->beautify());
+                }
                 $this->state('ast')->attachValidAST($parser->ast);
                 $this->setState(['complete' => true]);
             }
@@ -433,8 +484,28 @@ class Repl extends Component
         }
     }
 
-    public function start()
+    public function load($module)
     {
+        $location = realpath(dirname(__FILE__) . '/../../lib/' . $module . '.qk');
+        $source = file_get_contents($location);
+        $this->compile($source, true);
+        $this->console->resetCursor();
+        $this->console->setColor(Console::FG_WHITE);
+        $this->console->setColor(Console::BG_BLUE);
+        $this->console->write("[$module]");
+        $this->console->resetColor();
+        $this->console->setColor(Console::FG_GREEN);
+        $this->console->writeln(' successfully compiled!');
+        $this->console->resetColor();
+    }
+
+    public function start($modules = [])
+    {
+        $this->modules = $modules;
+        foreach ($modules as $module) {
+            $this->load($module);
+        }
+
         $this->render();
         while (true) {
             $this->handleRead();

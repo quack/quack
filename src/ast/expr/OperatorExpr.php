@@ -20,14 +20,12 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorExpr extends Expr
@@ -75,18 +73,18 @@ class OperatorExpr extends Expr
                 $symbol = $parent_scope->lookup($this->left->name);
 
                 // When symbol is not a variable
-                if (~$symbol & Kind::K_VARIABLE) {
+                if (~$symbol & Symbol::S_VARIABLE) {
                     throw new ScopeError(Localization::message('SCO070', [$this->left->name]));
                 }
 
                 // When symbol is not mutable
-                if (~$symbol & Kind::K_MUTABLE) {
+                if (~$symbol & Symbol::S_MUTABLE) {
                     throw new ScopeError(Localization::message('SCO080', [$this->left->name]));
                 }
             } else {
                 // We have a range of specific nodes that are allowed
                 $valid_assignment = $this->left instanceof AccessExpr ||
-                    $this->left instanceof ArrayExpr; // Array destructuring
+                    $this->left instanceof ListExpr; // List destructuring
 
                 if (!$valid_assignment) {
                     throw new ScopeError(Localization::message('SCO090', []));
@@ -94,7 +92,7 @@ class OperatorExpr extends Expr
 
                 // When it is array destructuring, ensure all the subnodes are names
                 // TODO: Implement destructuring on let, because this is currently useless
-                if ($this->left instanceof ArrayExpr) {
+                if ($this->left instanceof ListExpr) {
                     foreach ($this->left->items as $item) {
                         if (!($item instanceof NameExpr)) {
                             throw new ScopeError(Localization::message('SCO100', []));
@@ -107,6 +105,7 @@ class OperatorExpr extends Expr
 
     public function getType()
     {
+        $bool = $this->scope->getPrimitiveType('Bool');
         $type = (object) [
             'left'  => $this->left->getType(),
             'right' => 'string' === gettype($this->right) ? $this->right : $this->right->getType()
@@ -135,31 +134,34 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP100', [$type->right, $target]));
             }
 
-            return $type->left;
+            // The return type is an effect informing about the mutability
+            $mutability = $this->scope->getPrimitiveType('Mutability');
+            $mutability->parameters = [$type->left];
+            return $mutability;
         }
 
         // Type checking for numeric and string concat operations
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
             if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return new LiteralType(NativeQuackType::T_STR);
+                return $this->scope->getPrimitiveType('String');
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new LiteralType(NativeQuackType::T_NUMBER);
+                return $this->scope->getPrimitiveType('Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
         }
 
-        // Type checking for equality operators and coalescence
+        // Type checking for equality operators
         $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
             if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
             }
 
-            return new LiteralType(NativeQuackType::T_BOOL);
+            return $bool;
         }
 
         // Type checking for string matched by regex
@@ -168,18 +170,18 @@ class OperatorExpr extends Expr
                 throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
-            return new LiteralType(NativeQuackType::T_BOOL);
+            return $bool;
         }
 
         // Boolean algebra and bitwise operations
         $bool_op = [Tag::T_AND, Tag::T_OR, Tag::T_XOR];
         if (in_array($this->operator, $bool_op, true)) {
-            if ($type->left->isBoolean() && $type->right->isBoolean()) {
-                return new LiteralType(NativeQuackType::T_BOOL);
+            if ($bool->check($type->left) && $bool->check($type->right)) {
+                return $bool;
             }
 
             if ($type->left->isNumber() && $type->right->isNumber()) {
-                return new LiteralType(NativeQuackType::T_NUMBER);
+                return $this->scope->getPrimitiveType('Number');
             }
 
             throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));

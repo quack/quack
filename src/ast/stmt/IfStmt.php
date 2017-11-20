@@ -23,8 +23,8 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class IfStmt extends Stmt
@@ -47,12 +47,7 @@ class IfStmt extends Stmt
         $source = 'if ';
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
-        $parser->openScope();
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-        $parser->closeScope();
+        $source .= $this->body->format($parser);
 
         foreach ($this->elif as $elif) {
             $source .= $elif->format($parser);
@@ -62,12 +57,7 @@ class IfStmt extends Stmt
             $source .= $parser->indent();
             $source .= 'else';
             $source .= PHP_EOL;
-            $parser->openScope();
-            foreach ($this->else as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-            $parser->closeScope();
+            $source .= $this->else->format($parser);
         }
 
         $source .= $parser->indent();
@@ -79,13 +69,12 @@ class IfStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->condition->injectScope($parent_scope);
 
         // Bind scope for body of `if'
         $body_scope = new Scope($parent_scope);
-        foreach ($this->body as $stmt) {
-            $stmt->injectScope($body_scope);
-        }
+        $this->body->injectScope($body_scope);
 
         // Bind scope for every elif. This class is just a
         // bridge for that
@@ -105,14 +94,13 @@ class IfStmt extends Stmt
 
     public function runTypeChecker()
     {
+        $bool = $this->scope->getPrimitiveType('Bool');
         $condition_type = $this->condition->getType();
-        if (!$condition_type->isBoolean()) {
+        if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP140', [$condition_type]));
         }
 
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
 
         foreach ($this->elif as $elif) {
             $elif->runTypeChecker();

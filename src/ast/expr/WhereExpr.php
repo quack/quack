@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
@@ -91,7 +91,7 @@ class WhereExpr extends Expr
             }
 
             $value->injectScope($this->scope);
-            $this->scope->insert($key, Kind::K_VARIABLE | Kind::K_INITIALIZED);
+            $this->scope->insert($key, Symbol::S_VARIABLE | Symbol::S_INITIALIZED);
         }
 
         $this->expr->injectScope($this->scope);

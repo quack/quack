@@ -25,25 +25,18 @@ use \QuackCompiler\Scope\Scope;
 
 class BlockStmt extends Stmt
 {
-    public $stmt_list;
+    public $body;
 
-    public function __construct($stmt_list)
+    public function __construct($body)
     {
-        $this->stmt_list = $stmt_list;
+        $this->body = $body;
     }
 
     public function format(Parser $parser)
     {
         $source = 'begin';
         $source .= PHP_EOL;
-        $parser->openScope();
-
-        foreach ($this->stmt_list as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
-        $parser->closeScope();
+        $source .= $this->body->format($parser);
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
@@ -54,15 +47,11 @@ class BlockStmt extends Stmt
     public function injectScope($parent_scope)
     {
         $this->scope = new Scope($parent_scope);
-        foreach ($this->stmt_list as $node) {
-            $node->injectScope($this->scope);
-        }
+        return $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
     {
-        foreach ($this->stmt_list as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
     }
 }

@@ -18,34 +18,45 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Expr;
+namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Scope\Scope;
 
-class BoolExpr extends Expr
+class Body
 {
-    public $value;
+    public $body;
 
-    public function __construct($value)
+    public function __construct($body)
     {
-        $this->value = $value;
+        $this->body = $body;
     }
 
-    public function format(Parser $_)
+    public function format(Parser $parser)
     {
-        $source = var_export($this->value, true);
-        return $this->parenthesize($source);
+        $result = '';
+        $parser->openScope();
+
+        foreach ($this->body as $stmt) {
+            $result .= $parser->indent() . $stmt->format($parser);
+        }
+
+        $parser->closeScope();
+        return $result;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope($outer)
     {
-        // Pass
+        $this->scope = $outer;
+        foreach ($this->body as $stmt) {
+            $stmt->injectScope($this->scope);
+        }
     }
 
-    public function getType()
+    public function runTypeChecker()
     {
-        return new LiteralType(NativeQuackType::T_BOOL);
+        foreach ($this->body as $stmt) {
+            $stmt->runTypeChecker();
+        }
     }
 }

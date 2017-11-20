@@ -21,68 +21,57 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\FunctionTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\FunctionTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
 class FunctionType extends TypeNode
 {
+    use FunctionTypeChecker;
+    use FunctionTypeRenderer;
+
     public $parameters;
     public $return;
+    public $generics;
 
-    public function __construct($parameters, $return)
+    public function __construct($parameters, $return, $generics = [])
     {
         $this->parameters = $parameters;
         $this->return = $return;
+        $this->generics = $generics;
+    }
+
+    private function fromUnicode($char)
+    {
+        return json_decode('"' . $char . '"');
     }
 
     public function __toString()
     {
-        return $this->parenthesize(
-            '&[' . join(', ', $this->parameters) . ']: ' . $this->return
-        );
+        $source = '';
+        if (count($this->generics) > 0) {
+            $source .= $this->fromUnicode('\u2200') . ' ' . implode (', ', $this->generics ) . ' ';
+        }
+        $source .= '&[' . join(', ', $this->parameters) . ']: ' . $this->return;
+
+        return $this->parenthesize($source);
     }
 
-    public function bindScope(Scope $parent_scope)
+    public function getKind()
     {
-        foreach ($this->parameters as $parameter) {
-            $parameter->bindScope($parent_scope);
-        }
-
-        $this->return->bindScope($parent_scope);
+        return implode(' -> ', array_fill(0, count($this->parameters) + 1, '*'));
     }
 
-    public function check(TypeNode $other)
+    public function computeCall($arguments)
     {
-        $message = Localization::message('TYP350', [$this, $other]);
-        if (!($other instanceof FunctionType)) {
-            return false;
+        $received_arguments_count = count($arguments);
+        for ($index = 0; $index < $received_arguments_count; $index++) {
+            $received = $arguments[$index]->getType();
+            $expected = $this->parameters[$index];
+
+            $context = [];
+            $expected->unify($received, $context);
         }
-
-        // Functions with different number of arguments
-        $self_arity = count($this->parameters);
-        $other_arity = count($other->parameters);
-        if ($self_arity !== $other_arity) {
-            $message .= '     > ' . Localization::message('TYP360', [$self_arity, $other_arity]);
-            throw new TypeError($message);
-        }
-
-        // Check type for each parameter
-        for ($i = 0; $i < $self_arity; $i++) {
-            $self_type = $this->parameters[$i];
-            $other_type = $other->parameters[$i];
-
-            if (!$self_type->check($other_type)) {
-                $message .= '     > ' . Localization::message('TYP370', [$i + 1, $self_type, $other_type]);
-                throw new TypeError($message);
-            }
-        }
-
-        // Check return type
-        if (!$this->return->check($other->return)) {
-            $message .= '     > ' . Localization::message('TYP380', [$this->return, $other->return]);
-            throw new TypeError($message);
-        }
-
-        return true;
     }
 }

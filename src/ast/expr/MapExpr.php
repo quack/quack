@@ -25,7 +25,6 @@ use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class MapExpr extends Expr
@@ -46,7 +45,6 @@ class MapExpr extends Expr
         $values = $this->values;
 
         if (count($this->keys) > 0) {
-            $source .= ' ';
             // Iterate based on index
             $source .= implode(', ', array_map(function($index) use ($keys, $values, $parser) {
                 $subsource = $keys[$index]->format($parser);
@@ -55,7 +53,6 @@ class MapExpr extends Expr
 
                 return $subsource;
             }, range(0, count($keys) - 1)));
-            $source .= ' ';
         }
 
         $source .= '}';
@@ -80,9 +77,7 @@ class MapExpr extends Expr
 
         // Generic type when no initializer provided
         if (0 === $size) {
-            return new MapType(
-                new GenericType(Meta::nextGenericVarName()),
-                new GenericType(Meta::nextGenericVarName()));
+            return new MapType(new GenericType(), new GenericType());
         }
 
         $original_key_type = $this->keys[0]->getType();

@@ -26,8 +26,8 @@ use \QuackCompiler\Scope\Meta;
 class Scope
 {
     public $table = [];
-    public $parent;
     public $meta = [];
+    public $parent;
     public $child;
 
     public function __construct(Scope $parent = null)
@@ -37,6 +37,12 @@ class Scope
         if (null !== $this->parent) {
             $this->parent->child = $this;
         }
+    }
+
+    public function getPrimitiveType($name)
+    {
+        $type = $this->getMeta(Meta::M_TYPE, $name);
+        return $type;
     }
 
     public function hasLocal($symbol)
@@ -83,6 +89,16 @@ class Scope
         $this->meta[$property] = $value;
     }
 
+    public function getMetaTable($symbol)
+    {
+        $scope = $this->getSymbolScope($symbol);
+        if (null === $scope) {
+            return null;
+        }
+
+        return $scope->meta[$symbol];
+    }
+
     public function getMeta($property, $symbol)
     {
         $scope = $this->getSymbolScope($symbol);
@@ -116,5 +132,10 @@ class Scope
         return null !== $this->parent
             ? $this->parent->getSymbolScope($symbol)
             : null;
+    }
+
+    public function debug()
+    {
+        var_dump($this->table);
     }
 }

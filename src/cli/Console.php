@@ -29,17 +29,20 @@ class Console
     private $columns;
     private $event_tree;
 
-    const FG_YELLOW = '1;33';
-    const FG_RED = '0;31';
-    const FG_BLACK = '1;30';
-    const FG_CYAN = '0;36';
+    const FG_WHITE      = '1;37';
+    const FG_YELLOW     = '1;33';
+    const FG_RED        = '0;31';
+    const FG_BLACK      = '1;30';
+    const FG_CYAN       = '0;36';
     const FG_BOLD_GREEN = '1;32';
-    const FG_MAGENTA = '0;35';
-    const FG_BLUE = '0;34';
-
-    const BG_WHITE = '47';
-
-    const BOLD = '1';
+    const FG_MAGENTA    = '0;35';
+    const FG_GREEN      = '0;32';
+    const FG_BLUE       = '0;34';
+    const BG_WHITE      = '47';
+    const BG_GREEN      = '42';
+    const BG_RED        = '41';
+    const BG_BLUE       = '44';
+    const BOLD          = '1';
 
     public function __construct($stdin, $stdout, $stderr)
     {
@@ -114,6 +117,11 @@ class Console
         return $this->write(sprintf("%c[%dC", 0x1B, $n));
     }
 
+    public function backwardCursor($n)
+    {
+        return $this->write(sprintf("%c[%dD", 0x1B, $n));
+    }
+
     public function moveCursorToHome()
     {
         return $this->write(sprintf("%c[H", 0x1B));
@@ -161,4 +169,3 @@ class Console
         return $event;
     }
 }
-

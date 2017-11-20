@@ -23,7 +23,6 @@ namespace QuackCompiler\Parselets\Expr;
 use \QuackCompiler\Ast\Expr\NumberExpr;
 use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Expr\AtomExpr;
-use \QuackCompiler\Ast\Expr\BoolExpr;
 use \QuackCompiler\Ast\Expr\RegexExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
@@ -59,10 +58,6 @@ class LiteralParselet implements PrefixParselet
 
             case Tag::T_DOUBLE_EXP:
                 return new NumberExpr($content, 'double', 'scientific');
-
-            case Tag::T_TRUE:
-            case Tag::T_FALSE:
-                return new BoolExpr($tag === Tag::T_TRUE);
 
             case Tag::T_REGEX:
                 return new RegexExpr($content);

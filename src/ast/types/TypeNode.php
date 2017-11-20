@@ -21,11 +21,15 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
 
 abstract class TypeNode
 {
     protected $parentheses_level = 0;
+
+    public function getReference()
+    {
+        return null;
+    }
 
     public function addParentheses()
     {
@@ -43,39 +47,24 @@ abstract class TypeNode
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
     }
 
-    public function isAtom($atom)
-    {
-        return $this instanceof AtomType && $this->name === $atom;
-    }
-
     public function isNumber()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_NUMBER === $this->code;
+        return $this->name === 'Number';
     }
 
     public function isString()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_STR === $this->code;
-    }
-
-    public function isBoolean()
-    {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_BOOL === $this->code;
+        return $this->name === 'String';
     }
 
     public function isRegex()
     {
-        return $this instanceof LiteralType
-            && NativeQuackType::T_REGEX === $this->code;
+        return $this->name === 'Regex';
     }
 
     public function isIterable()
     {
-        return $this instanceof MapType
-            || $this instanceof ListType;
+        return $this instanceof MapType || $this instanceof ListType;
     }
 
     public function simplify()
@@ -83,7 +72,10 @@ abstract class TypeNode
         return $this;
     }
 
-    abstract function check(TypeNode $other);
+    public function getKind()
+    {
+        return '*';
+    }
 
-    abstract function bindScope(Scope $parent_scope);
+    abstract function check(TypeNode $other);
 }

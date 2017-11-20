@@ -21,11 +21,16 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\OperatorTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\OperatorTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
 class OperatorType extends TypeNode
 {
+    use OperatorTypeChecker;
+    use OperatorTypeRenderer;
+
     public $operator;
     public $left;
     public $right;
@@ -46,10 +51,6 @@ class OperatorType extends TypeNode
 
     public function simplify()
     {
-        if ('&' !== $this->operator) {
-            return $this;
-        }
-
         $simple_left = $this->left->simplify();
         $simple_right = $this->right->simplify();
 
@@ -76,16 +77,5 @@ class OperatorType extends TypeNode
         }
 
         throw new TypeError(Localization::message('TYP390', [$this->left, $this->right]));
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->left->bindScope($parent_scope);
-        $this->right->bindScope($parent_scope);
-    }
-
-    public function check(TypeNode $other)
-    {
-        return $this->simplify()->check($other);
     }
 }

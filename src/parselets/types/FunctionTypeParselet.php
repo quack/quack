@@ -25,7 +25,6 @@ use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
-use \QuackCompiler\Types\NativeQuackType;
 
 class FunctionTypeParselet implements PrefixParselet
 {

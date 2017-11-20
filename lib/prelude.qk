@@ -1,0 +1,23 @@
+data Morphism(a, b)
+
+data Mutability(a)
+
+data Empty
+
+data String
+
+data Number
+
+data Atom
+
+data Regex
+
+data Ordering
+    :- LT
+    or GT
+    or EQ
+
+data Bool
+    :- True
+    or False
+

@@ -18,35 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Pretty\Types;
 
-use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Pretty\Colorizer;
 
-class AtomType extends TypeNode
+trait ListTypeRenderer
 {
-    public $name;
-
-    public function __construct($name)
+    public function render(Colorizer $renderer)
     {
-        $this->name = $name;
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize($this->name);
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        // Pass
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof AtomType)) {
-            return false;
-        }
-
-        return $this->name === $other->name;
+        $result = '{';
+        $result .= $this->type->render($renderer);
+        $result .= '}';
+        return $result;
     }
 }

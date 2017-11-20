@@ -26,9 +26,26 @@ use \QuackCompiler\Parselets\PrefixParselet;
 
 class NameTypeParselet implements PrefixParselet
 {
+    private $is_generic;
+
+    public function __construct($is_generic = false)
+    {
+        $this->is_generic = $is_generic;
+    }
+
     public function parse($grammar, Token $token)
     {
         $name = $token->getContent();
-        return new NameType($name);
+        $values = [];
+
+        if ($grammar->reader->consumeIf('(')) {
+            do {
+                $values[] = $grammar->_type();
+            } while ($grammar->reader->consumeIf(','));
+            $grammar->reader->match(')');
+        }
+
+        return new NameType($name, $values, $this->is_generic);
     }
 }
+

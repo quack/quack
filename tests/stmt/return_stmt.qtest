@@ -22,7 +22,8 @@ fn retSmth(smth)
   ^ smth <> nil then smth else nil
 end
 fn recursive(n)
-  if n < 1 ^ 0
+  if n < 1
+    ^ 0
   else
     ^ n + recursive(n - 1)
   end

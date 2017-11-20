@@ -21,32 +21,39 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Intl\Localization;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\TypeChecker\NameTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
 class NameType extends TypeNode
 {
-    public $name;
+    use NameTypeChecker;
+    use NameTypeRenderer;
 
-    public function __construct($name)
+    public $name;
+    public $values;
+    public $is_generic;
+
+    public function __construct($name, $values, $is_generic = false)
     {
         $this->name = $name;
+        $this->values = $values;
+        $this->is_generic = $is_generic;
     }
 
     public function __toString()
     {
-        return $this->name;
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->scope = $parent_scope;
-        $type_flags = $this->scope->lookup($this->name);
-        if (null === $type_flags) {
-            throw new TypeError(Localization::message('TYP440', [$this->name]));
+        $source = $this->name;
+        if (sizeof($this->values) > 0) {
+            $source .= '(';
+            $source .= implode(', ', $this->values);
+            $source .= ')';
         }
+
+        return $source;
     }
 
     public function simplify()
@@ -60,9 +67,19 @@ class NameType extends TypeNode
         return $type->simplify();
     }
 
-    public function check(TypeNode $other)
+    public function getReference()
     {
-        $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type->check($other);
+        $flags = $this->scope->lookup($this->name);
+        $meta = $this->scope->getMetaTable($this->name);
+        if (null === $flags) {
+            return null;
+        }
+
+        return [$flags, $meta];
+    }
+
+    public function getKind()
+    {
+        return implode(' -> ', array_fill(0, count($this->values) + 1, '*'));
     }
 }

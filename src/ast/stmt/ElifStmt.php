@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
 class ElifStmt extends Stmt
@@ -43,16 +43,7 @@ class ElifStmt extends Stmt
         $source .= 'elif ';
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
-
-        $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
-        $parser->closeScope();
-
+        $source .= $this->body->format($parser);
         return $source;
     }
 
@@ -60,21 +51,17 @@ class ElifStmt extends Stmt
     {
         $this->scope = new Scope($parent_scope);
         $this->condition->injectScope($parent_scope);
-
-        foreach ($this->body as $node) {
-            $node->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
     {
+        $bool = $this->scope->getPrimitiveType('Bool');
         $condition_type = $this->condition->getType();
-        if (!$condition_type->isBoolean()) {
+        if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP180', [$condition_type]));
         }
 
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
     }
 }

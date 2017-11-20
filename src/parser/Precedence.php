@@ -27,7 +27,6 @@ class Precedence
     const PIPELINE           = 3;
     const MEMBER_ACCESS      = 4;
     const TERNARY            = 5;
-    const COALESCENCE        = 6;
     const RANGE              = 7;
     const LOGICAL_OR         = 8;
     const LOGICAL_XOR        = 9;
@@ -42,12 +41,10 @@ class Precedence
     const MULTIPLICATIVE     = 18;
     const PREFIX             = 19;
     const POSTFIX            = 20;
-    const TYPE_CAST          = 21;
     const EXPONENT           = 22;
     const CALL               = 23;
     const ACCESS             = 24;
     // TODO: Review operators precedence when finish the parser
 
-    const UNION_TYPE         = 1;
-    const INTERSECTION_TYPE  = 2;
+    const INTERSECTION_TYPE  = 1;
 }

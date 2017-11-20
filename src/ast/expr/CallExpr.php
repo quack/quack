@@ -21,8 +21,12 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
 
 class CallExpr extends Expr
@@ -50,40 +54,29 @@ class CallExpr extends Expr
 
     public function injectScope($parent_scope)
     {
-        $this->callee->injectScope($parent_scope);
+        $this->scope = new Scope($parent_scope);
+        $this->callee->injectScope($this->scope);
 
-        foreach ($this->arguments as $arg) {
-            $arg->injectScope($parent_scope);
+        foreach ($this->arguments as $argument) {
+            $argument->injectScope($this->scope);
         }
     }
 
     public function getType()
     {
-        $callee_type = $this->callee->getType();
-        if (!($callee_type instanceof FunctionType)) {
+        // TODO: TYP330 for parameter error
+        $called_with_argc = count($this->arguments);
+        $callee = $this->callee->getType();
+        if (!($callee instanceof FunctionType)) {
+            // Element is not callable
             throw new TypeError(Localization::message('TYP310', [$callee_type]));
         }
 
-        // Check parameters length
-        $expected_arguments = count($callee_type->parameters);
-        $received_arguments = count($this->arguments);
-
-        if ($received_arguments !== $expected_arguments) {
-            throw new TypeError(Localization::message('TYP320',
-                [$callee_type, $expected_arguments, $received_arguments]));
+        if ($called_with_argc > count($callee->parameters)) {
+            // Too many parameters provided to the function. Stop.
+            throw new TypeError(Localization::message('TYP450', [$callee]));
         }
 
-        // Check for each parameter type based on index
-        for ($i = 0; $i < $expected_arguments; $i++) {
-            $expected_type = $callee_type->parameters[$i];
-            $received_type = $this->arguments[$i]->getType();
-
-            if (!$expected_type->check($received_type)) {
-                throw new TypeError(Localization::message('TYP330',
-                    [$i + 1, $expected_type, $received_type]));
-            }
-        }
-
-        return $callee_type->return;
+        return $callee->computeCall($this->arguments);
     }
 }

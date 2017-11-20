@@ -20,10 +20,15 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\ObjectTypeRenderer;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\TypeChecker\ObjectTypeChecker;
 
 class ObjectType extends TypeNode
 {
+    use ObjectTypeChecker;
+    use ObjectTypeRenderer;
+
     public $properties;
 
     public function __construct($properties)
@@ -40,35 +45,5 @@ class ObjectType extends TypeNode
         $source .= '}';
 
         return $this->parenthesize($source);
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->properties as $property) {
-            $property->bindScope($parent_scope);
-        }
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof ObjectType)) {
-            return false;
-        }
-
-        // Get all properties that are in this object but not in the other
-        $different_properties = array_diff_key($this->properties, $other->properties);
-        if (count($different_properties) > 0) {
-            // If there is something like %{a:1}, %{}, so, we are missing `a'
-            return false;
-        }
-
-        // When properties match their names, try matching their types
-        foreach (array_keys($this->properties) as $property) {
-            if (!$this->properties[$property]->check($other->properties[$property])) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

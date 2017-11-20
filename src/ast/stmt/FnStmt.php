@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
@@ -54,16 +54,7 @@ class FnStmt extends Stmt
             $source .= $this->body->format($parser);
         } else {
             $source .= PHP_EOL;
-
-            $parser->openScope();
-
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
-            $parser->closeScope();
-
+            $source .= $this->body->format($parser);
             $source .= $parser->indent();
             $source .= 'end';
         }
@@ -75,19 +66,12 @@ class FnStmt extends Stmt
 
     public function injectScope($parent_scope)
     {
-        $parent_scope->insert($this->signature->name, Kind::K_VARIABLE | Kind::K_FUNCTION);
+        $parent_scope->insert($this->signature->name, Symbol::S_VARIABLE);
         $this->scope = new Scope($parent_scope);
 
         // Pre-inject parameters
         $this->signature->injectScope($this->scope);
-
-        if ($this->is_short) {
-            $this->body->injectScope($this->scope);
-        } else {
-            foreach ($this->body as $node) {
-                $node->injectScope($this->scope);
-            }
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()

@@ -25,6 +25,8 @@ use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
+use \QuackCompiler\Ast\Stmt\TypeConsStmt;
+use \QuackCompiler\Ast\Stmt\DataStmt;
 
 class DeclParser
 {
@@ -90,8 +92,42 @@ class DeclParser
         return new TypeStmt($name, $value);
     }
 
+    public function _typeConsStmt()
+    {
+        $name = $this->name_parser->_typename();
+        $values = [];
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $values[] = $this->type_parser->_type();
+            } while ($this->reader->consumeIf(','));
+
+            $this->reader->match(')');
+        }
+
+        return new TypeConsStmt($name, $values);
+    }
+
     public function _dataStmt()
     {
         $this->reader->match(Tag::T_DATA);
+        $name = $this->name_parser->_typename();
+        $parameters = [];
+        $values = [];
+
+        if ($this->reader->consumeIf('(')) {
+            do {
+                $parameters[] = $this->name_parser->_identifier();
+            } while ($this->reader->consumeIf(','));
+
+            $this->reader->match(')');
+        }
+
+        if ($this->reader->consumeIf(':-')) {
+            do {
+                $values[] = $this->_typeConsStmt();
+            } while ($this->reader->consumeIf(Tag::T_OR));
+        }
+
+        return new DataStmt($name, $parameters, $values);
     }
 }

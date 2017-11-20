@@ -25,10 +25,9 @@ use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
-class ArrayExpr extends Expr
+class ListExpr extends Expr
 {
     public $items;
 
@@ -41,11 +40,9 @@ class ArrayExpr extends Expr
     {
         $source = '{';
         if (count($this->items) > 0) {
-            $source .= ' ';
             $source .= implode(', ', array_map(function($item) use ($parser) {
                 return $item->format($parser);
             }, $this->items));
-            $source .= ' ';
         }
         $source .= '}';
 
@@ -63,7 +60,7 @@ class ArrayExpr extends Expr
     {
         // Empty array, generic type
         if (0 === count($this->items)) {
-            return new ListType(new GenericType(Meta::nextGenericVarName()));
+            return new ListType(new GenericType());
         }
 
         // Decidable type

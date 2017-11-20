@@ -20,12 +20,15 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\TypeChecker\TupleTypeChecker;
 
 class TupleType extends TypeNode
 {
+    use TupleTypeChecker;
+    use TupleTypeRenderer;
+
     public $types;
     public $size;
 
@@ -38,34 +41,5 @@ class TupleType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        foreach ($this->types as $type) {
-            $type->bindScope($parent_scope);
-        }
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof TupleType)) {
-            return false;
-        }
-
-        if ($this->size !== $other->size) {
-            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
-        }
-
-        for ($i = 0; $i < $this->size; $i++) {
-            $me = $this->types[$i];
-            $you = $other->types[$i];
-
-            if (!$me->check($you)) {
-                throw new TypeError(Localization::message('TYP430', [$i + 1, $me, $you]));
-            }
-        }
-
-        return true;
     }
 }

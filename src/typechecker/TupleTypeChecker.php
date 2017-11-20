@@ -18,32 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Expr;
+namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ArrayExpr;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Ast\Types\TupleType;
+use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TypeError;
 
-class ArrayParselet implements PrefixParselet
+trait TupleTypeChecker
 {
-    public function parse($grammar, Token $token)
+    public function check(TypeNode $other)
     {
-        $items = [];
-
-        if ($grammar->reader->is('}')) {
-            $grammar->reader->consume();
-        } else {
-            $items[] = $grammar->_expr();
-
-            while ($grammar->reader->is(',')) {
-                $grammar->reader->consume();
-                $items[] = $grammar->_expr();
-            }
-
-            $grammar->reader->match('}');
+        if (!($other instanceof TupleType)) {
+            return false;
         }
 
-        return new ArrayExpr($items);
+        if ($this->size !== $other->size) {
+            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
+        }
+
+        for ($i = 0; $i < $this->size; $i++) {
+            $me = $this->types[$i];
+            $you = $other->types[$i];
+
+            if (!$me->check($you)) {
+                throw new TypeError(Localization::message('TYP430', [$i + 1, $me, $you]));
+            }
+        }
+
+        return true;
     }
 }

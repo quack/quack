@@ -23,7 +23,6 @@ namespace QuackCompiler\Parselets\Expr;
 use \QuackCompiler\Ast\Expr\NameExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
-use \QuackCompiler\Parser\Grammar;
 
 class NameParselet implements PrefixParselet
 {

@@ -29,7 +29,7 @@ use \QuackCompiler\Parselets\Expr\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\TernaryParselet;
 use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
-use \QuackCompiler\Parselets\Expr\ArrayParselet;
+use \QuackCompiler\Parselets\Expr\ListParselet;
 use \QuackCompiler\Parselets\Expr\MemberAccessParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
 use \QuackCompiler\Parselets\Expr\AccessParselet;
@@ -63,11 +63,12 @@ class ExprParser
         $this->register(Tag::T_STRING, new LiteralParselet);
         $this->register(Tag::T_REGEX, new LiteralParselet);
         $this->register(Tag::T_IDENT, new NameParselet);
+        $this->register(Tag::T_TYPENAME, new NameParselet);
         $this->register(Tag::T_THEN, new TernaryParselet);
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
         $this->register('(', new CallParselet);
-        $this->register('{', new ArrayParselet);
+        $this->register('{', new ListParselet);
         $this->register('{', new AccessParselet);
         $this->register('%{', new ObjectParselet);
         $this->register('#{', new MapParselet);
@@ -75,8 +76,6 @@ class ExprParser
         $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('.', new MemberAccessParselet);
-        $this->register(Tag::T_TRUE, new LiteralParselet);
-        $this->register(Tag::T_FALSE, new LiteralParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
         $this->register(Tag::T_MATCH, new MatchParselet);
@@ -98,7 +97,6 @@ class ExprParser
         $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
         $this->infixLeft('|', Precedence::BITWISE_OR);
         $this->infixLeft('&', Precedence::BITWISE_AND);
-        $this->infixLeft('^', Precedence::BITWISE_XOR);
         $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
         $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
         $this->infixLeft('=', Precedence::VALUE_COMPARATOR);
@@ -108,8 +106,7 @@ class ExprParser
         $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('|>', Precedence::PIPELINE);
-        $this->infixLeft('??', Precedence::COALESCENCE);
+        $this->infixLeft('|', Precedence::PIPELINE);
 
         $this->infixRight('**', Precedence::EXPONENT);
         $this->infixRight(':-', Precedence::ASSIGNMENT);

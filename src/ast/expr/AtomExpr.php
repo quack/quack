@@ -20,9 +20,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Types\AtomType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 
 class AtomExpr extends Expr
 {
@@ -41,11 +39,11 @@ class AtomExpr extends Expr
 
     public function injectScope($parent_scope)
     {
-        // Pass
+        $this->scope = $parent_scope;
     }
 
     public function getType()
     {
-        return new AtomType($this->value);
+        return $this->scope->getPrimitiveType('Atom');
     }
 }

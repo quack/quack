@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
+define('PRETTY', 'pretty');
+define('TYPECHECKER', 'typechecker');
 define('AST', 'ast');
 define('LEXER', 'lexer');
 define('PARSELETS', 'parselets');
@@ -31,6 +33,31 @@ function import($module, $file)
 {
     require_once dirname(__FILE__) . '/../' . $module . '/' . $file . '.php';
 }
+
+/* Pretty */
+import(PRETTY, 'Colorizer');
+import(PRETTY, 'CliColorizer');
+import(PRETTY, 'types/DataTypeRenderer');
+import(PRETTY, 'types/FunctionTypeRenderer');
+import(PRETTY, 'types/NameTypeRenderer');
+import(PRETTY, 'types/GenericTypeRenderer');
+import(PRETTY, 'types/ListTypeRenderer');
+import(PRETTY, 'types/MapTypeRenderer');
+import(PRETTY, 'types/ObjectTypeRenderer');
+import(PRETTY, 'types/OperatorTypeRenderer');
+import(PRETTY, 'types/TupleTypeRenderer');
+
+/* Type checker */
+import(TYPECHECKER, 'DataTypeChecker');
+import(TYPECHECKER, 'FunctionTypeChecker');
+import(TYPECHECKER, 'GenericTypeChecker');
+import(TYPECHECKER, 'ListTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'MapTypeChecker');
+import(TYPECHECKER, 'NameTypeChecker');
+import(TYPECHECKER, 'ObjectTypeChecker');
+import(TYPECHECKER, 'OperatorTypeChecker');
+import(TYPECHECKER, 'TupleTypeChecker');
 
 /* Cli */
 import(CLI, 'Component');
@@ -60,7 +87,7 @@ import(PARSELETS, 'expr/PostfixOperatorParselet');
 import(PARSELETS, 'expr/TernaryParselet');
 import(PARSELETS, 'expr/GroupParselet');
 import(PARSELETS, 'expr/LambdaParselet');
-import(PARSELETS, 'expr/ArrayParselet');
+import(PARSELETS, 'expr/ListParselet');
 import(PARSELETS, 'expr/NameParselet');
 import(PARSELETS, 'expr/MemberAccessParselet');
 import(PARSELETS, 'expr/CallParselet');
@@ -75,12 +102,10 @@ import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
-import(PARSELETS, 'types/AtomTypeParselet');
 import(PARSELETS, 'types/BinaryOperatorTypeParselet');
 import(PARSELETS, 'types/FunctionTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
-import(PARSELETS, 'types/LiteralTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
 import(PARSELETS, 'types/NameTypeParselet');
 import(PARSELETS, 'types/ObjectTypeParselet');
@@ -103,9 +128,10 @@ import(PARSER, 'Precedence');
 /* Ast */
 
 import(AST, 'Node');
+import(AST, 'Body');
 
 import(AST, 'expr/Expr');
-import(AST, 'expr/ArrayExpr');
+import(AST, 'expr/ListExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/MapExpr');
 import(AST, 'expr/ObjectExpr');
@@ -115,7 +141,6 @@ import(AST, 'expr/PrefixExpr');
 import(AST, 'expr/OperatorExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
-import(AST, 'expr/BoolExpr');
 import(AST, 'expr/StringExpr');
 import(AST, 'expr/CallExpr');
 import(AST, 'expr/AccessExpr');
@@ -127,6 +152,7 @@ import(AST, 'expr/WhereExpr');
 import(AST, 'expr/BlockExpr');
 import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
+import(AST, 'expr/TypeExpr');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
@@ -143,14 +169,15 @@ import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/TypeStmt');
+import(AST, 'stmt/DataStmt');
+import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
-import(AST, 'types/AtomType');
+import(AST, 'types/DataType');
 import(AST, 'types/FunctionType');
 import(AST, 'types/GenericType');
 import(AST, 'types/ListType');
-import(AST, 'types/LiteralType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
@@ -161,10 +188,10 @@ import(AST, 'types/TupleType');
 
 import(SCOPE, 'Scope');
 import(SCOPE, 'ScopeError');
-import(SCOPE, 'Kind');
+import(SCOPE, 'Symbol');
 import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
-import(TYPES, 'NativeQuackType');
+import(TYPES, 'ParametricTypes');
 import(TYPES, 'TypeError');

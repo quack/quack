@@ -25,7 +25,6 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\NativeQuackType;
 
 class ObjectExpr extends Expr
 {

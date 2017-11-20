@@ -21,6 +21,7 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Ast\Body;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
@@ -74,7 +75,7 @@ class StmtParser
             $stmt_list[] = $this->_stmt();
         }
 
-        return $stmt_list;
+        return new Body($stmt_list);
     }
 
     public function _stmt()
@@ -161,7 +162,8 @@ class StmtParser
         $value = $this->reader->consumeIf(':-')
             ? $this->expr_parser->_expr()
             : null;
-        return new LetStmt($name, $type, $value, $mutable);
+
+       return new LetStmt($name, $type, $value, $mutable);
     }
 
     public function _whileStmt()

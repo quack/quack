@@ -18,17 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Types;
+namespace QuackCompiler\Pretty;
 
-use \QuackCompiler\Ast\Types\AtomType;
-use \QuackCompiler\Lexer\Tag;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\PrefixParselet;
-
-class AtomTypeParselet implements PrefixParselet
+interface Colorizer
 {
-    public function parse($grammar, Token $token)
-    {
-        return new AtomType($token->getContent());
-    }
+    public function bold($value);
+    public function red($value);
+    public function green($value);
+    public function yellow($value);
+    public function blue($value);
+    public function magenta($value);
+    public function cyan($value);
 }

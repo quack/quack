@@ -2,8 +2,8 @@
 Supports formatting binary operators
 %%source
 do x
-|>map (x * 2)
+| map (x * 2)
 do a and b or c mod d and not x+1
 %%expect
-do x |> map(x * 2)
+do x | map(x * 2)
 do a and b or c mod d and not x + 1

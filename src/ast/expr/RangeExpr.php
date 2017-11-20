@@ -21,10 +21,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
 class RangeExpr extends Expr
@@ -56,6 +55,7 @@ class RangeExpr extends Expr
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->from->injectScope($parent_scope);
         $this->to->injectScope($parent_scope);
 
@@ -88,6 +88,7 @@ class RangeExpr extends Expr
             $throw_error_on('by', $type->by);
         }
 
-        return new ListType(new LiteralType(NativeQuackType::T_NUMBER));
+        $number = $this->scope->getPrimitiveType('Number');
+        return new ListType($number);
     }
 }

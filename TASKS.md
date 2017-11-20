@@ -37,6 +37,9 @@ Because we currently are able to infer only types from pure expressions
 Because we need to allow importing modules and types
 
 # Implement parametric polymorphism
-# Implement algebraic data types
-# Improve pattern matching parser
-
+# Implement correct pattern matching parser based on EBNF
+# Implement optimizer module core
+# Implement code generator core
+# Implement PHP backend
+# Isolate errors in new module
+# Make lexer accept whitespaces and comments, generate tokens and not conflict with parser

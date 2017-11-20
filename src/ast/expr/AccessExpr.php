@@ -21,11 +21,9 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class AccessExpr extends Expr

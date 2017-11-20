@@ -20,10 +20,15 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Pretty\Types\ListTypeRenderer;
+use \QuackCompiler\TypeChecker\ListTypeChecker;
 use \QuackCompiler\Scope\Scope;
 
 class ListType extends TypeNode
 {
+    use ListTypeChecker;
+    use ListTypeRenderer;
+
     public $type;
 
     public function __construct(TypeNode $type)
@@ -34,19 +39,5 @@ class ListType extends TypeNode
     public function __toString()
     {
         return $this->parenthesize('{' . $this->type . '}');
-    }
-
-    public function bindScope(Scope $parent_scope)
-    {
-        $this->type->bindScope($parent_scope);
-    }
-
-    public function check(TypeNode $other)
-    {
-        if (!($other instanceof ListType)) {
-            return false;
-        }
-
-        return $this->type->check($other->type);
     }
 }

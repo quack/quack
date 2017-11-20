@@ -24,6 +24,7 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
 class PrefixExpr extends Expr
@@ -49,6 +50,7 @@ class PrefixExpr extends Expr
 
     public function injectScope($parent_scope)
     {
+        $this->scope = $parent_scope;
         $this->right->injectScope($parent_scope);
     }
 
@@ -69,7 +71,8 @@ class PrefixExpr extends Expr
 
                 throw $type_error;
             case Tag::T_NOT:
-                if ($right_type->isBoolean()) {
+                $bool = $this->scope->getPrimitiveType('Bool');
+                if ($bool->check($right_type)) {
                     return $right_type;
                 }
 

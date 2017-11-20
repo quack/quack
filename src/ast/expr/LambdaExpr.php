@@ -25,7 +25,7 @@ use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
@@ -86,15 +86,7 @@ class LambdaExpr extends Expr
             $source .= $this->body->format($parser);
         } else {
             $source .= 'begin' . PHP_EOL;
-
-            $parser->openScope();
-
-            foreach ($this->body as $stmt) {
-                $source .= $parser->indent();
-                $source .= $stmt->format($parser);
-            }
-
-            $parser->closeScope();
+            $source .= $this->body->format($parser);
             $source .= $parser->indent();
             $source .= 'end';
             $source .= PHP_EOL;
@@ -111,23 +103,17 @@ class LambdaExpr extends Expr
                 throw new ScopeError(Localization::message('SCO010', [$param->name]));
             }
 
-            $this->scope->insert($param->name, Kind::K_INITIALIZED | Kind::K_VARIABLE | Kind::K_PARAMETER | Kind::K_MUTABLE);
+            $this->scope->insert($param->name, Symbol::S_INITIALIZED | Symbol::S_VARIABLE | Symbol::S_PARAMETER);
             // Use or infer type for parameter and store it
             $param_type = isset($param->type)
                 ? $param->type
-                : new GenericType(Meta::nextGenericVarName());
+                : new GenericType();
 
             $this->argument_types[$param->name] = $param_type;
             $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);
         }
 
-        if (LambdaParselet::TYPE_STATEMENT === $this->kind) {
-            foreach ($this->body as $node) {
-                $node->injectScope($this->scope);
-            }
-        } else {
-            $this->body->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function getType()

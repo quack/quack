@@ -18,19 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Types;
+namespace QuackCompiler\TypeChecker;
 
-class NativeQuackType
+use \QuackCompiler\Ast\Types\TypeNode;
+
+trait DataTypeChecker
 {
-    const T_STR    = 0;
-    const T_NUMBER = 2;
-    const T_BOOL   = 3;
-    const T_OBJ    = 4;
-    const T_MAP    = 5;
-    const T_LIST   = 6;
-    const T_ATOM   = 9;
-    const T_REGEX  = 10;
-    const T_LAZY   = 11;
-    const T_BLOCK  = 12;
-    const T_BYTE   = 15;
+    public function check(TypeNode $other)
+    {
+        // TODO: Check parameters too
+        return $this->name === $other->name;
+    }
 }

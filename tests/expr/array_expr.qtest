@@ -3,9 +3,9 @@ Supports formatting array expressions
 %%source
     do {1} do {1, 2}
 do {}
-do {  test{4} }
+do {test{4}}
 %%expect
-do { 1 }
-do { 1, 2 }
+do {1}
+do {1, 2}
 do {}
-do { test {4} }
+do {test {4}}

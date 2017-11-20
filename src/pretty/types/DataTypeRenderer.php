@@ -18,21 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Scope;
+namespace QuackCompiler\Pretty\Types;
 
-class Kind
+use \QuackCompiler\Pretty\Colorizer;
+
+trait DataTypeRenderer
 {
-    // Base flags
-    const K_FUNCTION    = 1 << 0;
-    const K_VARIABLE    = 1 << 1;
-    const K_TYPE        = 1 << 2;
+    public function render(Colorizer $renderer)
+    {
+        $result = $renderer->blue($this->name);
 
-    // Additional flags
-    const K_MUTABLE     = 1 << 6;
-    const K_PARAMETER   = 1 << 7;
-    const K_LABEL       = 1 << 8;
-    const K_SPECIAL     = 1 << 9;
-    const K_MEMBER      = 1 << 10;
-    const K_INITIALIZED = 1 << 11;
-    const K_ALIAS       = 1 << 12;
+        if (count($this->parameters) > 0) {
+            $result .= '(';
+            $result .= implode(', ', array_map([$renderer, 'green'], $this->parameters));
+            $result .= ')';
+        }
+
+        return $result;
+    }
 }

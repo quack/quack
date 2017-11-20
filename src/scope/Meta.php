@@ -24,7 +24,7 @@ class Meta
 {
     const M_REF_COUNT = 'refcount';
     const M_TYPE      = 'type';
-    const M_LABEL     = 'label'; // implicit meta labels
+    const M_LABEL     = 'label'; // Implicit meta labels
 
     private static $label_num = 0;
     private static $generic_num = 0;
@@ -32,10 +32,5 @@ class Meta
     public static function nextMetaLabel()
     {
         return  'LB' . static::$label_num++;
-    }
-
-    public static function nextGenericVarName()
-    {
-        return 'A' . static::$generic_num++;
     }
 }

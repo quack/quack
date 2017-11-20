@@ -25,7 +25,6 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class WhileStmt extends Stmt
@@ -44,15 +43,7 @@ class WhileStmt extends Stmt
         $source = 'while ';
         $source .= $this->condition->format($parser);
         $source .= PHP_EOL;
-
-        $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
-        $parser->closeScope();
+        $source .= $this->body->format($parser);
         $source .= $parser->indent();
         $source .= 'end' . PHP_EOL;
 
@@ -63,23 +54,18 @@ class WhileStmt extends Stmt
     {
         $this->scope = new Scope($parent_scope);
         $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
-
         $this->condition->injectScope($parent_scope);
-
-        foreach ($this->body as $node) {
-            $node->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
     {
+        $bool = $this->scope->getPrimitiveType('Bool');
         $condition_type = $this->condition->getType();
-        if (!$condition_type->isBoolean()) {
+        if (!$bool->check($condition_type)) {
             throw new TypeError(Localization::message('TYP010', [$condition_type]));
         }
 
-        foreach ($this->body as $node) {
-            $node->runTypeChecker();
-        }
+        $this->body->runTypeChecker();
     }
 }

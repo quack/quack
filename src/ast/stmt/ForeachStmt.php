@@ -21,15 +21,13 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\LiteralType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Kind;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\NativeQuackType;
 use \QuackCompiler\Types\TypeError;
 
 class ForeachStmt extends Stmt
@@ -61,16 +59,7 @@ class ForeachStmt extends Stmt
         $source .= ' in ';
         $source .= $this->generator->format($parser);
         $source .= PHP_EOL;
-
-        $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $source .= $parser->indent();
-            $source .= $stmt->format($parser);
-        }
-
-        $parser->closeScope();
-
+        $source .= $this->body->format($parser);
         $source .= $parser->indent();
         $source .= 'end';
         $source .= PHP_EOL;
@@ -85,19 +74,16 @@ class ForeachStmt extends Stmt
 
         // Pre-inject key and value in block scope
         if (null !== $this->key) {
-            $this->scope->insert($this->key, Kind::K_VARIABLE | Kind::K_INITIALIZED);
+            $this->scope->insert($this->key, Symbol::S_VARIABLE | Symbol::S_INITIALIZED);
         }
 
         if ($this->key === $this->alias) {
             throw new ScopeError(Localization::message('SCO180', [$this->alias]));
         }
 
-        $this->scope->insert($this->alias, Kind::K_VARIABLE | Kind::K_INITIALIZED | Kind::K_MUTABLE);
+        $this->scope->insert($this->alias, Symbol::S_VARIABLE | Symbol::S_INITIALIZED | Symbol::S_MUTABLE);
         $this->generator->injectScope($parent_scope);
-
-        foreach ($this->body as $node) {
-            $node->injectScope($this->scope);
-        }
+        $this->body->injectScope($this->scope);
     }
 
     public function runTypeChecker()
@@ -114,17 +100,15 @@ class ForeachStmt extends Stmt
 
         if (null !== $this->key) {
             $key_type = $generator_type instanceof ListType
-                ? new LiteralType(NativeQuackType::T_NUMBER)
+                ? $this->scope->getPrimitiveType('Number')
                 : $generator_type->key;
             $this->scope->setMeta(Meta::M_TYPE, $this->key, $key_type);
         }
 
         $value_type = $generator_type instanceof ListType
             ? $generator_type->type
-            : $generator_type->key;
-
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+            : $generator_type->value;
+        $this->scope->setMeta(Meta::M_TYPE, $this->alias, $value_type);
+        $this->body->runTypeChecker();
     }
 }
