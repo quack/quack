@@ -18,21 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Decl;
 
+use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 
-class LetStmt extends Stmt
+class LetDecl implements Decl
 {
     public $name;
     public $type;
     public $value;
     public $mutable;
-    private $scope;
 
     public function __construct($name, $type, $value, $mutable)
     {

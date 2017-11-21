@@ -30,7 +30,6 @@ use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
-use \QuackCompiler\Ast\Stmt\LetStmt;
 use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
@@ -80,9 +79,15 @@ class StmtParser
 
     public function _stmt()
     {
+        $decl_list = [
+            Tag::T_DATA => '_dataStmt',
+            Tag::T_FN   => '_fnStmt',
+            Tag::T_LET  => '_letDecl',
+            Tag::T_TYPE => '_typeStmt'
+        ];
+
         $stmt_list = [
             Tag::T_IF       => '_ifStmt',
-            Tag::T_LET      => '_letStmt',
             Tag::T_WHILE    => '_whileStmt',
             Tag::T_DO       => '_exprStmt',
             Tag::T_FOREACH  => '_foreachStmt',
@@ -93,25 +98,18 @@ class StmtParser
             '['             => '_labelStmt'
         ];
 
-        if ($this->reader->is(Tag::T_FN)) {
-            return $this->decl_parser->_fnStmt();
+        $tag = $this->reader->lookahead->getTag();
+
+        if (isset($decl_list[$tag])) {
+            return $this->decl_parser->{$decl_list[$tag]}();
         }
 
-        if ($this->reader->is(Tag::T_TYPE)) {
-            return $this->decl_parser->_typeStmt();
-        }
-
-        if ($this->reader->is(Tag::T_DATA)) {
-            return $this->decl_parser->_dataStmt();
-        }
-
-        if (isset($stmt_list[$this->reader->lookahead->getTag()])) {
-            $callee = $stmt_list[$this->reader->lookahead->getTag()];
-            return $this->{$callee}();
+        if (isset($stmt_list[$tag])) {
+            return $this->{$stmt_list[$tag]}();
         }
 
         $params = [
-            'expected' => 'statement',
+            'expected' => 'statement or declaration',
             'found'    => $this->reader->lookahead,
             'parser'   => $this->reader
         ];
@@ -149,21 +147,6 @@ class StmtParser
         $this->reader->match(Tag::T_END);
 
         return new IfStmt($condition, $body, $elif, $else);
-    }
-
-    public function _letStmt()
-    {
-        $this->reader->match(Tag::T_LET);
-        $mutable = $this->reader->consumeIf(Tag::T_MUT);
-        $name = $this->name_parser->_identifier();
-        $type = $this->reader->consumeIf('::')
-            ? $this->type_parser->_type()
-            : null;
-        $value = $this->reader->consumeIf(':-')
-            ? $this->expr_parser->_expr()
-            : null;
-
-       return new LetStmt($name, $type, $value, $mutable);
     }
 
     public function _whileStmt()

@@ -128,6 +128,7 @@ import(PARSER, 'Precedence');
 /* Ast */
 
 import(AST, 'Node');
+import(AST, 'Decl');
 import(AST, 'Body');
 
 import(AST, 'expr/Expr');
@@ -154,6 +155,8 @@ import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');
 
+import(AST, 'decl/LetDecl');
+
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
@@ -165,7 +168,6 @@ import(AST, 'stmt/FnSignatureStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
-import(AST, 'stmt/LetStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/TypeStmt');

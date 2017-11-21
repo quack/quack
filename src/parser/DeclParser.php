@@ -22,6 +22,7 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Ast\Decl\LetDecl;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
@@ -37,6 +38,21 @@ class DeclParser
     public function __construct($reader)
     {
         $this->reader = $reader;
+    }
+
+    public function _letDecl()
+    {
+        $this->reader->match(Tag::T_LET);
+        $mutable = $this->reader->consumeIf(Tag::T_MUT);
+        $name = $this->name_parser->_identifier();
+        $type = $this->reader->consumeIf('::')
+            ? $this->type_parser->_type()
+            : null;
+        $value = $this->reader->consumeIf(':-')
+            ? $this->expr_parser->_expr()
+            : null;
+
+       return new LetDecl($name, $type, $value, $mutable);
     }
 
     public function _fnSignature()
