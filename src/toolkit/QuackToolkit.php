@@ -156,6 +156,7 @@ import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');
 
 import(AST, 'decl/LetDecl');
+import(AST, 'decl/TypeDecl');
 
 import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
@@ -170,7 +171,6 @@ import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
-import(AST, 'stmt/TypeStmt');
 import(AST, 'stmt/DataStmt');
 import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');

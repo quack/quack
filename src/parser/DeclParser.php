@@ -23,9 +23,9 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Ast\Decl\LetDecl;
+use \QuackCompiler\Ast\Decl\TypeDecl;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
-use \QuackCompiler\Ast\Stmt\TypeStmt;
 use \QuackCompiler\Ast\Stmt\TypeConsStmt;
 use \QuackCompiler\Ast\Stmt\DataStmt;
 
@@ -78,7 +78,7 @@ class DeclParser
         return new FnSignatureStmt($name, $parameters, $type);
     }
 
-    public function _fnStmt()
+    public function _fnDecl()
     {
         $is_short = false;
         $body = null;
@@ -98,17 +98,17 @@ class DeclParser
         return new FnStmt($signature, $body, $is_short);
     }
 
-    public function _typeStmt()
+    public function _typeDecl()
     {
         $this->reader->match(Tag::T_TYPE);
         $name = $this->name_parser->_typename();
         $this->reader->match(':-');
         $value = $this->type_parser->_type();
 
-        return new TypeStmt($name, $value);
+        return new TypeDecl($name, $value);
     }
 
-    public function _typeConsStmt()
+    public function _dataMember()
     {
         $name = $this->name_parser->_typename();
         $values = [];
@@ -123,7 +123,7 @@ class DeclParser
         return new TypeConsStmt($name, $values);
     }
 
-    public function _dataStmt()
+    public function _dataDecl()
     {
         $this->reader->match(Tag::T_DATA);
         $name = $this->name_parser->_typename();
@@ -140,7 +140,7 @@ class DeclParser
 
         if ($this->reader->consumeIf(':-')) {
             do {
-                $values[] = $this->_typeConsStmt();
+                $values[] = $this->_dataMember();
             } while ($this->reader->consumeIf(Tag::T_OR));
         }
 

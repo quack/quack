@@ -80,10 +80,10 @@ class StmtParser
     public function _stmt()
     {
         $decl_list = [
-            Tag::T_DATA => '_dataStmt',
-            Tag::T_FN   => '_fnStmt',
+            Tag::T_DATA => '_dataDecl',
+            Tag::T_FN   => '_fnDecl',
             Tag::T_LET  => '_letDecl',
-            Tag::T_TYPE => '_typeStmt'
+            Tag::T_TYPE => '_typeDecl'
         ];
 
         $stmt_list = [

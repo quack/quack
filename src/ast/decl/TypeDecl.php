@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Decl;
 
-use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 
-class TypeStmt extends Stmt
+class TypeDecl implements Decl
 {
     public $name;
     public $value;
