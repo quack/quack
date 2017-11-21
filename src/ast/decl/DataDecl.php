@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Decl;
 
+use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
@@ -29,7 +30,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
-class DataStmt extends Stmt
+class DataDecl implements Decl
 {
     public $name;
     public $parameters;

@@ -22,12 +22,12 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Ast\Decl\DataDecl;
 use \QuackCompiler\Ast\Decl\LetDecl;
 use \QuackCompiler\Ast\Decl\TypeDecl;
+use \QuackCompiler\Ast\Member\DataMember;
 use \QuackCompiler\Ast\Stmt\FnStmt;
 use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
-use \QuackCompiler\Ast\Stmt\TypeConsStmt;
-use \QuackCompiler\Ast\Stmt\DataStmt;
 
 class DeclParser
 {
@@ -120,7 +120,7 @@ class DeclParser
             $this->reader->match(')');
         }
 
-        return new TypeConsStmt($name, $values);
+        return new DataMember($name, $values);
     }
 
     public function _dataDecl()
@@ -144,6 +144,6 @@ class DeclParser
             } while ($this->reader->consumeIf(Tag::T_OR));
         }
 
-        return new DataStmt($name, $parameters, $values);
+        return new DataDecl($name, $parameters, $values);
     }
 }

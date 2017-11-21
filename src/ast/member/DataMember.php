@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Member;
 
+use \QuackCompiler\Ast\Member;
 use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
@@ -27,7 +28,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
 
-class TypeConsStmt
+class DataMember implements Member
 {
     public $name;
     public $parameters;

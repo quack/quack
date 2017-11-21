@@ -129,6 +129,7 @@ import(PARSER, 'Precedence');
 
 import(AST, 'Node');
 import(AST, 'Decl');
+import(AST, 'Member');
 import(AST, 'Body');
 
 import(AST, 'expr/Expr');
@@ -155,6 +156,9 @@ import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');
 
+import(AST, 'member/DataMember');
+
+import(AST, 'decl/DataDecl');
 import(AST, 'decl/LetDecl');
 import(AST, 'decl/TypeDecl');
 
@@ -171,8 +175,6 @@ import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
-import(AST, 'stmt/DataStmt');
-import(AST, 'stmt/TypeConsStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'types/TypeNode');
