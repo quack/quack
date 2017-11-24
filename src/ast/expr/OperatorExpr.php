@@ -20,16 +20,20 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
-class OperatorExpr extends Expr
+class OperatorExpr implements Expr
 {
+    use Parenthesized;
+
     public $left;
     public $operator;
     public $right;

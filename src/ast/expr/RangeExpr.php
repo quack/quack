@@ -20,14 +20,18 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class RangeExpr extends Expr
+class RangeExpr implements Expr
 {
+    use Parenthesized;
+
     public $from;
     public $to;
     public $by;

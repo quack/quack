@@ -20,14 +20,18 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Types\TypeError;
 
-class AccessExpr extends Expr
+class AccessExpr implements Expr
 {
+    use Parenthesized;
+
     public $left;
     public $index;
 

@@ -20,15 +20,18 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\TaggedUnion;
 use \QuackCompiler\Types\TypeError;
 
-class TypeExpr extends Expr
+class TypeExpr implements Expr
 {
+    use Parenthesized;
+
     private $name;
     private $values;
 

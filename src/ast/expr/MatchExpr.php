@@ -20,10 +20,14 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class MatchExpr extends Expr
+class MatchExpr implements Expr
 {
+    use Parenthesized;
+
     public $expr;
     public $cases;
     public $else;

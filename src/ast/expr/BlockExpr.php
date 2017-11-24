@@ -20,13 +20,17 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 
-class BlockExpr extends Expr
+class BlockExpr implements Expr
 {
+    use Parenthesized;
+
     public $body;
 
     public function __construct($body)

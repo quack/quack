@@ -20,11 +20,15 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class PartialFuncExpr extends Expr
+class PartialFuncExpr implements Expr
 {
+    use Parenthesized;
+
     public $operator;
     public $right;
 

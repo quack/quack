@@ -20,15 +20,19 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class PrefixExpr extends Expr
+class PrefixExpr implements Expr
 {
+    use Parenthesized;
+
     private $operator;
     private $right;
 

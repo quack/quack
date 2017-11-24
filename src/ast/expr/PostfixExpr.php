@@ -21,11 +21,15 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \Exception;
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class PostfixExpr extends Expr
+class PostfixExpr implements Expr
 {
+    use Parenthesized;
+
     public $left;
     public $operator;
 

@@ -20,16 +20,20 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
-class NameExpr extends Expr
+class NameExpr implements Expr
 {
+    use Parenthesized;
+
     public $name;
 
     public function __construct($name)

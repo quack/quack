@@ -20,10 +20,14 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class AtomExpr extends Expr
+class AtomExpr implements Expr
 {
+    use Parenthesized;
+
     public $value;
 
     public function __construct($value)

@@ -20,11 +20,15 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class TupleExpr extends Expr
+class TupleExpr implements Expr
 {
+    use Parenthesized;
+
     public $items;
 
     public function __construct($items)

@@ -20,10 +20,14 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class StringExpr extends Expr
+class StringExpr implements Expr
 {
+    use Parenthesized;
+
     public $value;
     public $delimiter;
 

@@ -20,13 +20,17 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class TernaryExpr extends Expr
+class TernaryExpr implements Expr
 {
+    use Parenthesized;
+
     public $condition;
     public $then;
     public $else;
