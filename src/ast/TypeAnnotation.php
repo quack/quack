@@ -18,29 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Ast\TypeAnnotation;
-use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\TypeChecker\TupleTypeChecker;
-
-class TupleType extends TypeNode implements TypeAnnotation
+interface TypeAnnotation
 {
-    use TupleTypeChecker;
-    use TupleTypeRenderer;
-
-    public $types;
-    public $size;
-
-    public function __construct(...$types)
-    {
-        $this->types = $types;
-        $this->size = count($types);
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize('#(' . implode(', ', $this->types) . ')');
-    }
 }

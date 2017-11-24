@@ -20,13 +20,14 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Pretty\Types\FunctionTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\FunctionTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
-class FunctionType extends TypeNode
+class FunctionType extends TypeNode implements TypeAnnotation
 {
     use FunctionTypeChecker;
     use FunctionTypeRenderer;

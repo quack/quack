@@ -20,6 +20,7 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
@@ -28,7 +29,7 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\TypeChecker\NameTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
-class NameType extends TypeNode
+class NameType extends TypeNode implements TypeAnnotation
 {
     use NameTypeChecker;
     use NameTypeRenderer;

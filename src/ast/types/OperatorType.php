@@ -20,13 +20,14 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Pretty\Types\OperatorTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\OperatorTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
-class OperatorType extends TypeNode
+class OperatorType extends TypeNode implements TypeAnnotation
 {
     use OperatorTypeChecker;
     use OperatorTypeRenderer;

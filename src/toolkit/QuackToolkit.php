@@ -131,6 +131,7 @@ import(PARSER, 'Precedence');
 import(AST, 'Decl');
 import(AST, 'Expr');
 import(AST, 'Stmt');
+import(AST, 'TypeAnnotation');
 
 import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');

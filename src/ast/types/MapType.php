@@ -20,11 +20,12 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Pretty\Types\MapTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\MapTypeChecker;
 
-class MapType extends TypeNode
+class MapType extends TypeNode implements TypeAnnotation
 {
     use MapTypeChecker;
     use MapTypeRenderer;

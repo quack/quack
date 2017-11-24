@@ -20,11 +20,12 @@
  */
 namespace QuackCompiler\Ast\Types;
 
+use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Pretty\Types\ObjectTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\ObjectTypeChecker;
 
-class ObjectType extends TypeNode
+class ObjectType extends TypeNode implements TypeAnnotation
 {
     use ObjectTypeChecker;
     use ObjectTypeRenderer;
