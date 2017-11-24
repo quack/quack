@@ -20,9 +20,7 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
-use \QuackCompiler\Ast\Node;
-
-abstract class Expr extends Node
+abstract class Expr
 {
     protected $parentheses_level = 0;
 
