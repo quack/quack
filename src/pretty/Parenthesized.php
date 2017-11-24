@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Expr;
+namespace QuackCompiler\Pretty;
 
-abstract class Expr
+trait Parenthesized
 {
-    protected $parentheses_level = 0;
+    private $parentheses_level = 0;
 
     public function addParentheses()
     {
@@ -34,9 +34,10 @@ abstract class Expr
         $this->parentheses_level--;
     }
 
-    protected function parenthesize($source)
+    public function parenthesize($source)
     {
         $level = $this->parentheses_level;
         return str_repeat('(', $level) . $source . str_repeat(')', $level);
+
     }
 }

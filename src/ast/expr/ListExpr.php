@@ -20,15 +20,19 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class ListExpr extends Expr
+class ListExpr implements Expr
 {
+    use Parenthesized;
+
     public $items;
 
     public function __construct($items)

@@ -37,6 +37,7 @@ function import($module, $file)
 /* Pretty */
 import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
+import(PRETTY, 'Parenthesized');
 import(PRETTY, 'types/DataTypeRenderer');
 import(PRETTY, 'types/FunctionTypeRenderer');
 import(PRETTY, 'types/NameTypeRenderer');
@@ -127,8 +128,8 @@ import(PARSER, 'Precedence');
 
 /* Ast */
 
-import(AST, 'Node');
 import(AST, 'Decl');
+import(AST, 'Expr');
 import(AST, 'Stmt');
 
 import(AST, 'helpers/Body');
@@ -137,7 +138,6 @@ import(AST, 'helpers/Elif');
 import(AST, 'helpers/Param');
 import(AST, 'helpers/Program');
 
-import(AST, 'expr/Expr');
 import(AST, 'expr/ListExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/MapExpr');

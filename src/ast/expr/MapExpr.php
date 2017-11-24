@@ -20,15 +20,19 @@
  */
 namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class MapExpr extends Expr
+class MapExpr implements Expr
 {
+    use Parenthesized;
+
     public $keys;
     public $values;
 

@@ -20,11 +20,7 @@
  */
 namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Parser\Parser;
-
-abstract class Node
+interface Expr
 {
-    abstract public function format(Parser $parser);
-
-    abstract public function injectScope($parent_scope);
 }
+
