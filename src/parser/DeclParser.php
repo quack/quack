@@ -22,12 +22,13 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
+use \QuackCompiler\Ast\Decl\FnShortDecl;
 use \QuackCompiler\Ast\Decl\DataDecl;
 use \QuackCompiler\Ast\Decl\LetDecl;
 use \QuackCompiler\Ast\Decl\TypeDecl;
-use \QuackCompiler\Ast\Member\DataMember;
+use \QuackCompiler\Ast\Helpers\DataMember;
+use \QuackCompiler\Ast\Helpers\Param;
 use \QuackCompiler\Ast\Stmt\FnStmt;
-use \QuackCompiler\Ast\Stmt\FnSignatureStmt;
 
 class DeclParser
 {
@@ -55,47 +56,43 @@ class DeclParser
        return new LetDecl($name, $type, $value, $mutable);
     }
 
-    public function _fnSignature()
+    public function _param()
     {
-        $name = null;
-        $parameters = [];
-        $type = null;
         $name = $this->name_parser->_identifier();
+        $type = null;
+        if ($this->reader->consumeIf('::')) {
+            $type = $this->type_parser->_type();
+        }
+
+        return new Param($name, $type);
+    }
+
+    public function _fnDecl()
+    {
+        $this->reader->match(Tag::T_FN);
+        $name = $this->name_parser->_identifier();
+        $params = [];
+        $return_type = null;
 
         $this->reader->match('(');
 
         if (!$this->reader->consumeIf(')')) {
             do {
-                $parameters[] = $this->stmt_parser->_parameter();
+                $params[] = $this->_param();
             } while ($this->reader->consumeIf(','));
             $this->reader->match(')');
         }
 
         if ($this->reader->consumeIf(':')) {
-            $type = $this->type_parser->_type();
+            $return_type = $this->type_parser->_type();
         }
 
-        return new FnSignatureStmt($name, $parameters, $type);
-    }
-
-    public function _fnDecl()
-    {
-        $is_short = false;
-        $body = null;
-
-        $this->reader->match(Tag::T_FN);
-        $signature = $this->_fnSignature();
-
-        // Is short method?
-        if ($is_short = $this->reader->is(':-')) {
-            $this->reader->consume(); // :-
-            $body = $this->expr_parser->_expr();
-        } else {
-            $body = $this->stmt_parser->_stmtList();
-            $this->reader->match(Tag::T_END);
+        if ($is_short = $this->reader->consumeIf(':-')) {
+            $expr = $this->expr_parser->_expr();
+            return new FnShortDecl($name, $params, $expr, $return_type);
         }
 
-        return new FnStmt($signature, $body, $is_short);
+        // TODO: Support functions with imperative body
     }
 
     public function _typeDecl()

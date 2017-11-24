@@ -18,45 +18,41 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast;
+namespace QuackCompiler\Ast\Helpers;
 
+use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Symbol;
 
-class Body
+class Param
 {
-    public $body;
+    public $name;
+    public $type;
 
-    public function __construct($body)
+    public function __construct($name, $type = null)
     {
-        $this->body = $body;
+        $this->name = $name;
+        $this->type = $type;
     }
 
     public function format(Parser $parser)
     {
-        $result = '';
-        $parser->openScope();
-
-        foreach ($this->body as $stmt) {
-            $result .= $parser->indent() . $stmt->format($parser);
+        $source = $this->name;
+        if (null !== $this->type) {
+            $source .= ' :: ';
+            $source .= $this->type;
         }
 
-        $parser->closeScope();
-        return $result;
+        return $source;
     }
 
     public function injectScope($outer)
     {
-        $this->scope = $outer;
-        foreach ($this->body as $stmt) {
-            $stmt->injectScope($this->scope);
-        }
-    }
-
-    public function runTypeChecker()
-    {
-        foreach ($this->body as $stmt) {
-            $stmt->runTypeChecker();
-        }
+        $outer->insert($this->name, Symbol::S_VARIABLE);
+        $type = null === $this->type
+            ? new GenericType()
+            : $this->type;
+        $outer->setMeta(Meta::M_TYPE, $this->name, $type);
     }
 }

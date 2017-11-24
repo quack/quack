@@ -51,7 +51,7 @@ class LambdaParselet implements PrefixParselet
             $grammar->reader->match('[');
             if (!$grammar->reader->consumeIf(']')) {
                 do {
-                    $parameters[] = $grammar->stmt_parser->_parameter();
+                    $parameters[] = $grammar->decl_parser->_param();
                 } while ($grammar->reader->consumeIf(','));
                 $grammar->reader->match(']');
             }

@@ -21,7 +21,7 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
-use \QuackCompiler\Ast\Body;
+use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
@@ -234,20 +234,6 @@ class StmtParser
         }
 
         return null;
-    }
-
-    public function _parameter()
-    {
-        $name = $this->name_parser->_identifier();
-        $type = null;
-        if ($this->reader->consumeIf('::')) {
-            $type = $this->type_parser->_type();
-        }
-
-        return (object) [
-            'name' => $name,
-            'type' => $type
-        ];
     }
 
     public function _optLabel()

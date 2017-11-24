@@ -18,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Member;
+namespace QuackCompiler\Ast\Helpers;
 
-use \QuackCompiler\Ast\Member;
 use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
@@ -28,7 +27,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
 
-class DataMember implements Member
+class DataMember
 {
     public $name;
     public $parameters;
@@ -64,8 +63,5 @@ class DataMember implements Member
             $this->scope->setMeta(Meta::M_TYPE, $this->name, $data);
             return;
         }
-
-        // TODO: Collect constraints and deal with types with parameters
-        // TODO: Create a ->collectConstraints($context)
     }
 }
