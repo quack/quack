@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Helpers;
 
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
@@ -26,7 +26,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class ElifStmt extends Stmt
+class Elif
 {
     public $condition;
     public $body;

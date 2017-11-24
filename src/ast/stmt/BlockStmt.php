@@ -20,10 +20,11 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
-class BlockStmt extends Stmt
+class BlockStmt implements Stmt
 {
     public $body;
 

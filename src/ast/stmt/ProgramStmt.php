@@ -21,10 +21,11 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \Exception;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
-class ProgramStmt extends Stmt
+class ProgramStmt implements Stmt
 {
     public $stmt_list;
 

@@ -20,11 +20,12 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\CliColorizer;
 use \QuackCompiler\Types\ParametricTypes;
 
-class ExprStmt extends Stmt
+class ExprStmt implements Stmt
 {
     public $expr;
 

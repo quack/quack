@@ -20,14 +20,14 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
-class IfStmt extends Stmt
+class IfStmt implements Stmt
 {
     public $condition;
     public $body;
@@ -85,10 +85,7 @@ class IfStmt extends Stmt
         // If we have `else', bind in depth
         if (null !== $this->else) {
             $else_scope = new Scope($parent_scope);
-
-            foreach ($this->else as $stmt) {
-                $stmt->injectScope($else_scope);
-            }
+            $this->else->injectScope($else_scope);
         }
     }
 

@@ -22,10 +22,10 @@ namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Helpers\Body;
+use \QuackCompiler\Ast\Helpers\Elif;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
-use \QuackCompiler\Ast\Stmt\ElifStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
@@ -221,7 +221,7 @@ class StmtParser
         while ($this->reader->consumeIf(Tag::T_ELIF)) {
             $condition = $this->expr_parser->_expr();
             $body = $this->_stmtList();
-            $elifs[] = new ElifStmt($condition, $body);
+            $elifs[] = new Elif($condition, $body);
         }
 
         return $elifs;

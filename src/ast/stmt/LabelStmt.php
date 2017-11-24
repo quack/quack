@@ -20,12 +20,13 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
-class LabelStmt extends Stmt
+class LabelStmt implements Stmt
 {
     public $name;
     public $stmt;

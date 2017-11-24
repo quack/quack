@@ -129,9 +129,11 @@ import(PARSER, 'Precedence');
 
 import(AST, 'Node');
 import(AST, 'Decl');
+import(AST, 'Stmt');
 
 import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
+import(AST, 'helpers/Elif');
 import(AST, 'helpers/Param');
 
 import(AST, 'expr/Expr');
@@ -163,11 +165,9 @@ import(AST, 'decl/FnShortDecl');
 import(AST, 'decl/LetDecl');
 import(AST, 'decl/TypeDecl');
 
-import(AST, 'stmt/Stmt');
 import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
 import(AST, 'stmt/ContinueStmt');
-import(AST, 'stmt/ElifStmt');
 import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');

@@ -20,14 +20,14 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt\BlockStmt;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
-class WhileStmt extends Stmt
+class WhileStmt implements Stmt
 {
     public $condition;
     public $body;

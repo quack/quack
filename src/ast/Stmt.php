@@ -18,10 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Ast\Node;
-
-abstract class Stmt extends Node
+interface Stmt
 {
 }

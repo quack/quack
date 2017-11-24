@@ -20,9 +20,10 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 
-class ReturnStmt extends Stmt
+class ReturnStmt implements Stmt
 {
     public $expression;
 
