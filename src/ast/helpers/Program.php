@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Helpers;
 
 use \Exception;
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
-class ProgramStmt implements Stmt
+class Program
 {
     public $stmt_list;
 

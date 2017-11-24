@@ -23,6 +23,7 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Helpers\Elif;
+use \QuackCompiler\Ast\Helpers\Program;
 use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
@@ -30,7 +31,6 @@ use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
 use \QuackCompiler\Ast\Stmt\IfStmt;
 use \QuackCompiler\Ast\Stmt\LabelStmt;
-use \QuackCompiler\Ast\Stmt\ProgramStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
@@ -64,7 +64,7 @@ class StmtParser
         while (!$this->reader->isEOF()) {
             $body[] = $this->_stmt();
         }
-        return new ProgramStmt($body);
+        return new Program($body);
     }
 
     public function _stmtList()

@@ -135,6 +135,7 @@ import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
 import(AST, 'helpers/Elif');
 import(AST, 'helpers/Param');
+import(AST, 'helpers/Program');
 
 import(AST, 'expr/Expr');
 import(AST, 'expr/ListExpr');
@@ -172,7 +173,6 @@ import(AST, 'stmt/ExprStmt');
 import(AST, 'stmt/ForeachStmt');
 import(AST, 'stmt/IfStmt');
 import(AST, 'stmt/LabelStmt');
-import(AST, 'stmt/ProgramStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/WhileStmt');
 
