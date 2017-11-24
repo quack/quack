@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Ast\TypeAnnotation;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\ListTypeRenderer;
 use \QuackCompiler\TypeChecker\ListTypeChecker;
 use \QuackCompiler\Scope\Scope;
@@ -29,6 +30,7 @@ class ListType extends TypeNode implements TypeAnnotation
 {
     use ListTypeChecker;
     use ListTypeRenderer;
+    use Parenthesized;
 
     public $type;
 

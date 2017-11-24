@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Ast\TypeAnnotation;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\TupleTypeChecker;
@@ -29,6 +30,7 @@ class TupleType extends TypeNode implements TypeAnnotation
 {
     use TupleTypeChecker;
     use TupleTypeRenderer;
+    use Parenthesized;
 
     public $types;
     public $size;

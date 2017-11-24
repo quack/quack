@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
@@ -33,6 +34,7 @@ class NameType extends TypeNode implements TypeAnnotation
 {
     use NameTypeChecker;
     use NameTypeRenderer;
+    use Parenthesized;
 
     public $name;
     public $values;

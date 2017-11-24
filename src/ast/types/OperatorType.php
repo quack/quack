@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\OperatorTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\OperatorTypeChecker;
@@ -31,6 +32,7 @@ class OperatorType extends TypeNode implements TypeAnnotation
 {
     use OperatorTypeChecker;
     use OperatorTypeRenderer;
+    use Parenthesized;
 
     public $operator;
     public $left;

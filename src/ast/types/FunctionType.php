@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Types;
 
 use \QuackCompiler\Ast\TypeAnnotation;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\FunctionTypeRenderer;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\FunctionTypeChecker;
@@ -31,6 +32,7 @@ class FunctionType extends TypeNode implements TypeAnnotation
 {
     use FunctionTypeChecker;
     use FunctionTypeRenderer;
+    use Parenthesized;
 
     public $parameters;
     public $return;
