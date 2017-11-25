@@ -22,12 +22,12 @@ namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Ast\Types\DataType;
-use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\GenericType;
 use \QuackCompiler\Types\TypeError;
 
 class DataDecl implements Decl

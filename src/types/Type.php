@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\TypeChecker;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Types\Type;
-
-trait GenericTypeChecker
+abstract class Type
 {
-    public function check(Type $other)
+    public function getKind()
     {
-        return false;
+        return '*';
     }
+
+    abstract function check(Type $other);
 }

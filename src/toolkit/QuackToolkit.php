@@ -180,7 +180,6 @@ import(AST, 'stmt/WhileStmt');
 import(AST, 'types/TypeNode');
 import(AST, 'types/DataType');
 import(AST, 'types/FunctionType');
-import(AST, 'types/GenericType');
 import(AST, 'types/ListType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
@@ -198,4 +197,6 @@ import(SCOPE, 'Meta');
 /* Type inference and checking */
 
 import(TYPES, 'ParametricTypes');
+import(TYPES, 'Type');
 import(TYPES, 'TypeError');
+import(TYPES, 'GenericType');

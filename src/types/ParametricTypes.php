@@ -20,8 +20,6 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\Types\GenericType;
-
 class ParametricTypes
 {
     private static $instances = [];

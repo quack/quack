@@ -20,10 +20,10 @@
  */
 namespace QuackCompiler\Ast\Helpers;
 
-use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\GenericType;
 
 class Param
 {

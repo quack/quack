@@ -22,7 +22,6 @@ namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\GenericType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
@@ -30,6 +29,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\GenericType;
 
 class FnShortDecl implements Decl
 {
