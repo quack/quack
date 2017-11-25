@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\Types\OperatorType;
+use \QuackCompiler\Ast\Types\OperatorTypeAnnotation;
 use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
@@ -39,7 +39,7 @@ class BinaryOperatorTypeParselet implements InfixParselet
     public function parse($parser, $left, Token $token)
     {
         $right = $parser->_type($this->precedence - (int) $this->is_right);
-        return new OperatorType($left, $token->getTag(), $right);
+        return new OperatorTypeAnnotation($left, $token->getTag(), $right);
     }
 
     public function getPrecedence()

@@ -44,7 +44,6 @@ import(PRETTY, 'types/GenericTypeRenderer');
 import(PRETTY, 'types/ListTypeRenderer');
 import(PRETTY, 'types/MapTypeRenderer');
 import(PRETTY, 'types/ObjectTypeRenderer');
-import(PRETTY, 'types/OperatorTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
@@ -55,7 +54,6 @@ import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
-import(TYPECHECKER, 'OperatorTypeChecker');
 import(TYPECHECKER, 'TupleTypeChecker');
 
 /* Cli */
@@ -181,7 +179,7 @@ import(AST, 'types/ListType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
-import(AST, 'types/OperatorType');
+import(AST, 'types/OperatorTypeAnnotation');
 import(AST, 'types/TupleType');
 
 /* Scope */
