@@ -20,7 +20,6 @@
  */
 namespace QuackCompiler\Ast\Helpers;
 
-use \QuackCompiler\Ast\Types\DataType;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
@@ -55,13 +54,5 @@ class DataMember
     {
         $this->scope = $outer;
         $this->scope->insert($this->name, Symbol::S_VARIABLE | Symbol::S_DATA_MEMBER);
-    }
-
-    public function runTypeChecker(DataType $data)
-    {
-        if (0 === count($this->parameters)) {
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $data);
-            return;
-        }
     }
 }

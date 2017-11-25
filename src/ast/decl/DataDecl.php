@@ -21,7 +21,7 @@
 namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
-use \QuackCompiler\Ast\Types\DataType;
+use \QuackCompiler\Ast\Types\NameType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
@@ -73,7 +73,7 @@ class DataDecl implements Decl
             $this->scope->setMeta(Meta::M_TYPE, $parameter, new GenericType());
         }
 
-        $this->type = new DataType($this->name, $this->parameters);
+        $this->type = new NameType($this->name, $this->parameters);
         $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
         $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
 
@@ -84,8 +84,6 @@ class DataDecl implements Decl
 
     public function runTypeChecker()
     {
-        foreach ($this->values as $value) {
-            $value->runTypeChecker($this->type);
-        }
+        // Hmmmmm
     }
 }
