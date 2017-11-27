@@ -20,8 +20,6 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-use \QuackCompiler\Scope\Scope;
-
 abstract class TypeNode
 {
     public function getReference()
@@ -47,11 +45,6 @@ abstract class TypeNode
     public function isIterable()
     {
         return $this instanceof MapType || $this instanceof ListType;
-    }
-
-    public function simplify()
-    {
-        return $this;
     }
 
     public function getKind()

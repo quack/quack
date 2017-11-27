@@ -20,19 +20,12 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\Types\NameType;
+use \QuackCompiler\Ast\TypeSig\NameTypeSig;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
 class NameTypeParselet implements PrefixParselet
 {
-    private $is_generic;
-
-    public function __construct($is_generic = false)
-    {
-        $this->is_generic = $is_generic;
-    }
-
     public function parse($grammar, Token $token)
     {
         $name = $token->getContent();
@@ -45,7 +38,7 @@ class NameTypeParselet implements PrefixParselet
             $grammar->reader->match(')');
         }
 
-        return new NameType($name, $values, $this->is_generic);
+        return new NameTypeSig($name, $values);
     }
 }
 

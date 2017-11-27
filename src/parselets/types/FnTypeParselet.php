@@ -20,36 +20,29 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\TupleType;
+use \QuackCompiler\Ast\TypeSig\FnTypeSig;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class FunctionTypeParselet implements PrefixParselet
+class FnTypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
         $parameters = [];
-        $return = new TupleType();
 
-        if ($grammar->reader->is(Tag::T_IDENT)) {
-            $parameters[] = $grammar->_type();
-        } else {
-            $grammar->reader->match('[');
-            if (!$grammar->reader->consumeIf(']')) {
-                do {
-                    $parameters[] = $grammar->_type();
-                } while ($grammar->reader->consumeIf(','));
+        $grammar->reader->match('[');
+        if (!$grammar->reader->consumeIf(']')) {
+            do {
+                $parameters[] = $grammar->_type();
+            } while ($grammar->reader->consumeIf(','));
 
-                $grammar->reader->match(']');
-            }
+            $grammar->reader->match(']');
         }
 
-        if ($grammar->reader->consumeIf(':')) {
-            $return = $grammar->_type();
-        }
+        $grammar->reader->match(':');
+        $return = $grammar->_type();
 
-        return new FunctionType($parameters, $return);
+        return new FnTypeSig($parameters, $return);
     }
 }

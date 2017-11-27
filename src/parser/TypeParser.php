@@ -20,15 +20,10 @@
  */
 namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Ast\Types\FunctionType;
-use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\MapType;
-use \QuackCompiler\Ast\Types\ObjectType;
-use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
 use \QuackCompiler\Parselets\Types\BinaryTypeParselet;
-use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
+use \QuackCompiler\Parselets\Types\FnTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
@@ -53,7 +48,7 @@ class TypeParser
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);
         $this->register('%{', new ObjectTypeParselet);
-        $this->register('&', new FunctionTypeParselet);
+        $this->register('&', new FnTypeParselet);
         $this->register('&', new BinaryTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
 

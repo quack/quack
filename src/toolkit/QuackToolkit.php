@@ -100,7 +100,7 @@ import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
 import(PARSELETS, 'types/BinaryTypeParselet');
-import(PARSELETS, 'types/FunctionTypeParselet');
+import(PARSELETS, 'types/FnTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
@@ -176,10 +176,8 @@ import(AST, 'stmt/WhileStmt');
 import(AST, 'types/TypeNode');
 import(AST, 'types/FunctionType');
 import(AST, 'types/ListType');
-import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
-import(AST, 'types/TupleType');
 
 import(AST, 'typesig/BinaryTypeSig');
 import(AST, 'typesig/FnTypeSig');
