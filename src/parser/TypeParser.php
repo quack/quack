@@ -36,11 +36,9 @@ class TypeParser
     use Attachable;
     use Parselet;
 
-    public $parser;
-
-    public function __construct(Parser $parser)
+    public function __construct(Parser $reader)
     {
-        $this->reader = $parser;
+        $this->reader = $reader;
         $this->register('(', new GroupTypeParselet);
         $this->register(Tag::T_IDENT, new NameTypeParselet(true));
         $this->register(Tag::T_TYPENAME, new NameTypeParselet);

@@ -39,8 +39,6 @@ class StmtParser
 {
     use Attachable;
 
-    public $reader;
-
     public function __construct($reader)
     {
         $this->reader = $reader;

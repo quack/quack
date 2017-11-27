@@ -48,8 +48,6 @@ class ExprParser
     use Attachable;
     use Parselet;
 
-    public $reader;
-
     public function __construct($reader)
     {
         $this->reader = $reader;

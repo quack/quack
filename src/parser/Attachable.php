@@ -20,8 +20,12 @@
  */
 namespace QuackCompiler\Parser;
 
+use \QuackCompiler\Ast\Node;
+
 trait Attachable
 {
+    public $reader;
+
     public function attachParsers($parsers)
     {
         foreach ($parsers as $name => $parser) {
