@@ -22,11 +22,11 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\FnType;
 
 class BlockExpr extends Node implements Expr
 {
@@ -62,7 +62,7 @@ class BlockExpr extends Node implements Expr
 
     public function getType()
     {
-        $empty_return = $this->scope->getPrimitiveType('Empty');
-        return new FunctionType([], $empty_return, []);
+        $empty = $this->scope->getPrimitiveType('Empty');
+        return new FnType($empty, $empty);
     }
 }

@@ -22,11 +22,11 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Types\ObjectType;
 use \QuackCompiler\Scope\ScopeError;
 
 class ObjectExpr extends Node implements Expr
