@@ -18,15 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Pretty\Types;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Colorizer;
-use \QuackCompiler\Types\ParametricTypes;
+use \QuackCompiler\Pretty\Types\FnTypeRenderer;
+use \QuackCompiler\TypeChecker\FnTypeChecker;
 
-trait GenericTypeRenderer
+class FnType extends Type
 {
-    public function render(Colorizer $renderer)
+    use FnTypeChecker;
+    use FnTypeRenderer;
+
+    public $input;
+    public $output;
+
+    public function __construct($input, $output)
     {
-        return $renderer->yellow(ParametricTypes::name($this));
+        $this->input = $input;
+        $this->output = $output;
     }
 }

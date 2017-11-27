@@ -20,24 +20,27 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Ast\Types\TupleType;
-use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Types\TupleType;
+use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 trait TupleTypeChecker
 {
-    public function check(TypeNode $other)
+    public function check(Type $other)
     {
         if (!($other instanceof TupleType)) {
             return false;
         }
 
-        if ($this->size !== $other->size) {
-            throw new TypeError(Localization::message('TYP420', [$this->size, $other->size]));
+        $left_size = count($this->types);
+        $right_size = count($other->types);
+
+        if ($left_size !== $right_size) {
+            throw new TypeError(Localization::message('TYP420', [$left_size, $right_size]));
         }
 
-        for ($i = 0; $i < $this->size; $i++) {
+        for ($i = 0; $i < $left_size; $i++) {
             $me = $this->types[$i];
             $you = $other->types[$i];
 

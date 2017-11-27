@@ -18,35 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\TypeSig;
-use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\ObjectTypeRenderer;
-use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\ObjectTypeChecker;
 
-class ObjectType extends TypeNode implements TypeSig
+class ObjectType extends Type
 {
     use ObjectTypeChecker;
     use ObjectTypeRenderer;
-    use Parenthesized;
 
     public $properties;
 
     public function __construct($properties)
     {
         $this->properties = $properties;
-    }
-
-    public function __toString()
-    {
-        $source = '%{';
-        $source .= implode(', ', array_map(function($name) {
-            return "{$name}: {$this->properties[$name]}";
-        }, array_keys($this->properties)));
-        $source .= '}';
-
-        return $this->parenthesize($source);
     }
 }

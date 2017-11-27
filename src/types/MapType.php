@@ -18,29 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\TypeSig;
-use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Pretty\Types\ListTypeRenderer;
-use \QuackCompiler\TypeChecker\ListTypeChecker;
-use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Pretty\Types\MapTypeRenderer;
+use \QuackCompiler\TypeChecker\MapTypeChecker;
 
-class ListType extends TypeNode implements TypeSig
+class MapType extends Type
 {
-    use ListTypeChecker;
-    use ListTypeRenderer;
-    use Parenthesized;
+    use MapTypeChecker;
+    use MapTypeRenderer;
 
-    public $type;
+    public $key;
+    public $value;
 
-    public function __construct(TypeNode $type)
+    public function __construct(Type $key, Type $value)
     {
-        $this->type = $type;
-    }
-
-    public function __toString()
-    {
-        return $this->parenthesize('{' . $this->type . '}');
+        $this->key = $key;
+        $this->value = $value;
     }
 }

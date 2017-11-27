@@ -20,12 +20,12 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Ast\Types\ObjectType;
-use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Types\Type;
 
 trait ObjectTypeChecker
 {
-    public function check(TypeNode $other)
+    public function check(Type $other)
     {
         if (!($other instanceof ObjectType)) {
             return false;

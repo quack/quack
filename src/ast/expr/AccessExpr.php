@@ -21,11 +21,11 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
-use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Types\ListType;
+use \QuackCompiler\Types\MapType;
 use \QuackCompiler\Types\TypeError;
 
 class AccessExpr implements Expr

@@ -20,38 +20,18 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Intl\Localization;
-use \QuackCompiler\Types\MapType;
+use \QuackCompiler\Types\FnType;
 use \QuackCompiler\Types\Type;
-use \QuackCompiler\Types\TypeError;
 
-trait MapTypeChecker
+trait FnTypeChecker
 {
     public function check(Type $other)
     {
-        if (!($other instanceof MapType)) {
+        $message = Localization::message('TYP350', [$this, $other]);
+        if (!($other instanceof FnType)) {
             return false;
         }
 
-        $match_keys = $this->key->check($other->key);
-        $match_values = $this->value->check($other->value);
-
-        if (!$match_keys || !$match_values) {
-            $message = Localization::message('TYP350', [$this, $other]);
-
-            if (!$match_keys) {
-                $message .= '     > ' . Localization::message('TYP340',
-                    ['key', $this->key, $other->key]);
-            }
-
-            if (!$match_values) {
-                $message .= PHP_EOL . '     > ' . Localization::message('TYP340',
-                    ['value', $this->value, $other->value]);
-            }
-
-            throw new TypeError($message);
-        }
-
-        return true;
+        return $this->input->check($other->input) && $this->output->check($other->output);
     }
 }

@@ -18,14 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\TypeChecker;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Types\Type;
+use \QuackCompiler\Pretty\Types\NameTypeRenderer;
+use \QuackCompiler\TypeChecker\NameTypeChecker;
 
-trait GenericTypeChecker
+class NameType extends Type
 {
-    public function check(Type $other)
+    use NameTypeChecker;
+    use NameTypeRenderer;
+
+    public $name;
+    public $values;
+
+    public function __construct($name, $values)
     {
-        return false;
+        $this->name = $name;
+        $this->values = $values;
     }
 }

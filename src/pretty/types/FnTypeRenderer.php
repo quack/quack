@@ -22,29 +22,13 @@ namespace QuackCompiler\Pretty\Types;
 
 use \QuackCompiler\Pretty\Colorizer;
 
-trait FunctionTypeRenderer
+trait FnTypeRenderer
 {
-    private function fromUnicode($char)
-    {
-        return json_decode('"' . $char . '"');
-    }
-
     public function render(Colorizer $renderer)
     {
-        $result = '';
-        if (count($this->generics) > 0) {
-            $result .= $renderer->bold($this->fromUnicode('\u2200')) . ' ';
-            $result .= implode(', ', array_map([$renderer, 'red'], $this->generics));
-            $result .= ' ';
-        }
-
-        $result .= $renderer->magenta('&[');
-        $result .= implode(', ', array_map(function ($parameter) use ($renderer) {
-            return $parameter->render($renderer);
-        }, $this->parameters));
-        $result .= $renderer->magenta(']');
-        $result .= ': ';
-        $result .= $this->return->render($renderer);
+        $result = $this->input->render($renderer);
+        $result .= $renderer->magenta(' -> ');
+        $result .= $this->output->render($renderer);
         return $result;
     }
 }

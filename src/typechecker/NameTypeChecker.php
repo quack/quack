@@ -20,38 +20,16 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Ast\Types\TypeNode;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Types\Type;
 use \QuackCompiler\Types\TypeError;
 
 trait NameTypeChecker
 {
-    public function check(TypeNode $other)
+    public function check(Type $other)
     {
         $type = $this->scope->getMeta(Meta::M_TYPE, $this->name);
         return $type->check($other);
-    }
-
-    public function unify(TypeNode $other, &$context)
-    {
-        $my_kind = $this->getKind();
-        $your_kind = $other->getKind();
-
-        if ($my_kind !== $your_kind) {
-            throw new TypeError(Localization::message('TYP480', [
-                $this, $other, $my_kind, $your_kind
-            ]));
-        }
-
-        if ($this->is_generic) {
-            $context[$this->name] = $other;
-        }
-
-        for ($index = 0; $index < count($this->values); $index++) {
-            $my_baby = $this->values[$index];
-            $your_baby = $other->parameters[$index];
-            $my_baby->unify($your_baby, $context);
-        }
     }
 }

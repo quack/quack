@@ -18,39 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Types;
+namespace QuackCompiler\Types;
 
-abstract class TypeNode
+use \QuackCompiler\Pretty\Types\ListTypeRenderer;
+use \QuackCompiler\TypeChecker\ListTypeChecker;
+
+class ListType extends Type
 {
-    public function getReference()
-    {
-        return null;
-    }
+    use ListTypeChecker;
+    use ListTypeRenderer;
 
-    public function isNumber()
-    {
-        return $this->name === 'Number';
-    }
+    public $type;
 
-    public function isString()
+    public function __construct($type)
     {
-        return $this->name === 'String';
+        $this->type = $type;
     }
-
-    public function isRegex()
-    {
-        return $this->name === 'Regex';
-    }
-
-    public function isIterable()
-    {
-        return $this instanceof MapType || $this instanceof ListType;
-    }
-
-    public function getKind()
-    {
-        return '*';
-    }
-
-    abstract function check(TypeNode $other);
 }

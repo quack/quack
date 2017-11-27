@@ -20,12 +20,12 @@
  */
 namespace QuackCompiler\TypeChecker;
 
-use \QuackCompiler\Ast\Types\ListType;
-use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Types\ListType;
+use \QuackCompiler\Types\Type;
 
 trait ListTypeChecker
 {
-    public function check(TypeNode $other)
+    public function check(Type $other)
     {
         if (!($other instanceof ListType)) {
             return false;

@@ -38,19 +38,16 @@ function import($module, $file)
 import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
 import(PRETTY, 'Parenthesized');
-import(PRETTY, 'types/FunctionTypeRenderer');
+import(PRETTY, 'types/FnTypeRenderer');
 import(PRETTY, 'types/NameTypeRenderer');
-import(PRETTY, 'types/GenericTypeRenderer');
 import(PRETTY, 'types/ListTypeRenderer');
 import(PRETTY, 'types/MapTypeRenderer');
 import(PRETTY, 'types/ObjectTypeRenderer');
 import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
-import(TYPECHECKER, 'FunctionTypeChecker');
-import(TYPECHECKER, 'GenericTypeChecker');
+import(TYPECHECKER, 'FnTypeChecker');
 import(TYPECHECKER, 'ListTypeChecker');
-import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
@@ -173,12 +170,6 @@ import(AST, 'stmt/LabelStmt');
 import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/WhileStmt');
 
-import(AST, 'types/TypeNode');
-import(AST, 'types/FunctionType');
-import(AST, 'types/ListType');
-import(AST, 'types/NameType');
-import(AST, 'types/ObjectType');
-
 import(AST, 'typesig/BinaryTypeSig');
 import(AST, 'typesig/FnTypeSig');
 import(AST, 'typesig/ListTypeSig');
@@ -199,4 +190,11 @@ import(SCOPE, 'Meta');
 import(TYPES, 'ParametricTypes');
 import(TYPES, 'Type');
 import(TYPES, 'TypeError');
+
+import(TYPES, 'FnType');
 import(TYPES, 'GenericType');
+import(TYPES, 'ListType');
+import(TYPES, 'MapType');
+import(TYPES, 'NameType');
+import(TYPES, 'ObjectType');
+import(TYPES, 'TupleType');

@@ -21,7 +21,7 @@
 namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
-use \QuackCompiler\Ast\Types\TypeNode;
+use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
@@ -31,7 +31,7 @@ class TypeDecl implements Decl
     public $name;
     public $value;
 
-    public function __construct($name, TypeNode $value)
+    public function __construct($name, TypeSig $value)
     {
         $this->name = $name;
         $this->value = $value;

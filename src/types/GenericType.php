@@ -20,14 +20,8 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\GenericTypeRenderer;
-use \QuackCompiler\TypeChecker\GenericTypeChecker;
-
 class GenericType extends Type
 {
-    use GenericTypeChecker;
-    use GenericTypeRenderer;
-
     public $kind;
 
     public function __construct($kind = null)
@@ -39,5 +33,14 @@ class GenericType extends Type
     public function __toString()
     {
         return $this->parenthesize(ParametricTypes::name($this));
+    }
+
+    public function check(Type $other)
+    {
+        return false;
+    }
+
+    public function render()
+    {
     }
 }
