@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
@@ -32,7 +33,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\GenericType;
 
-class LambdaExpr implements Expr
+class LambdaExpr extends Node implements Expr
 {
     use Parenthesized;
 

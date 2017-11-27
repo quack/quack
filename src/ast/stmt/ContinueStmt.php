@@ -21,13 +21,14 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
 
-class ContinueStmt implements Stmt
+class ContinueStmt extends Node implements Stmt
 {
     public $label;
     public $is_explicit;

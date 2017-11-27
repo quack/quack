@@ -20,11 +20,12 @@
  */
 namespace QuackCompiler\Ast\TypeSig;
 
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 
-class BinaryTypeSig implements TypeSig
+class BinaryTypeSig extends Node implements TypeSig
 {
     use Parenthesized;
 

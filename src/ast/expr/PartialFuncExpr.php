@@ -21,11 +21,12 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 
-class PartialFuncExpr implements Expr
+class PartialFuncExpr extends Node implements Expr
 {
     use Parenthesized;
 

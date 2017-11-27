@@ -21,13 +21,14 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
-class IfStmt implements Stmt
+class IfStmt extends Node implements Stmt
 {
     public $condition;
     public $body;

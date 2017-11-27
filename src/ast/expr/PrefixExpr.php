@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
@@ -29,7 +30,7 @@ use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\TypeError;
 
-class PrefixExpr implements Expr
+class PrefixExpr extends Node implements Expr
 {
     use Parenthesized;
 

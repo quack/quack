@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
@@ -29,7 +30,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 
-class WhereExpr implements Expr
+class WhereExpr extends Node implements Expr
 {
     use Parenthesized;
 

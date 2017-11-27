@@ -21,9 +21,10 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Parser\Parser;
 
-class ReturnStmt implements Stmt
+class ReturnStmt extends Node implements Stmt
 {
     public $expression;
 

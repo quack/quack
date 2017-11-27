@@ -18,30 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\TypeSig;
+namespace QuackCompiler\Ast;
 
-use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\TypeSig;
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Ast\Location\SourceLocation;
 
-class ListTypeSig extends Node implements TypeSig
+abstract class Node
 {
-    use Parenthesized;
+    public $location;
+    public $range;
 
-    public $type;
-
-    public function __construct($type)
+    public function setLocation(SourceLocation $location)
     {
-        $this->type = $type;
+        $this->location = $location;
     }
 
-    public function format(Parser $parser)
+    public function setRange($range)
     {
-        $source = '{';
-        $source .= $this->type->format($parser);
-        $source .= '}';
-
-        return $this->parenthesize($source);
+        $this->range = $range;
     }
 }

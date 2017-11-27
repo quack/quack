@@ -129,6 +129,8 @@ import(AST, 'TypeSig');
 import(AST, 'location/Position');
 import(AST, 'location/SourceLocation');
 
+import(AST, 'Node');
+
 import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
 import(AST, 'helpers/Elif');

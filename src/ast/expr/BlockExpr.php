@@ -21,13 +21,14 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 
-class BlockExpr implements Expr
+class BlockExpr extends Node implements Expr
 {
     use Parenthesized;
 

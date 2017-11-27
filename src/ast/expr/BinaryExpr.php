@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
@@ -30,7 +31,7 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
-class BinaryExpr implements Expr
+class BinaryExpr extends Node implements Expr
 {
     use Parenthesized;
 

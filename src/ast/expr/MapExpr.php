@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
@@ -29,7 +30,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\GenericType;
 use \QuackCompiler\Types\TypeError;
 
-class MapExpr implements Expr
+class MapExpr extends Node implements Expr
 {
     use Parenthesized;
 

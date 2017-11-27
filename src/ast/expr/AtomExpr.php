@@ -21,10 +21,11 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 
-class AtomExpr implements Expr
+class AtomExpr extends Node implements Expr
 {
     use Parenthesized;
 

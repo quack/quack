@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\ListType;
 use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
@@ -31,7 +32,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
-class ForeachStmt implements Stmt
+class ForeachStmt extends Node implements Stmt
 {
     public $key;
     public $alias;

@@ -21,6 +21,7 @@
 namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;

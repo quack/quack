@@ -21,10 +21,11 @@
 namespace QuackCompiler\Ast\Stmt;
 
 use \QuackCompiler\Ast\Stmt;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\CliColorizer;
 
-class ExprStmt implements Stmt
+class ExprStmt extends Node implements Stmt
 {
     public $expr;
 

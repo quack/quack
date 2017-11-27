@@ -21,11 +21,12 @@
 namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
+use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 
-class TupleExpr implements Expr
+class TupleExpr extends Node implements Expr
 {
     use Parenthesized;
 
