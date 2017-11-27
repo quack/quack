@@ -45,6 +45,6 @@ class MapTypeSig implements TypeSig
         $source .= $this->value->format($parser);
         $source .= '}';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

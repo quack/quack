@@ -43,6 +43,6 @@ class TupleTypeSig implements TypeSig
         }, $this->types));
         $source .= ')';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }

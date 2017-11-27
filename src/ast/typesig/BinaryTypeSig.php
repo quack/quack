@@ -21,11 +21,8 @@
 namespace QuackCompiler\Ast\TypeSig;
 
 use \QuackCompiler\Ast\TypeSig;
-use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\TypeError;
 
 class BinaryTypeSig implements TypeSig
 {

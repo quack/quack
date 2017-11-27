@@ -41,6 +41,6 @@ class ListTypeSig implements TypeSig
         $source .= $this->type->format($parser);
         $source .= '}';
 
-        return $source;
+        return $this->parenthesize($source);
     }
 }
