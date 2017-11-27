@@ -53,7 +53,7 @@ class LetDecl implements Decl
         $source .= $this->name;
 
         if (null !== $this->type) {
-            $source .= ' :: ' . $this->type;
+            $source .= ' :: ' . $this->type->format($parser);
         }
 
         if (null !== $this->value) {
