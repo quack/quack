@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\Types\ObjectType;
+use \QuackCompiler\Ast\TypeSig\ObjectTypeSig;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
@@ -49,6 +49,6 @@ class ObjectTypeParselet implements PrefixParselet
         }
         $grammar->reader->match('}');
 
-        return new ObjectType($properties);
+        return new ObjectTypeSig($properties);
     }
 }
