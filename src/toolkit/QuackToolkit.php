@@ -126,6 +126,9 @@ import(AST, 'Expr');
 import(AST, 'Stmt');
 import(AST, 'TypeSig');
 
+import(AST, 'location/Position');
+import(AST, 'location/SourceLocation');
+
 import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
 import(AST, 'helpers/Elif');
