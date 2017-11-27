@@ -27,7 +27,6 @@ trait FnTypeChecker
 {
     public function check(Type $other)
     {
-        $message = Localization::message('TYP350', [$this, $other]);
         if (!($other instanceof FnType)) {
             return false;
         }
