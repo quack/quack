@@ -22,12 +22,12 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Types\MapType;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Types\GenericType;
+use \QuackCompiler\Types\MapType;
 use \QuackCompiler\Types\TypeError;
 
 class MapExpr extends Node implements Expr

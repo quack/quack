@@ -20,7 +20,6 @@
  */
 namespace QuackCompiler\Ast\Helpers;
 
-use \QuackCompiler\Ast\Types\FunctionType;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
