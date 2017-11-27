@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\Types\BinaryTypeSig;
+use \QuackCompiler\Ast\TypeSig\BinaryTypeSig;
 use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;

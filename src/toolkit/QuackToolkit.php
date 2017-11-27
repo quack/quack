@@ -179,8 +179,10 @@ import(AST, 'types/ListType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
-import(AST, 'types/BinaryTypeSig');
 import(AST, 'types/TupleType');
+
+import(AST, 'typesig/BinaryTypeSig');
+import(AST, 'typesig/ListTypeSig');
 
 /* Scope */
 

@@ -18,18 +18,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Types;
+namespace QuackCompiler\Ast\TypeSig;
 
-use \QuackCompiler\Ast\TypeSig\ListTypeSig;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Ast\TypeSig;
+use \QuackCompiler\Parser\Parser;
+use \QuackCompiler\Pretty\Parenthesized;
 
-class ListTypeParselet implements PrefixParselet
+class ListTypeSig implements TypeSig
 {
-    public function parse($grammar, Token $token)
+    use Parenthesized;
+
+    public $type;
+
+    public function __construct($type)
     {
-        $type = $grammar->_type();
-        $grammar->reader->match('}');
-        return new ListTypeSig($type);
+        $this->type = $type;
+    }
+
+    public function format(Parser $parser)
+    {
+        $source = '{';
+        $source .= $this->type->format($parser);
+        $source .= '}';
+
+        return $source;
     }
 }
