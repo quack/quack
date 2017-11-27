@@ -187,7 +187,6 @@ import(SCOPE, 'Meta');
 
 /* Type inference and checking */
 
-import(TYPES, 'ParametricTypes');
 import(TYPES, 'Type');
 import(TYPES, 'TypeError');
 

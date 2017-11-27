@@ -23,7 +23,6 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\CliColorizer;
-use \QuackCompiler\Types\ParametricTypes;
 
 class ExprStmt implements Stmt
 {
@@ -31,7 +30,6 @@ class ExprStmt implements Stmt
 
     public function __construct($expr)
     {
-        ParametricTypes::reset();
         $this->expr = $expr;
     }
 

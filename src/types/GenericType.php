@@ -26,13 +26,11 @@ class GenericType extends Type
 
     public function __construct($kind = null)
     {
-        ParametricTypes::push($this);
         $this->kind = $kind;
     }
 
     public function __toString()
     {
-        return $this->parenthesize(ParametricTypes::name($this));
     }
 
     public function check(Type $other)
