@@ -182,7 +182,11 @@ import(AST, 'types/ObjectType');
 import(AST, 'types/TupleType');
 
 import(AST, 'typesig/BinaryTypeSig');
+import(AST, 'typesig/FnTypeSig');
 import(AST, 'typesig/ListTypeSig');
+import(AST, 'typesig/MapTypeSig');
+import(AST, 'typesig/NameTypeSig');
+import(AST, 'typesig/ObjectTypeSig');
 import(AST, 'typesig/TupleTypeSig');
 
 /* Scope */
