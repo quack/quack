@@ -20,13 +20,13 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-use \QuackCompiler\Ast\TypeAnnotation;
+use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 
-class OperatorTypeAnnotation implements TypeAnnotation
+class BinaryTypeSig implements TypeSig
 {
     use Parenthesized;
 

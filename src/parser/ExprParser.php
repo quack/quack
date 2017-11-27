@@ -21,7 +21,7 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Lexer\Tag;
-use \QuackCompiler\Parselets\Expr\BinaryOperatorParselet;
+use \QuackCompiler\Parselets\Expr\BinaryParselet;
 use \QuackCompiler\Parselets\Expr\LiteralParselet;
 use \QuackCompiler\Parselets\Expr\NameParselet;
 use \QuackCompiler\Parselets\Expr\PostfixOperatorParselet;
@@ -161,12 +161,12 @@ class ExprParser
 
     private function infixLeft($tag, $precedence)
     {
-        $this->register($tag, new BinaryOperatorParselet($precedence, false));
+        $this->register($tag, new BinaryParselet($precedence, false));
     }
 
     private function infixRight($tag, $precedence)
     {
-        $this->register($tag, new BinaryOperatorParselet($precedence, true));
+        $this->register($tag, new BinaryParselet($precedence, true));
     }
 
     public function _optExpr()

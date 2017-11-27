@@ -26,7 +26,7 @@ use \QuackCompiler\Parser\SyntaxError;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\TernaryExpr;
 use \QuackCompiler\Ast\Expr\NameExpr;
-use \QuackCompiler\Ast\Expr\OperatorExpr;
+use \QuackCompiler\Ast\Expr\BinaryExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\InfixParselet;
@@ -47,7 +47,7 @@ class MemberAccessParselet implements InfixParselet
         } else {
             $right = $grammar->name_parser->_identifier();
         }
-        return new OperatorExpr($left, $token->getTag(), $right);
+        return new BinaryExpr($left, $token->getTag(), $right);
     }
 
     public function getPrecedence()

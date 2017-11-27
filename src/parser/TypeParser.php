@@ -27,7 +27,7 @@ use \QuackCompiler\Ast\Types\ObjectType;
 use \QuackCompiler\Ast\Types\TupleType;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\Parselet;
-use \QuackCompiler\Parselets\Types\BinaryOperatorTypeParselet;
+use \QuackCompiler\Parselets\Types\BinaryTypeParselet;
 use \QuackCompiler\Parselets\Types\FunctionTypeParselet;
 use \QuackCompiler\Parselets\Types\GroupTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
@@ -54,7 +54,7 @@ class TypeParser
         $this->register('#(', new TupleTypeParselet);
         $this->register('%{', new ObjectTypeParselet);
         $this->register('&', new FunctionTypeParselet);
-        $this->register('&', new BinaryOperatorTypeParselet(Precedence::INTERSECTION_TYPE, false));
+        $this->register('&', new BinaryTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
 
     public function _type($precedence = 0)

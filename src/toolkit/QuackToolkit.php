@@ -79,7 +79,7 @@ import(PARSELETS, 'Parselet');
 import(PARSELETS, 'InfixParselet');
 import(PARSELETS, 'PrefixParselet');
 import(PARSELETS, 'expr/PrefixOperatorParselet');
-import(PARSELETS, 'expr/BinaryOperatorParselet');
+import(PARSELETS, 'expr/BinaryParselet');
 import(PARSELETS, 'expr/PostfixOperatorParselet');
 import(PARSELETS, 'expr/TernaryParselet');
 import(PARSELETS, 'expr/GroupParselet');
@@ -99,7 +99,7 @@ import(PARSELETS, 'expr/ObjectParselet');
 import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
-import(PARSELETS, 'types/BinaryOperatorTypeParselet');
+import(PARSELETS, 'types/BinaryTypeParselet');
 import(PARSELETS, 'types/FunctionTypeParselet');
 import(PARSELETS, 'types/GroupTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
@@ -127,7 +127,7 @@ import(PARSER, 'Precedence');
 import(AST, 'Decl');
 import(AST, 'Expr');
 import(AST, 'Stmt');
-import(AST, 'TypeAnnotation');
+import(AST, 'TypeSig');
 
 import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
@@ -142,7 +142,7 @@ import(AST, 'expr/ObjectExpr');
 import(AST, 'expr/NameExpr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');
-import(AST, 'expr/OperatorExpr');
+import(AST, 'expr/BinaryExpr');
 import(AST, 'expr/PostfixExpr');
 import(AST, 'expr/TernaryExpr');
 import(AST, 'expr/StringExpr');
@@ -179,7 +179,7 @@ import(AST, 'types/ListType');
 import(AST, 'types/MapType');
 import(AST, 'types/NameType');
 import(AST, 'types/ObjectType');
-import(AST, 'types/OperatorTypeAnnotation');
+import(AST, 'types/BinaryTypeSig');
 import(AST, 'types/TupleType');
 
 /* Scope */

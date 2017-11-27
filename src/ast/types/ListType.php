@@ -20,13 +20,13 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-use \QuackCompiler\Ast\TypeAnnotation;
+use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\ListTypeRenderer;
 use \QuackCompiler\TypeChecker\ListTypeChecker;
 use \QuackCompiler\Scope\Scope;
 
-class ListType extends TypeNode implements TypeAnnotation
+class ListType extends TypeNode implements TypeSig
 {
     use ListTypeChecker;
     use ListTypeRenderer;

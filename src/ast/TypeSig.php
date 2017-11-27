@@ -20,6 +20,6 @@
  */
 namespace QuackCompiler\Ast;
 
-interface TypeAnnotation
+interface TypeSig
 {
 }

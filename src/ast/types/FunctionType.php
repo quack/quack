@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Ast\Types;
 
-use \QuackCompiler\Ast\TypeAnnotation;
+use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Pretty\Types\FunctionTypeRenderer;
@@ -28,7 +28,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\TypeChecker\FunctionTypeChecker;
 use \QuackCompiler\Types\TypeError;
 
-class FunctionType extends TypeNode implements TypeAnnotation
+class FunctionType extends TypeNode implements TypeSig
 {
     use FunctionTypeChecker;
     use FunctionTypeRenderer;

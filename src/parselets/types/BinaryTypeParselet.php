@@ -18,15 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Parselets\Expr;
+namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Ast\Expr\OperatorExpr;
+use \QuackCompiler\Ast\Types\BinaryTypeSig;
+use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
 
-class BinaryOperatorParselet implements InfixParselet
+class BinaryTypeParselet implements InfixParselet
 {
     public $precedence;
     public $is_right;
@@ -37,10 +36,10 @@ class BinaryOperatorParselet implements InfixParselet
         $this->is_right = $is_right;
     }
 
-    public function parse($grammar, $left, Token $token)
+    public function parse($parser, $left, Token $token)
     {
-        $right = $grammar->_expr($this->precedence - (int) $this->is_right);
-        return new OperatorExpr($left, $token->getTag(), $right);
+        $right = $parser->_type($this->precedence - (int) $this->is_right);
+        return new BinaryTypeSig($left, $token->getTag(), $right);
     }
 
     public function getPrecedence()

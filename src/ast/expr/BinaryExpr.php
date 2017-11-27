@@ -30,7 +30,7 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Types\TypeError;
 
-class OperatorExpr implements Expr
+class BinaryExpr implements Expr
 {
     use Parenthesized;
 
