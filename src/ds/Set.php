@@ -20,9 +20,18 @@
  */
 namespace QuackCompiler\Ds;
 
-class Set
+use \Countable;
+use \Iterator;
+
+class Set implements Countable, Iterator
 {
+    private $position;
     private $keys = [];
+
+    public function __construct()
+    {
+        $this->position = 0;
+    }
 
     public function has($key)
     {
@@ -42,8 +51,33 @@ class Set
         }
     }
 
-    public function toArray()
+    public function count()
     {
-        return $this->keys;
+        return count($this->keys);
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    public function current()
+    {
+        return $this->keys[$this->position];
+    }
+
+    public function key()
+    {
+        return $this->position;
+    }
+
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    public function valid()
+    {
+        return isset($this->keys[$this->position]);
     }
 }

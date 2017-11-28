@@ -38,11 +38,7 @@ class HindleyMilner
 
     public static function occursIn($variable, $types)
     {
-        $list = $types instanceof Set
-            ? $types->toArray()
-            : $types;
-
-        foreach ($list as $subtype) {
+        foreach ($types as $subtype) {
             if (static::occursInType($variable, $subtype)) {
                 return true;
             }
