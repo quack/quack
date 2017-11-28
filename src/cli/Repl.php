@@ -453,7 +453,7 @@ class Repl extends Component
             if (null === $this->state('ast')) {
                 $scope = $this->state('scope');
                 $parser->ast->injectScope($scope);
-                $parser->ast->runTypeChecker();
+                $parser->ast->runTypeChecker($scope);
                 // Save AST in case of success
                 if (!$silent) {
                     $this->console->write($parser->beautify());

@@ -23,7 +23,7 @@ namespace QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Pretty\CliColorizer;
+use \QuackCompiler\Scope\Scope;
 
 class ExprStmt extends Node implements Stmt
 {
@@ -44,13 +44,9 @@ class ExprStmt extends Node implements Stmt
         $this->expr->injectScope($parent_scope);
     }
 
-    public function runTypeChecker()
+    public function runTypeChecker(Scope $scope)
     {
         $type = $this->expr->getType();
-        if ('1' === getenv('QUACK_DEV')) {
-            echo $type->render(new CliColorizer()), PHP_EOL;
-        } else {
-            var_dump((string) $type);
-        }
+        echo $type;
     }
 }

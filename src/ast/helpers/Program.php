@@ -53,10 +53,10 @@ class Program
         }
     }
 
-    public function runTypeChecker()
+    public function runTypeChecker(Scope $scope)
     {
         foreach ($this->stmt_list as $node) {
-            $node->runTypeChecker();
+            $node->runTypeChecker($scope);
         }
     }
 
@@ -69,7 +69,7 @@ class Program
             }
 
             foreach ($ast->stmt_list as $node) {
-                $node->runTypeChecker();
+                $node->runTypeChecker($safe_scope);
             }
 
             $this->stmt_list = array_merge($this->stmt_list, $ast->stmt_list);
