@@ -21,3 +21,6 @@ data Bool
     :- True
     or False
 
+data List(a)
+    :- Nil
+    or Cons(a, List(a))
