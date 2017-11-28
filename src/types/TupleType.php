@@ -20,13 +20,11 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\TupleTypeRenderer;
 use \QuackCompiler\TypeChecker\TupleTypeChecker;
 
 class TupleType extends Type
 {
     use TupleTypeChecker;
-    use TupleTypeRenderer;
 
     public $types;
 

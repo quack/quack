@@ -20,13 +20,11 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\MapTypeRenderer;
 use \QuackCompiler\TypeChecker\MapTypeChecker;
 
 class MapType extends Type
 {
     use MapTypeChecker;
-    use MapTypeRenderer;
 
     public $key;
     public $value;

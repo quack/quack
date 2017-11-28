@@ -20,13 +20,11 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\ListTypeRenderer;
 use \QuackCompiler\TypeChecker\ListTypeChecker;
 
 class ListType extends Type
 {
     use ListTypeChecker;
-    use ListTypeRenderer;
 
     public $type;
 

@@ -20,13 +20,11 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\NameTypeRenderer;
 use \QuackCompiler\TypeChecker\NameTypeChecker;
 
 class NameType extends Type
 {
     use NameTypeChecker;
-    use NameTypeRenderer;
 
     public $name;
     public $values;

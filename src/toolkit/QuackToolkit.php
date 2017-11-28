@@ -39,12 +39,6 @@ function import($module, $file)
 import(PRETTY, 'Colorizer');
 import(PRETTY, 'CliColorizer');
 import(PRETTY, 'Parenthesized');
-import(PRETTY, 'types/FnTypeRenderer');
-import(PRETTY, 'types/NameTypeRenderer');
-import(PRETTY, 'types/ListTypeRenderer');
-import(PRETTY, 'types/MapTypeRenderer');
-import(PRETTY, 'types/ObjectTypeRenderer');
-import(PRETTY, 'types/TupleTypeRenderer');
 
 /* Type checker */
 import(TYPECHECKER, 'FnTypeChecker');

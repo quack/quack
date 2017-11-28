@@ -20,13 +20,11 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\Pretty\Types\ObjectTypeRenderer;
 use \QuackCompiler\TypeChecker\ObjectTypeChecker;
 
 class ObjectType extends Type
 {
     use ObjectTypeChecker;
-    use ObjectTypeRenderer;
 
     public $properties;
 
