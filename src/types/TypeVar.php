@@ -50,7 +50,7 @@ class TypeVar extends Type
     public function __toString()
     {
         if (null !== $this->instance) {
-            return $this->instance;
+            return (string) $this->instance;
         }
 
         return $this->getName();

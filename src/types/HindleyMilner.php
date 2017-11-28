@@ -36,9 +36,13 @@ class HindleyMilner
         return false;
     }
 
-    public static function occursIn($variable, Set $types)
+    public static function occursIn($variable, $types)
     {
-        foreach ($types->toArray() as $subtype) {
+        $list = $types instanceof Set
+            ? $types->toArray()
+            : $types;
+
+        foreach ($list as $subtype) {
             if (static::occursInType($variable, $subtype)) {
                 return true;
             }
@@ -67,7 +71,7 @@ class HindleyMilner
                 } else {
                     return $pruned;
                 }
-            } else if ($pruned instanceof TypeOperator) {
+            } elseif ($pruned instanceof TypeOperator) {
                 return new TypeOperator($pruned->getName(), array_map($freshrec, $pruned->types));
             }
         };
@@ -77,6 +81,27 @@ class HindleyMilner
 
     public function unify(Type $t1, Type $t2)
     {
+        $left = $t1->prune();
+        $right = $t2->prune();
 
+        if ($left instanceof TypeVar) {
+            if ($left !== $right) {
+                if (static::occursInType($left, $right)) {
+                    throw new TypeError('Recursive unification');
+                }
+
+                $left->instance = $right;
+            }
+        } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
+            static::unify($right, $left);
+        } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
+            if ($left->name !== $right->name || count($left->types) !== count($right->types)) {
+                throw new TypeError('Type mismatch: ' . $left . ' != ' . $right);
+            }
+
+            for ($i = 0; $i < count($left->types); $i++) {
+                static::unify($left->types[$i], $right->types[$i]);
+            }
+        }
     }
 }
