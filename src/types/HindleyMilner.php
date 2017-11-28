@@ -20,10 +20,31 @@
  */
 namespace QuackCompiler\Types;
 
+use \QuackCompiler\Ds\Set;
+
 class HindleyMilner
 {
     public static function occursInType($variable, Type $type)
     {
+        $pruned_expr = $type->prune();
+        if ($pruned_expr === $variable) {
+            return true;
+        } else if ($pruned_expr instanceof TypeOperator) {
+            return static::occursIn($variable, $pruned_expr->types);
+        }
 
+        return false;
+    }
+
+    public static function occursIn($variable, Set $types)
+    {
+        return $types->some(function ($subtype) use ($type) {
+            return static::occursInType($variable, $subtype);
+        });
+    }
+
+    public function isGeneric($variable, Set $non_generic)
+    {
+        return !static::occursIn($variable, $non_generic);
     }
 }

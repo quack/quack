@@ -48,6 +48,6 @@ class ExprStmt extends Node implements Stmt
     public function runTypeChecker(Scope $scope)
     {
         $type = $this->expr->analyze($scope, new Set());
-        echo $type;
+        echo $type . PHP_EOL;
     }
 }

@@ -22,8 +22,10 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Types\TypeOperator;
 
 class NumberExpr extends Node implements Expr
 {
@@ -48,11 +50,10 @@ class NumberExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = $parent_scope;
     }
 
-    public function getType()
+    public function analyze($env, Set $non_generic)
     {
-        return $this->scope->getPrimitiveType('Number');
+        return new TypeOperator('Number', []);
     }
 }

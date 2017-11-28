@@ -23,7 +23,7 @@ namespace QuackCompiler\Types;
 class TypeOperator extends Type
 {
     private $name;
-    private $types;
+    public $types;
 
     public function __construct($name, $types)
     {
