@@ -22,13 +22,16 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\FnType;
+use \QuackCompiler\Types\HindleyMilner;
+use \QuackCompiler\Types\TypeVar;
 use \QuackCompiler\Types\TypeError;
 
 class CallExpr extends Node implements Expr
@@ -66,21 +69,16 @@ class CallExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        // TODO: TYP330 for parameter error
-        $called_with_argc = count($this->arguments);
-        $callee = $this->callee->getType();
-        if (!($callee instanceof FunctionType)) {
-            // Element is not callable
-            throw new TypeError(Localization::message('TYP310', [$callee_type]));
-        }
+        $argument = $this->arguments[0];
 
-        if ($called_with_argc > count($callee->parameters)) {
-            // Too many parameters provided to the function. Stop.
-            throw new TypeError(Localization::message('TYP450', [$callee]));
-        }
+        $fn_type = $this->callee->analyze($scope, $non_generic);
+        $arg_type = $argument->analyze($scope, $non_generic);
 
-        return $callee->computeCall($this->arguments);
+        $result_type = new TypeVar();
+        HindleyMilner::unify(new FnType($arg_type, $result_type), $fn_type);
+
+        return $result_type;
     }
 }

@@ -74,4 +74,9 @@ class HindleyMilner
 
         return $freshrec($type);
     }
+
+    public function unify(Type $t1, Type $t2)
+    {
+
+    }
 }
