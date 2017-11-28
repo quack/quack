@@ -20,10 +20,31 @@
  */
 namespace QuackCompiler\Types;
 
-class FnType extends TypeOperator
+class TypeOperator
 {
-    public function __construct($from_type, $to_type)
+    private $name;
+    private $types;
+
+    public function __construct($name, $types)
     {
-        parent::__construct('->', [$from_type, $to_type]);
+        $this->name = $name;
+        $this->types = $types;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function __toString()
+    {
+        switch (count($this->types)) {
+            case 0:
+                return $this->name;
+            case 2:
+                return "({$this->types[0]} {$this->name} {$this->types[1]})";
+            default:
+                return $this->name . ' ' . implode(' ', $this->types);
+        }
     }
 }

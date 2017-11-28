@@ -20,7 +20,39 @@
  */
 namespace QuackCompiler\Types;
 
-class Environment
+class TypeVar
 {
-    public $map = [];
+    private static $next_var_id = 0;
+    private static $next_var_name_code = 96;
+
+    private $id;
+    private $instance;
+    private $name;
+
+    public function __construct()
+    {
+        $this->id = static::$next_var_id;
+        static::$next_var_id++;
+        $this->instance = null;
+        $this->name = null;
+    }
+
+    public function getName()
+    {
+        static::$next_var_name_code++;
+        if (null === $this->name) {
+            $this->name = chr(static::$next_var_name_code);
+        }
+
+        return $this->name;
+    }
+
+    public function __toString()
+    {
+        if (null !== $this->instance) {
+            return $this->instance;
+        }
+
+        return $this->getName();
+    }
 }

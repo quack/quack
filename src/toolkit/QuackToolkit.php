@@ -195,7 +195,8 @@ import(SCOPE, 'Meta');
 import(TYPES, 'Type');
 import(TYPES, 'TypeError');
 
-import(TYPES, 'Environment');
+import(TYPES, 'TypeVar');
+import(TYPES, 'TypeOperator');
 
 import(TYPES, 'FnType');
 import(TYPES, 'GenericType');
