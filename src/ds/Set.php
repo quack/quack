@@ -23,28 +23,27 @@ namespace QuackCompiler\Ds;
 class Set
 {
     private $keys = [];
-    private $length = 0;
 
     public function has($key)
     {
-        return in_array($key, $this->keys, true);
+        foreach ($this->keys as $original_key) {
+            if ($original_key === $key) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function push($key)
     {
         if (!$this->has($key)) {
             $this->keys[] = $key;
-            $this->length++;
         }
     }
 
-    public function map($fn)
+    public function toArray()
     {
-        return array_map($fn, $this->keys);
-    }
-
-    public function some($fn)
-    {
-        return count(array_filter($this->keys, $fn)) > 0;
+        return $this->keys;
     }
 }

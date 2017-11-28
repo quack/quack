@@ -23,11 +23,11 @@ namespace QuackCompiler\Types;
 class TypeVar extends Type
 {
     private static $next_var_id = 0;
-    private static $next_var_name_code = 96;
+    private static $next_var_name_code = 97;
 
-    private $id;
-    private $instance;
-    private $name;
+    public $id;
+    public $instance;
+    public $name;
 
     public function __construct()
     {
@@ -39,9 +39,9 @@ class TypeVar extends Type
 
     public function getName()
     {
-        static::$next_var_name_code++;
         if (null === $this->name) {
             $this->name = chr(static::$next_var_name_code);
+            static::$next_var_name_code++;
         }
 
         return $this->name;

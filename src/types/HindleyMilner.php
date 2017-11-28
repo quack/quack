@@ -38,9 +38,11 @@ class HindleyMilner
 
     public static function occursIn($variable, Set $types)
     {
-        return $types->some(function ($subtype) use ($type) {
-            return static::occursInType($variable, $subtype);
-        });
+        foreach ($types->toArray() as $subtype) {
+            if (static::occursInType($variable, $subtype)) {
+                return true;
+            }
+        }
     }
 
     public function isGeneric($variable, Set $non_generic)
@@ -51,7 +53,7 @@ class HindleyMilner
     public function fresh(Type $type, Set $non_generic)
     {
         $mappings = [];
-        $freshrec = function ($type) use ($non_generic) {
+        $freshrec = function (Type $type) use ($non_generic, &$mappings) {
             $pruned = $type->prune();
             if ($pruned instanceof TypeVar) {
                 if (static::isGeneric($pruned, $non_generic)) {

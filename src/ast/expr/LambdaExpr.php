@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Types\FunctionType;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
@@ -31,7 +31,8 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\GenericType;
+use \QuackCompiler\Types\FnType;
+use \QuackCompiler\Types\TypeVar;
 
 class LambdaExpr extends Node implements Expr
 {
@@ -102,34 +103,22 @@ class LambdaExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = new Scope($parent_scope);
-        foreach ($this->parameters as $param) {
-            if ($this->scope->hasLocal($param->name)) {
-                throw new ScopeError(Localization::message('SCO010', [$param->name]));
-            }
-
-            $this->scope->insert($param->name, Symbol::S_INITIALIZED | Symbol::S_VARIABLE | Symbol::S_PARAMETER);
-            // Use or infer type for parameter and store it
-            $param_type = isset($param->type)
-                ? $param->type
-                : new GenericType();
-
-            $this->argument_types[$param->name] = $param_type;
-            $this->scope->setMeta(Meta::M_TYPE, $param->name, $param_type);
-        }
-
-        $this->body->injectScope($this->scope);
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
-            return new FunctionType(array_map(function($parameter) {
-                return $this->argument_types[$parameter->name];
-            }, $this->parameters), $this->body->getType());
-        }
+        $arg_type = new TypeVar();
+        $new_env = clone $scope;
+        $param = $this->parameters[0];
 
-        // TODO: Must implement return for blocks
-        return null;
+        $new_env->insert($param->name, Symbol::S_VARIABLE);
+        $new_env->setMeta(Meta::M_TYPE, $param->name, $arg_type);
+
+        $new_non_generic = clone $non_generic;
+        $new_non_generic->push($arg_type);
+
+        $result_type = $this->body->analyze($new_env, $new_non_generic);
+
+        return new FnType($arg_type, $result_type);
     }
 }

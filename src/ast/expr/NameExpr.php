@@ -73,10 +73,10 @@ class NameExpr extends Node implements Expr
 
     public function analyze(Scope $scope, $non_generic)
     {
-        return $this->getType($this->name, $scope, $non_generic);
+        return $this->getType($scope, $non_generic);
     }
 
-    public function getType($name, Scope $scope, Set $non_generic)
+    public function getType(Scope $scope, Set $non_generic)
     {
         $symbol = $scope->lookup($this->name);
 
