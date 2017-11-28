@@ -18,36 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ds;
 
-use \QuackCompiler\Ast\Stmt;
-use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ds\Set;
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Scope;
-
-class ExprStmt extends Node implements Stmt
+class Set
 {
-    public $expr;
+    private $keys = [];
+    private $length = 0;
 
-    public function __construct($expr)
+    public function has($key)
     {
-        $this->expr = $expr;
+        return in_array($key, $this->keys, true);
     }
 
-    public function format(Parser $parser)
+    public function push($key)
     {
-        return 'do ' . $this->expr->format($parser) . PHP_EOL;
+        if (!$this->has($key)) {
+            $this->keys[] = $key;
+            $this->length++;
+        }
     }
 
-    public function injectScope($parent_scope)
+    public function map($fn)
     {
-        $this->expr->injectScope($parent_scope);
+        return array_map($fn, $this->keys);
     }
 
-    public function runTypeChecker(Scope $scope)
+    public function some($fn)
     {
-        $type = $this->expr->analyze($scope, new Set());
-        echo $type;
+        return count(array_filter($this->keys, $fn)) > 0;
     }
 }

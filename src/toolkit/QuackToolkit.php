@@ -28,6 +28,7 @@ define('SCOPE', 'scope');
 define('TYPES', 'types');
 define('INTL', 'intl');
 define('CLI', 'cli');
+define('DS', 'ds');
 
 function import($module, $file)
 {
@@ -189,6 +190,9 @@ import(SCOPE, 'Scope');
 import(SCOPE, 'ScopeError');
 import(SCOPE, 'Symbol');
 import(SCOPE, 'Meta');
+
+/* General data structures */
+import(DS, 'Set');
 
 /* Type inference and checking */
 

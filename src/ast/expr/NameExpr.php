@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
@@ -68,11 +69,16 @@ class NameExpr extends Node implements Expr
         }
     }
 
-    public function getType(Scope $scope)
+    public function analyze(Scope $scope, $non_generic)
     {
-        $symbol = $this->scope->lookup($this->name);
+        return $this->getType($this->name, $scope, $non_generic);
+    }
 
-        if ($symbol & Symbol::S_VARIABLE || $symbol & Symbol::S_DATA_MEMBER) {
+    public function getType($name, Scope $scope, Set $non_generic)
+    {
+        $symbol = $scope->lookup($this->name);
+
+        if ($symbol & Symbol::S_VARIABLE) {
             return $this->scope->getMeta(Meta::M_TYPE, $this->name);
         }
 
