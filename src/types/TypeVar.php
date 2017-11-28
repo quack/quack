@@ -55,4 +55,14 @@ class TypeVar
 
         return $this->getName();
     }
+
+    public function prune()
+    {
+        if (null !== $this->instance) {
+            $this->instance = $this->instance->prune();
+            return $this->instance;
+        }
+
+        return $this;
+    }
 }

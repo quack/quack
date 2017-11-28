@@ -47,4 +47,9 @@ class TypeOperator
                 return $this->name . ' ' . implode(' ', $this->types);
         }
     }
+
+    public function prune()
+    {
+        return $this;
+    }
 }
