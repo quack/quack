@@ -28,7 +28,9 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
 
 class NameExpr extends Node implements Expr
@@ -79,7 +81,8 @@ class NameExpr extends Node implements Expr
         $symbol = $scope->lookup($this->name);
 
         if ($symbol & Symbol::S_VARIABLE) {
-            return $this->scope->getMeta(Meta::M_TYPE, $this->name);
+            $type = $scope->getMeta(Meta::M_TYPE, $this->name);
+            return HindleyMilner::fresh($type, $non_generic);
         }
 
         throw new TypeError(Localization::message('TYP190', [$this->name]));

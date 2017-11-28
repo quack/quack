@@ -47,4 +47,27 @@ class HindleyMilner
     {
         return !static::occursIn($variable, $non_generic);
     }
+
+    public function fresh(Type $type, Set $non_generic)
+    {
+        $mappings = [];
+        $freshrec = function ($type) use ($non_generic) {
+            $pruned = $type->prune();
+            if ($pruned instanceof TypeVar) {
+                if (static::isGeneric($pruned, $non_generic)) {
+                    if (!isset($mappings[$pruned->id])) {
+                        $mappings[$pruned->id] = new TypeVar();
+                    }
+
+                    return $mappings[$pruned->id];
+                } else {
+                    return $pruned;
+                }
+            } else if ($pruned instanceof TypeOperator) {
+                return new TypeOperator($pruned->getName(), array_map($freshrec, $pruned->types));
+            }
+        };
+
+        return $freshrec($type);
+    }
 }

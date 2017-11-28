@@ -38,12 +38,13 @@ class Repl extends Component
     public function __construct(Console $console, Croak $croak = null)
     {
         $this->console = $console;
+        $scope = new Scope();
         parent::__construct([
             'line'          => [],
             'column'        => 0,
             'history'       => [],
             'history_index' => 0,
-            'scope'         => new Scope(),
+            'scope'         => $scope,
             'ast'           => null,
             'complete'      => true,
             'command'       => '',
@@ -51,6 +52,9 @@ class Repl extends Component
         ]);
         $this->console = $console;
         $this->croak = $croak;
+        // Testing with primitive types
+        $scope->insert('a', Symbol::S_VARIABLE);
+        $scope->setMeta(Meta::M_TYPE, 'a', new \QuackCompiler\Types\TypeOperator('Eita', []));
     }
 
     private function resetState()
