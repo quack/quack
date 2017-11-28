@@ -46,7 +46,7 @@ class ExprStmt extends Node implements Stmt
 
     public function runTypeChecker(Scope $scope)
     {
-        $type = $this->expr->getType();
+        $type = $this->expr->getType($scope);
         echo $type;
     }
 }

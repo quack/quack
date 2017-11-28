@@ -49,7 +49,6 @@ class NameExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = $parent_scope;
         $symbol = $parent_scope->lookup($this->name);
 
         if (null === $symbol) {
@@ -69,7 +68,7 @@ class NameExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function getType(Scope $scope)
     {
         $symbol = $this->scope->lookup($this->name);
 
