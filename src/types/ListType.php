@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\TypeChecker\ListTypeChecker;
 
-class ListType extends Type
+class ListType
 {
     use ListTypeChecker;
 

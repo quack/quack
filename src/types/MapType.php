@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\TypeChecker\MapTypeChecker;
 
-class MapType extends Type
+class MapType
 {
     use MapTypeChecker;
 

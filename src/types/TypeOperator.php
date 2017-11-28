@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Types;
 
-class TypeOperator
+class TypeOperator extends Type
 {
     private $name;
     private $types;

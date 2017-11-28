@@ -193,6 +193,7 @@ import(DS, 'Set');
 import(TYPES, 'Type');
 import(TYPES, 'TypeError');
 
+import(TYPES, 'HindleyMilner');
 import(TYPES, 'TypeVar');
 import(TYPES, 'TypeOperator');
 

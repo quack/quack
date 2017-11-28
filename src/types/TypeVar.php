@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Types;
 
-class TypeVar
+class TypeVar extends Type
 {
     private static $next_var_id = 0;
     private static $next_var_name_code = 96;

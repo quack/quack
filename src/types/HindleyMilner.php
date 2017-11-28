@@ -20,7 +20,10 @@
  */
 namespace QuackCompiler\Types;
 
-abstract class Type
+class HindleyMilner
 {
+    public static function occursInType($variable, Type $type)
+    {
 
+    }
 }

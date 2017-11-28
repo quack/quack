@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\TypeChecker\NameTypeChecker;
 
-class NameType extends Type
+class NameType
 {
     use NameTypeChecker;
 

@@ -20,7 +20,7 @@
  */
 namespace QuackCompiler\Types;
 
-class GenericType extends Type
+class GenericType
 {
     public $kind;
 

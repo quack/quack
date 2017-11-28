@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\TypeChecker\TupleTypeChecker;
 
-class TupleType extends Type
+class TupleType
 {
     use TupleTypeChecker;
 

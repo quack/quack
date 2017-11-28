@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\TypeChecker\ObjectTypeChecker;
 
-class ObjectType extends Type
+class ObjectType
 {
     use ObjectTypeChecker;
 
