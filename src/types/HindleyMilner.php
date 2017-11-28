@@ -43,6 +43,8 @@ class HindleyMilner
                 return true;
             }
         }
+
+        return false;
     }
 
     public function isGeneric($variable, Set $non_generic)
