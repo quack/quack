@@ -23,16 +23,12 @@ namespace QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ds\Set;
-use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\FnType;
 use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeVar;
-use \QuackCompiler\Types\TypeError;
 
 class CallExpr extends Node implements Expr
 {
