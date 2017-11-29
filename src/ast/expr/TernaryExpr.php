@@ -22,10 +22,13 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
 
 class TernaryExpr extends Node implements Expr
@@ -62,18 +65,23 @@ class TernaryExpr extends Node implements Expr
         $this->else->injectScope($parent_scope);
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        $bool = $this->scope->getPrimitiveType('Bool');
-        $condition = $this->condition->getType();
-        if (!$bool->check($condition)) {
+        $bool = $scope->getPrimitiveType('Bool');
+        $condition = $this->condition->analyze($scope, $non_generic);
+
+        try {
+            HindleyMilner::unify($condition, $bool);
+        } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP240', [$condition]));
         }
 
-        $truthy = $this->then->getType();
-        $falsy = $this->else->getType();
+        $truthy = $this->then->analyze($scope, $non_generic);
+        $falsy = $this->else->analyze($scope, $non_generic);
 
-        if (!$truthy->check($falsy)) {
+        try {
+            HindleyMilner::unify($truthy, $falsy);
+        } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP250', [$truthy, $falsy]));
         }
 
