@@ -21,9 +21,6 @@
 namespace QuackCompiler\Ast\Helpers;
 
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Scope\Symbol;
 
 class DataMember
 {
@@ -47,11 +44,5 @@ class DataMember
         }
 
         return $source;
-    }
-
-    public function injectScope(Scope $outer)
-    {
-        $this->scope = $outer;
-        $this->scope->insert($this->name, Symbol::S_VARIABLE | Symbol::S_DATA_MEMBER);
     }
 }

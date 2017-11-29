@@ -26,8 +26,7 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\GenericType;
-use \QuackCompiler\Types\NameType;
+use \QuackCompiler\Types\TypeOperator;
 use \QuackCompiler\Types\TypeError;
 
 class DataDecl implements Decl
@@ -66,24 +65,14 @@ class DataDecl implements Decl
 
     public function injectScope($parent_scope)
     {
-        // Bind input parameters
-        $this->scope = new Scope($parent_scope);
-        foreach ($this->parameters as $parameter) {
-            $this->scope->insert($parameter, Symbol::S_DATA_PARAM);
-            $this->scope->setMeta(Meta::M_TYPE, $parameter, new GenericType());
-        }
-
-        $this->type = new NameType($this->name, $this->parameters);
-        $parent_scope->insert($this->name, Symbol::S_TYPE | Symbol::S_DATA);
-        $parent_scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
-
-        foreach ($this->values as $value) {
-            $value->injectScope($parent_scope);
-        }
     }
 
-    public function runTypeChecker()
+    public function runTypeChecker(Scope $scope)
     {
-        // Hmmmmm
+        $return_type = new TypeOperator($this->name, []);
+        foreach ($this->values as $value) {
+            $scope->insert($value->name, Symbol::S_VARIABLE);
+            $scope->setMeta(Meta::M_TYPE, $value->name, $return_type);
+        }
     }
 }

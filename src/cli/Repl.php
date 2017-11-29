@@ -269,7 +269,7 @@ class Repl extends Component
 
     private function handleListDefinitions()
     {
-        $context = $this->state('scope')->child;
+        $context = $this->state('scope');
 
         if (0 === count($context->table)) {
             return;
