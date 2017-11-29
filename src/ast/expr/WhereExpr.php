@@ -107,17 +107,20 @@ class WhereExpr extends Node implements Expr
 
     public function analyze(Scope $scope, Set $non_generic)
     {
-        list ($name, $defn) = $this->clauses[0];
-
-        $new_type = new TypeVar();
         $new_env = clone $scope;
-        $new_env->insert($name, Symbol::S_VARIABLE);
-        $new_env->setMeta(Meta::M_TYPE, $name, $new_type);
         $new_non_generic = clone $non_generic;
-        $new_non_generic->push($new_type);
 
-        $defn_type = $defn->analyze($new_env, $new_non_generic);
-        HindleyMilner::unify($new_type, $defn_type);
+        foreach ($this->clauses as $clause) {
+            list ($name, $defn) = $clause;
+
+            $new_type = new TypeVar();
+            $new_env->insert($name, Symbol::S_VARIABLE);
+            $new_env->setMeta(Meta::M_TYPE, $name, $new_type);
+            $new_non_generic->push($new_type);
+
+            $defn_type = $defn->analyze($new_env, $new_non_generic);
+            HindleyMilner::unify($new_type, $defn_type);
+        }
 
         return $this->expr->analyze($new_env, $non_generic);
     }
