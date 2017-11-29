@@ -22,8 +22,10 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
 
 class AtomExpr extends Node implements Expr
 {
@@ -47,8 +49,8 @@ class AtomExpr extends Node implements Expr
         $this->scope = $parent_scope;
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        return $this->scope->getPrimitiveType('Atom');
+        return $scope->getPrimitiveType('Atom');
     }
 }
