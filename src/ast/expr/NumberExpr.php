@@ -25,7 +25,7 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Types\TypeOperator;
+use \QuackCompiler\Scope\Scope;
 
 class NumberExpr extends Node implements Expr
 {
@@ -52,8 +52,8 @@ class NumberExpr extends Node implements Expr
     {
     }
 
-    public function analyze($env, Set $non_generic)
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        return new TypeOperator('Number', []);
+        return $scope->getPrimitiveType('Number');
     }
 }

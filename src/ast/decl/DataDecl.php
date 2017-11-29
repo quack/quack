@@ -70,6 +70,10 @@ class DataDecl implements Decl
     public function runTypeChecker(Scope $scope)
     {
         $return_type = new TypeOperator($this->name, []);
+
+        $scope->insert($this->name, Symbol::S_TYPE);
+        $scope->setMeta(Meta::M_TYPE, $this->name, $return_type);
+
         foreach ($this->values as $value) {
             $scope->insert($value->name, Symbol::S_VARIABLE);
             $scope->setMeta(Meta::M_TYPE, $value->name, $return_type);
