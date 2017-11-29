@@ -20,18 +20,20 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\TypeChecker\MapTypeChecker;
-
-class MapType
+class MapType extends TypeOperator
 {
-    use MapTypeChecker;
-
-    public $key;
-    public $value;
+    private $key;
+    private $value;
 
     public function __construct(Type $key, Type $value)
     {
         $this->key = $key;
         $this->value = $value;
+        parent::__construct('#{}', [$key, $value]);
+    }
+
+    public function __toString()
+    {
+        return "#{{$this->key}: {$this->value}}";
     }
 }

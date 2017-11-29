@@ -42,7 +42,6 @@ import(PRETTY, 'Parenthesized');
 
 /* Type checker */
 import(TYPECHECKER, 'FnTypeChecker');
-import(TYPECHECKER, 'ListTypeChecker');
 import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
