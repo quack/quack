@@ -41,8 +41,6 @@ import(PRETTY, 'CliColorizer');
 import(PRETTY, 'Parenthesized');
 
 /* Type checker */
-import(TYPECHECKER, 'FnTypeChecker');
-import(TYPECHECKER, 'MapTypeChecker');
 import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
 import(TYPECHECKER, 'TupleTypeChecker');
