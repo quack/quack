@@ -22,8 +22,10 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuacKCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
 
 class RegexExpr extends Node implements Expr
 {
@@ -44,11 +46,10 @@ class RegexExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = $parent_scope;
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        return $this->scope->getPrimitiveType('Regex');
+        return $scope->getPrimitiveType('Regex');
     }
 }

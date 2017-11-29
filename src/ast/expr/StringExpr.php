@@ -22,8 +22,10 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
 
 class StringExpr extends Node implements Expr
 {
@@ -49,11 +51,10 @@ class StringExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $this->scope = $parent_scope;
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        return $this->scope->getPrimitiveType('String');
+        return $scope->getPrimitiveType('String');
     }
 }
