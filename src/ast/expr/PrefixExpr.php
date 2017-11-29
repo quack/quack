@@ -22,12 +22,15 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
 
 class PrefixExpr extends Node implements Expr
@@ -59,29 +62,31 @@ class PrefixExpr extends Node implements Expr
         $this->right->injectScope($parent_scope);
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        $right_type = $this->right->getType();
         $op_name = Tag::getOperatorLexeme($this->operator);
+        $right_type = $this->right->analyze($scope, $non_generic);
 
         $type_error = new TypeError(Localization::message('TYP230', [$op_name, $right_type]));
 
         switch ($this->operator) {
             case '+':
             case '-':
-            case '~':
-                if ($right_type->isNumber()) {
-                    return $right_type;
+                $number = $scope->getPrimitiveType('Number');
+                try {
+                    HindleyMilner::unify($right_type, $number);
+                    return $number;
+                } catch (TypeError $error) {
+                    throw $type_error;
                 }
-
-                throw $type_error;
             case Tag::T_NOT:
                 $bool = $this->scope->getPrimitiveType('Bool');
-                if ($bool->check($right_type)) {
-                    return $right_type;
+                try {
+                    HindleyMilner::unify($right_type, $bool);
+                    return $bool;
+                } catch (TypeError $error) {
+                    throw $type_error;
                 }
-
-                throw $type_error;
         }
     }
 }
