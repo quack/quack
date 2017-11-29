@@ -22,10 +22,13 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\ListType;
 use \QuackCompiler\Types\TypeError;
 
@@ -69,31 +72,40 @@ class RangeExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
         $type = (object) [
-            'from' => $this->from->getType(),
-            'to'   => $this->to->getType(),
-            'by'   => null !== $this->by ? $this->by->getType() : null
+            'from' => $this->from->analyze($scope, $non_generic),
+            'to'   => $this->to->analyze($scope, $non_generic),
+            'by'   => null !== $this->by ? $this->by->analyze($scope, $non_generic) : null
         ];
 
+        $number = $scope->getPrimitiveType('Number');
         $throw_error_on = function($operand, $got) {
             throw new TypeError(Localization::message('TYP220', [$operand, $got]));
         };
 
-        if (!$type->from->isNumber()) {
+
+        try {
+            HindleyMilner::unify($type->from, $number);
+        } catch (TypeError $error) {
             $throw_error_on('from', $type->from);
         }
 
-        if (!$type->to->isNumber()) {
+        try {
+            HindleyMilner::unify($type->to, $number);
+        } catch (TypeError $error) {
             $throw_error_on('to', $type->to);
         }
 
-        if (null !== $type->by && !$type->by->isNumber()) {
-            $throw_error_on('by', $type->by);
+        if (null !== $type->by) {
+            try {
+                HindleyMilner::unify($type->by, $number);
+            } catch (TypeError $error) {
+                $throw_error_on('by', $type->by);
+            }
         }
 
-        $number = $this->scope->getPrimitiveType('Number');
         return new ListType($number);
     }
 }
