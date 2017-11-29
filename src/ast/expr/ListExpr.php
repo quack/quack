@@ -22,13 +22,16 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\ListType;
-use \QuackCompiler\Types\GenericType;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\TypeVar;
 
 class ListExpr extends Node implements Expr
 {
@@ -61,22 +64,18 @@ class ListExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        // Empty array, generic type
-        if (0 === count($this->items)) {
-            return new ListType(new GenericType());
-        }
-
-        // Decidable type
-        $subtype = $this->items[0]->getType();
-        foreach (array_slice($this->items, 1) as $item) {
-            $type = $item->getType();
-            if (!$subtype->check($type)) {
-                throw new TypeError(Localization::message('TYP020', [$type, $subtype]));
+        $type = new TypeVar();
+        foreach ($this->items as $item) {
+            $inferred_type = $item->analyze($scope, $non_generic);
+            try {
+                HindleyMilner::unify($type, $inferred_type);
+            } catch (TypeError $error) {
+                throw new TypeError(Localization::message('TYP020', [$inferred_type, $type]));
             }
         }
 
-        return new ListType($subtype);
+        return new ListType($type);
     }
 }

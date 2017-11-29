@@ -20,16 +20,18 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\TypeChecker\ListTypeChecker;
-
-class ListType
+class ListType extends TypeOperator
 {
-    use ListTypeChecker;
-
-    public $type;
+    private $type;
 
     public function __construct($type)
     {
         $this->type = $type;
+        parent::__construct('{}', [$type]);
+    }
+
+    public function __toString()
+    {
+        return "{{$this->type}}";
     }
 }
