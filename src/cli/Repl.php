@@ -52,9 +52,6 @@ class Repl extends Component
         ]);
         $this->console = $console;
         $this->croak = $croak;
-        // Testing with primitive types
-        $scope->insert('a', Symbol::S_VARIABLE);
-        $scope->setMeta(Meta::M_TYPE, 'a', new \QuackCompiler\Types\TypeOperator('Eita', []));
     }
 
     private function resetState()
