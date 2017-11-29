@@ -21,15 +21,18 @@
 namespace QuackCompiler\Ast\Helpers;
 
 use \Exception;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;
 
 class Program
 {
     public $stmt_list;
+    private $non_generic;
 
     public function __construct($stmt_list)
     {
+        $this->non_generic = new Set();
         $this->stmt_list = $stmt_list;
     }
 
@@ -55,21 +58,24 @@ class Program
 
     public function runTypeChecker(Scope $scope)
     {
+        $non_generic = new Set();
         foreach ($this->stmt_list as $node) {
-            $node->runTypeChecker($scope);
+            $node->runTypeChecker($scope, $this->non_generic);
         }
     }
 
     public function attachValidAST($ast)
     {
         $safe_scope = clone $this->scope;
+        $safe_non_generic = clone $this->non_generic;
+
         try {
             foreach ($ast->stmt_list as $node) {
                 $node->injectScope($this->scope);
             }
 
             foreach ($ast->stmt_list as $node) {
-                $node->runTypeChecker($safe_scope);
+                $node->runTypeChecker($safe_scope, $safe_non_generic);
             }
 
             $this->stmt_list = array_merge($this->stmt_list, $ast->stmt_list);

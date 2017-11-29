@@ -45,9 +45,9 @@ class ExprStmt extends Node implements Stmt
         $this->expr->injectScope($parent_scope);
     }
 
-    public function runTypeChecker(Scope $scope)
+    public function runTypeChecker(Scope $scope, Set $non_generic)
     {
-        $type = $this->expr->analyze($scope, new Set());
+        $type = $this->expr->analyze($scope, $non_generic);
         echo $type . PHP_EOL;
     }
 }

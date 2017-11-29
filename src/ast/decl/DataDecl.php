@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
@@ -67,7 +68,7 @@ class DataDecl implements Decl
     {
     }
 
-    public function runTypeChecker(Scope $scope)
+    public function runTypeChecker(Scope $scope, Set $non_generic)
     {
         $return_type = new TypeOperator($this->name, []);
 
