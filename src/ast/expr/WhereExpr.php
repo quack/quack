@@ -22,6 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
@@ -29,6 +30,8 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\HindleyMilner;
+use \QuackCompiler\Types\TypeVar;
 
 class WhereExpr extends Node implements Expr
 {
@@ -102,13 +105,20 @@ class WhereExpr extends Node implements Expr
         $this->expr->injectScope($this->scope);
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        // Infer type for each declaration in this scope
-        foreach ($this->clauses as $clause) {
-            $this->scope->setMeta(Meta::M_TYPE, $clause[0], $clause[1]->getType());
-        }
-        // Retain type based on previous inference.
-        return $this->expr->getType();
+        list ($name, $defn) = $this->clauses[0];
+
+        $new_type = new TypeVar();
+        $new_env = clone $scope;
+        $new_env->insert($name, Symbol::S_VARIABLE);
+        $new_env->setMeta(Meta::M_TYPE, $name, $new_type);
+        $new_non_generic = clone $non_generic;
+        $new_non_generic->push($new_type);
+
+        $defn_type = $defn->analyze($new_env, $new_non_generic);
+        HindleyMilner::unify($new_type, $defn_type);
+
+        return $this->expr->analyze($new_env, $non_generic);
     }
 }
