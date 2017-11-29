@@ -88,7 +88,6 @@ import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/ObjectParselet');
-import(PARSELETS, 'expr/BlockParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
 import(PARSELETS, 'types/BinaryTypeParselet');
@@ -150,7 +149,6 @@ import(AST, 'expr/AtomExpr');
 import(AST, 'expr/PartialFuncExpr');
 import(AST, 'expr/RegexExpr');
 import(AST, 'expr/WhereExpr');
-import(AST, 'expr/BlockExpr');
 import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');

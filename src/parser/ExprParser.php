@@ -38,7 +38,6 @@ use \QuackCompiler\Parselets\Expr\PartialFuncParselet;
 use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
 use \QuackCompiler\Parselets\Expr\ObjectParselet;
-use \QuackCompiler\Parselets\Expr\BlockParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\MatchParselet;
 use \QuackCompiler\Parselets\Parselet;
@@ -71,7 +70,6 @@ class ExprParser
         $this->register('%{', new ObjectParselet);
         $this->register('#{', new MapParselet);
         $this->register('#(', new TupleParselet);
-        $this->register('&{', new BlockParselet);
         $this->register('&', new LambdaParselet);
         $this->register('.', new MemberAccessParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
