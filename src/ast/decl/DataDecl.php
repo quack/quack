@@ -72,7 +72,7 @@ class DataDecl implements Decl
     {
         $return_type = new TypeOperator($this->name, []);
 
-        $scope->insert($this->name, Symbol::S_TYPE);
+        $scope->insert($this->name, Symbol::S_TYPE | Symbol::S_TYPE);
         $scope->setMeta(Meta::M_TYPE, $this->name, $return_type);
 
         foreach ($this->values as $value) {

@@ -22,8 +22,13 @@ namespace QuackCompiler\Ast\TypeSig;
 
 use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\TypeError;
 
 class NameTypeSig extends Node implements TypeSig
 {
@@ -49,5 +54,17 @@ class NameTypeSig extends Node implements TypeSig
         }
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $symbol = $scope->lookup($this->name);
+
+        if (null === $symbol || ~$symbol & Symbol::S_TYPE) {
+            throw new TypeError(Localization::message('TYP120', [$this->name]));
+        }
+
+        $type = $scope->getMeta(Meta::M_TYPE, $this->name);
+        return $type;
     }
 }

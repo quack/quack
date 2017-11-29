@@ -21,11 +21,14 @@
 namespace QuackCompiler\Ast\Decl;
 
 use \QuackCompiler\Ast\Decl;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Types\TypeError;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\HindleyMilner;
+use \QuackCompiler\Types\TypeError;
 
 class LetDecl implements Decl
 {
@@ -77,7 +80,7 @@ class LetDecl implements Decl
         }
     }
 
-    public function runTypeChecker()
+    public function runTypeChecker(Scope $scope, Set $non_generic)
     {
         // TODO: Deal with variable referrencing itself, such as
         // let x :- x. It is "valid" in the context of a function, but not
@@ -89,13 +92,13 @@ class LetDecl implements Decl
         }
 
         if ($this->mutable) {
-            $this->checkMutable();
+            $this->checkMutable($scope, $non_generic);
         } else {
-            $this->checkImmutable();
+            $this->checkImmutable($scope, $non_generic);
         }
     }
 
-    public function checkMutable()
+    public function checkMutable($scope, $non_generic)
     {
         // No value (but we still have type)
         if (null === $this->value) {
@@ -113,10 +116,10 @@ class LetDecl implements Decl
         }
 
         // Got type and value
-        $this->checkTypeAndValue();
+        $this->checkTypeAndValue($scope, $non_generic);
     }
 
-    public function checkImmutable()
+    public function checkImmutable($scope, $non_generic)
     {
         // No value on immutable variable (error)
         if (null === $this->value) {
@@ -130,17 +133,19 @@ class LetDecl implements Decl
             return;
         }
 
-        $this->checkTypeAndValue();
+        $this->checkTypeAndValue($scope, $non_generic);
     }
 
-    public function checkTypeAndValue()
+    public function checkTypeAndValue($scope, $non_generic)
     {
-        // Type and value exist. Check them!
-        $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
-        $inferred_type = $this->value->getType();
-        if (!$this->type->check($inferred_type)) {
+        $expected_type = $this->type->compute($scope);
+        $inferred_type = $this->value->analyze($scope, $non_generic);
+
+        try {
+            HindleyMilner::unify($expected_type, $inferred_type);
+        } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP300', [
-                $this->name, $this->type, $inferred_type
+                $this->name, $expected_type, $inferred_type
             ]));
         }
     }
