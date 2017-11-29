@@ -22,13 +22,16 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
-use \QuackCompiler\Types\GenericType;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\MapType;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\TypeVar;
 
 class MapExpr extends Node implements Expr
 {
@@ -74,6 +77,32 @@ class MapExpr extends Node implements Expr
         foreach ($this->values as $value) {
             $value->injectScope($parent_scope);
         }
+    }
+
+    public function analyze(Scope $scope, Set $non_generic)
+    {
+        $key_type = new TypeVar();
+        $value_type = new TypeVar();
+
+        $size = count($this->keys);
+        for ($i = 0; $i < $size; $i++) {
+            $inferred_key_type = $this->keys[$i]->analyze($scope, $non_generic);
+            $inferred_value_type = $this->values[$i]->analyze($scope, $non_generic);
+
+            try {
+                HindleyMilner::unify($key_type, $inferred_key_type);
+            } catch (TypeError $error) {
+                throw new TypeError(Localization::message('TYP070', [$i, $key_type, $inferred_key_type]));
+            }
+
+            try {
+                HindleyMilner::unify($value_type, $inferred_value_type);
+            } catch (TypeError $error) {
+                throw new TypeError(Localization::message('TYP080', [$i, $value_type, $inferred_value_type]));
+            }
+        }
+
+        return new MapType($key_type, $value_type);
     }
 
     public function getType()
