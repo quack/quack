@@ -41,7 +41,6 @@ import(PRETTY, 'CliColorizer');
 import(PRETTY, 'Parenthesized');
 
 /* Type checker */
-import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
 
 /* Cli */
@@ -195,6 +194,5 @@ import(TYPES, 'FnType');
 import(TYPES, 'GenericType');
 import(TYPES, 'ListType');
 import(TYPES, 'MapType');
-import(TYPES, 'NameType');
 import(TYPES, 'ObjectType');
 import(TYPES, 'TupleType');

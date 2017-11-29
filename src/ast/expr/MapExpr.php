@@ -104,32 +104,4 @@ class MapExpr extends Node implements Expr
 
         return new MapType($key_type, $value_type);
     }
-
-    public function getType()
-    {
-        $size = count($this->keys);
-
-        // Generic type when no initializer provided
-        if (0 === $size) {
-            return new MapType(new GenericType(), new GenericType());
-        }
-
-        $original_key_type = $this->keys[0]->getType();
-        $original_value_type = $this->values[0]->getType();
-
-        for ($i = 1; $i < $size; $i++) {
-            $key_type = $this->keys[$i]->getType();
-            $value_type = $this->values[$i]->getType();
-
-            if (!$original_key_type->check($key_type)) {
-                throw new TypeError(Localization::message('TYP070', [$i, $original_key_type, $key_type]));
-            }
-
-            if (!$original_value_type->check($value_type)) {
-                throw new TypeError(Localization::message('TYP080', [$i, $original_value_type, $value_type]));
-            }
-        }
-
-        return new MapType($original_key_type, $original_value_type);
-    }
 }
