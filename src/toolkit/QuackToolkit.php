@@ -43,7 +43,6 @@ import(PRETTY, 'Parenthesized');
 /* Type checker */
 import(TYPECHECKER, 'NameTypeChecker');
 import(TYPECHECKER, 'ObjectTypeChecker');
-import(TYPECHECKER, 'TupleTypeChecker');
 
 /* Cli */
 import(CLI, 'Component');

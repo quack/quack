@@ -22,8 +22,10 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TupleType;
 
 class TupleExpr extends Node implements Expr
@@ -55,11 +57,11 @@ class TupleExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
         $types = [];
         foreach ($this->items as $item) {
-            $types[] = $item->getType();
+            $types[] = $item->analyze($scope, $non_generic);
         }
 
         return new TupleType(...$types);

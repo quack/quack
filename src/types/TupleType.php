@@ -20,16 +20,19 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\TypeChecker\TupleTypeChecker;
-
-class TupleType
+class TupleType extends TypeOperator
 {
-    use TupleTypeChecker;
-
-    public $types;
-
     public function __construct(...$types)
     {
-        $this->types = $types;
+        parent::__construct('#()', $types);
+    }
+
+    public function __toString()
+    {
+        $result = '#(';
+        $result .= implode(', ', $this->types);
+        $result .= ')';
+
+        return $result;
     }
 }
