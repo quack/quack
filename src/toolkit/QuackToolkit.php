@@ -74,7 +74,7 @@ import(PARSELETS, 'expr/GroupParselet');
 import(PARSELETS, 'expr/LambdaParselet');
 import(PARSELETS, 'expr/ListParselet');
 import(PARSELETS, 'expr/NameParselet');
-import(PARSELETS, 'expr/MemberAccessParselet');
+import(PARSELETS, 'expr/MemberParselet');
 import(PARSELETS, 'expr/CallParselet');
 import(PARSELETS, 'expr/AccessParselet');
 import(PARSELETS, 'expr/RangeParselet');
@@ -148,6 +148,7 @@ import(AST, 'expr/WhereExpr');
 import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');
+import(AST, 'expr/MemberExpr');
 
 import(AST, 'decl/DataDecl');
 import(AST, 'decl/FnShortDecl');

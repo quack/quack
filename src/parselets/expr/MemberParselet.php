@@ -21,17 +21,11 @@
 namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Precedence;
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Parser\SyntaxError;
-use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Ast\Expr\TernaryExpr;
-use \QuackCompiler\Ast\Expr\NameExpr;
-use \QuackCompiler\Ast\Expr\BinaryExpr;
+use \QuackCompiler\Ast\Expr\MemberExpr;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parselets\InfixParselet;
 
-class MemberAccessParselet implements InfixParselet
+class MemberParselet implements InfixParselet
 {
     public function parse($grammar, $left, Token $token)
     {
@@ -47,7 +41,7 @@ class MemberAccessParselet implements InfixParselet
         } else {
             $right = $grammar->name_parser->_identifier();
         }
-        return new BinaryExpr($left, $token->getTag(), $right);
+        return new MemberExpr($left, $right);
     }
 
     public function getPrecedence()
