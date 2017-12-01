@@ -20,16 +20,26 @@
  */
 namespace QuackCompiler\Types;
 
-use \QuackCompiler\TypeChecker\ObjectTypeChecker;
-
-class ObjectType
+class ObjectType extends TypeOperator
 {
-    use ObjectTypeChecker;
+    public $names;
 
-    public $properties;
-
-    public function __construct($properties)
+    public function __construct($names, $types)
     {
-        $this->properties = $properties;
+        $this->names = $names;
+        parent::__construct('%{}', $types);
+    }
+
+    public function __toString()
+    {
+        $pairs = array_combine($this->names, $this->types);
+
+        $result = '%{';
+        $result .= implode(', ', array_map(function ($key) use ($pairs) {
+            return $key . ': ' . $pairs[$key];
+        }, $this->names));
+        $result .= '}';
+
+        return $result;
     }
 }
