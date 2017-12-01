@@ -22,8 +22,13 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\HindleyMilner;
+use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Types\TypeVar;
 
 class MemberExpr extends Node implements Expr
 {
@@ -48,5 +53,15 @@ class MemberExpr extends Node implements Expr
     public function injectScope($outer)
     {
         // Pass
+    }
+
+    public function analyze(Scope $scope, Set $non_generic)
+    {
+        $object_type = $this->object->analyze($scope, $non_generic);
+        $result_type = new TypeVar();
+
+        HindleyMilner::unify(new ObjectType([$this->property], [$result_type]), $object_type);
+
+        return $result_type;
     }
 }
