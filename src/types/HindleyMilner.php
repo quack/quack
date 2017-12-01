@@ -67,8 +67,14 @@ class HindleyMilner
                 } else {
                     return $pruned;
                 }
+            } elseif ($pruned instanceof ObjectType) {
+                return new ObjectType(
+                    $pruned->names,
+                    array_map($freshrec, $pruned->types)
+                );
             } elseif ($pruned instanceof TypeOperator) {
-                return new TypeOperator($pruned->getName(), array_map($freshrec, $pruned->types));
+                $class = get_class($pruned);
+                return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
             }
         };
 
