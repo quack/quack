@@ -55,7 +55,7 @@ class HindleyMilner
     public function fresh(Type $type, Set $non_generic)
     {
         $mappings = [];
-        $freshrec = function (Type $type) use ($non_generic, &$mappings) {
+        $freshrec = function (Type $type) use ($non_generic, &$mappings, &$freshrec) {
             $pruned = $type->prune();
             if ($pruned instanceof TypeVar) {
                 if (static::isGeneric($pruned, $non_generic)) {
