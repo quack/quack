@@ -25,14 +25,12 @@ class Precedence
     const ASSIGNMENT         = 1;
     const WHERE              = 2;
     const PIPELINE           = 3;
-    const MEMBER_ACCESS      = 4;
     const TERNARY            = 5;
     const RANGE              = 7;
     const LOGICAL_OR         = 8;
     const LOGICAL_XOR        = 9;
     const LOGICAL_AND        = 10;
     const BITWISE_OR         = 11;
-    const BITWISE_XOR        = 12;
     const BITWISE_AND        = 13;
     const VALUE_COMPARATOR   = 14;
     const SIZE_COMPARATOR    = 15;
@@ -44,6 +42,7 @@ class Precedence
     const EXPONENT           = 22;
     const CALL               = 23;
     const ACCESS             = 24;
+    const MEMBER_ACCESS      = 25;
     // TODO: Review operators precedence when finish the parser
 
     const INTERSECTION_TYPE  = 1;

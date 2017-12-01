@@ -78,7 +78,6 @@ class ExprParser
 
         $this->prefix('+');
         $this->prefix('-');
-        $this->prefix('^^');
         $this->prefix('*');
         $this->prefix('~');
         $this->prefix(Tag::T_NOT);
@@ -91,8 +90,6 @@ class ExprParser
         $this->infixLeft(Tag::T_AND, Precedence::LOGICAL_AND);
         $this->infixLeft(Tag::T_OR, Precedence::LOGICAL_OR);
         $this->infixLeft(Tag::T_XOR, Precedence::LOGICAL_XOR);
-        $this->infixLeft('|', Precedence::BITWISE_OR);
-        $this->infixLeft('&', Precedence::BITWISE_AND);
         $this->infixLeft('<<', Precedence::BITWISE_SHIFT);
         $this->infixLeft('>>', Precedence::BITWISE_SHIFT);
         $this->infixLeft('=', Precedence::VALUE_COMPARATOR);
