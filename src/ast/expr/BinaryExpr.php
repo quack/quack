@@ -46,20 +46,13 @@ class BinaryExpr extends Node implements Expr
         $this->right = $right;
     }
 
-    private function isMemberAccess()
-    {
-        return '.' === $this->operator;
-    }
-
     public function format(Parser $parser)
     {
-        $blanks = $this->isMemberAccess() ? '' : ' ';
-
         $source = $this->left->format($parser);
-        $source .= $blanks;
+        $source .= ' ';
         $source .= Tag::getOperatorLexeme($this->operator);
-        $source .= $blanks;
-        $source .= $this->isMemberAccess() ? $this->right : $this->right->format($parser);
+        $source .= ' ';
+        $source .= $this->right->format($parser);
 
         return $this->parenthesize($source);
     }
@@ -68,10 +61,7 @@ class BinaryExpr extends Node implements Expr
     {
         $this->scope = $parent_scope;
         $this->left->injectScope($parent_scope);
-
-        if (!$this->isMemberAccess()) {
-            $this->right->injectScope($parent_scope);
-        }
+        $this->right->injectScope($parent_scope);
 
         if (':-' === $this->operator) {
             if ($this->left instanceof NameExpr) {
@@ -117,15 +107,6 @@ class BinaryExpr extends Node implements Expr
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
-
-        if ('.' === $this->operator) {
-            // When member access and the property exists on the left type
-            if ($type->left instanceof ObjectType && isset($type->left->properties[$this->right])) {
-                return $type->left->properties[$this->right];
-            }
-
-            throw new TypeError(Localization::message('TYP090', [$type->left, $type->right]));
-        }
 
         // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
         // scope injection
