@@ -22,13 +22,15 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
 
 class BinaryExpr extends Node implements Expr
@@ -46,20 +48,13 @@ class BinaryExpr extends Node implements Expr
         $this->right = $right;
     }
 
-    private function isMemberAccess()
-    {
-        return '.' === $this->operator;
-    }
-
     public function format(Parser $parser)
     {
-        $blanks = $this->isMemberAccess() ? '' : ' ';
-
         $source = $this->left->format($parser);
-        $source .= $blanks;
+        $source .= ' ';
         $source .= Tag::getOperatorLexeme($this->operator);
-        $source .= $blanks;
-        $source .= $this->isMemberAccess() ? $this->right : $this->right->format($parser);
+        $source .= ' ';
+        $source .= $this->right->format($parser);
 
         return $this->parenthesize($source);
     }
@@ -68,10 +63,7 @@ class BinaryExpr extends Node implements Expr
     {
         $this->scope = $parent_scope;
         $this->left->injectScope($parent_scope);
-
-        if (!$this->isMemberAccess()) {
-            $this->right->injectScope($parent_scope);
-        }
+        $this->right->injectScope($parent_scope);
 
         if (':-' === $this->operator) {
             if ($this->left instanceof NameExpr) {
@@ -108,6 +100,42 @@ class BinaryExpr extends Node implements Expr
         }
     }
 
+    public function analyze(Scope $scope, Set $non_generic)
+    {
+        $op_name = Tag::getOperatorLexeme($this->operator);
+        $native_number = $scope->getPrimitiveType('Number');
+        $native_string = $scope->getPrimitiveType('String');
+        $native_bool = $scope->getPrimitiveType('Bool');
+        $native_regex = $scope->getPrimitiveType('Regex');
+
+        $left_type = $this->left->analyze($scope, $non_generic);
+        $right_type = $this->right->analyze($scope, $non_generic);
+
+        $type_error = new TypeError(Localization::message('TYP110', [$op_name, $left_type, $op_name, $right_type]));
+
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
+        if (in_array($this->operator, $numeric_op, true)) {
+            // TODO: Implement for String. Must make compatible
+            try {
+                HindleyMilner::unify($left_type, $native_number);
+                HindleyMilner::unify($right_type, $native_number);
+                return $native_number;
+            } catch (TypeError $error) {
+                throw $type_error;
+            }
+        }
+
+        if ('=~' === $this->operator) {
+            try {
+                HindleyMilner::unify($left_type, $native_string);
+                HindleyMilner::unify($right_type, $native_regex);
+                return $native_bool;
+            } catch (TypeError $error) {
+                throw $type_error;
+            }
+        }
+    }
+
     public function getType()
     {
         $bool = $this->scope->getPrimitiveType('Bool');
@@ -117,15 +145,6 @@ class BinaryExpr extends Node implements Expr
         ];
 
         $op_name = Tag::getOperatorLexeme($this->operator);
-
-        if ('.' === $this->operator) {
-            // When member access and the property exists on the left type
-            if ($type->left instanceof ObjectType && isset($type->left->properties[$this->right])) {
-                return $type->left->properties[$this->right];
-            }
-
-            throw new TypeError(Localization::message('TYP090', [$type->left, $type->right]));
-        }
 
         // Type-checking for assignment. Don't worry. Left-hand assignment was handled on
         // scope injection
@@ -145,34 +164,11 @@ class BinaryExpr extends Node implements Expr
             return $mutability;
         }
 
-        // Type checking for numeric and string concat operations
-        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
-        if (in_array($this->operator, $numeric_op, true)) {
-            if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return $this->scope->getPrimitiveType('String');
-            }
-
-            if ($type->left->isNumber() && $type->right->isNumber()) {
-                return $this->scope->getPrimitiveType('Number');
-            }
-
-            throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
-        }
-
         // Type checking for equality operators
         $eq_op = ['=', '<>', '>', '>=', '<', '<='];
         if (in_array($this->operator, $eq_op, true)) {
             if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
-            }
-
-            return $bool;
-        }
-
-        // Type checking for string matched by regex
-        if ('=~' === $this->operator) {
-            if (!$type->left->isString() || !$type->right->isRegex()) {
-                throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
             return $bool;

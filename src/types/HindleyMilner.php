@@ -55,7 +55,7 @@ class HindleyMilner
     public function fresh(Type $type, Set $non_generic)
     {
         $mappings = [];
-        $freshrec = function (Type $type) use ($non_generic, &$mappings) {
+        $freshrec = function (Type $type) use ($non_generic, &$mappings, &$freshrec) {
             $pruned = $type->prune();
             if ($pruned instanceof TypeVar) {
                 if (static::isGeneric($pruned, $non_generic)) {
@@ -67,8 +67,14 @@ class HindleyMilner
                 } else {
                     return $pruned;
                 }
+            } elseif ($pruned instanceof ObjectType) {
+                return new ObjectType(
+                    $pruned->names,
+                    array_map($freshrec, $pruned->types)
+                );
             } elseif ($pruned instanceof TypeOperator) {
-                return new TypeOperator($pruned->getName(), array_map($freshrec, $pruned->types));
+                $class = get_class($pruned);
+                return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
             }
         };
 
