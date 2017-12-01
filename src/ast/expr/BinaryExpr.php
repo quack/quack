@@ -105,26 +105,33 @@ class BinaryExpr extends Node implements Expr
         $op_name = Tag::getOperatorLexeme($this->operator);
         $native_number = $scope->getPrimitiveType('Number');
         $native_string = $scope->getPrimitiveType('String');
+        $native_bool = $scope->getPrimitiveType('Bool');
+        $native_regex = $scope->getPrimitiveType('Regex');
 
         $left_type = $this->left->analyze($scope, $non_generic);
         $right_type = $this->right->analyze($scope, $non_generic);
 
+        $type_error = new TypeError(Localization::message('TYP110', [$op_name, $left_type, $op_name, $right_type]));
+
         $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
         if (in_array($this->operator, $numeric_op, true)) {
+            // TODO: Implement for String. Must make compatible
+            try {
+                HindleyMilner::unify($left_type, $native_number);
+                HindleyMilner::unify($right_type, $native_number);
+                return $native_number;
+            } catch (TypeError $error) {
+                throw $type_error;
+            }
+        }
+
+        if ('=~' === $this->operator) {
             try {
                 HindleyMilner::unify($left_type, $native_string);
-                HindleyMilner::unify($right_type, $native_string);
-                return $native_string;
+                HindleyMilner::unify($right_type, $native_regex);
+                return $native_bool;
             } catch (TypeError $error) {
-                try {
-                    HindleyMilner::unify($left_type, $native_number);
-                    HindleyMilner::unify($right_type, $native_number);
-                    return $native_number;
-                } catch (TypeError $error) {
-                    throw new TypeError(
-                        Localization::message('TYP110', [$op_name, $left_type, $op_name, $right_type])
-                    );
-                }
+                throw $type_error;
             }
         }
     }
@@ -162,15 +169,6 @@ class BinaryExpr extends Node implements Expr
         if (in_array($this->operator, $eq_op, true)) {
             if (!$type->left->check($type->right)) {
                 throw new TypeError(Localization::message('TYP130', [$type->left, $op_name, $type->right]));
-            }
-
-            return $bool;
-        }
-
-        // Type checking for string matched by regex
-        if ('=~' === $this->operator) {
-            if (!$type->left->isString() || !$type->right->isRegex()) {
-                throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
             }
 
             return $bool;
