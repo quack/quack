@@ -22,13 +22,15 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
 
 class BinaryExpr extends Node implements Expr
@@ -98,6 +100,35 @@ class BinaryExpr extends Node implements Expr
         }
     }
 
+    public function analyze(Scope $scope, Set $non_generic)
+    {
+        $op_name = Tag::getOperatorLexeme($this->operator);
+        $native_number = $scope->getPrimitiveType('Number');
+        $native_string = $scope->getPrimitiveType('String');
+
+        $left_type = $this->left->analyze($scope, $non_generic);
+        $right_type = $this->right->analyze($scope, $non_generic);
+
+        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
+        if (in_array($this->operator, $numeric_op, true)) {
+            try {
+                HindleyMilner::unify($left_type, $native_string);
+                HindleyMilner::unify($right_type, $native_string);
+                return $native_string;
+            } catch (TypeError $error) {
+                try {
+                    HindleyMilner::unify($left_type, $native_number);
+                    HindleyMilner::unify($right_type, $native_number);
+                    return $native_number;
+                } catch (TypeError $error) {
+                    throw new TypeError(
+                        Localization::message('TYP110', [$op_name, $left_type, $op_name, $right_type])
+                    );
+                }
+            }
+        }
+    }
+
     public function getType()
     {
         $bool = $this->scope->getPrimitiveType('Bool');
@@ -124,20 +155,6 @@ class BinaryExpr extends Node implements Expr
             $mutability = $this->scope->getPrimitiveType('Mutability');
             $mutability->parameters = [$type->left];
             return $mutability;
-        }
-
-        // Type checking for numeric and string concat operations
-        $numeric_op = ['+', '-', '*', '**', '/', '>>', '<<', Tag::T_MOD];
-        if (in_array($this->operator, $numeric_op, true)) {
-            if ('+' === $this->operator && $type->left->isString() && $type->right->isString()) {
-                return $this->scope->getPrimitiveType('String');
-            }
-
-            if ($type->left->isNumber() && $type->right->isNumber()) {
-                return $this->scope->getPrimitiveType('Number');
-            }
-
-            throw new TypeError(Localization::message('TYP110', [$op_name, $type->left, $op_name, $type->right]));
         }
 
         // Type checking for equality operators
