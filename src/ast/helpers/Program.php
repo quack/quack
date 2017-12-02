@@ -49,7 +49,7 @@ class Program
 
     public function injectScope($parent_scope)
     {
-        $this->scope = new Scope($parent_scope);
+        $this->scope = $parent_scope;
 
         foreach ($this->stmt_list as $node) {
             $node->injectScope($this->scope);

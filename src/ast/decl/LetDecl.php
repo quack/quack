@@ -128,7 +128,7 @@ class LetDecl implements Decl
 
         // No type declared. The compiler will infer
         if (null === $this->type) {
-            $type = $this->value->getType();
+            $type = $this->value->analyze($scope, $non_generic);
             $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
             return;
         }
