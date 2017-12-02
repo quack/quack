@@ -22,12 +22,14 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Types\ObjectType;
 
 class ObjectExpr extends Node implements Expr
 {
@@ -92,13 +94,12 @@ class ObjectExpr extends Node implements Expr
         }
     }
 
-    public function getType()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        $properties = [];
-        for ($i = 0, $size = count($this->keys); $i < $size; $i++) {
-            $properties[$this->keys[$i]] = $this->values[$i]->getType();
-        }
+        $values = array_map(function ($expr) use ($scope, $non_generic) {
+            return $expr->analyze($scope, $non_generic);
+        }, $this->values);
 
-        return new ObjectType($properties);
+        return new ObjectType(array_combine($this->keys, $values));
     }
 }

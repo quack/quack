@@ -22,22 +22,17 @@ namespace QuackCompiler\Types;
 
 class ObjectType extends TypeOperator
 {
-    public $names;
-
-    public function __construct($names, $types)
+    public function __construct($types)
     {
-        $this->names = $names;
         parent::__construct('%{}', $types);
     }
 
     public function __toString()
     {
-        $pairs = array_combine($this->names, $this->types);
-
         $result = '%{';
-        $result .= implode(', ', array_map(function ($key) use ($pairs) {
-            return $key . ': ' . $pairs[$key];
-        }, $this->names));
+        $result .= implode(', ', array_map(function ($key) {
+            return $key . ': ' . $this->types[$key];
+        }, array_keys($this->types)));
         $result .= '}';
 
         return $result;

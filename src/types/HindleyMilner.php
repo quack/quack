@@ -67,11 +67,6 @@ class HindleyMilner
                 } else {
                     return $pruned;
                 }
-            } elseif ($pruned instanceof ObjectType) {
-                return new ObjectType(
-                    $pruned->names,
-                    array_map($freshrec, $pruned->types)
-                );
             } elseif ($pruned instanceof TypeOperator) {
                 $class = get_class($pruned);
                 return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
@@ -96,6 +91,8 @@ class HindleyMilner
             }
         } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
             static::unify($right, $left);
+        } elseif ($left instanceof ObjectType && $right instanceof ObjectType) {
+            var_dump($left, $right);
         } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
             if ($left->name !== $right->name || count($left->types) !== count($right->types)) {
                 throw new TypeError('Type mismatch: ' . $left . ' != ' . $right);

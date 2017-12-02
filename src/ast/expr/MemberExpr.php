@@ -60,7 +60,7 @@ class MemberExpr extends Node implements Expr
         $object_type = $this->object->analyze($scope, $non_generic);
         $result_type = new TypeVar();
 
-        HindleyMilner::unify(new ObjectType([$this->property], [$result_type]), $object_type);
+        HindleyMilner::unify(new ObjectType([$this->property => $result_type]), $object_type);
 
         return $result_type;
     }
