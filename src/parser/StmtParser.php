@@ -24,7 +24,6 @@ use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Helpers\Elif;
 use \QuackCompiler\Ast\Helpers\Program;
-use \QuackCompiler\Ast\Stmt\BlockStmt;
 use \QuackCompiler\Ast\Stmt\BreakStmt;
 use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
@@ -48,7 +47,7 @@ class StmtParser
     {
         static $stmt_list = [
             Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
-            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_BEGIN, Tag::T_FN, '^', '[',
+            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_FN, '^', '[',
             Tag::T_TYPE, Tag::T_DATA
         ];
 
@@ -91,7 +90,6 @@ class StmtParser
             Tag::T_FOREACH  => '_foreachStmt',
             Tag::T_BREAK    => '_breakStmt',
             Tag::T_CONTINUE => '_continueStmt',
-            Tag::T_BEGIN    => '_blockStmt',
             '^'             => '_returnStmt',
             '['             => '_labelStmt'
         ];
@@ -126,16 +124,7 @@ class StmtParser
         return new ExprStmt($expr);
     }
 
-    public function _blockStmt()
-    {
-        $this->reader->match(Tag::T_BEGIN);
-        $body = $this->_stmtList();
-        $this->reader->match(Tag::T_END);
-
-        return new BlockStmt($body);
-    }
-
-    public function _ifStmt()
+   public function _ifStmt()
     {
         $this->reader->match(Tag::T_IF);
         $condition = $this->expr_parser->_expr();

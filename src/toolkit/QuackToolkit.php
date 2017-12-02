@@ -150,7 +150,6 @@ import(AST, 'decl/FnShortDecl');
 import(AST, 'decl/LetDecl');
 import(AST, 'decl/TypeDecl');
 
-import(AST, 'stmt/BlockStmt');
 import(AST, 'stmt/BreakStmt');
 import(AST, 'stmt/ContinueStmt');
 import(AST, 'stmt/ExprStmt');
