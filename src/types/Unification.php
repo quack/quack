@@ -92,6 +92,10 @@ class Unification
                 } else {
                     return $pruned;
                 }
+            } elseif ($pruned instanceof RecordConstraint) {
+                $record = new RecordConstraint(array_map($freshrec, $pruned->types));
+                $record->origin = $pruned;
+                return $record;
             } elseif ($pruned instanceof RecordType) {
                 // Preserve record names and reference old expression
                 $record = new RecordType(array_map($freshrec, $pruned->types));
@@ -120,6 +124,10 @@ class Unification
             }
 
             $left->instance = $right;
+        }
+
+        elseif ($left instanceof RecordConstraint && $right instanceof RecordConstraint) {
+            static::fuse($left, $right);
         }
 
         elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
