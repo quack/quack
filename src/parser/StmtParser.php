@@ -20,7 +20,6 @@
  */
 namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Helpers\Elif;
 use \QuackCompiler\Ast\Helpers\Program;
@@ -33,6 +32,7 @@ use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\TypeStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
+use \QuackCompiler\Lexer\Tag;
 
 class StmtParser
 {

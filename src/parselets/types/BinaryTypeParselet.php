@@ -21,9 +21,9 @@
 namespace QuackCompiler\Parselets\Types;
 
 use \QuackCompiler\Ast\TypeSig\BinaryTypeSig;
-use \QuackCompiler\Parser\TypeParser;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
+use \QuackCompiler\Parser\TypeParser;
 
 class BinaryTypeParselet implements InfixParselet
 {

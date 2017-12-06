@@ -20,11 +20,11 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\PostfixExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
+use \QuackCompiler\Parser\Grammar;
 
 class PostfixOperatorParselet implements InfixParselet
 {

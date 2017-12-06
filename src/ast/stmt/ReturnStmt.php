@@ -20,8 +20,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
 
 class ReturnStmt extends Node implements Stmt

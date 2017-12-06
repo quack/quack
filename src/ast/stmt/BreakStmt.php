@@ -20,13 +20,13 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Symbol;
 
 class BreakStmt extends Node implements Stmt
 {

@@ -27,10 +27,10 @@ use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\FnType;
 use \QuackCompiler\Types\TypeVar;
 

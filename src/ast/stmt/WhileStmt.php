@@ -20,8 +20,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;

@@ -21,10 +21,10 @@
 namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Ast\Expr\MatchExpr;
-use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Parser\Grammar;
 
 class MatchParselet implements PrefixParselet
 {

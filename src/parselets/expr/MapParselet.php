@@ -20,10 +20,10 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\MapExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
+use \QuackCompiler\Parser\Grammar;
 
 class MapParselet implements PrefixParselet
 {

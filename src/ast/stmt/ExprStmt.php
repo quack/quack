@@ -20,8 +20,8 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Scope;

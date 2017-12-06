@@ -20,15 +20,15 @@
  */
 namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Lexer\Tag;
-use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Ast\Decl\FnShortDecl;
 use \QuackCompiler\Ast\Decl\DataDecl;
+use \QuackCompiler\Ast\Decl\FnShortDecl;
 use \QuackCompiler\Ast\Decl\LetDecl;
 use \QuackCompiler\Ast\Decl\TypeDecl;
 use \QuackCompiler\Ast\Helpers\DataMember;
 use \QuackCompiler\Ast\Helpers\Param;
 use \QuackCompiler\Ast\Stmt\FnStmt;
+use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
 
 class DeclParser
 {

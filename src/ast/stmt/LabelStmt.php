@@ -20,12 +20,12 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Symbol;
 
 class LabelStmt extends Node implements Stmt
 {

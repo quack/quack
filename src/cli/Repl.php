@@ -21,13 +21,13 @@
 namespace QuackCompiler\Cli;
 
 use \Exception;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Lexer\Tokenizer;
 use \QuackCompiler\Parser\EOFError;
 use \QuackCompiler\Parser\TokenReader;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Scope\Symbol;
 
 class Repl extends Component
 {

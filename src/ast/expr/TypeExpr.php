@@ -25,8 +25,8 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
 
 class TypeExpr extends Node implements Expr

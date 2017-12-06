@@ -20,15 +20,14 @@
  */
 namespace QuackCompiler\Ast\Stmt;
 
-use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Ast\Node;
-
+use \QuackCompiler\Ast\Stmt;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\ListType;
 use \QuackCompiler\Types\MapType;
 use \QuackCompiler\Types\TypeError;

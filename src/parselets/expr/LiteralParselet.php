@@ -20,10 +20,10 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\NumberExpr;
-use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Ast\Expr\AtomExpr;
+use \QuackCompiler\Ast\Expr\NumberExpr;
 use \QuackCompiler\Ast\Expr\RegexExpr;
+use \QuackCompiler\Ast\Expr\StringExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;

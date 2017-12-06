@@ -22,7 +22,7 @@ namespace QuackCompiler\Ast\Expr;
 
 use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuacKCompiler\Ds\Set;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;

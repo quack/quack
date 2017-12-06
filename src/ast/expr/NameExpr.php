@@ -26,10 +26,10 @@ use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
-use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
+use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Types\Unification;
 

@@ -28,9 +28,9 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\Unification;
 use \QuackCompiler\Types\ListType;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
 class RangeExpr extends Node implements Expr
 {

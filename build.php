@@ -166,6 +166,19 @@ function minify($source, $pure_identifiers)
         $result .= $value;
     }
 
+    // Check "use" order
+    $expecting = $use;
+    sort($expecting);
+
+    foreach ($expecting as $key => $value) {
+        if ($value !== $use[$key]) {
+            echo '`use\' should be sorted alphabetically. Stop!';
+            print_r($expecting);
+            exit(1);
+        }
+    }
+
+
     if ($namespace === '') {
         $namespace = 'Main';
     }
@@ -252,6 +265,8 @@ function bundle($config)
     }
 
     $output_path = $bundle['directory'] . '/' . $bundle['filename'];
+    echo 'ok';
+    exit;
     file_put_contents($output_path, implode(' ', $contents));
 }
 
@@ -434,10 +449,8 @@ $bundle_settings = [
         new ResourceDir('src/parselets/expr'),
         new ResourceDir('src/parselets/types'),
         new ResourceDir('src/parser'),
-        new ResourceFile('src/ast/Node.php'),
         new ResourceDir('src/ast/expr'),
         new ResourceDir('src/ast/stmt'),
-        new ResourceDir('src/ast/types'),
         new ResourceDir('src/scope'),
         new ResourceDir('src/types'),
         new ResourceFile('src/cli/Component.php'),
@@ -446,108 +459,6 @@ $bundle_settings = [
         new ResourceFile('src/Main.php')
     ],
     'pure_identifiers' => [
-        'QuackCompiler',
-        'Scope',
-        'Types',
-        'Ast',
-        'Localization',
-        'Parser',
-        'Tokenizer',
-        'TokenReader',
-        'NativeQuackType',
-        'parenthesize',
-        'Attachable',
-        'Parselet',
-        'GroupTypeParselet',
-        'LambdaParselet',
-        'Intl',
-        'StmtList',
-        'Token',
-        'Word',
-        'PostConditionalStmt',
-        'injectScope',
-        'Expr',
-        'getPrecedence',
-        'OperatorType',
-        'BinaryOperatorParselet',
-        'InfixParselet',
-        'PrefixParselet',
-        'reserve',
-        'Tag',
-        'Meta',
-        'Stmt',
-        'SyntaxError',
-        'TypeError',
-        'ScopeError',
-        'format',
-        'closeScope',
-        'openScope',
-        'LiteralType',
-        'Parselets',
-        'infixLeft',
-        'consume',
-        'indent',
-        'getMeta',
-        'setMeta',
-        'readChar',
-        'tryMatch',
-        'consumeIf',
-        '_expr',
-        'NumberExpr',
-        'Grammar',
-        'parse',
-        '_innerStmtList',
-        '_identifier',
-        'BinaryOperatorTypeParselet',
-        'ObjectType',
-        'getTag',
-        'FunctionType',
-        'getType',
-        'Lexer',
-        'isBoolean',
-        'Precedence',
-        'register',
-        'getContent',
-        'consumeAndFetch',
-        'StringExpr',
-        'isEnd',
-        'match',
-        'runTypeChecker',
-        'TYPE_EXPRESSION',
-        'TYPE_STATEMENT',
-        'ListType',
-        'isString',
-        'isNumber',
-        'getOperatorLexeme',
-        'Symbol',
-        'GenericType',
-        'RegexExpr',
-        'ObjectParselet',
-        'WhenExpr',
-        'OperatorExpr',
-        'infixParseletForToken',
-        'LiteralParselet',
-        'EOFError',
-        'MapType',
-        'FunctionTypeParselet',
-        'LiteralTypeParselet',
-        'BlockParselet',
-        'AtomExpr',
-        'WhereExpr',
-        'PostfixOperatorParselet',
-        'MemberAccessParselet',
-        'FnSignatureStmt',
-        'NameParselet',
-        'CallExpr',
-        'BlockExpr',
-        'LetStmt',
-        'PrefixOperatorParselet',
-        'TernaryParselet',
-        'GroupParselet',
-        'RangeParselet',
-        'PartialFuncParselet',
-        'TupleType',
-        'TernaryExpr'
     ]
 ];
 

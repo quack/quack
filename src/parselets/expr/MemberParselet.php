@@ -20,10 +20,10 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Precedence;
 use \QuackCompiler\Ast\Expr\MemberExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
+use \QuackCompiler\Parser\Precedence;
 
 class MemberParselet implements InfixParselet
 {

@@ -20,13 +20,13 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Parser\Precedence;
-use \QuackCompiler\Parser\Grammar;
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\TernaryExpr;
-use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Lexer\Tag;
+use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\InfixParselet;
+use \QuackCompiler\Parser\Grammar;
+use \QuackCompiler\Parser\Precedence;
 
 class TernaryParselet implements InfixParselet
 {
