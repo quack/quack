@@ -65,6 +65,15 @@ class Unification
         $right->origin->types = $fields;
     }
 
+    private static function decompose(RecordType $actual, RecordType $expected)
+    {
+        $missing = array_diff(array_keys($expected->types), array_keys($actual->types));
+        if (count($missing) > 0) {
+            list ($property) = $missing;
+            throw new TypeError('Missing property ' . $property);
+        }
+    }
+
     public function fresh(Type $type, Set $non_generic)
     {
         $mappings = [];
@@ -85,6 +94,9 @@ class Unification
                 $record = new RecordType(array_map($freshrec, $pruned->types));
                 $record->origin = $pruned;
                 return $record;
+            } elseif ($pruned instanceof FnType) {
+                list ($from, $to) = $pruned->types;
+               return new FnType($from, $to);
             } elseif ($pruned instanceof TypeOperator) {
                 $class = get_class($pruned);
                 return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
@@ -108,6 +120,11 @@ class Unification
         } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
             static::unify($right, $left);
         } elseif ($left instanceof RecordType && $right instanceof RecordType) {
+            // When the origins of the types are themselves, ensure everything is OK
+            if ($left->origin === $left && $right->origin === $right) {
+                static::decompose($left, $right);
+            }
+
             static::fuse($left, $right);
         } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
             if ($left->name !== $right->name || count($left->types) !== count($right->types)) {

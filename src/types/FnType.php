@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 class FnType extends TypeOperator
 {
-    public function __construct($from_type, $to_type)
+    public function __construct(Type $from_type, Type $to_type)
     {
         parent::__construct('->', [$from_type, $to_type]);
     }

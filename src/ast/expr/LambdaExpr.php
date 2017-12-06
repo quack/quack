@@ -107,7 +107,7 @@ class LambdaExpr extends Node implements Expr
 
     public function analyze(Scope $scope, Set $non_generic)
     {
-        $new_env = clone $scope;
+        $new_env = new Scope($scope);
         $new_non_generic = clone $non_generic;
 
         $parameters = [];
