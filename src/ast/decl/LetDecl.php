@@ -133,6 +133,8 @@ class LetDecl implements Decl
             return;
         }
 
+        $type = $this->type->compute($scope);
+        $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
         $this->checkTypeAndValue($scope, $non_generic);
     }
 

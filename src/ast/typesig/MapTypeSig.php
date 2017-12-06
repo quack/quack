@@ -24,6 +24,8 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\MapType;
 
 class MapTypeSig extends Node implements TypeSig
 {
@@ -47,5 +49,13 @@ class MapTypeSig extends Node implements TypeSig
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $key_type = $this->key->compute($scope);
+        $value_type = $this->value->compute($scope);
+
+        return new MapType($key_type, $value_type);
     }
 }

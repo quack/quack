@@ -64,7 +64,6 @@ class NameTypeSig extends Node implements TypeSig
             throw new TypeError(Localization::message('TYP120', [$this->name]));
         }
 
-        $type = $scope->getMeta(Meta::M_TYPE, $this->name);
-        return $type;
+        return $scope->getMeta(Meta::M_TYPE, $this->name);
     }
 }

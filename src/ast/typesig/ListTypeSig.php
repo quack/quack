@@ -24,6 +24,8 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\ListType;
 
 class ListTypeSig extends Node implements TypeSig
 {
@@ -43,5 +45,11 @@ class ListTypeSig extends Node implements TypeSig
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $type = $this->type->compute($scope);
+        return new ListType($type);
     }
 }

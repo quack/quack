@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 class ListType extends TypeOperator
 {
-    private $type;
+    public $type;
 
     public function __construct($type)
     {

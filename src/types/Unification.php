@@ -104,6 +104,12 @@ class Unification
             } elseif ($pruned instanceof FnType) {
                 list ($from, $to) = $pruned->types;
                 return new FnType($from, $to);
+            } elseif ($pruned instanceof MapType) {
+                return new MapType($freshrec($pruned->key), $freshrec($pruned->value));
+            } elseif ($pruned instanceof ListType) {
+                return new ListType($freshrec($pruned->type));
+            } elseif ($pruned instanceof TupleType) {
+                return new TupleType(...array_map($freshrec, $pruned->types));
             } elseif ($pruned instanceof TypeOperator) {
                 $class = get_class($pruned);
                 return new $class($pruned->getName(), array_map($freshrec, $pruned->types));

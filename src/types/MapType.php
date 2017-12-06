@@ -22,8 +22,8 @@ namespace QuackCompiler\Types;
 
 class MapType extends TypeOperator
 {
-    private $key;
-    private $value;
+    public $key;
+    public $value;
 
     public function __construct(Type $key, Type $value)
     {
