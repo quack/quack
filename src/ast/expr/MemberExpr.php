@@ -26,6 +26,7 @@ use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\Constraints\RecordConstraint;
 use \QuackCompiler\Types\RecordType;
 use \QuackCompiler\Types\TypeVar;
 use \QuackCompiler\Types\Unification;
@@ -57,10 +58,10 @@ class MemberExpr extends Node implements Expr
 
     public function analyze(Scope $scope, Set $non_generic)
     {
-        $object_type = $this->object->analyze($scope, $non_generic);
+        $record_type = $this->object->analyze($scope, $non_generic);
         $result_type = new TypeVar();
 
-        Unification::unify(new RecordType([$this->property => $result_type]), $object_type);
+        Unification::unify(new RecordConstraint([$this->property => $result_type]), $record_type);
 
         return $result_type;
     }

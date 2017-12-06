@@ -193,3 +193,5 @@ import(TYPES, 'ListType');
 import(TYPES, 'MapType');
 import(TYPES, 'RecordType');
 import(TYPES, 'TupleType');
+
+import(TYPES, 'constraints/RecordConstraint');

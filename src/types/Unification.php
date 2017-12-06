@@ -21,6 +21,7 @@
 namespace QuackCompiler\Types;
 
 use \QuackCompiler\Ds\Set;
+use \QuackCompiler\Types\Constraints\RecordConstraint;
 
 class Unification
 {
@@ -65,11 +66,11 @@ class Unification
         $right->origin->types = $fields;
     }
 
-    private static function decompose(RecordType $actual, RecordType $expected)
+    private static function decompose(RecordType $actual, RecordConstraint $constraint)
     {
-        $missing = array_diff(array_keys($expected->types), array_keys($actual->types));
+        $missing = array_diff(array_keys($constraint->types), array_keys($actual->types));
         if (count($missing) > 0) {
-            list ($property) = $missing;
+            $property = $missing[0];
             throw new TypeError('Missing property ' . $property);
         }
     }
@@ -89,6 +90,8 @@ class Unification
                 } else {
                     return $pruned;
                 }
+            } elseif ($pruned instanceof RecordConstraint) {
+                return new RecordConstraint(array_map($freshrec, $pruned->types));
             } elseif ($pruned instanceof RecordType) {
                 // Preserve record names and reference old expression
                 $record = new RecordType(array_map($freshrec, $pruned->types));
@@ -117,16 +120,25 @@ class Unification
             }
 
             $left->instance = $right;
-        } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
-            static::unify($right, $left);
-        } elseif ($left instanceof RecordType && $right instanceof RecordType) {
-            // When the origins of the types are themselves, ensure everything is OK
-            if ($left->origin === $left && $right->origin === $right) {
-                static::decompose($left, $right);
-            }
+        }
 
+        elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
+            static::unify($right, $left);
+        }
+
+        elseif ($left instanceof RecordConstraint && $right instanceof RecordType) {
+            static::unify($right, $left);
+        }
+
+        elseif ($left instanceof RecordType && $right instanceof RecordConstraint) {
+            static::decompose($left, $right);
+        }
+
+        elseif ($left instanceof RecordType && $right instanceof RecordType) {
             static::fuse($left, $right);
-        } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
+        }
+
+        elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
             if ($left->name !== $right->name || count($left->types) !== count($right->types)) {
                 throw new TypeError('Type mismatch: ' . $left . ' != ' . $right);
             }

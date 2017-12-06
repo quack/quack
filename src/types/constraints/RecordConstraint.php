@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Types;
+namespace QuackCompiler\Types\Constraints;
 
-abstract class Type
+use \QuackCompiler\Types\RecordType;
+
+class RecordConstraint extends RecordType
 {
-    public $constraints = [];
 }
