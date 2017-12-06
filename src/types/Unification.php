@@ -92,8 +92,6 @@ class Unification
                 } else {
                     return $pruned;
                 }
-            } elseif ($pruned instanceof RecordConstraint) {
-                return new RecordConstraint(array_map($freshrec, $pruned->types));
             } elseif ($pruned instanceof RecordType) {
                 // Preserve record names and reference old expression
                 $record = new RecordType(array_map($freshrec, $pruned->types));
