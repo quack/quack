@@ -37,7 +37,7 @@ use \QuackCompiler\Parselets\Expr\RangeParselet;
 use \QuackCompiler\Parselets\Expr\PartialFuncParselet;
 use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
-use \QuackCompiler\Parselets\Expr\ObjectParselet;
+use \QuackCompiler\Parselets\Expr\RecordParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\MatchParselet;
 use \QuackCompiler\Parselets\Parselet;
@@ -67,7 +67,7 @@ class ExprParser
         $this->register('(', new CallParselet);
         $this->register('{', new ListParselet);
         $this->register('{', new AccessParselet);
-        $this->register('%{', new ObjectParselet);
+        $this->register('%{', new RecordParselet);
         $this->register('#{', new MapParselet);
         $this->register('#(', new TupleParselet);
         $this->register('&', new LambdaParselet);

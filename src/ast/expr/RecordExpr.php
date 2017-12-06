@@ -29,9 +29,9 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\ObjectType;
+use \QuackCompiler\Types\RecordType;
 
-class ObjectExpr extends Node implements Expr
+class RecordExpr extends Node implements Expr
 {
     use Parenthesized;
 
@@ -100,6 +100,6 @@ class ObjectExpr extends Node implements Expr
             return $expr->analyze($scope, $non_generic);
         }, $this->values);
 
-        return new ObjectType(array_combine($this->keys, $values));
+        return new RecordType(array_combine($this->keys, $values));
     }
 }

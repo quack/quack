@@ -21,11 +21,11 @@
 namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Ast\Expr\ObjectExpr;
+use \QuackCompiler\Ast\Expr\RecordExpr;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class ObjectParselet implements PrefixParselet
+class RecordParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
@@ -33,7 +33,7 @@ class ObjectParselet implements PrefixParselet
         $values = [];
 
         if ($grammar->reader->consumeIf('}')) {
-            return new ObjectExpr([], []);
+            return new RecordExpr([], []);
         }
 
         do {
@@ -55,6 +55,6 @@ class ObjectParselet implements PrefixParselet
         } while ($grammar->reader->consumeIf(','));
 
         $grammar->reader->match('}');
-        return new ObjectExpr($keys, $values);
+        return new RecordExpr($keys, $values);
     }
 }

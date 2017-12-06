@@ -20,11 +20,11 @@
  */
 namespace QuackCompiler\Parselets\Types;
 
-use \QuackCompiler\Ast\TypeSig\ObjectTypeSig;
+use \QuackCompiler\Ast\TypeSig\RecordTypeSig;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
 
-class ObjectTypeParselet implements PrefixParselet
+class RecordTypeParselet implements PrefixParselet
 {
     public function parse($grammar, Token $token)
     {
@@ -49,6 +49,6 @@ class ObjectTypeParselet implements PrefixParselet
         }
         $grammar->reader->match('}');
 
-        return new ObjectTypeSig($properties);
+        return new RecordTypeSig($properties);
     }
 }

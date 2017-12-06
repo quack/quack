@@ -18,34 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\TypeSig;
+namespace QuackCompiler\Types;
 
-use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\TypeSig;
-use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Pretty\Parenthesized;
-
-class ObjectTypeSig extends Node implements TypeSig
+class RecordType extends TypeOperator
 {
-    use Parenthesized;
-
-    public $properties;
-
-    public function __constructor($properties)
+    public function __construct($types)
     {
-        $this->properties = $properties;
+        parent::__construct('%{}', $types);
     }
 
-    public function format(Parser $parser)
+    public function __toString()
     {
-        $source = '%{';
-        $source .= implode(', ', array_map(function ($name) use ($parser) {
-            $result = "{$name}: ";
-            $result .= $this->properties[$name]->format($parser);
-            return $result;
-        }, array_keys($this->properties)));
-        $source .= '}';
+        $result = '%{';
+        $result .= implode(', ', array_map(function ($key) {
+            return $key . ': ' . $this->types[$key];
+        }, array_keys($this->types)));
+        $result .= '}';
 
-        return $this->parenthesize($source);
+        return $result;
     }
 }

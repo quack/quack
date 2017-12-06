@@ -28,7 +28,7 @@ use \QuackCompiler\Parselets\Types\GroupTypeParselet;
 use \QuackCompiler\Parselets\Types\ListTypeParselet;
 use \QuackCompiler\Parselets\Types\MapTypeParselet;
 use \QuackCompiler\Parselets\Types\NameTypeParselet;
-use \QuackCompiler\Parselets\Types\ObjectTypeParselet;
+use \QuackCompiler\Parselets\Types\RecordTypeParselet;
 use \QuackCompiler\Parselets\Types\TupleTypeParselet;
 
 class TypeParser
@@ -45,7 +45,7 @@ class TypeParser
         $this->register('{', new ListTypeParselet);
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);
-        $this->register('%{', new ObjectTypeParselet);
+        $this->register('%{', new RecordTypeParselet);
         $this->register('&', new FnTypeParselet);
         $this->register('&', new BinaryTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }

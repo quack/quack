@@ -78,7 +78,7 @@ import(PARSELETS, 'expr/PartialFuncParselet');
 import(PARSELETS, 'expr/WhereParselet');
 import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/MatchParselet');
-import(PARSELETS, 'expr/ObjectParselet');
+import(PARSELETS, 'expr/RecordParselet');
 import(PARSELETS, 'expr/TupleParselet');
 
 import(PARSELETS, 'types/BinaryTypeParselet');
@@ -87,7 +87,7 @@ import(PARSELETS, 'types/GroupTypeParselet');
 import(PARSELETS, 'types/ListTypeParselet');
 import(PARSELETS, 'types/MapTypeParselet');
 import(PARSELETS, 'types/NameTypeParselet');
-import(PARSELETS, 'types/ObjectTypeParselet');
+import(PARSELETS, 'types/RecordTypeParselet');
 import(PARSELETS, 'types/TupleTypeParselet');
 
 /* Parser */
@@ -125,7 +125,7 @@ import(AST, 'helpers/Program');
 import(AST, 'expr/ListExpr');
 import(AST, 'expr/LambdaExpr');
 import(AST, 'expr/MapExpr');
-import(AST, 'expr/ObjectExpr');
+import(AST, 'expr/RecordExpr');
 import(AST, 'expr/NameExpr');
 import(AST, 'expr/NumberExpr');
 import(AST, 'expr/PrefixExpr');
@@ -164,7 +164,7 @@ import(AST, 'typesig/FnTypeSig');
 import(AST, 'typesig/ListTypeSig');
 import(AST, 'typesig/MapTypeSig');
 import(AST, 'typesig/NameTypeSig');
-import(AST, 'typesig/ObjectTypeSig');
+import(AST, 'typesig/RecordTypeSig');
 import(AST, 'typesig/TupleTypeSig');
 
 /* Scope */
@@ -190,5 +190,5 @@ import(TYPES, 'FnType');
 import(TYPES, 'GenericType');
 import(TYPES, 'ListType');
 import(TYPES, 'MapType');
-import(TYPES, 'ObjectType');
+import(TYPES, 'RecordType');
 import(TYPES, 'TupleType');
