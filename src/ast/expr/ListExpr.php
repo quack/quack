@@ -28,10 +28,10 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\ListType;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class ListExpr extends Node implements Expr
 {
@@ -70,7 +70,7 @@ class ListExpr extends Node implements Expr
         foreach ($this->items as $item) {
             $inferred_type = $item->analyze($scope, $non_generic);
             try {
-                HindleyMilner::unify($type, $inferred_type);
+                Unification::unify($type, $inferred_type);
             } catch (TypeError $error) {
                 throw new TypeError(Localization::message('TYP020', [$inferred_type, $type]));
             }

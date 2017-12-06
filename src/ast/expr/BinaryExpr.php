@@ -30,8 +30,8 @@ use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
 use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
 class BinaryExpr extends Node implements Expr
 {
@@ -117,8 +117,8 @@ class BinaryExpr extends Node implements Expr
         if (in_array($this->operator, $numeric_op, true)) {
             // TODO: Implement for String. Must make compatible
             try {
-                HindleyMilner::unify($left_type, $native_number);
-                HindleyMilner::unify($right_type, $native_number);
+                Unification::unify($left_type, $native_number);
+                Unification::unify($right_type, $native_number);
                 return $native_number;
             } catch (TypeError $error) {
                 throw $type_error;
@@ -127,8 +127,8 @@ class BinaryExpr extends Node implements Expr
 
         if ('=~' === $this->operator) {
             try {
-                HindleyMilner::unify($left_type, $native_string);
-                HindleyMilner::unify($right_type, $native_regex);
+                Unification::unify($left_type, $native_string);
+                Unification::unify($right_type, $native_regex);
                 return $native_bool;
             } catch (TypeError $error) {
                 throw $type_error;

@@ -183,7 +183,7 @@ import(TYPES, 'Type');
 import(TYPES, 'TypeError');
 
 import(TYPES, 'OccursCheck');
-import(TYPES, 'HindleyMilner');
+import(TYPES, 'Unification');
 import(TYPES, 'TypeVar');
 import(TYPES, 'TypeOperator');
 

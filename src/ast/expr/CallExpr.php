@@ -27,8 +27,8 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\FnType;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class CallExpr extends Node implements Expr
 {
@@ -73,7 +73,7 @@ class CallExpr extends Node implements Expr
         $arg_type = $argument->analyze($scope, $non_generic);
 
         $result_type = new TypeVar();
-        HindleyMilner::unify(new FnType($arg_type, $result_type), $fn_type);
+        Unification::unify(new FnType($arg_type, $result_type), $fn_type);
 
         return $result_type;
     }

@@ -30,8 +30,8 @@ use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\ScopeError;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class WhereExpr extends Node implements Expr
 {
@@ -119,7 +119,7 @@ class WhereExpr extends Node implements Expr
             $new_non_generic->push($new_type);
 
             $defn_type = $defn->analyze($new_env, $new_non_generic);
-            HindleyMilner::unify($new_type, $defn_type);
+            Unification::unify($new_type, $defn_type);
         }
 
         return $this->expr->analyze($new_env, $non_generic);

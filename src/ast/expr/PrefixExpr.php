@@ -30,8 +30,8 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
 class PrefixExpr extends Node implements Expr
 {
@@ -74,7 +74,7 @@ class PrefixExpr extends Node implements Expr
             case '-':
                 $number = $scope->getPrimitiveType('Number');
                 try {
-                    HindleyMilner::unify($right_type, $number);
+                    Unification::unify($right_type, $number);
                     return $number;
                 } catch (TypeError $error) {
                     throw $type_error;
@@ -82,7 +82,7 @@ class PrefixExpr extends Node implements Expr
             case Tag::T_NOT:
                 $bool = $this->scope->getPrimitiveType('Bool');
                 try {
-                    HindleyMilner::unify($right_type, $bool);
+                    Unification::unify($right_type, $bool);
                     return $bool;
                 } catch (TypeError $error) {
                     throw $type_error;

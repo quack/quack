@@ -28,7 +28,7 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
+use \QuackCompiler\Types\Unification;
 use \QuackCompiler\Types\ListType;
 use \QuackCompiler\Types\TypeError;
 
@@ -87,20 +87,20 @@ class RangeExpr extends Node implements Expr
 
 
         try {
-            HindleyMilner::unify($type->from, $number);
+            Unification::unify($type->from, $number);
         } catch (TypeError $error) {
             $throw_error_on('from', $type->from);
         }
 
         try {
-            HindleyMilner::unify($type->to, $number);
+            Unification::unify($type->to, $number);
         } catch (TypeError $error) {
             $throw_error_on('to', $type->to);
         }
 
         if (null !== $type->by) {
             try {
-                HindleyMilner::unify($type->by, $number);
+                Unification::unify($type->by, $number);
             } catch (TypeError $error) {
                 $throw_error_on('by', $type->by);
             }

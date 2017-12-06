@@ -26,9 +26,9 @@ use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\RecordType;
 use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class MemberExpr extends Node implements Expr
 {
@@ -60,7 +60,7 @@ class MemberExpr extends Node implements Expr
         $object_type = $this->object->analyze($scope, $non_generic);
         $result_type = new TypeVar();
 
-        HindleyMilner::unify(new RecordType([$this->property => $result_type]), $object_type);
+        Unification::unify(new RecordType([$this->property => $result_type]), $object_type);
 
         return $result_type;
     }

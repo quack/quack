@@ -28,10 +28,10 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\MapType;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class MapExpr extends Node implements Expr
 {
@@ -90,13 +90,13 @@ class MapExpr extends Node implements Expr
             $inferred_value_type = $this->values[$i]->analyze($scope, $non_generic);
 
             try {
-                HindleyMilner::unify($key_type, $inferred_key_type);
+                Unification::unify($key_type, $inferred_key_type);
             } catch (TypeError $error) {
                 throw new TypeError(Localization::message('TYP070', [$i, $key_type, $inferred_key_type]));
             }
 
             try {
-                HindleyMilner::unify($value_type, $inferred_value_type);
+                Unification::unify($value_type, $inferred_value_type);
             } catch (TypeError $error) {
                 throw new TypeError(Localization::message('TYP080', [$i, $value_type, $inferred_value_type]));
             }

@@ -22,7 +22,7 @@ namespace QuackCompiler\Types;
 
 use \QuackCompiler\Ds\Set;
 
-class HindleyMilner
+class Unification
 {
     private function isGeneric($variable, Set $non_generic)
     {

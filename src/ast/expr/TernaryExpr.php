@@ -28,8 +28,8 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
 class TernaryExpr extends Node implements Expr
 {
@@ -71,7 +71,7 @@ class TernaryExpr extends Node implements Expr
         $condition = $this->condition->analyze($scope, $non_generic);
 
         try {
-            HindleyMilner::unify($condition, $bool);
+            Unification::unify($condition, $bool);
         } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP240', [$condition]));
         }
@@ -80,7 +80,7 @@ class TernaryExpr extends Node implements Expr
         $falsy = $this->else->analyze($scope, $non_generic);
 
         try {
-            HindleyMilner::unify($truthy, $falsy);
+            Unification::unify($truthy, $falsy);
         } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP250', [$truthy, $falsy]));
         }

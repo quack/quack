@@ -27,8 +27,8 @@ use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
-use \QuackCompiler\Types\HindleyMilner;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
 class LetDecl implements Decl
 {
@@ -142,7 +142,7 @@ class LetDecl implements Decl
         $inferred_type = $this->value->analyze($scope, $non_generic);
 
         try {
-            HindleyMilner::unify($expected_type, $inferred_type);
+            Unification::unify($expected_type, $inferred_type);
         } catch (TypeError $error) {
             throw new TypeError(Localization::message('TYP300', [
                 $this->name, $expected_type, $inferred_type
