@@ -51,7 +51,7 @@ if (count($argv) > 1) {
         }
 
         if (!$disable_typechecker) {
-            $parser->ast->runTypeChecker();
+            $parser->ast->runTypeChecker($scope);
         }
 
         return $parser;
