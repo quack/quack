@@ -81,14 +81,12 @@ class HindleyMilner
         $left = $t1->prune();
         $right = $t2->prune();
 
-        if ($left instanceof TypeVar) {
-            if ($left !== $right) {
-                if (static::occursInType($left, $right)) {
-                    throw new TypeError('Recursive unification');
-                }
-
-                $left->instance = $right;
+        if ($left instanceof TypeVar && $left !== $right) {
+            if (static::occursInType($left, $right)) {
+                throw new TypeError('Recursive unification');
             }
+
+            $left->instance = $right;
         } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
             static::unify($right, $left);
         } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
