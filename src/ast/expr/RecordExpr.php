@@ -96,10 +96,11 @@ class RecordExpr extends Node implements Expr
 
     public function analyze(Scope $scope, Set $non_generic)
     {
-        $values = array_map(function ($expr) use ($scope, $non_generic) {
+        $analyze = function (Expr $expr) use ($scope, $non_generic) {
             return $expr->analyze($scope, $non_generic);
-        }, $this->values);
+        };
 
+        $values = array_map($analyze, $this->values);
         return new RecordType(array_combine($this->keys, $values));
     }
 }
