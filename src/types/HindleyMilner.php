@@ -57,6 +57,9 @@ class HindleyMilner
             $fields[$field] = $result;
         }
 
+        // Sort by keys
+        ksort($fields);
+
         // So the origin changes to fuse records
         $left->origin->types = $fields;
         $right->origin->types = $fields;
