@@ -22,9 +22,12 @@ namespace QuackCompiler\Types;
 
 class RecordType extends TypeOperator
 {
+    public $origin;
+
     public function __construct($types)
     {
         parent::__construct('%{}', $types);
+        $this->origin = $this;
     }
 
     public function __toString()

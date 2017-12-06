@@ -24,9 +24,42 @@ use \QuackCompiler\Ds\Set;
 
 class HindleyMilner
 {
-    public function isGeneric($variable, Set $non_generic)
+    private function isGeneric($variable, Set $non_generic)
     {
         return !OccursCheck::occursIn($variable, $non_generic);
+    }
+
+    private static function fuse(RecordType $left, RecordType $right)
+    {
+        $fields = [];
+
+        $left_names = array_keys($left->types);
+        $right_names = array_keys($right->types);
+
+        $common_fields = array_intersect($left_names, $right_names);
+        $exclusive_left_fields = array_diff($left_names, $right_names);
+        $exclusive_right_fields = array_diff($right_names, $left_names);
+
+        // Exclusive fields can only be set
+        foreach ($exclusive_left_fields as $field) {
+            $fields[$field] = $left->types[$field];
+        }
+
+        foreach ($exclusive_right_fields as $field) {
+            $fields[$field] = $right->types[$field];
+        }
+
+        // Common fields are then unified
+        foreach ($common_fields as $field) {
+            $result = new TypeVar();
+            static::unify($left->types[$field], $result);
+            static::unify($right->types[$field], $result);
+            $fields[$field] = $result;
+        }
+
+        // So the origin changes to fuse records
+        $left->origin->types = $fields;
+        $right->origin->types = $fields;
     }
 
     public function fresh(Type $type, Set $non_generic)
@@ -44,6 +77,11 @@ class HindleyMilner
                 } else {
                     return $pruned;
                 }
+            } elseif ($pruned instanceof RecordType) {
+                // Preserve record names and reference old expression
+                $record = new RecordType(array_map($freshrec, $pruned->types));
+                $record->origin = $pruned;
+                return $record;
             } elseif ($pruned instanceof TypeOperator) {
                 $class = get_class($pruned);
                 return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
@@ -66,6 +104,8 @@ class HindleyMilner
             $left->instance = $right;
         } elseif ($left instanceof TypeOperator && $right instanceof TypeVar) {
             static::unify($right, $left);
+        } elseif ($left instanceof RecordType && $right instanceof RecordType) {
+            static::fuse($left, $right);
         } elseif ($left instanceof TypeOperator && $right instanceof TypeOperator) {
             if ($left->name !== $right->name || count($left->types) !== count($right->types)) {
                 throw new TypeError('Type mismatch: ' . $left . ' != ' . $right);
