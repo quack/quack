@@ -73,6 +73,8 @@ class Unification
             $property = $missing[0];
             throw new TypeError('Missing property ' . $property);
         }
+
+        static::fuse($actual, $constraint);
     }
 
     public function fresh(Type $type, Set $non_generic)
