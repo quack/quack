@@ -24,32 +24,9 @@ use \QuackCompiler\Ds\Set;
 
 class HindleyMilner
 {
-    public static function occursInType($variable, Type $type)
-    {
-        $pruned_expr = $type->prune();
-        if ($pruned_expr === $variable) {
-            return true;
-        } else if ($pruned_expr instanceof TypeOperator) {
-            return static::occursIn($variable, $pruned_expr->types);
-        }
-
-        return false;
-    }
-
-    public static function occursIn($variable, $types)
-    {
-        foreach ($types as $subtype) {
-            if (static::occursInType($variable, $subtype)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function isGeneric($variable, Set $non_generic)
     {
-        return !static::occursIn($variable, $non_generic);
+        return !OccursCheck::occursIn($variable, $non_generic);
     }
 
     public function fresh(Type $type, Set $non_generic)
@@ -82,7 +59,7 @@ class HindleyMilner
         $right = $t2->prune();
 
         if ($left instanceof TypeVar && $left !== $right) {
-            if (static::occursInType($left, $right)) {
+            if (OccursCheck::occursInType($left, $right)) {
                 throw new TypeError('Recursive unification');
             }
 
