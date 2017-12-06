@@ -101,7 +101,7 @@ class Unification
                 return $record;
             } elseif ($pruned instanceof FnType) {
                 list ($from, $to) = $pruned->types;
-               return new FnType($from, $to);
+                return new FnType($from, $to);
             } elseif ($pruned instanceof TypeOperator) {
                 $class = get_class($pruned);
                 return new $class($pruned->getName(), array_map($freshrec, $pruned->types));
