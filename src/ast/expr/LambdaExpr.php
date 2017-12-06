@@ -107,18 +107,23 @@ class LambdaExpr extends Node implements Expr
 
     public function analyze(Scope $scope, Set $non_generic)
     {
-        $arg_type = new TypeVar();
         $new_env = clone $scope;
-        $param = $this->parameters[0];
-
-        $new_env->insert($param->name, Symbol::S_VARIABLE);
-        $new_env->setMeta(Meta::M_TYPE, $param->name, $arg_type);
-
         $new_non_generic = clone $non_generic;
-        $new_non_generic->push($arg_type);
 
-        $result_type = $this->body->analyze($new_env, $new_non_generic);
+        $parameters = [];
+        foreach ($this->parameters as $param) {
+            $arg_type = new TypeVar();
+            $new_env->insert($param->name, Symbol::S_VARIABLE);
+            $new_env->setMeta(Meta::M_TYPE, $param->name, $arg_type);
+            $new_non_generic->push($arg_type);
+            $parameters[$param->name] = $arg_type;
+        }
 
-        return new FnType($arg_type, $result_type);
+        $construct = function ($acc, $elem) use ($parameters) {
+            return new FnType($parameters[$elem->name], $acc);
+        };
+
+        $body = $this->body->analyze($new_env, $new_non_generic);
+        return array_reduce(array_reverse($this->parameters), $construct, $body);
     }
 }
