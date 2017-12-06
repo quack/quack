@@ -60,6 +60,7 @@ class TypeVar extends Type
     {
         if (null !== $this->instance) {
             $this->instance = $this->instance->prune();
+            $this->instance->origin = $this->instance;
             return $this->instance;
         }
 
