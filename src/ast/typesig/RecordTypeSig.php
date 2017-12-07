@@ -24,6 +24,8 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\Constraints\RecordConstraint;
 
 class RecordTypeSig extends Node implements TypeSig
 {
@@ -31,7 +33,7 @@ class RecordTypeSig extends Node implements TypeSig
 
     public $properties;
 
-    public function __constructor($properties)
+    public function __construct($properties)
     {
         $this->properties = $properties;
     }
@@ -47,5 +49,15 @@ class RecordTypeSig extends Node implements TypeSig
         $source .= '}';
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $compute = function ($type) use ($scope) {
+            return $type->compute($scope);
+        };
+
+        $types = array_map($compute, $this->properties);
+        return new RecordConstraint($types);
     }
 }
