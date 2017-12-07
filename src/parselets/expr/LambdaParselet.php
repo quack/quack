@@ -22,6 +22,7 @@ namespace QuackCompiler\Parselets\Expr;
 
 use \QuackCompiler\Ast\Expr\Expr;
 use \QuackCompiler\Ast\Expr\LambdaExpr;
+use \QuackCompiler\Ast\Helpers\Param;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
 use \QuackCompiler\Parselets\PrefixParselet;
@@ -29,44 +30,28 @@ use \QuackCompiler\Parser\Grammar;
 
 class LambdaParselet implements PrefixParselet
 {
-    const TYPE_EXPRESSION = 0x1;
-    const TYPE_STATEMENT  = 0x2;
-
     public function parse($grammar, Token $token)
     {
         $parameters = [];
-        $kind = null;
         $body = null;
-        $has_brackets = false;
+        $complex = false;
 
         // When identifier, we have an unary function
         if ($grammar->reader->is(Tag::T_IDENT)) {
             $name = $grammar->name_parser->_identifier();
-            $parameters[] = (object) [
-                'name' => $name,
-                'type' => null
-            ];
+            $parameters = [new Param($name)];
         } else {
-            $has_brackets = true;
-            $grammar->reader->match('[');
+            $complex = true;
+            $grammar->reader->match('(');
             do {
                 $parameters[] = $grammar->decl_parser->_param();
             } while ($grammar->reader->consumeIf(','));
-            $grammar->reader->match(']');
+            $grammar->reader->match(')');
         }
 
-        $grammar->reader->match(':');
+        $grammar->reader->match('->');
+        $body = $grammar->_expr();
 
-        if ($grammar->reader->is(Tag::T_BEGIN)) {
-            $kind = static::TYPE_STATEMENT;
-            $grammar->reader->consume();
-            $body = $grammar->stmt_parser->_stmtList();
-            $grammar->reader->match(Tag::T_END);
-        } else {
-            $kind = static::TYPE_EXPRESSION;
-            $body = $grammar->_expr();
-        }
-
-        return new LambdaExpr($parameters, $kind, $body, $has_brackets);
+        return new LambdaExpr($parameters, $body, $complex);
     }
 }

@@ -23,6 +23,7 @@ namespace QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
@@ -49,7 +50,9 @@ class BinaryTypeSig extends Node implements TypeSig
     public function format(Parser $parser)
     {
         $source = $this->left->format($parser);
-        $source .= " {$this->operator} ";
+        $source .= ' ';
+        $source .= Tag::getOperatorLexeme($this->operator);
+        $source .= ' ';
         $source .= $this->right->format($parser);
 
         return $this->parenthesize($source);

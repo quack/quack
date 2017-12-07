@@ -30,17 +30,13 @@ class FnTypeParselet implements PrefixParselet
     public function parse($grammar, Token $token)
     {
         $parameters = [];
+        $grammar->reader->match('(');
+        do {
+            $parameters[] = $grammar->_type();
+        } while ($grammar->reader->consumeIf(','));
 
-        $grammar->reader->match('[');
-        if (!$grammar->reader->consumeIf(']')) {
-            do {
-                $parameters[] = $grammar->_type();
-            } while ($grammar->reader->consumeIf(','));
-
-            $grammar->reader->match(']');
-        }
-
-        $grammar->reader->match(':');
+        $grammar->reader->match(')');
+        $grammar->reader->match('->');
         $return = $grammar->_type();
 
         return new FnTypeSig($parameters, $return);

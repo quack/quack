@@ -43,11 +43,11 @@ class FnTypeSig extends Node implements TypeSig
 
     public function format(Parser $parser)
     {
-        $source = '&[';
+        $source = 'fn (';
         $source .= implode(', ', array_map(function ($parameter) use ($parser) {
             return $parameter->format($parser);
         }, $this->parameters));
-        $source .= ']: ';
+        $source .= ') -> ';
         $source .= $this->return->format($parser);
 
         return $this->parenthesize($source);

@@ -39,64 +39,33 @@ class LambdaExpr extends Node implements Expr
     use Parenthesized;
 
     public $parameters;
-    public $kind;
     public $body;
-    public $has_brackets;
-    private $argument_types;
+    public $complex;
 
-    public function __construct($parameters, $kind, $body, $has_brackets)
+    public function __construct($parameters, $body, $complex)
     {
         $this->parameters = $parameters;
-        $this->kind = $kind;
         $this->body = $body;
-        $this->has_brackets = $has_brackets;
-        $this->argument_types = [];
+        $this->complex = $complex;
     }
 
     public function format(Parser $parser)
     {
-        $source = '&';
+        $source = 'fn ';
 
-        switch (count($this->parameters)) {
-            case 0:
-                $source .= '[]';
-                break;
-            case 1:
-                if ($this->has_brackets) {
-                    $source .= '[' . $this->parameters[0]->name;
-                    if (isset($this->parameters[0]->type)) {
-                        $source .= ' :: ' . $this->parameters[0]->type;
-                    }
-                    $source .= ']';
-                } else {
-                    $source .= $this->parameters[0]->name;
-                }
-                break;
-            default:
-                $source .= '[';
-                $source .= implode(', ', array_map(function($param) {
-                    $parameter = $param->name;
-
-                    if (null !== $param->type) {
-                        $parameter .= " :: {$param->type}";
-                    }
-
-                    return $parameter;
-                }, $this->parameters));
-                $source .= ']';
-        }
-
-        $source .= ': ';
-
-        if (LambdaParselet::TYPE_EXPRESSION === $this->kind) {
-            $source .= $this->body->format($parser);
+        if ($this->complex) {
+            $source .= '(';
+            $source .= implode(', ', array_map(function ($parameter) use ($parser) {
+                return $parameter->format($parser);
+            }, $this->parameters));
+            $source .= ')';
         } else {
-            $source .= 'begin' . PHP_EOL;
-            $source .= $this->body->format($parser);
-            $source .= $parser->indent();
-            $source .= 'end';
-            $source .= PHP_EOL;
+            list ($parameter) = $this->parameters;
+            $source .= $parameter->format($parser);
         }
+
+        $source .= ' -> ';
+        $source .= $this->body->format($parser);
 
         return $this->parenthesize($source);
     }

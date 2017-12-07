@@ -46,8 +46,8 @@ class TypeParser
         $this->register('#{', new MapTypeParselet);
         $this->register('#(', new TupleTypeParselet);
         $this->register('%{', new RecordTypeParselet);
-        $this->register('&', new FnTypeParselet);
-        $this->register('&', new BinaryTypeParselet(Precedence::INTERSECTION_TYPE, false));
+        $this->register(Tag::T_FN, new FnTypeParselet);
+        $this->register(Tag::T_AND, new BinaryTypeParselet(Precedence::INTERSECTION_TYPE, false));
     }
 
     public function _type($precedence = 0)

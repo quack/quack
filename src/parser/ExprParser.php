@@ -70,16 +70,13 @@ class ExprParser
         $this->register('%{', new RecordParselet);
         $this->register('#{', new MapParselet);
         $this->register('#(', new TupleParselet);
-        $this->register('&', new LambdaParselet);
         $this->register('.', new MemberParselet);
         $this->register(Tag::T_ATOM, new LiteralParselet);
         $this->register(Tag::T_WHERE, new WhereParselet);
         $this->register(Tag::T_MATCH, new MatchParselet);
+        $this->register(Tag::T_FN, new LambdaParselet);
 
-        $this->prefix('+');
         $this->prefix('-');
-        $this->prefix('*');
-        $this->prefix('~');
         $this->prefix(Tag::T_NOT);
 
         $this->infixLeft('+', Precedence::ADDITIVE);
