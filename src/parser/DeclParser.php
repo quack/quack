@@ -42,6 +42,7 @@ class DeclParser
     public function _letDecl()
     {
         $this->reader->match(Tag::T_LET);
+        $recursive = $this->reader->consumeIf(Tag::T_REC);
         $mutable = $this->reader->consumeIf(Tag::T_MUT);
         $name = $this->name_parser->_identifier();
         $type = $this->reader->consumeIf('::')
@@ -50,7 +51,7 @@ class DeclParser
         $this->reader->match(':-');
         $value = $this->expr_parser->_expr();
 
-        return new LetDecl($name, $type, $value, $mutable);
+        return new LetDecl($name, $type, $value, $recursive, $mutable);
     }
 
     public function _param()

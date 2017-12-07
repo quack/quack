@@ -47,7 +47,7 @@
     "TYP240": "Condition of ternary operator should de `Bool'. Got `%s'",
     "TYP250": "Both sides of ternary expression must have the same type. Got `%s' and `%s'",
     "TYP260": "`%s' is not iterable",
-    "TYP270": "===DELETED===",
+    "TYP270": "Cannot deduce type of symbol `%s', maybe you should let it be explicit",
     "TYP280": "===DELETED===",
     "TYP290": "===DELETED===",
     "TYP300": "Cannot assign to variable `%s' of type `%s' a value of type `%s'",

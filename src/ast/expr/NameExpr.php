@@ -77,6 +77,11 @@ class NameExpr extends Node implements Expr
 
         if ($symbol & Symbol::S_VARIABLE) {
             $type = $scope->getMeta(Meta::M_TYPE, $this->name);
+
+            if (null === $type) {
+                throw new TypeError(Localization::message('TYP270', [$this->name]));
+            }
+
             return Unification::fresh($type, $non_generic);
         }
 

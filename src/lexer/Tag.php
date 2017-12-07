@@ -65,6 +65,7 @@ class Tag
     const T_MATCH    = 0x218;
     const T_WITH     = 0x219;
     const T_DATA     = 0x21A;
+    const T_REC      = 0x21B;
 
     public static function getOperatorLexeme($op)
     {

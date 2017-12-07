@@ -35,13 +35,15 @@ class LetDecl implements Decl
     public $name;
     public $type;
     public $value;
+    public $recursive;
     public $mutable;
 
-    public function __construct($name, $type, $value, $mutable)
+    public function __construct($name, $type, $value, $recursive, $mutable)
     {
         $this->name = $name;
         $this->type = $type;
         $this->value = $value;
+        $this->recursive = $recursive;
         $this->mutable = $mutable;
     }
 
