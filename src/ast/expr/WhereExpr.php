@@ -109,6 +109,7 @@ class WhereExpr extends Node implements Expr
     {
         $new_env = clone $scope;
         $new_non_generic = clone $non_generic;
+        $defn_pairs = [];
 
         foreach ($this->clauses as $clause) {
             list ($name, $defn) = $clause;
@@ -118,6 +119,11 @@ class WhereExpr extends Node implements Expr
             $new_env->setMeta(Meta::M_TYPE, $name, $new_type);
             $new_non_generic->push($new_type);
 
+            $defn_pairs[] = [$new_type, $defn];
+        }
+
+        foreach ($defn_pairs as $pair) {
+            list ($new_type, $defn) = $pair;
             $defn_type = $defn->analyze($new_env, $new_non_generic);
             Unification::unify($new_type, $defn_type);
         }
