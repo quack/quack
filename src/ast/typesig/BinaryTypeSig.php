@@ -22,8 +22,14 @@ namespace QuackCompiler\Ast\TypeSig;
 
 use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
+use \QuackCompiler\Intl\Localization;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\RecordType;
+use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\TypeVar;
+use \QuackCompiler\Types\Unification;
 
 class BinaryTypeSig extends Node implements TypeSig
 {
@@ -47,5 +53,20 @@ class BinaryTypeSig extends Node implements TypeSig
         $source .= $this->right->format($parser);
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $left = $this->left->compute($scope);
+        $right  = $this->right->compute($scope);
+
+        if (!($left instanceof RecordType) || !($right instanceof RecordType)) {
+            throw new TypeError(Localization::message('TYP390', [$left, $right]));
+        }
+
+        $result = new TypeVar();
+        Unification::fuse($left, $right);
+        Unification::unify($right, $result);
+        return $result;
     }
 }

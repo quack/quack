@@ -59,7 +59,7 @@
     "TYP360": "Functions have different number of arguments. One has %d, the other has %d",
     "TYP370": "Parameter number %d of function needs to be a `%s', but it is a `%s'",
     "TYP380": "I was expecting to have a function with return type of `%s', but you gave me a `%s'",
-    "TYP390": "===DELETED===",
+    "TYP390": "I don't know how to merge types `%s' and `%s', only record pairs",
     "TYP400": "===DELETED===",
     "TYP410": "A JSX child should be a component or a string, but you gave me `%s' and I'm very sad about that",
     "TYP420": "The tuples have different sizes, I want %d and you gave me %d",

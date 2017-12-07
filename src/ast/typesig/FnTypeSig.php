@@ -24,6 +24,9 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ast\TypeSig;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Types\FnType;
+use \QuackCompiler\Types\Type;
 
 class FnTypeSig extends Node implements TypeSig
 {
@@ -48,5 +51,17 @@ class FnTypeSig extends Node implements TypeSig
         $source .= $this->return->format($parser);
 
         return $this->parenthesize($source);
+    }
+
+    public function compute(Scope $scope)
+    {
+        $reducer = function (Type $return, TypeSig $parameter) use ($scope) {
+            $input = $parameter->compute($scope);
+            return new FnType($input, $return);
+        };
+
+        $return = $this->return->compute($scope);
+
+        return array_reduce($this->parameters, $reducer, $return);
     }
 }

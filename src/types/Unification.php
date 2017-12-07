@@ -30,7 +30,7 @@ class Unification
         return !OccursCheck::occursIn($variable, $non_generic);
     }
 
-    private static function fuse(RecordType $left, RecordType $right)
+    public static function fuse(RecordType $left, RecordType $right)
     {
         $fields = [];
 
