@@ -59,11 +59,7 @@ class LetDecl implements Decl
             $source .= ' :: ' . $this->type->format($parser);
         }
 
-        if (null !== $this->value) {
-            $source .= ' :- ' . $this->value->format($parser);
-        }
-
-        $source .= PHP_EOL;
+        $source .= ' :- ' . $this->value->format($parser) . PHP_EOL;
         return $source;
     }
 
@@ -82,15 +78,6 @@ class LetDecl implements Decl
 
     public function runTypeChecker(Scope $scope, Set $non_generic)
     {
-        // TODO: Deal with variable referrencing itself, such as
-        // let x :- x. It is "valid" in the context of a function, but not
-        // in eager definition. D'oh!
-
-        // No type, no value. Free variable
-        if (null === $this->type && null === $this->value) {
-            throw new TypeError(Localization::message('TYP290', [$this->name]));
-        }
-
         if ($this->mutable) {
             $this->checkMutable($scope, $non_generic);
         } else {
@@ -100,14 +87,6 @@ class LetDecl implements Decl
 
     public function checkMutable($scope, $non_generic)
     {
-        // No value (but we still have type)
-        if (null === $this->value) {
-            // Force type reduction because we still have no value to match against
-            $this->type->simplify();
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $this->type);
-            return;
-        }
-
         // No type (but we still have the value)
         if (null === $this->type) {
             $inferred_type = $this->value->getType();
@@ -121,11 +100,6 @@ class LetDecl implements Decl
 
     public function checkImmutable($scope, $non_generic)
     {
-        // No value on immutable variable (error)
-        if (null === $this->value) {
-            throw new TypeError(Localization::message('TYP270', [$this->name . ' :: ' . $this->type]));
-        }
-
         // No type declared. The compiler will infer
         if (null === $this->type) {
             $type = $this->value->analyze($scope, $non_generic);

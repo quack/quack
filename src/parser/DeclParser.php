@@ -47,11 +47,10 @@ class DeclParser
         $type = $this->reader->consumeIf('::')
             ? $this->type_parser->_type()
             : null;
-        $value = $this->reader->consumeIf(':-')
-            ? $this->expr_parser->_expr()
-            : null;
+        $this->reader->match(':-');
+        $value = $this->expr_parser->_expr();
 
-       return new LetDecl($name, $type, $value, $mutable);
+        return new LetDecl($name, $type, $value, $mutable);
     }
 
     public function _param()
