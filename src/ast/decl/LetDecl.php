@@ -28,6 +28,7 @@ use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Scope\Symbol;
 use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\TypeVar;
 use \QuackCompiler\Types\Unification;
 
 class LetDecl implements Decl
@@ -70,52 +71,32 @@ class LetDecl implements Decl
         $this->scope = $parent_scope;
         $mask = Symbol::S_VARIABLE | ($this->mutable ? Symbol::S_MUTABLE : 0x0);
 
-        if (null === $this->value) {
-            $this->scope->insert($this->name, $mask);
-        } else {
-            $this->scope->insert($this->name, $mask | Symbol::S_INITIALIZED);
-            $this->value->injectScope($parent_scope);
-        }
+        $this->scope->insert($this->name, $mask | Symbol::S_INITIALIZED);
+        $this->value->injectScope($parent_scope);
     }
 
     public function runTypeChecker(Scope $scope, Set $non_generic)
     {
-        if ($this->mutable) {
-            $this->checkMutable($scope, $non_generic);
-        } else {
-            $this->checkImmutable($scope, $non_generic);
-        }
-    }
-
-    public function checkMutable($scope, $non_generic)
-    {
-        // No type (but we still have the value)
-        if (null === $this->type) {
-            $inferred_type = $this->value->getType();
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $inferred_type);
-            return;
-        }
-
-        // Got type and value
-        $this->checkTypeAndValue($scope, $non_generic);
-    }
-
-    public function checkImmutable($scope, $non_generic)
-    {
         // No type declared. The compiler will infer
         if (null === $this->type) {
-            $type = $this->value->analyze($scope, $non_generic);
-            $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
+            if ($this->recursive) {
+                $type = new TypeVar();
+                $scope->setMeta(Meta::M_TYPE, $this->name, $type);
+                $non_generic->push($type);
+                $result = $this->value->analyze($scope, $non_generic);
+                Unification::unify($result, $type);
+                return $type;
+            } else {
+                $type = $this->value->analyze($scope, $non_generic);
+                $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
+            }
+
             return;
         }
 
         $type = $this->type->compute($scope);
         $this->scope->setMeta(Meta::M_TYPE, $this->name, $type);
-        $this->checkTypeAndValue($scope, $non_generic);
-    }
 
-    public function checkTypeAndValue($scope, $non_generic)
-    {
         $expected_type = $this->type->compute($scope);
         $inferred_type = $this->value->analyze($scope, $non_generic);
 
