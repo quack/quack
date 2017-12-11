@@ -134,6 +134,15 @@ class BinaryExpr extends Node implements Expr
                 throw $type_error;
             }
         }
+
+        if ('=' === $this->operator) {
+            try {
+                Unification::unify($left_type, $right_type);
+                return $native_bool;
+            } catch (TypeError $error) {
+                throw $type_error;
+            }
+        }
     }
 
     public function getType()
