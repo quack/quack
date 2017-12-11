@@ -37,7 +37,7 @@ use \QuackCompiler\Parselets\Expr\PostfixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\RangeParselet;
 use \QuackCompiler\Parselets\Expr\RecordParselet;
-use \QuackCompiler\Parselets\Expr\TernaryParselet;
+use \QuackCompiler\Parselets\Expr\IfParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\WhereParselet;
 use \QuackCompiler\Parselets\Parselet;
@@ -61,7 +61,7 @@ class ExprParser
         $this->register(Tag::T_REGEX, new LiteralParselet);
         $this->register(Tag::T_IDENT, new NameParselet);
         $this->register(Tag::T_TYPENAME, new NameParselet);
-        $this->register(Tag::T_THEN, new TernaryParselet);
+        $this->register(Tag::T_IF, new IfParselet);
         $this->register('..', new RangeParselet);
         $this->register('(', new GroupParselet);
         $this->register('(', new CallParselet);

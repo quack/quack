@@ -31,7 +31,7 @@ use \QuackCompiler\Scope\Scope;
 use \QuackCompiler\Types\TypeError;
 use \QuackCompiler\Types\Unification;
 
-class TernaryExpr extends Node implements Expr
+class IfExpr extends Node implements Expr
 {
     use Parenthesized;
 
@@ -48,7 +48,8 @@ class TernaryExpr extends Node implements Expr
 
     public function format(Parser $parser)
     {
-        $source = $this->condition->format($parser);
+        $source = 'if ';
+        $source .= $this->condition->format($parser);
         $source .= ' then ';
         $source .= $this->then->format($parser);
         $source .= ' else ';

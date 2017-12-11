@@ -20,26 +20,20 @@
  */
 namespace QuackCompiler\Parselets\Expr;
 
-use \QuackCompiler\Ast\Expr\Expr;
-use \QuackCompiler\Ast\Expr\TernaryExpr;
+use \QuackCompiler\Ast\Expr\IfExpr;
 use \QuackCompiler\Lexer\Tag;
 use \QuackCompiler\Lexer\Token;
-use \QuackCompiler\Parselets\InfixParselet;
-use \QuackCompiler\Parser\Grammar;
-use \QuackCompiler\Parser\Precedence;
+use \QuackCompiler\Parselets\PrefixParselet;
 
-class TernaryParselet implements InfixParselet
+class IfParselet implements PrefixParselet
 {
-    public function parse($grammar, $left, Token $token)
+    public function parse($grammar, Token $token)
     {
+        $cond = $grammar->_expr();
+        $grammar->reader->match(Tag::T_THEN);
         $then = $grammar->_expr();
         $grammar->reader->match(Tag::T_ELSE);
-        $else = $grammar->_expr(Precedence::TERNARY - 1);
-        return new TernaryExpr($left, $then, $else);
-    }
-
-    public function getPrecedence()
-    {
-        return Precedence::TERNARY;
+        $else = $grammar->_expr();
+        return new IfExpr($cond, $then, $else);
     }
 }

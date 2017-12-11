@@ -25,7 +25,6 @@ class Precedence
     const ASSIGNMENT         = 1;
     const WHERE              = 2;
     const PIPELINE           = 3;
-    const TERNARY            = 5;
     const RANGE              = 7;
     const LOGICAL_OR         = 8;
     const LOGICAL_XOR        = 9;
