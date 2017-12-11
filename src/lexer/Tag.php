@@ -43,7 +43,6 @@ class Tag
     const T_DO       = 0x202;
     const T_LET      = 0x203;
     const T_WHERE    = 0x204;
-    const T_FOREACH  = 0x205;
     const T_IN       = 0x206;
     const T_AND      = 0x209;
     const T_OR       = 0x20A;

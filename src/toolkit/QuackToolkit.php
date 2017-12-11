@@ -150,8 +150,6 @@ import(AST, 'decl/LetDecl');
 import(AST, 'decl/TypeDecl');
 
 import(AST, 'stmt/ExprStmt');
-import(AST, 'stmt/ForeachStmt');
-import(AST, 'stmt/ReturnStmt');
 import(AST, 'stmt/WhileStmt');
 
 import(AST, 'typesig/BinaryTypeSig');

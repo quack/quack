@@ -23,8 +23,6 @@ namespace QuackCompiler\Parser;
 use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Helpers\Program;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
-use \QuackCompiler\Ast\Stmt\ForeachStmt;
-use \QuackCompiler\Ast\Stmt\ReturnStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 use \QuackCompiler\Lexer\Tag;
 
@@ -40,8 +38,8 @@ class StmtParser
     public function startsStmt()
     {
         static $stmt_list = [
-            Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
-            Tag::T_FN, '^', Tag::T_TYPE, Tag::T_DATA
+            Tag::T_LET, Tag::T_WHILE, Tag::T_DO,
+            Tag::T_FN, Tag::T_TYPE, Tag::T_DATA
         ];
 
         $peek = $this->reader->lookahead->getTag();
@@ -78,9 +76,7 @@ class StmtParser
 
         $stmt_list = [
             Tag::T_WHILE    => '_whileStmt',
-            Tag::T_DO       => '_exprStmt',
-            Tag::T_FOREACH  => '_foreachStmt',
-            '^'             => '_returnStmt'
+            Tag::T_DO       => '_exprStmt'
         ];
 
         $tag = $this->reader->lookahead->getTag();
@@ -121,29 +117,5 @@ class StmtParser
         $this->reader->match(Tag::T_END);
 
         return new WhileStmt($condition, $body);
-    }
-
-    public function _foreachStmt()
-    {
-        $key = null;
-        $this->reader->match(Tag::T_FOREACH);
-
-        if ($this->reader->is(Tag::T_IDENT)) {
-            $alias = $this->name_parser->_identifier();
-
-            if ($this->reader->consumeIf(':')) {
-                $key = $alias;
-                $alias = $this->name_parser->_identifier();
-            }
-        } else {
-            $alias = $this->name_parser->_identifier();
-        }
-
-        $this->reader->match(Tag::T_IN);
-        $iterable = $this->expr_parser->_expr();
-        $body = $this->_stmtList();
-        $this->reader->match(Tag::T_END);
-
-        return new ForeachStmt($key, $alias, $iterable, $body);
     }
 }
