@@ -21,16 +21,10 @@
 namespace QuackCompiler\Parser;
 
 use \QuackCompiler\Ast\Helpers\Body;
-use \QuackCompiler\Ast\Helpers\Elif;
 use \QuackCompiler\Ast\Helpers\Program;
-use \QuackCompiler\Ast\Stmt\BreakStmt;
-use \QuackCompiler\Ast\Stmt\ContinueStmt;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Ast\Stmt\ForeachStmt;
-use \QuackCompiler\Ast\Stmt\IfStmt;
-use \QuackCompiler\Ast\Stmt\LabelStmt;
 use \QuackCompiler\Ast\Stmt\ReturnStmt;
-use \QuackCompiler\Ast\Stmt\TypeStmt;
 use \QuackCompiler\Ast\Stmt\WhileStmt;
 use \QuackCompiler\Lexer\Tag;
 
@@ -46,9 +40,8 @@ class StmtParser
     public function startsStmt()
     {
         static $stmt_list = [
-            Tag::T_IF, Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
-            Tag::T_BREAK, Tag::T_CONTINUE, Tag::T_FN, '^', '[',
-            Tag::T_TYPE, Tag::T_DATA
+            Tag::T_LET, Tag::T_WHILE, Tag::T_DO, Tag::T_FOREACH,
+            Tag::T_FN, '^', Tag::T_TYPE, Tag::T_DATA
         ];
 
         $peek = $this->reader->lookahead->getTag();
@@ -84,14 +77,10 @@ class StmtParser
         ];
 
         $stmt_list = [
-            Tag::T_IF       => '_ifStmt',
             Tag::T_WHILE    => '_whileStmt',
             Tag::T_DO       => '_exprStmt',
             Tag::T_FOREACH  => '_foreachStmt',
-            Tag::T_BREAK    => '_breakStmt',
-            Tag::T_CONTINUE => '_continueStmt',
-            '^'             => '_returnStmt',
-            '['             => '_labelStmt'
+            '^'             => '_returnStmt'
         ];
 
         $tag = $this->reader->lookahead->getTag();
@@ -122,18 +111,6 @@ class StmtParser
         $this->reader->match(Tag::T_DO);
         $expr = $this->expr_parser->_expr();
         return new ExprStmt($expr);
-    }
-
-   public function _ifStmt()
-    {
-        $this->reader->match(Tag::T_IF);
-        $condition = $this->expr_parser->_expr();
-        $body = $this->_stmtList();
-        $elif = $this->_elifList();
-        $else = $this->_optElse();
-        $this->reader->match(Tag::T_END);
-
-        return new IfStmt($condition, $body, $elif, $else);
     }
 
     public function _whileStmt()
@@ -168,65 +145,5 @@ class StmtParser
         $this->reader->match(Tag::T_END);
 
         return new ForeachStmt($key, $alias, $iterable, $body);
-    }
-
-    public function _breakStmt()
-    {
-        $this->reader->match(Tag::T_BREAK);
-        $label = $this->_optLabel();
-        return new BreakStmt($label);
-    }
-
-    public function _continueStmt()
-    {
-        $this->reader->match(Tag::T_CONTINUE);
-        $label = $this->_optLabel();
-        return new ContinueStmt($label);
-    }
-
-    public function _returnStmt()
-    {
-        $this->reader->match('^');
-        $expression = $this->expr_parser->_optExpr();
-
-        return new ReturnStmt($expression);
-    }
-
-    public function _labelStmt()
-    {
-        $this->reader->match('[');
-        $label_name = $this->name_parser->_identifier();
-        $this->reader->match(']');
-        $stmt = $this->_stmt();
-
-        return new LabelStmt($label_name, $stmt);
-    }
-
-    public function _elifList()
-    {
-        $elifs = [];
-        while ($this->reader->consumeIf(Tag::T_ELIF)) {
-            $condition = $this->expr_parser->_expr();
-            $body = $this->_stmtList();
-            $elifs[] = new Elif($condition, $body);
-        }
-
-        return $elifs;
-    }
-
-    public function _optElse()
-    {
-        if ($this->reader->consumeIf(Tag::T_ELSE)) {
-            return $this->_stmtList();
-        }
-
-        return null;
-    }
-
-    public function _optLabel()
-    {
-        return $this->reader->is(Tag::T_IDENT)
-            ? $this->name_parser->_identifier()
-            : null;
     }
 }

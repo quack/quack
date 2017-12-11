@@ -45,8 +45,6 @@ class Tag
     const T_WHERE    = 0x204;
     const T_FOREACH  = 0x205;
     const T_IN       = 0x206;
-    const T_CONTINUE = 0x207;
-    const T_BREAK    = 0x208;
     const T_AND      = 0x209;
     const T_OR       = 0x20A;
     const T_XOR      = 0x20B;
