@@ -20,7 +20,6 @@
  */
 namespace QuackCompiler\Parser;
 
-use \QuackCompiler\Ast\Helpers\Body;
 use \QuackCompiler\Ast\Helpers\Program;
 use \QuackCompiler\Ast\Stmt\ExprStmt;
 use \QuackCompiler\Lexer\Tag;
@@ -34,16 +33,6 @@ class StmtParser
         $this->reader = $reader;
     }
 
-    public function startsStmt()
-    {
-        static $stmt_list = [
-            Tag::T_LET, Tag::T_DO, Tag::T_FN, Tag::T_TYPE, Tag::T_DATA
-        ];
-
-        $peek = $this->reader->lookahead->getTag();
-        return in_array($peek, $stmt_list, true);
-    }
-
     public function _program()
     {
         $body = [];
@@ -51,16 +40,6 @@ class StmtParser
             $body[] = $this->_stmt();
         }
         return new Program($body);
-    }
-
-    public function _stmtList()
-    {
-        $stmt_list = [];
-        while ($this->startsStmt()) {
-            $stmt_list[] = $this->_stmt();
-        }
-
-        return new Body($stmt_list);
     }
 
     public function _stmt()

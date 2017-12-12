@@ -51,4 +51,19 @@ class SemiExpr extends Node implements Expr
 
         return $this->parenthesize($source);
     }
+
+    public function injectScope($outer)
+    {
+        // Deprecated
+    }
+
+    public function analyze(Scope $scope, Set $non_generic)
+    {
+        $type = null;
+        foreach ($this->sequence as $expr) {
+            $type = $expr->analyze($scope, $non_generic);
+        }
+
+        return $type;
+    }
 }

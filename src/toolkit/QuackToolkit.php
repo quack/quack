@@ -119,7 +119,6 @@ import(AST, 'location/SourceLocation');
 
 import(AST, 'Node');
 
-import(AST, 'helpers/Body');
 import(AST, 'helpers/DataMember');
 import(AST, 'helpers/Param');
 import(AST, 'helpers/Program');
