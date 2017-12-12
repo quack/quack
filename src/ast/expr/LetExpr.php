@@ -62,7 +62,7 @@ class LetExpr extends Node implements Expr
         $source .= ' in' . PHP_EOL;
         $source .= $parser->indent() . $this->body->format($parser);
 
-        return $source;
+        return $this->parenthesize($source);
     }
 
     public function analyze(Scope $scope, Set $non_generic)

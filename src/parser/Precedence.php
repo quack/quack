@@ -22,9 +22,10 @@ namespace QuackCompiler\Parser;
 
 class Precedence
 {
-    const ASSIGNMENT         = 1;
-    const WHERE              = 2;
-    const PIPELINE           = 3;
+    const SEMI               = 1;
+    const ASSIGNMENT         = 2;
+    const WHERE              = 3;
+    const PIPELINE           = 4;
     const RANGE              = 7;
     const LOGICAL_OR         = 8;
     const LOGICAL_XOR        = 9;

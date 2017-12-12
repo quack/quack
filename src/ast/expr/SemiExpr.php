@@ -25,48 +25,30 @@ use \QuackCompiler\Ast\Node;
 use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
 use \QuackCompiler\Pretty\Parenthesized;
+use \QuackCompiler\Scope\Meta;
 use \QuackCompiler\Scope\Scope;
+use \QuackCompiler\Scope\Symbol;
+use \QuackCompiler\Types\TypeVar;
 use \QuackCompiler\Types\Unification;
 
-class WhileExpr extends Node implements Expr
+class SemiExpr extends Node implements Expr
 {
     use Parenthesized;
 
-    public $condition;
-    public $body;
+    public $sequence;
 
-    public function __construct(Expr $condition, Expr $body)
+    public function __construct($sequence)
     {
-        $this->condition = $condition;
-        $this->body = $body;
+        $this->sequence = $sequence;
     }
 
     public function format(Parser $parser)
     {
-        $source = 'while ';
-        $source .= $this->condition->format($parser);
-        $source .= ' do' . PHP_EOL;
-        $parser->openScope();
-        $source .= $parser->indent() . $this->body->format($parser) . PHP_EOL;
-        $parser->closeScope();
-        $source .= 'done';
+        $format = function ($expr) use ($parser) {
+            return $expr->format($parser);
+        };
+        $source = implode(';' . PHP_EOL . $parser->indent(), array_map($format, $this->sequence));
 
         return $this->parenthesize($source);
-    }
-
-    public function injectScope($outer)
-    {
-        // Deprecated
-    }
-
-    public function analyze(Scope $scope, Set $non_generic)
-    {
-        $bool = $scope->getPrimitiveType('Bool');
-        $unit = $scope->getPrimitiveType('Empty');
-        $condition = $this->condition->analyze($scope, $non_generic);
-
-        Unification::unify($condition, $bool);
-
-        return $unit;
     }
 }

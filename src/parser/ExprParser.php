@@ -38,6 +38,7 @@ use \QuackCompiler\Parselets\Expr\PostfixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\PrefixOperatorParselet;
 use \QuackCompiler\Parselets\Expr\RangeParselet;
 use \QuackCompiler\Parselets\Expr\RecordParselet;
+use \QuackCompiler\Parselets\Expr\SemiParselet;
 use \QuackCompiler\Parselets\Expr\IfParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\WhereParselet;
@@ -104,6 +105,8 @@ class ExprParser
 
         $this->infixRight('**', Precedence::EXPONENT);
         $this->infixRight(':-', Precedence::ASSIGNMENT);
+
+        $this->register(';', new SemiParselet);
     }
 
     public function _expr($precedence = 0, $opt = false)
