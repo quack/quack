@@ -26,6 +26,7 @@ use \QuackCompiler\Parselets\Expr\BinaryParselet;
 use \QuackCompiler\Parselets\Expr\CallParselet;
 use \QuackCompiler\Parselets\Expr\GroupParselet;
 use \QuackCompiler\Parselets\Expr\LambdaParselet;
+use \QuackCompiler\Parselets\Expr\LetParselet;
 use \QuackCompiler\Parselets\Expr\ListParselet;
 use \QuackCompiler\Parselets\Expr\LiteralParselet;
 use \QuackCompiler\Parselets\Expr\MapParselet;
@@ -77,6 +78,7 @@ class ExprParser
         $this->register(Tag::T_MATCH, new MatchParselet);
         $this->register(Tag::T_FN, new LambdaParselet);
         $this->register(Tag::T_WHILE, new WhileParselet);
+        $this->register(Tag::T_LET, new LetParselet);
 
         $this->prefix('-');
         $this->prefix(Tag::T_NOT);
@@ -98,7 +100,7 @@ class ExprParser
         $this->infixLeft('<', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>=', Precedence::SIZE_COMPARATOR);
         $this->infixLeft('>', Precedence::SIZE_COMPARATOR);
-        $this->infixLeft('|', Precedence::PIPELINE);
+        $this->infixLeft('|>', Precedence::PIPELINE);
 
         $this->infixRight('**', Precedence::EXPONENT);
         $this->infixRight(':-', Precedence::ASSIGNMENT);

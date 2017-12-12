@@ -81,6 +81,7 @@ import(PARSELETS, 'expr/MapParselet');
 import(PARSELETS, 'expr/MatchParselet');
 import(PARSELETS, 'expr/RecordParselet');
 import(PARSELETS, 'expr/TupleParselet');
+import(PARSELETS, 'expr/LetParselet');
 
 import(PARSELETS, 'types/BinaryTypeParselet');
 import(PARSELETS, 'types/FnTypeParselet');
@@ -145,6 +146,7 @@ import(AST, 'expr/TupleExpr');
 import(AST, 'expr/MatchExpr');
 import(AST, 'expr/TypeExpr');
 import(AST, 'expr/MemberExpr');
+import(AST, 'expr/LetExpr');
 
 import(AST, 'decl/DataDecl');
 import(AST, 'decl/FnShortDecl');
