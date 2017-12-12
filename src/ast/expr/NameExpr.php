@@ -52,28 +52,22 @@ class NameExpr extends Node implements Expr
 
     public function injectScope($parent_scope)
     {
-        $symbol = $parent_scope->lookup($this->name);
-
-        if (null === $symbol) {
-            throw new ScopeError(Localization::message('SCO020', [$this->name]));
-        }
-
-        // When we reach here, we can compute that this symbol is being used
-        // We store this info in metatables (like Lua) that can be reached
-        // later with Quack compile-time reflection function qk_get_meta(prop, symbol)
-        // TODO: Assert a variable is initialized in order to use it. We need
-        //       a better fork algorithm in order to check for conditional nodes
-        $refcount = $parent_scope->getMeta(Meta::M_REF_COUNT, $this->name);
-        if (null === $refcount) {
-            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->name, 1);
-        } else {
-            $parent_scope->setMeta(Meta::M_REF_COUNT, $this->name, $refcount + 1);
-        }
     }
 
     public function analyze(Scope $scope, $non_generic)
     {
         $symbol = $scope->lookup($this->name);
+
+        if (null === $symbol) {
+            throw new ScopeError(Localization::message('SCO020', [$this->name]));
+        }
+
+        $refcount = $scope->getMeta(Meta::M_REF_COUNT, $this->name);
+        if (null === $refcount) {
+            $scope->setMeta(Meta::M_REF_COUNT, $this->name, 1);
+        } else {
+            $scope->setMeta(Meta::M_REF_COUNT, $this->name, $refcount + 1);
+        }
 
         if ($symbol & Symbol::S_VARIABLE) {
             $type = $scope->getMeta(Meta::M_TYPE, $this->name);

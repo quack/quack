@@ -47,7 +47,6 @@ class Tag
     const T_AND      = 0x209;
     const T_OR       = 0x20A;
     const T_XOR      = 0x20B;
-    const T_ELIF     = 0x20C;
     const T_ELSE     = 0x20D;
     const T_MOD      = 0x20E;
     const T_NOT      = 0x20F;
@@ -55,7 +54,6 @@ class Tag
     const T_THEN     = 0x211;
     const T_BEGIN    = 0x212;
     const T_END      = 0x213;
-    const T_UNLESS   = 0x214;
     const T_MUT      = 0x215;
     const T_BY       = 0x216;
     const T_TYPE     = 0x217;
@@ -63,6 +61,7 @@ class Tag
     const T_WITH     = 0x219;
     const T_DATA     = 0x21A;
     const T_REC      = 0x21B;
+    const T_DONE     = 0x21C;
 
     public static function getOperatorLexeme($op)
     {

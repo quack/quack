@@ -55,21 +55,19 @@ abstract class Lexer
         $this->reserve(new Word(Tag::T_AND, 'and'));
         $this->reserve(new Word(Tag::T_OR, 'or'));
         $this->reserve(new Word(Tag::T_XOR, 'xor'));
-        $this->reserve(new Word(Tag::T_ELIF, 'elif'));
         $this->reserve(new Word(Tag::T_ELSE, 'else'));
         $this->reserve(new Word(Tag::T_NOT, 'not'));
         $this->reserve(new Word(Tag::T_FN, 'fn'));
         $this->reserve(new Word(Tag::T_THEN, 'then'));
         $this->reserve(new Word(Tag::T_BEGIN, 'begin'));
         $this->reserve(new Word(Tag::T_END, 'end'));
-        $this->reserve(new Word(Tag::T_BY, 'by'));
-        $this->reserve(new Word(Tag::T_UNLESS, 'unless'));
         $this->reserve(new Word(Tag::T_MUT, 'mut'));
         $this->reserve(new Word(Tag::T_TYPE, 'type'));
         $this->reserve(new Word(Tag::T_MATCH, 'match'));
         $this->reserve(new Word(Tag::T_WITH, 'with'));
         $this->reserve(new Word(Tag::T_DATA, 'data'));
         $this->reserve(new Word(Tag::T_REC, 'rec'));
+        $this->reserve(new Word(Tag::T_DONE, 'done'));
     }
 
     private function reserve(Word $t)

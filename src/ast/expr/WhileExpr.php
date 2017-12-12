@@ -18,22 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Quack.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace QuackCompiler\Ast\Stmt;
+namespace QuackCompiler\Ast\Expr;
 
+use \QuackCompiler\Ast\Expr;
 use \QuackCompiler\Ast\Node;
-use \QuackCompiler\Ast\Stmt;
-use \QuackCompiler\Intl\Localization;
+use \QuackCompiler\Ds\Set;
 use \QuackCompiler\Parser\Parser;
-use \QuackCompiler\Scope\Meta;
+use \QuackCompiler\Pretty\Parenthesized;
 use \QuackCompiler\Scope\Scope;
-use \QuackCompiler\Types\TypeError;
+use \QuackCompiler\Types\Unification;
 
-class WhileStmt extends Node implements Stmt
+class WhileExpr extends Node implements Expr
 {
+    use Parenthesized;
+
     public $condition;
     public $body;
 
-    public function __construct($condition, $body)
+    public function __construct(Expr $condition, Expr $body)
     {
         $this->condition = $condition;
         $this->body = $body;
@@ -43,30 +45,28 @@ class WhileStmt extends Node implements Stmt
     {
         $source = 'while ';
         $source .= $this->condition->format($parser);
-        $source .= PHP_EOL;
-        $source .= $this->body->format($parser);
-        $source .= $parser->indent();
-        $source .= 'end' . PHP_EOL;
+        $source .= ' do' . PHP_EOL;
+        $parser->openScope();
+        $source .= $parser->indent() . $this->body->format($parser) . PHP_EOL;
+        $parser->closeScope();
+        $source .= 'done';
 
         return $source;
     }
 
-    public function injectScope($parent_scope)
+    public function injectScope($outer)
     {
-        $this->scope = new Scope($parent_scope);
-        $this->scope->setMetaInContext(Meta::M_LABEL, Meta::nextMetaLabel());
-        $this->condition->injectScope($parent_scope);
-        $this->body->injectScope($this->scope);
+        // Deprecated
     }
 
-    public function runTypeChecker()
+    public function analyze(Scope $scope, Set $non_generic)
     {
-        $bool = $this->scope->getPrimitiveType('Bool');
-        $condition_type = $this->condition->getType();
-        if (!$bool->check($condition_type)) {
-            throw new TypeError(Localization::message('TYP010', [$condition_type]));
-        }
+        $bool = $scope->getPrimitiveType('Bool');
+        $unit = $scope->getPrimitiveType('Empty');
+        $condition = $this->condition->analyze($scope, $non_generic);
 
-        $this->body->runTypeChecker();
+        Unification::unify($condition, $bool);
+
+        return $unit;
     }
 }

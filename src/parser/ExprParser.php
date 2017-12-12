@@ -40,6 +40,7 @@ use \QuackCompiler\Parselets\Expr\RecordParselet;
 use \QuackCompiler\Parselets\Expr\IfParselet;
 use \QuackCompiler\Parselets\Expr\TupleParselet;
 use \QuackCompiler\Parselets\Expr\WhereParselet;
+use \QuackCompiler\Parselets\Expr\WhileParselet;
 use \QuackCompiler\Parselets\Parselet;
 
 class ExprParser
@@ -75,6 +76,7 @@ class ExprParser
         $this->register(Tag::T_WHERE, new WhereParselet);
         $this->register(Tag::T_MATCH, new MatchParselet);
         $this->register(Tag::T_FN, new LambdaParselet);
+        $this->register(Tag::T_WHILE, new WhileParselet);
 
         $this->prefix('-');
         $this->prefix(Tag::T_NOT);
