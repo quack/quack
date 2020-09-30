@@ -91,5 +91,5 @@ Yay! Your contribution to the Quack language core is **very** important! There i
 There are many ways to help! You can fix typos, improve code quality, suggest changes, suggest language features, be engaged on the language discussion, standardize the code, doc-comment the methods, write and run tests... The work is just starting out!
 
 We also need to implement support of Quack for the different text editors. If you want to implement for some, contact me and I'll write the syntactic specification and the semantic of the blocks for you!
-
+###this doesn't support temux.
 Questions or concerns? Contact me at <marcelocamargo@linuxmail.org> and I'll be happy to answer.
